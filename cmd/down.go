@@ -18,7 +18,7 @@ var DownCmd = &cobra.Command{
 🚅  Tokaido is pulling down your containers!
 		`)
 
-		utils.StdoutCmd("docker-compose", "up", "-d")
+		utils.StdoutCmd("docker-compose", "down")
 
 		fmt.Println(`
 🚉  Tokaido stopped containers successfully!
