@@ -1,4 +1,4 @@
-# 🚅  TOKAIDO by IronStar
+# 🚅 TOKAIDO by IronStar
 
 A command line utility for quickly and painlessly spinning up your Drupal environment
 
@@ -17,12 +17,21 @@ TODO: Docker desktop install instructions
 ### Build From Source
 
 TODO: Better instructions
-Tokaido is build in Golang 1.9.2
+Tokaido is build in Golang 1.10.2
 
-- Install Go @ >= 1.9.2
-- Clone this repository
-- From the root of the cloned repo run `go build -o tok`
-- Your executable is now avaialable with `./tok [command]`
+* Install Go and dep with `brew install dep` (Latest go version is included)
+* Install package dependencies with `dep ensure`
+* Clone this repository
+* From the root of the cloned repo run `go build -o tok`
+* Your executable is now avaialable with `./tok [command]`
+
+Getting this message or something similar?
+
+```sh
+import /Users/jimmycann/www/golang/pkg/darwin_amd64/bitbucket.org/ironstar/tokaido-cli/utils.a: object is [darwin amd64 go1.9.2 X:framepointer] expected [darwin amd64 go1.10.2 X:framepointer]
+```
+
+There are two versions of go installed on your system. Easiest is to remove the version in `/usr/local/go` with `sudo rm -rfv /usr/local/go`. Your brew installed version should now be working, check your version with `go version`
 
 ## Usage
 
@@ -36,5 +45,5 @@ Tokaido is build in Golang 1.9.2
 
 The team at IronStar
 
-- Mike Richardson (@otakumike)
-- Jimmy Cann (@yjimk)
+* Mike Richardson (@otakumike)
+* Jimmy Cann (@yjimk)

@@ -13,5 +13,8 @@
 # Project-local glide cache, RE: https://github.com/Masterminds/glide/issues/736
 .glide/
 
+# Installed vendor packages from dep
+vendor
+
 # Project binary
 tok

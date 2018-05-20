@@ -1,7 +1,7 @@
 package main
 
 import (
-	"./cmd"
+	"bitbucket.org/ironstar/tokaido-cli/cmd"
 )
 
 func main() {
