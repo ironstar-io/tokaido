@@ -1,4 +1,4 @@
-# 🚅 TOKAIDO by IronStar
+# 🚅 TOKAIDO by Ironstar
 
 A command line utility for quickly and painlessly spinning up your Drupal environment
 
@@ -39,11 +39,11 @@ There are two versions of go installed on your system. Easiest is to remove the 
 
 ## About Tokaido
 
-## About IronStar
+## About Ironstar
 
 ## Authors
 
-The team at IronStar
+The team at Ironstar
 
 * Mike Richardson (@otakumike)
 * Jimmy Cann (@yjimk)

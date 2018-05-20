@@ -10,7 +10,7 @@ import (
 var RootCmd = &cobra.Command{
 	Use:   "tok",
 	Short: "Use Tokaido to bootstrap your Drupal applications",
-	Long:  "Easily build out your Drupal application. Built in Go by the team at IronStar.",
+	Long:  "Easily build out your Drupal application. Built in Go by the team at Ironstar.",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("First tok command run!")
 	},
