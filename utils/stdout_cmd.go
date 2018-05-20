@@ -16,5 +16,5 @@ func StdoutCmd(name string, args ...string) string {
 	}
 
 	fmt.Printf("%s\n", stdoutStderr)
-	return ""
+	return string(stdoutStderr)
 }
