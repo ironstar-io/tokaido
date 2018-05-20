@@ -12,7 +12,7 @@ var UpCmd = &cobra.Command{
 	Short: "Compose and run your containers",
 	Long:  "Runs in unison in the background - `docker-compose up -d`",
 	Run: func(cmd *cobra.Command, args []string) {
-		utils.CheckPath("docker-compose")
+		utils.CheckPathHard("docker-compose")
 
 		fmt.Println(`
 🚅  Tokaido is pulling up your containers!

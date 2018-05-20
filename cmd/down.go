@@ -12,7 +12,7 @@ var DownCmd = &cobra.Command{
 	Short: "Stop all containers",
 	Long:  "Gracefully stop your containers - `docker-compose down`",
 	Run: func(cmd *cobra.Command, args []string) {
-		utils.CheckPath("docker-compose")
+		utils.CheckPathHard("docker-compose")
 
 		fmt.Println(`
 🚅  Tokaido is pulling down your containers!
