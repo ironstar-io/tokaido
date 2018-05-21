@@ -6,7 +6,7 @@ import (
 	"os/exec"
 )
 
-// CheckBrew - Root executable
+// CheckBrew ...
 func CheckBrew() string {
 	_, err := exec.LookPath("brew")
 	if err != nil {

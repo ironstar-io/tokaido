@@ -1,9 +1,13 @@
 package main
 
 import (
+	"log"
+
 	"bitbucket.org/ironstar/tokaido-cli/cmd"
 )
 
 func main() {
-	cmd.Execute()
+	if err := cmd.RootCmd().Execute(); err != nil {
+		log.Fatal(err)
+	}
 }
