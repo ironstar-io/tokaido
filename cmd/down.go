@@ -2,7 +2,9 @@ package cmd
 
 import (
 	"bitbucket.org/ironstar/tokaido-cli/utils"
+
 	"fmt"
+
 	"github.com/spf13/cobra"
 )
 

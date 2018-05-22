@@ -1,11 +1,13 @@
 package cmd
 
 import (
+	"bitbucket.org/ironstar/tokaido-cli/conf"
+	"bitbucket.org/ironstar/tokaido-cli/system"
+
 	"fmt"
 	"log"
 	"os"
 
-	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"github.com/spf13/cobra"
 )
 
@@ -36,7 +38,9 @@ func Execute() {
 // RootCmd will setup and return the root command
 func RootCmd() *cobra.Command {
 	rootCmd.PersistentFlags().StringP("config", "c", "", "Specify the Tokaido config file to use")
-	rootCmd.Flags().IntP("port", "p", 5000, "The port to use for unison")
+	rootCmd.Flags().StringP("port", "p", "5000", "The port to use for unison")
+	rootCmd.Flags().StringP("project", "j", system.Basename(), "The name of the project")
+	rootCmd.Flags().StringP("path", "t", system.WorkDir(), "The project path")
 
 	return &rootCmd
 }

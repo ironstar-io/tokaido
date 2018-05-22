@@ -12,6 +12,7 @@ type Config struct {
 	Port    string
 	Config  string
 	Project string
+	Path    string
 }
 
 // LoadConfig loads the config from a file if specified, otherwise from the environment
