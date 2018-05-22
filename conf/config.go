@@ -9,8 +9,9 @@ import (
 
 // Config the application's configuration
 type Config struct {
-	port   int64
-	config string
+	Port    string
+	Config  string
+	Project string
 }
 
 // LoadConfig loads the config from a file if specified, otherwise from the environment

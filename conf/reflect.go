@@ -57,7 +57,7 @@ func recursivelySet(val reflect.Value, prefix string) error {
 		case reflect.Bool:
 			thisField.SetBool(viper.GetBool(tag))
 		default:
-			return fmt.Errorf("Unexpected type detected - aborting: %s", thisField.Kind())
+			return fmt.Errorf("unexpected type detected - aborting: %s", thisField.Kind())
 		}
 	}
 
