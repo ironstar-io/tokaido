@@ -8,7 +8,7 @@ import (
 )
 
 // CheckDeps - Root executable
-func CheckDeps() string {
+func CheckDeps() *string {
 	var GOOS = utils.CheckOS()
 
 	fmt.Println("\tChecking required dependencies")
@@ -20,5 +20,5 @@ func CheckDeps() string {
 		return osx.CheckDeps()
 	}
 
-	return ""
+	return nil
 }

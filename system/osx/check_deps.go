@@ -5,12 +5,12 @@ import (
 )
 
 // CheckDeps - Root executable
-func CheckDeps() string {
+func CheckDeps() *string {
 	utils.CheckPathHard("brew")
 
 	CheckBrew()
 	CheckAndBrewInstall("unison")
 	CheckDockersync()
 
-	return ""
+	return nil
 }

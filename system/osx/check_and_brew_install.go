@@ -7,12 +7,12 @@ import (
 )
 
 // CheckAndBrewInstall - Root executable
-func CheckAndBrewInstall(program string) string {
+func CheckAndBrewInstall(program string) *string {
 	_, err := exec.LookPath(program)
 	if err != nil {
 		utils.StdoutCmd("brew", "install", program)
 	}
 
 	fmt.Println("\t✓ ", program)
-	return ""
+	return nil
 }

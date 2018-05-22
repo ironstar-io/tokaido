@@ -7,7 +7,7 @@ import (
 )
 
 // CheckDockersync - Root executable
-func CheckDockersync() string {
+func CheckDockersync() *string {
 	_, err := exec.LookPath("unison-fsmonitor")
 	if err != nil {
 		utils.StdoutCmd("brew", "tap", "eugenmayer/dockersync")
@@ -15,5 +15,5 @@ func CheckDockersync() string {
 	}
 
 	fmt.Println("\t✓  unison-fsmonitor")
-	return ""
+	return nil
 }
