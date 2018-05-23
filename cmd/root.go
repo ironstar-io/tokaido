@@ -24,6 +24,7 @@ func init() {
 	rootCmd.AddCommand(IronstarCmd)
 	rootCmd.AddCommand(UpCmd)
 	rootCmd.AddCommand(DownCmd)
+	rootCmd.AddCommand(SyscheckCmd)
 	rootCmd.AddCommand(StatusCmd)
 }
 

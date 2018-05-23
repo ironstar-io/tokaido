@@ -25,7 +25,7 @@ var InitCmd = &cobra.Command{
 🚅  Tokaido is initializing your project!
 		`)
 
-		system.CheckDeps()
+		system.CheckDependencies()
 
 		unison.DockerUp()
 		unison.GeneratePrf()

@@ -8,18 +8,29 @@ import (
 	"fmt"
 )
 
-// CheckDeps - Root executable
-func CheckDeps() *string {
+// CheckDependencies - Root executable
+func CheckDependencies() {
 	var GOOS = utils.CheckOS()
 
 	fmt.Println("Checking required dependencies")
 	if GOOS == "linux" {
-		return linux.CheckDeps()
+		linux.CheckDependencies()
 	}
 
 	if GOOS == "osx" {
-		return osx.CheckDeps()
+		osx.CheckDependencies()
+	}
+}
+
+// Check - Root executable
+func Check() {
+	var GOOS = utils.CheckOS()
+
+	if GOOS == "linux" {
+		linux.CheckSystem()
 	}
 
-	return nil
+	if GOOS == "osx" {
+		osx.CheckSystem()
+	}
 }
