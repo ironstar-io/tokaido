@@ -1,7 +1,7 @@
-package conf
+package unison
 
 import (
-	"bitbucket.org/ironstar/tokaido-cli/system"
+	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/utils"
 
 	"bytes"
@@ -15,11 +15,11 @@ type prf struct {
 	ProjectPath string
 }
 
-// UnisonPrf - Generate a `.prf` file for unison
-func UnisonPrf() {
-	config := GetConfig()
+// GeneratePrf - Generate a `.prf` file for unison
+func GeneratePrf() {
+	config := conf.GetConfig()
 
-	s := prf{UnisonPort: system.UnisonLocalPort(), ProjectPath: config.Path}
+	s := prf{UnisonPort: LocalPort(), ProjectPath: config.Path}
 
 	tmpl := template.New("unison.prf")
 
@@ -53,12 +53,12 @@ auto = true`)
 		return
 	}
 
-	CopyUnison(tpl.String())
+	CreatePrf(tpl.String())
 }
 
-// CopyUnison - Copy generated `.prf` file to `~/.unison/`
-func CopyUnison(body string) {
-	config := GetConfig()
+// CreatePrf - Copy generated `.prf` file to `~/.unison/`
+func CreatePrf(body string) {
+	config := conf.GetConfig()
 
 	// detect if file exists
 	path := utils.HomeDir() + "/.unison/" + config.Project + ".prf"

@@ -13,6 +13,6 @@ func CheckAndBrewInstall(program string) *string {
 		utils.StdoutCmd("brew", "install", program)
 	}
 
-	fmt.Println("\t✓ ", program)
+	fmt.Println("  ✓ ", program)
 	return nil
 }

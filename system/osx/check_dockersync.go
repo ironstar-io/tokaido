@@ -14,6 +14,6 @@ func CheckDockersync() *string {
 		utils.StdoutCmd("brew", "install", "eugenmayer/dockersync/unox")
 	}
 
-	fmt.Println("\t✓  unison-fsmonitor")
+	fmt.Println("  ✓  unison-fsmonitor")
 	return nil
 }

@@ -13,6 +13,6 @@ func CheckBrew() *string {
 		utils.StdoutCmd("/usr/bin/ruby", "-e", "\"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)\"")
 	}
 
-	fmt.Println("\t✓  brew")
+	fmt.Println("  ✓  brew")
 	return nil
 }

@@ -12,7 +12,7 @@ import (
 func CheckDeps() *string {
 	var GOOS = utils.CheckOS()
 
-	fmt.Println("\tChecking required dependencies")
+	fmt.Println("Checking required dependencies")
 	if GOOS == "linux" {
 		return linux.CheckDeps()
 	}
