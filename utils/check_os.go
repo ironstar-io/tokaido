@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"log"
 	"runtime"
 )
 
@@ -12,7 +13,7 @@ func CheckOS() string {
 	case "linux":
 		return "linux"
 	default:
-		// TODO
-		return "FatalError(Error(\"Tokaido is currently only compatible with Linux and Mac OSX operating systems\"))"
+		log.Fatal("Tokaido is currently only compatible with Linux and Mac OSX operating systems")
+		return ""
 	}
 }
