@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/system"
 	"bitbucket.org/ironstar/tokaido-cli/utils"
 
@@ -16,12 +17,23 @@ var InitCmd = &cobra.Command{
 	Long:  "Initialize a Tokaido project. Installs dependencies, starts unison synchronization, builds a configuration file, starts your container. Docker is required to be installed manually for this to work",
 	Run: func(cmd *cobra.Command, args []string) {
 		utils.CheckPathHard("docker-compose")
+		conf.LoadConfig(cmd)
 
 		fmt.Println(`
 🚅  Tokaido is initializing your project!
 		`)
 
 		system.CheckDeps()
+
+		fmt.Println(`
+Firing up the Unison container!
+		`)
+
+		utils.StdoutCmd("docker-compose", "up", "-d", "unison")
+
+		conf.UnisonPrf()
+
+		conf.UnisonSync()
 
 		fmt.Println(`
 🚉  Tokaido successfully initialized you project!
