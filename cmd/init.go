@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"bitbucket.org/ironstar/tokaido-cli/conf"
+	"bitbucket.org/ironstar/tokaido-cli/services/docker"
 	"bitbucket.org/ironstar/tokaido-cli/services/unison"
 	"bitbucket.org/ironstar/tokaido-cli/system"
 	"bitbucket.org/ironstar/tokaido-cli/utils"
@@ -29,6 +30,9 @@ var InitCmd = &cobra.Command{
 		unison.DockerUp()
 		unison.GeneratePrf()
 		unison.Sync()
+
+		docker.Up()
+		docker.Status()
 
 		fmt.Println(`
 🚉  Tokaido successfully initialized you project!

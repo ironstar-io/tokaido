@@ -10,7 +10,7 @@ import (
 func StdoutCmd(name string, args ...string) string {
 	stdoutStderr := SilentStdoutCmd(name, args...)
 
-	fmt.Printf("%s", stdoutStderr)
+	fmt.Printf("%s\n", stdoutStderr)
 
 	return string(stdoutStderr)
 }

@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"bitbucket.org/ironstar/tokaido-cli/services/docker"
 	"bitbucket.org/ironstar/tokaido-cli/utils"
 
 	"fmt"
@@ -20,7 +21,7 @@ var DownCmd = &cobra.Command{
 🚅  Tokaido is pulling down your containers!
 		`)
 
-		utils.StdoutCmd("docker-compose", "down")
+		docker.Down()
 
 		fmt.Println(`
 🚉  Tokaido stopped containers successfully!
