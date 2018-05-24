@@ -35,7 +35,7 @@ var InitCmd = &cobra.Command{
 		docker.Status()
 
 		fmt.Println(`
-🚉  Tokaido successfully initialized you project!
+🚉  Tokaido successfully initialized your project!
 		`)
 	},
 }

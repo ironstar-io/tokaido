@@ -3,6 +3,7 @@ package cmd
 import (
 	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/system"
+	"bitbucket.org/ironstar/tokaido-cli/utils"
 
 	"fmt"
 	"log"
@@ -41,7 +42,7 @@ func RootCmd() *cobra.Command {
 	rootCmd.PersistentFlags().StringP("config", "c", "", "Specify the Tokaido config file to use")
 	rootCmd.PersistentFlags().StringP("port", "p", "5000", "The port to use for local development")
 	rootCmd.PersistentFlags().StringP("project", "j", system.Basename(), "The name of the project")
-	rootCmd.PersistentFlags().StringP("path", "t", system.WorkDir(), "The project path")
+	rootCmd.PersistentFlags().StringP("path", "t", utils.WorkDir(), "The project path")
 
 	return &rootCmd
 }
