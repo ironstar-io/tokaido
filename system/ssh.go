@@ -36,13 +36,13 @@ func copyPub() {
 	CheckAndCreateFolder(tokDir)
 	CheckAndCreateFolder(tokDir + "/local")
 
-	fs.Copy(sshPub, tokDir+"/local/tok_ssh.pub-copy")
+	fs.Copy(sshPub, tokDir+"/local/ssh_key.pub-copy")
 	replacePub()
 }
 
 // replacePub - Replace `.pub-copy` with `.pub` file in `./.tok/local`
 func replacePub() {
-	mainPub := tokDir + "/local/tok_ssh.pub"
+	mainPub := tokDir + "/local/ssh_key.pub"
 	copyPub := mainPub + "-copy"
 
 	// Remove the original .pub key
