@@ -45,7 +45,6 @@ func GetPrfPath() string {
 // CreateOrUpdatePrf - Create or Update a `.prf` file in `~/.unison/`
 func CreateOrUpdatePrf() {
 	// detect if file exists
-
 	var _, err = os.Stat(GetPrfPath() + ".prf")
 
 	// create file if not exists
