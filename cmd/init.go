@@ -31,6 +31,8 @@ var InitCmd = &cobra.Command{
 		unison.CreateOrUpdatePrf()
 		unison.Sync()
 
+		system.GenerateSSHKeys()
+
 		docker.Up()
 		docker.Status()
 
