@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"bitbucket.org/ironstar/tokaido-cli/services/docker"
+	"bitbucket.org/ironstar/tokaido-cli/services/unison"
 	"bitbucket.org/ironstar/tokaido-cli/utils"
 
 	"fmt"
@@ -21,6 +22,7 @@ var UpCmd = &cobra.Command{
 🚅  Tokaido is pulling up your containers!
 		`)
 
+		unison.CreateOrUpdatePrf()
 		docker.Up()
 
 		fmt.Println(`

@@ -28,7 +28,7 @@ var InitCmd = &cobra.Command{
 		system.CheckDependencies()
 
 		unison.DockerUp()
-		unison.GeneratePrf()
+		unison.CreateOrUpdatePrf()
 		unison.Sync()
 
 		docker.Up()
