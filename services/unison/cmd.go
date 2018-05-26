@@ -15,3 +15,12 @@ func Sync() {
 
 	utils.NoFatalStdoutCmd("unison", config.Project, "-watch=false")
 }
+
+// Watch ...
+func Watch() {
+	config := conf.GetConfig()
+
+	fmt.Println(`Watching your files for changes and synchronising with your container`)
+
+	utils.StdoutCmd("unison", config.Project)
+}

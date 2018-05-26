@@ -28,6 +28,7 @@ func init() {
 	rootCmd.AddCommand(SSHCmd)
 	rootCmd.AddCommand(SyscheckCmd)
 	rootCmd.AddCommand(StatusCmd)
+	rootCmd.AddCommand(WatchCmd)
 }
 
 // Execute - Root executable
