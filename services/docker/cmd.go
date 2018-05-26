@@ -9,6 +9,11 @@ func Up() {
 	utils.StdoutCmd("docker-compose", "up", "-d")
 }
 
+// Stop - Stop all containers in the compose file
+func Stop() {
+	utils.StdoutCmd("docker-compose", "stop")
+}
+
 // Down - Pull down all the containers in the compose file
 func Down() {
 	utils.StdoutCmd("docker-compose", "down")
