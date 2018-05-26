@@ -1,7 +1,7 @@
-package osx
+package drupal
 
 import (
-	"bitbucket.org/ironstar/tokaido-cli/utils"
+	"bitbucket.org/ironstar/tokaido-cli/system/fs"
 
 	"bufio"
 	"fmt"
@@ -14,12 +14,12 @@ import (
 )
 
 var rgx = regexp.MustCompile("'(.*?)'")
-var drupalDir = utils.WorkDir() + "/docroot/core/lib/Drupal.php"
+var drupalDir = fs.WorkDir() + "/docroot/core/lib/Drupal.php"
 var validDrupalRange = ">=8.5.x"
 var checkFailMsg = "\n⚠️  There were some problems detected during the system checks. This won't stop you from running any Tokaido commands, but they may not behave as you were expecting.\n\n"
 
-// CheckSystem ...
-func CheckSystem() {
+// Check ...
+func Check() {
 	if _, err := os.Stat(drupalDir); os.IsNotExist(err) {
 		fmt.Println("  ✘  A Drupal installation was not found")
 		fmt.Printf(checkFailMsg)

@@ -2,7 +2,7 @@ package unison
 
 import (
 	"bitbucket.org/ironstar/tokaido-cli/conf"
-	"bitbucket.org/ironstar/tokaido-cli/utils"
+	"bitbucket.org/ironstar/tokaido-cli/system/fs"
 
 	"bytes"
 	"log"
@@ -61,7 +61,7 @@ func CreatePrf(body string) {
 	config := conf.GetConfig()
 
 	// detect if file exists
-	path := utils.HomeDir() + "/.unison/" + config.Project + ".prf"
+	path := fs.HomeDir() + "/.unison/" + config.Project + ".prf"
 	var _, err = os.Stat(path)
 
 	// create file if not exists

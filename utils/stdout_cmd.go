@@ -1,7 +1,10 @@
 package utils
 
 import (
+	"bitbucket.org/ironstar/tokaido-cli/system/fs"
+
 	"fmt"
+	"log"
 	"os/exec"
 	"strings"
 )
@@ -18,11 +21,11 @@ func StdoutCmd(name string, args ...string) string {
 // SilentStdoutCmd - Execute a command on the users' OS without logging result to the console
 func SilentStdoutCmd(name string, args ...string) string {
 	cmd := exec.Command(name, args...)
-	cmd.Dir = WorkDir()
+	cmd.Dir = fs.WorkDir()
 	stdoutStderr, err := cmd.CombinedOutput()
 	if err != nil {
 		fmt.Printf("Tokaido encountered a fatal error and had to stop at command '%s %s'\n%s", name, strings.Join(args, " "), stdoutStderr)
-		return FatalError(err)
+		log.Fatal(err)
 	}
 
 	return string(stdoutStderr)
@@ -31,7 +34,7 @@ func SilentStdoutCmd(name string, args ...string) string {
 // NoFatalStdoutCmd - Execute a command on the users' OS without exiting on stdoutError
 func NoFatalStdoutCmd(name string, args ...string) string {
 	cmd := exec.Command(name, args...)
-	cmd.Dir = WorkDir()
+	cmd.Dir = fs.WorkDir()
 	stdoutStderr, _ := cmd.CombinedOutput()
 
 	return string(stdoutStderr)

@@ -18,7 +18,7 @@ var InitCmd = &cobra.Command{
 	Short: "Initialize a Tokaido project",
 	Long:  "Initialize a Tokaido project. Installs dependencies, starts unison synchronization, builds a configuration file, starts your container. Docker is required to be installed manually for this to work",
 	Run: func(cmd *cobra.Command, args []string) {
-		utils.CheckPathHard("docker-compose")
+		utils.CheckCmdHard("docker-compose")
 		conf.LoadConfig(cmd)
 
 		fmt.Println(`

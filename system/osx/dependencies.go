@@ -9,7 +9,7 @@ import (
 
 // CheckDependencies - Root executable
 func CheckDependencies() {
-	utils.CheckPathHard("brew")
+	utils.CheckCmdHard("brew")
 
 	CheckBrew()
 	CheckAndBrewInstall("unison")

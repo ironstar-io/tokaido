@@ -6,14 +6,14 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("CheckPathHard", func() {
+var _ = Describe("CheckCmdHard", func() {
 	It("should return an error when the program passed is not available on $PATH", func() {
-		result := utils.CheckPathHard("not-an-installed-program")
-		Expect(result).To(Equal("utils.FatalError called"))
+		result := utils.CheckCmdHard("not-an-installed-program")
+		Expect(result).To(Equal("log.Fatal called"))
 	})
 
 	It("should return an empty string (success) when the program passed is available on $PATH", func() {
-		result := utils.CheckPathHard("date")
+		result := utils.CheckCmdHard("date")
 		Expect(result).To(Equal(""))
 	})
 })

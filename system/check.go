@@ -21,16 +21,3 @@ func CheckDependencies() {
 		osx.CheckDependencies()
 	}
 }
-
-// Check - Root executable
-func Check() {
-	var GOOS = utils.CheckOS()
-
-	if GOOS == "linux" {
-		linux.CheckSystem()
-	}
-
-	if GOOS == "osx" {
-		osx.CheckSystem()
-	}
-}
