@@ -10,5 +10,5 @@ import (
 func DrushSSH() {
 	drushPort := docker.LocalPort("drush", "22")
 
-	utils.StdoutCmd("bash", "-c", "ssh", "tok@localhost", "-p", drushPort, "-i", fs.HomeDir()+"/.ssh/tok-ssh.key", "-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null", "-q")
+	utils.StdoutCmd("ssh", "tok@localhost", "-p", drushPort, "-i", fs.HomeDir()+"/.ssh/tok_ssh.key", "-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null", "-q")
 }
