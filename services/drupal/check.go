@@ -28,12 +28,12 @@ func Check() {
 
 	fmt.Println("  ✓  A Drupal installation was found")
 
-	CheckDrupalVersion()
+	checkDrupalVersion()
 }
 
-// CheckDrupalVersion ...
-func CheckDrupalVersion() {
-	drupalVersion := GetDrupalVersion()
+// checkDrupalVersion ...
+func checkDrupalVersion() {
+	drupalVersion := getDrupalVersion()
 	if drupalVersion == "" {
 		fmt.Printf("  ✘  Tokaido was unable to determine the Drupal version, it should be %s\n", validDrupalRange)
 		fmt.Printf(checkFailMsg)
@@ -51,9 +51,9 @@ func CheckDrupalVersion() {
 	}
 }
 
-// GetDrupalVersion ...
-func GetDrupalVersion() string {
-	drupalVersionString := DrupalVersionStr()
+// getDrupalVersion ...
+func getDrupalVersion() string {
+	drupalVersionString := versionStr()
 	if drupalVersionString == "" {
 		return ""
 	}
@@ -63,8 +63,8 @@ func GetDrupalVersion() string {
 	return strings.Replace(drupalVersion, "'", "", 2)
 }
 
-// DrupalVersionStr ...
-func DrupalVersionStr() string {
+// versionStr ...
+func versionStr() string {
 	f, err := os.Open(drupalDir)
 	if err != nil {
 		log.Fatal(err)
