@@ -3,7 +3,6 @@ package unison
 import (
 	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/system/fs"
-	"fmt"
 
 	"bufio"
 	"bytes"
@@ -51,14 +50,14 @@ func CreateOrUpdatePrf() {
 
 	// create file if not exists
 	if os.IsNotExist(err) {
-		GeneratePrf()
+		generatePrf()
 	} else {
-		UpdatePrf()
+		updatePrf()
 	}
 }
 
-// GeneratePrf - Generate a `.prf` file for unison
-func GeneratePrf() {
+// generatePrf - Generate a `.prf` file for unison
+func generatePrf() {
 	config := conf.GetConfig()
 	s := prf{UnisonPort: LocalPort(), ProjectPath: config.Path}
 
@@ -75,12 +74,12 @@ func GeneratePrf() {
 		log.Fatal("Parse: ", err)
 		return
 	}
-	fmt.Printf("11111 %s", GetPrfPath()+".prf")
-	CreatePrf(tpl.String(), GetPrfPath()+".prf")
+
+	createPrf(tpl.String(), GetPrfPath()+".prf")
 }
 
-// CreatePrf - Write generated `.prf` file to `~/.unison/`
-func CreatePrf(body string, path string) {
+// createPrf - Write generated `.prf` file to `~/.unison/`
+func createPrf(body string, path string) {
 	var file, err = os.Create(path)
 	if err != nil {
 		log.Fatal("Create: ", err)
@@ -91,8 +90,8 @@ func CreatePrf(body string, path string) {
 	defer file.Close()
 }
 
-// UpdatePrf - Update a `.prf` file in `~/.unison/`
-func UpdatePrf() {
+// updatePrf - Update a `.prf` file in `~/.unison/`
+func updatePrf() {
 	f, err := os.Open(GetPrfPath() + ".prf")
 	if err != nil {
 		log.Fatal(err)
@@ -112,12 +111,12 @@ func UpdatePrf() {
 		}
 	}
 
-	CreatePrf(strings.Join(prfString, "\n"), GetPrfPath()+".tmp.prf")
-	ReplacePrf()
+	createPrf(strings.Join(prfString, "\n"), GetPrfPath()+".tmp.prf")
+	replacePrf()
 }
 
-// ReplacePrf - Replace `.tmp.prf` with `.prf` file in `~/.unison/`
-func ReplacePrf() {
+// replacePrf - Replace `.tmp.prf` with `.prf` file in `~/.unison/`
+func replacePrf() {
 	rootPrf := GetPrfPath()
 	mainPrf := rootPrf + ".prf"
 	tmpPrf := rootPrf + ".tmp.prf"
