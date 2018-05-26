@@ -25,6 +25,7 @@ func init() {
 	rootCmd.AddCommand(UpCmd)
 	rootCmd.AddCommand(DestroyCmd)
 	rootCmd.AddCommand(StopCmd)
+	rootCmd.AddCommand(SSHCmd)
 	rootCmd.AddCommand(SyscheckCmd)
 	rootCmd.AddCommand(StatusCmd)
 }
