@@ -26,5 +26,5 @@ func Status() {
 
 // LocalPort - Return the local port of a container
 func LocalPort(containerName string, containerPort string) string {
-	return utils.SilentStdoutCmd("bash", "-c", "docker-compose port"+containerName+" "+containerPort+" | cut -d':' -f2")
+	return utils.SilentStdoutCmd("bash", "-c", "docker-compose port "+containerName+" "+containerPort+" | cut -d':' -f2")
 }
