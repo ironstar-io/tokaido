@@ -39,3 +39,14 @@ func NoFatalStdoutCmd(name string, args ...string) string {
 
 	return strings.TrimSpace(string(stdoutStderr))
 }
+
+// BashStringCmd - Execute a bash command from a string `bash -c "(cmd)"`
+func BashStringCmd(cmdStr string) string {
+	cmd := exec.Command("bash", "-c", cmdStr)
+	cmd.Dir = fs.WorkDir()
+	stdoutStderr, _ := cmd.CombinedOutput()
+
+	fmt.Printf("%s\n", stdoutStderr)
+
+	return strings.TrimSpace(string(stdoutStderr))
+}
