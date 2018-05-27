@@ -1,21 +1,16 @@
 package drupal
 
 import (
-	"bitbucket.org/ironstar/tokaido-cli/services/docker"
-	"bitbucket.org/ironstar/tokaido-cli/system/fs"
+	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/system/ssh"
-
-	"log"
+	"fmt"
 )
 
 // DrushSSH SSH into the Drush container
 func DrushSSH() {
-	drushPort := docker.LocalPort("drush", "22")
+	config := conf.GetConfig()
 
-	client, err := ssh.DialWithKey("localhost:"+drushPort, "tok", fs.HomeDir()+"/.ssh/tok_ssh.key")
-	if err != nil {
-		log.Fatal(err)
-	}
+	ssh.ProcessTokConfig()
 
-	defer client.Close()
+	fmt.Printf("\nTo access Drush via SSH run `ssh %s.tok`\n\n", config.Project)
 }
