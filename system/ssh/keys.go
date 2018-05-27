@@ -1,6 +1,7 @@
-package system
+package ssh
 
 import (
+	"bitbucket.org/ironstar/tokaido-cli/system"
 	"bitbucket.org/ironstar/tokaido-cli/system/fs"
 
 	"crypto/rand"
@@ -19,8 +20,8 @@ var sshPriv = fs.HomeDir() + "/.ssh/tok_ssh.key"
 var sshPub = fs.HomeDir() + "/.ssh/tok_ssh.pub"
 var tokDir = fs.WorkDir() + "/.tok"
 
-// GenerateSSHKeys ...
-func GenerateSSHKeys() {
+// GenerateKeys ...
+func GenerateKeys() {
 	var _, err = os.Stat(sshPub)
 
 	// create file if not exists
@@ -33,8 +34,8 @@ func GenerateSSHKeys() {
 }
 
 func copyPub() {
-	CheckAndCreateFolder(tokDir)
-	CheckAndCreateFolder(tokDir + "/local")
+	system.CheckAndCreateFolder(tokDir)
+	system.CheckAndCreateFolder(tokDir + "/local")
 
 	fs.Copy(sshPub, tokDir+"/local/ssh_key.pub-copy")
 	replacePub()

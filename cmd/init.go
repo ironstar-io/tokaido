@@ -5,6 +5,7 @@ import (
 	"bitbucket.org/ironstar/tokaido-cli/services/docker"
 	"bitbucket.org/ironstar/tokaido-cli/services/unison"
 	"bitbucket.org/ironstar/tokaido-cli/system"
+	"bitbucket.org/ironstar/tokaido-cli/system/ssh"
 	"bitbucket.org/ironstar/tokaido-cli/utils"
 
 	"fmt"
@@ -26,7 +27,8 @@ var InitCmd = &cobra.Command{
 		`)
 
 		system.CheckDependencies()
-		system.GenerateSSHKeys()
+
+		ssh.GenerateKeys()
 
 		unison.DockerUp()
 		unison.CreateOrUpdatePrf()
