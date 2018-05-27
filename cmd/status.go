@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"bitbucket.org/ironstar/tokaido-cli/services/docker"
+	"bitbucket.org/ironstar/tokaido-cli/services/drupal"
+	"bitbucket.org/ironstar/tokaido-cli/system/ssh"
 	"bitbucket.org/ironstar/tokaido-cli/utils"
 
 	"github.com/spf13/cobra"
@@ -16,5 +18,9 @@ var StatusCmd = &cobra.Command{
 		utils.CheckCmdHard("docker-compose")
 
 		docker.Status()
+
+		ssh.CheckKey()
+
+		drupal.CheckContainer()
 	},
 }

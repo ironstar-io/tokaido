@@ -26,6 +26,11 @@ func Status() {
 	utils.StdoutCmd("docker-compose", "ps")
 }
 
+// CheckAllContainers ...
+func CheckAllContainers() {
+
+}
+
 // LocalPort - Return the local port of a container
 func LocalPort(containerName string, containerPort string) string {
 	// Example return: "unison:32757"

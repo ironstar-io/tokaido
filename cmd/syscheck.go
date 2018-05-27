@@ -21,7 +21,7 @@ var SyscheckCmd = &cobra.Command{
 🚅  Checking Drupal for compatibility with Tokaido
 		`)
 
-		drupal.Check()
+		drupal.CheckLocal()
 
 		fmt.Println(`
 🚉  Drupal compatibility checks complete!

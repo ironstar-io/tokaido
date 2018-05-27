@@ -1,7 +1,9 @@
 package drupal
 
 import (
+	"bitbucket.org/ironstar/tokaido-cli/services/docker"
 	"bitbucket.org/ironstar/tokaido-cli/system/fs"
+	"bitbucket.org/ironstar/tokaido-cli/utils"
 
 	"bufio"
 	"fmt"
@@ -18,8 +20,8 @@ var drupalDir = fs.WorkDir() + "/docroot/core/lib/Drupal.php"
 var validDrupalRange = ">=8.5.x"
 var checkFailMsg = "\n⚠️  There were some problems detected during the system checks. This won't stop you from running any Tokaido commands, but they may not behave as you were expecting.\n\n"
 
-// Check ...
-func Check() {
+// CheckLocal ...
+func CheckLocal() {
 	if _, err := os.Stat(drupalDir); os.IsNotExist(err) {
 		fmt.Println("  ✘  A Drupal installation was not found")
 		fmt.Printf(checkFailMsg)
@@ -29,6 +31,32 @@ func Check() {
 	fmt.Println("  ✓  A Drupal installation was found")
 
 	checkDrupalVersion()
+}
+
+// CheckContainer ...
+func CheckContainer() {
+	haproxyPort := docker.LocalPort("haproxy", "8443")
+
+	drupalInstalled := utils.BashStringCmd(`curl -sko /dev/null -I -w"%{http_code}" https://localhost:` + haproxyPort + ` | grep 302`)
+	if drupalInstalled == "true" {
+		fmt.Println("  ✓  Drupal is listening on HTTPS")
+		return
+	}
+
+	fmt.Printf(`  ✘  Drupal is not installed
+
+Tokaido is running but it looks like your Drupal site isn't installed.
+
+You can install Drupal by using the web interface at https://project-name:port_number. Note that your database credentials should be:
+
+Hostname: mysql
+Username: tokaido
+Password: tokaido
+Database name: tokaido
+
+It might be easier to use Drush to install your site, which you can do by connecting to SSH "tok ssh" and running "drush site-install"
+	`)
+	return
 }
 
 // checkDrupalVersion ...
