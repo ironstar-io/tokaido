@@ -25,20 +25,20 @@ var tokDir = fs.WorkDir() + "/.tok"
 // CheckKey ...
 func CheckKey() {
 	localPort := docker.LocalPort("drush", "22")
-	cmdStr := `ssh tok@localhost -p ` + localPort + ` -i ` + fs.HomeDir() + `/.ssh/tok_ssh.key -C "echo 1" | echo $?`
+	cmdStr := `ssh tok@localhost -p ` + localPort + ` -i $HOME/.ssh/tok_ssh.key  -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -C "echo 1" | echo $?`
 
-	keyResult := utils.BashStringCmd(cmdStr)
+	keyResult := utils.SilentBashStringCmd(cmdStr)
 	if keyResult == "1" {
 		fmt.Println("  ✓  SSH access is configured")
 		return
 	}
 
-	fmt.Printf(`  ✘  SSH access not configured
+	fmt.Println(`  ✘  SSH access not configured
 
 Tokaido is running but your SSH access to the Drush container looks broken.
 Make sure you have an SSH public key uploaded in "./.tok/local/ssh_key.pub".
 
-You should be able to run "tok repair" to attempt to fix this automatically.
+You should be able to run "tok repair" to attempt to fix this automatically
 	`)
 	return
 }

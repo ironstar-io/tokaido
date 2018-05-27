@@ -40,13 +40,20 @@ func NoFatalStdoutCmd(name string, args ...string) string {
 	return strings.TrimSpace(string(stdoutStderr))
 }
 
-// BashStringCmd - Execute a bash command from a string `bash -c "(cmd)"`
-func BashStringCmd(cmdStr string) string {
+// SilentBashStringCmd - Execute a bash command from a string `bash -c "(cmd)" with no log output`
+func SilentBashStringCmd(cmdStr string) string {
 	cmd := exec.Command("bash", "-c", cmdStr)
 	cmd.Dir = fs.WorkDir()
 	stdoutStderr, _ := cmd.CombinedOutput()
 
+	return strings.TrimSpace(string(stdoutStderr))
+}
+
+// BashStringCmd - Execute a bash command from a string `bash -c "(cmd)"`
+func BashStringCmd(cmdStr string) string {
+	stdoutStderr := SilentBashStringCmd(cmdStr)
+
 	fmt.Printf("%s\n", stdoutStderr)
 
-	return strings.TrimSpace(string(stdoutStderr))
+	return string(stdoutStderr)
 }

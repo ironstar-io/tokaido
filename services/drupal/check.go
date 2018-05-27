@@ -43,7 +43,7 @@ func CheckContainer() {
 		return
 	}
 
-	fmt.Printf(`  ✘  Drupal is not installed
+	fmt.Println(`  ✘  Drupal is not installed
 
 Tokaido is running but it looks like your Drupal site isn't installed.
 
@@ -54,8 +54,7 @@ Username: tokaido
 Password: tokaido
 Database name: tokaido
 
-It might be easier to use Drush to install your site, which you can do by connecting to SSH "tok ssh" and running "drush site-install"
-	`)
+It might be easier to use Drush to install your site, which you can do by connecting to SSH "tok ssh" and running "drush site-install"`)
 	return
 }
 
