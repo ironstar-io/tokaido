@@ -2,6 +2,8 @@ package docker
 
 import (
 	"bitbucket.org/ironstar/tokaido-cli/utils"
+
+	"strings"
 )
 
 // Up - Lift all containers in the compose file
@@ -26,5 +28,8 @@ func Status() {
 
 // LocalPort - Return the local port of a container
 func LocalPort(containerName string, containerPort string) string {
-	return utils.SilentStdoutCmd("bash", "-c", "docker-compose port "+containerName+" "+containerPort+" | cut -d':' -f2")
+	// Example return: "unison:32757"
+	containerStr := utils.SilentStdoutCmd("docker-compose", "port", containerName, containerPort)
+
+	return strings.Split(containerStr, ":")[1]
 }
