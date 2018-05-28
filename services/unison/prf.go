@@ -42,6 +42,15 @@ func GetPrfPath() string {
 	return fs.HomeDir() + "/.unison/" + config.Project
 }
 
+func checkDotUnison() {
+	dotUnison = fs.HomeDir() + "/.unison"
+	var _, err = os.Stat(dotUnison)
+
+	if os.IsNotExist(err) {
+		os.Mkdir(dotUnison, os.ModePerm)
+	}
+}
+
 // CreateOrUpdatePrf - Create or Update a `.prf` file in `~/.unison/`
 func CreateOrUpdatePrf() {
 	// detect if file exists
@@ -79,6 +88,8 @@ func generatePrf() {
 
 // createPrf - Write generated `.prf` file to `~/.unison/`
 func createPrf(body string, path string) {
+	checkDotUnison()
+
 	var file, err = os.Create(path)
 	if err != nil {
 		log.Fatal("Create: ", err)
