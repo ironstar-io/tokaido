@@ -17,6 +17,6 @@ var SSHCmd = &cobra.Command{
 		utils.CheckCmdHard("docker-compose")
 		conf.LoadConfig(cmd)
 
-		drupal.DrushSSH()
+		drupal.ConfigureSSH()
 	},
 }

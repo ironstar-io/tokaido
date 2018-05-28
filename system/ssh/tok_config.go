@@ -5,11 +5,11 @@ import (
 	"bitbucket.org/ironstar/tokaido-cli/services/docker"
 	"bitbucket.org/ironstar/tokaido-cli/system/fs"
 
-	// "bufio"
+	"bufio"
 	"bytes"
 	"log"
 	"os"
-	// "strings"
+	"strings"
 	"text/template"
 )
 
@@ -26,7 +26,7 @@ var tokConfigTmpStr = `Host {{.ProjectName}}.tok
     IdentityFile ~/.ssh/tok_ssh.key
     ForwardAgent yes
     StrictHostKeyChecking no
-	UserKnownHostsFile /dev/null
+    UserKnownHostsFile /dev/null
 
 `
 
@@ -43,14 +43,15 @@ func createOrUpdate() {
 
 	// create file if not exists
 	if os.IsNotExist(err) {
-		generateTokConfig()
+		tpl := generateTokConfig()
+		createTokConfig(tpl, tokConfigFile)
 	} else {
 		updateTokConfig()
 	}
 }
 
 // generateTokConfig - Generate a `tok_config` file
-func generateTokConfig() {
+func generateTokConfig() string {
 	config := conf.GetConfig()
 	s := tokConf{DrushPort: docker.LocalPort("drush", "22"), ProjectName: config.Project}
 
@@ -59,16 +60,14 @@ func generateTokConfig() {
 
 	if err != nil {
 		log.Fatal("Parse: ", err)
-		return
 	}
 
 	var tpl bytes.Buffer
 	if err := tmpl.Execute(&tpl, s); err != nil {
 		log.Fatal("Parse: ", err)
-		return
 	}
 
-	createTokConfig(tpl.String(), tokConfigFile)
+	return tpl.String()
 }
 
 // createTokConfig - Write generated config file to `~/.ssh/`
@@ -85,29 +84,46 @@ func createTokConfig(body string, path string) {
 
 // updateTokConfig - Update a `tok_config` file in `~/.ssh/`
 func updateTokConfig() {
-	// TODO
+	f, err := os.Open(tokConfigFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer f.Close()
 
-	// f, err := os.Open(sshConfigFile)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// defer f.Close()
+	config := conf.GetConfig()
 
-	// portLine := "root = socket://localhost:"
-	// // Splits on newlines by default.
-	// scanner := bufio.NewScanner(f)
+	hostLine := "Host " + config.Project + ".tok"
+	// Splits on newlines by default.
+	scanner := bufio.NewScanner(f)
 
-	// var prfString []string
-	// for scanner.Scan() {
-	// 	if strings.Contains(scanner.Text(), portLine) {
-	// 		prfString = append(prfString, portLine+LocalPort())
-	// 	} else {
-	// 		prfString = append(prfString, scanner.Text())
-	// 	}
-	// }
+	var buffer bytes.Buffer
+	block := []string{}
+	replace := false
+	for scanner.Scan() {
+		l := scanner.Text()
 
-	// createTokConfig(strings.Join(prfString, "\n"), tokConfigFile+"-tmp")
-	// replaceTokConfig()
+		if strings.Contains(scanner.Text(), hostLine) {
+			replace = true
+		}
+
+		if len(strings.TrimSpace(l)) != 0 {
+			block = append(block, l)
+			continue
+		}
+
+		if len(block) != 0 {
+			if replace == true {
+				buffer.Write([]byte(generateTokConfig()))
+			} else {
+				buffer.Write([]byte(strings.Join(block, " ")))
+			}
+			block = []string{}
+			replace = false
+		}
+	}
+
+	createTokConfig(buffer.String(), tokConfigFile+"-tmp")
+	replaceTokConfig()
 }
 
 // replaceTokConfig - Replace `~/.ssh/tok_config` with `~/.ssh/tok_config-tmp` file

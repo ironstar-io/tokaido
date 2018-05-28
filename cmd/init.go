@@ -3,6 +3,7 @@ package cmd
 import (
 	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/services/docker"
+	"bitbucket.org/ironstar/tokaido-cli/services/drupal"
 	"bitbucket.org/ironstar/tokaido-cli/services/unison"
 	"bitbucket.org/ironstar/tokaido-cli/system"
 	"bitbucket.org/ironstar/tokaido-cli/system/ssh"
@@ -35,6 +36,9 @@ var InitCmd = &cobra.Command{
 		unison.Sync()
 
 		docker.Up()
+
+		drupal.ConfigureSSH()
+
 		docker.Status()
 
 		fmt.Println(`

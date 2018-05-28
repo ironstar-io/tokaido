@@ -52,10 +52,10 @@ func prependTokInclude() {
 	scanner := bufio.NewScanner(f)
 
 	var confString []string
-	confString = append(confString, "Include ~/.ssh/tok_config\n")
 	for scanner.Scan() {
 		confString = append(confString, scanner.Text())
 	}
+	confString = append(confString, "\nInclude ~/.ssh/tok_config\n")
 
 	createTempConfig(strings.Join(confString, "\n"))
 	replaceConfig()

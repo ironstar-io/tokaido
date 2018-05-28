@@ -3,6 +3,7 @@ package cmd
 import (
 	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/services/docker"
+	"bitbucket.org/ironstar/tokaido-cli/services/drupal"
 	"bitbucket.org/ironstar/tokaido-cli/services/unison"
 	"bitbucket.org/ironstar/tokaido-cli/utils"
 
@@ -28,6 +29,8 @@ var UpCmd = &cobra.Command{
 		unison.CreateOrUpdatePrf()
 
 		docker.Up()
+
+		drupal.ConfigureSSH()
 
 		fmt.Println(`
 🚁  Tokaido lifted containers successfully!

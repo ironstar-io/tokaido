@@ -6,8 +6,8 @@ import (
 	"fmt"
 )
 
-// DrushSSH SSH into the Drush container
-func DrushSSH() {
+// ConfigureSSH - Configure `~/.ssh/config` and `~/.ssh/tok_config` to be ready for ssh access
+func ConfigureSSH() {
 	config := conf.GetConfig()
 
 	ssh.ProcessTokConfig()
