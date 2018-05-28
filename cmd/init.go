@@ -36,10 +36,9 @@ var InitCmd = &cobra.Command{
 		unison.Sync()
 
 		docker.Up()
+		docker.Status()
 
 		drupal.ConfigureSSH()
-
-		docker.Status()
 
 		fmt.Println(`
 🚉  Tokaido successfully initialized your project!
