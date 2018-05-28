@@ -97,29 +97,34 @@ func updateTokConfig() {
 	scanner := bufio.NewScanner(f)
 
 	var buffer bytes.Buffer
-	block := []string{}
-	replace := false
+	var block bytes.Buffer
+	replaceBlock := false
+	blockWritten := false
 	for scanner.Scan() {
 		l := scanner.Text()
 
 		if strings.Contains(scanner.Text(), hostLine) {
-			replace = true
+			replaceBlock = true
+			blockWritten = true
 		}
 
 		if len(strings.TrimSpace(l)) != 0 {
-			block = append(block, l)
+			block.Write([]byte(l + "\n"))
 			continue
 		}
 
-		if len(block) != 0 {
-			if replace == true {
-				buffer.Write([]byte(generateTokConfig()))
-			} else {
-				buffer.Write([]byte(strings.Join(block, " ")))
-			}
-			block = []string{}
-			replace = false
+		if replaceBlock == true {
+			buffer.Write([]byte(generateTokConfig()))
+		} else {
+			buffer.Write([]byte(block.String() + "\n"))
 		}
+
+		block.Reset()
+		replaceBlock = false
+	}
+
+	if blockWritten == false {
+		buffer.Write([]byte(generateTokConfig()))
 	}
 
 	createTokConfig(buffer.String(), tokConfigFile+"-tmp")
