@@ -43,7 +43,7 @@ func GetPrfPath() string {
 }
 
 func checkDotUnison() {
-	dotUnison = fs.HomeDir() + "/.unison"
+	dotUnison := fs.HomeDir() + "/.unison"
 	var _, err = os.Stat(dotUnison)
 
 	if os.IsNotExist(err) {
