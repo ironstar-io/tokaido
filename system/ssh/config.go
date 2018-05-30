@@ -4,7 +4,6 @@ import (
 	"bitbucket.org/ironstar/tokaido-cli/system/fs"
 
 	"bufio"
-	"bytes"
 	"log"
 	"os"
 	"strings"
@@ -52,13 +51,13 @@ func prependTokInclude() {
 	// Splits on newlines by default.
 	scanner := bufio.NewScanner(f)
 
-	var buffer bytes.Buffer
+	var confString []string
+	confString = append(confString, "Include ~/.ssh/tok_config\n")
 	for scanner.Scan() {
-		buffer.Write([]byte(scanner.Text() + "\n"))
+		confString = append(confString, scanner.Text())
 	}
-	buffer.Write([]byte("\nInclude ~/.ssh/tok_config\n"))
 
-	createTempConfig(buffer.String())
+	createTempConfig(strings.Join(confString, "\n"))
 	replaceConfig()
 }
 
