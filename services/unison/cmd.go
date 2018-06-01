@@ -11,7 +11,7 @@ import (
 func Sync() {
 	config := conf.GetConfig()
 
-	fmt.Println(`Running the initial synchronisation of your files with the container.`)
+	fmt.Println(`Running one time unison sync of your files with the container.`)
 
 	utils.NoFatalStdoutCmd("unison", config.Project, "-watch=false")
 }
