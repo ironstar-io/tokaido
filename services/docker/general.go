@@ -17,7 +17,7 @@ func LocalPort(containerName string, containerPort string) string {
 	CheckForTokComposeFile()
 
 	// Example return: "unison:32757"
-	containerStr := utils.SilentStdoutCmd("docker-compose", "port", containerName, containerPort)
+	containerStr := utils.SilentStdoutCmd("docker-compose", "-f", fs.WorkDir()+"/docker-compose.tok.yml", "port", containerName, containerPort)
 
 	return strings.Split(containerStr, ":")[1]
 }
