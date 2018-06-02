@@ -4,6 +4,7 @@ import (
 	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/services/docker"
 	"bitbucket.org/ironstar/tokaido-cli/system/fs"
+	"bitbucket.org/ironstar/tokaido-cli/system/ssh/templates"
 
 	"bufio"
 	"bytes"
@@ -19,16 +20,6 @@ type tokConf struct {
 }
 
 var tokConfigFile = fs.HomeDir() + "/.ssh/tok_config"
-var tokConfigTmpStr = `Host {{.ProjectName}}.tok
-    HostName localhost
-    Port {{.DrushPort}}
-    User tok
-    IdentityFile ~/.ssh/tok_ssh.key
-    ForwardAgent yes
-    StrictHostKeyChecking no
-    UserKnownHostsFile /dev/null
-
-`
 
 // ProcessTokConfig ...
 func ProcessTokConfig() {
@@ -56,7 +47,7 @@ func generateTokConfig() string {
 	s := tokConf{DrushPort: docker.LocalPort("drush", "22"), ProjectName: config.Project}
 
 	tmpl := template.New("tok_config")
-	tmpl, err := tmpl.Parse(tokConfigTmpStr)
+	tmpl, err := tmpl.Parse(sshtmpl.TokConfTmplStr)
 
 	if err != nil {
 		log.Fatal("Parse: ", err)

@@ -2,7 +2,6 @@ package unison
 
 import (
 	"bitbucket.org/ironstar/tokaido-cli/services/docker"
-	"bitbucket.org/ironstar/tokaido-cli/utils"
 
 	"fmt"
 	"log"
@@ -12,7 +11,7 @@ import (
 func DockerUp() {
 	fmt.Println("Firing up the Unison container!")
 
-	utils.StdoutCmd("docker-compose", "up", "-d", "unison")
+	docker.ComposeStdout("up", "-d", "unison")
 }
 
 // LocalPort - Return the local port for unison
