@@ -70,7 +70,7 @@ Database name: tokaido
 		return
 	}
 
-	// appendTokRef()
+	appendTokRef()
 	createSettingsTok()
 }
 
