@@ -63,6 +63,8 @@ services:
     image: mysql:5.7
     volumes_from:
       - syslog
+    ports:
+      - "3306"
     environment:
       MYSQL_DATABASE: tokaido
       MYSQL_USER: tokaido
