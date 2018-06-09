@@ -28,7 +28,7 @@ services:
       - nginx
   varnish:
     user: "1004"
-    image: tokaido/varnish:0.0.1
+    image: tokaido/varnish:0.0.2
     depends_on:
       - nginx
   nginx:
@@ -39,9 +39,11 @@ services:
       - syslog
     depends_on:
       - fpm
+    ports: 
+      - "8082"
   fpm:
     user: "1001"
-    image: tokaido/fpm:0.0.1
+    image: tokaido/fpm:0.0.2
     env_file: .env
     working_dir: /tokaido/site/
     volumes:
@@ -51,6 +53,10 @@ services:
       - syslog
     depends_on:
       - syslog
+    ports:
+      - "9000"
+    environment:
+      PHP_DISPLAY_ERRORS: "yes"
   memcache:
     image: memcached:1.5-alpine
   mysql:
