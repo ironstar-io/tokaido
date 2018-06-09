@@ -24,6 +24,7 @@ func init() {
 	rootCmd.AddCommand(IronstarCmd)
 	rootCmd.AddCommand(UpCmd)
 	rootCmd.AddCommand(DestroyCmd)
+	rootCmd.AddCommand(OpenCmd)
 	rootCmd.AddCommand(StopCmd)
 	rootCmd.AddCommand(SSHCmd)
 	rootCmd.AddCommand(SyscheckCmd)
