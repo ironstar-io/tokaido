@@ -1,4 +1,4 @@
-package linux
+package system
 
 import (
 	"bitbucket.org/ironstar/tokaido-cli/services/docker"
@@ -14,5 +14,13 @@ func OpenSite() {
 	if httpsPort == "" {
 		log.Fatal("Unable to obtain the HTTPS port number. The HAProxy container may be broken")
 	}
-	utils.NoFatalStdoutCmd("xdg-open", "https://localhost:"+httpsPort)
+	
+	var handler string
+	if utils.CheckOS() == "osx" {
+		handler = "open"
+	} else {
+		handler = "xdg-open"
+	}
+
+	utils.NoFatalStdoutCmd(handler, "https://localhost:"+httpsPort)
 }
