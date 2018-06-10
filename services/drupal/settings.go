@@ -2,6 +2,7 @@ package drupal
 
 import (
 	"bitbucket.org/ironstar/tokaido-cli/services/drupal/templates"
+	"bitbucket.org/ironstar/tokaido-cli/system"
 	"bitbucket.org/ironstar/tokaido-cli/system/fs"
 	"bitbucket.org/ironstar/tokaido-cli/utils"
 
@@ -12,6 +13,11 @@ import (
 	"os"
 	"strings"
 )
+
+type fileMasks struct {
+	DocrootDefault  os.FileMode
+	DocrootSettings os.FileMode
+}
 
 var docrootDefault = fs.WorkDir() + "/docroot/sites/default"
 var docrootSettingsPath = docrootDefault + "/settings.php"
@@ -31,7 +37,16 @@ Could not find a Drupal settings file located at "` + docrootSettingsPath + `", 
 	}
 
 	if containsTokRef() == false {
+		defaultMasks := fileMasks{
+			DocrootDefault:  system.GetPermissionsMask(docrootDefault),
+			DocrootSettings: system.GetPermissionsMask(docrootSettingsPath),
+		}
+
+		loosenFilePerimissions()
+
 		buildTokSettings()
+
+		restoreFilePerimissions(defaultMasks)
 	}
 }
 
@@ -57,7 +72,9 @@ func containsTokRef() bool {
 }
 
 func buildTokSettings() {
-	confirmCreate := utils.ConfirmationPrompt("Tokaido needs to create database connection settings for your site. May we add the file 'docroot/sites/default/settings.tok.php' and reference it from 'settings.php'?")
+	confirmCreate := utils.ConfirmationPrompt(`
+Tokaido needs to create database connection settings for your site. May we add the file 'docroot/sites/default/settings.tok.php' and reference it from 'settings.php'?`)
+
 	if confirmCreate == false {
 		fmt.Println(`
 No problem! Please make sure that you manually configure your Drupal site to use the following database connection details:
@@ -74,6 +91,20 @@ Database name: tokaido
 	createSettingsTok()
 }
 
+func loosenFilePerimissions() {
+	if fs.Writable(docrootDefault) == false {
+		fmt.Println("\nIt looks like Drupal has been installed before, this operation may need elevated privileges to complete. You may be requested to supply your password.")
+
+		os.Chmod(docrootDefault, 0770)
+		os.Chmod(docrootSettingsPath, 0660)
+	}
+}
+
+func restoreFilePerimissions(defaultMasks fileMasks) {
+	os.Chmod(docrootDefault, defaultMasks.DocrootDefault)
+	os.Chmod(docrootSettingsPath, defaultMasks.DocrootSettings)
+}
+
 func appendTokRef() {
 	f, err := os.Open(docrootSettingsPath)
 	if err != nil {
@@ -88,7 +119,7 @@ func appendTokRef() {
 	var buffer bytes.Buffer
 	for scanner.Scan() {
 		if strings.Contains(scanner.Text(), closePHP) {
-			buffer.Write([]byte(drupaltmpl.DocrootSitesDefaultSettings))
+			buffer.Write([]byte(drupaltmpl.SettingsAppend))
 		} else {
 			buffer.Write([]byte(scanner.Text() + "\n"))
 		}
@@ -124,7 +155,7 @@ func createSettingsTok() {
 		log.Fatal("Create: ", err)
 	}
 
-	_, _ = file.WriteString(drupaltmpl.DocrootSitesDefaultSettingsTok)
+	_, _ = file.WriteString(drupaltmpl.SettingsTok)
 
 	defer file.Close()
 }
