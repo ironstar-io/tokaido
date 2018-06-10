@@ -14,12 +14,12 @@ services:
     volumes:
       - /tokaido/site
   syslog:
-    image: tokaido/syslog:0.0.1
+    image: tokaido/syslog:latest
     volumes:
       - /tokaido/logs
   haproxy:
     user: "1005"
-    image: tokaido/haproxy:0.0.1
+    image: tokaido/haproxy:latest
     ports:
       - "8080"
       - "8443"
@@ -28,12 +28,12 @@ services:
       - nginx
   varnish:
     user: "1004"
-    image: tokaido/varnish:0.0.2
+    image: tokaido/varnish:latest
     depends_on:
       - nginx
   nginx:
     user: "1002"
-    image: tokaido/nginx:0.0.1
+    image: tokaido/nginx:latest
     volumes_from:
       - unison
       - syslog
@@ -43,11 +43,8 @@ services:
       - "8082"
   fpm:
     user: "1001"
-    image: tokaido/fpm:0.0.2
-    env_file: .env
+    image: tokaido/fpm:latest
     working_dir: /tokaido/site/
-    volumes:
-      - ./.env:/tokaido/config/.env
     volumes_from:
       - unison
       - syslog
@@ -71,14 +68,11 @@ services:
       MYSQL_PASSWORD: tokaido
       MYSQL_ROOT_PASSWORD: tokaido
   drush:
-    env_file: .env
-    image: tokaido/drush:0.0.1
+    image: tokaido/drush:latest
     hostname: 'tokaido'
     ports:
       - "22"
     working_dir: /tokaido/site
-    volumes:
-      - ./.env:/tokaido/config/.env
     volumes_from:
       - unison
       - syslog
