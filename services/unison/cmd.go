@@ -11,7 +11,7 @@ import (
 func Sync() {
 	config := conf.GetConfig()
 
-	fmt.Println(`Running one time unison sync of your files with the container.`)
+	fmt.Println(`🚝  Running a one time Unison sync between your system and the Tokaido environment`)
 
 	utils.NoFatalStdoutCmd("unison", config.Project, "-watch=false")
 }

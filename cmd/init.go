@@ -23,9 +23,7 @@ var InitCmd = &cobra.Command{
 		utils.CheckCmdHard("docker-compose")
 		conf.LoadConfig(cmd)
 
-		fmt.Println(`
-🚅  Tokaido is initializing your project!
-		`)
+		fmt.Println(`🚅  Tokaido is initializing your project!`)
 
 		system.CheckDependencies()
 
@@ -39,9 +37,11 @@ var InitCmd = &cobra.Command{
 		docker.Status()
 
 		drupal.ConfigureSSH()
+		config := conf.GetConfig()
 
-		fmt.Println(`
-🚉  Tokaido successfully initialized your project!
-		`)
+		fmt.Println(`🚉  Tokaido successfully initialised your environment!`)
+		fmt.Println(`🌎  Check out https://docs.tokaido.io/environments for tips on managing your Tokaido environment`)
+		fmt.Println(`⌚  Run "tok watch" to keep files in your local system and the Tokaido environment synchronised`)
+		fmt.Printf("💻  To access Drush via SSH run ssh %s.tok", config.Project)
 	},
 }

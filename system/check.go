@@ -13,7 +13,6 @@ import (
 func CheckDependencies() {
 	var GOOS = utils.CheckOS()
 
-	fmt.Println("Checking required dependencies")
 	if GOOS == "linux" {
 		linux.CheckDependencies()
 	}
@@ -21,6 +20,8 @@ func CheckDependencies() {
 	if GOOS == "osx" {
 		osx.CheckDependencies()
 	}
+
+	fmt.Println(`🤹‍️‍️  System readiness check successful`)
 }
 
 // CheckAndCreateFolder - Check existence of `./.tok` folder

@@ -29,5 +29,5 @@ func ComposeStdout(args ...string) {
 	composeFile := []string{"-f", fs.WorkDir() + "/docker-compose.tok.yml"}
 	composeParams := append(composeFile, args...)
 
-	utils.StdoutCmd("docker-compose", composeParams...)
+	utils.SilentStdoutCmd("docker-compose", composeParams...)
 }
