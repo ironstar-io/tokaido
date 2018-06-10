@@ -1,36 +1,16 @@
 package system
 
 import (
-	"bitbucket.org/ironstar/tokaido-cli/system/linux"
-	"bitbucket.org/ironstar/tokaido-cli/system/osx"
-	"bitbucket.org/ironstar/tokaido-cli/utils"
-	"fmt"
-	"log"
-
+	"errors"
 	"os"
-	"strconv"
-	"strings"
 )
 
 // GetPermissionsMask - Return the permissions mask for a file/directory
-func GetPermissionsMask(path string) os.FileMode {
-	var permissionString string
-	if utils.CheckOS() == "osx" {
-		permissionString = osx.GetPermissionsMask(path)
-	} else {
-		permissionString = linux.GetPermissionsMask(path)
-	}
-
-	maskString := strings.Split(permissionString, " ")[0]
-	fmt.Println(permissionString)
-	fmt.Println(maskString)
-	if len(maskString) == 3 {
-		maskString = "0" + maskString
-	}
-	maskInt, err := strconv.ParseUint(maskString, 10, 32)
+func GetPermissionsMask(path string) (os.FileMode, error) {
+	file, err := os.Stat(path)
 	if err != nil {
-		log.Fatal("A fatal error has occurred when processing file permissions", err)
+		return 0, errors.New("Tokaido doesn't have the required permissions on the file '" + path + "'")
 	}
 
-	return os.FileMode(maskInt)
+	return file.Mode().Perm(), nil
 }

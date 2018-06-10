@@ -36,18 +36,29 @@ Could not find a Drupal settings file located at "` + docrootSettingsPath + `", 
 		return
 	}
 
-	if containsTokRef() == false {
-		defaultMasks := fileMasks{
-			DocrootDefault:  system.GetPermissionsMask(docrootDefault),
-			DocrootSettings: system.GetPermissionsMask(docrootSettingsPath),
-		}
-
-		loosenFilePerimissions()
-
-		buildTokSettings()
-
-		restoreFilePerimissions(defaultMasks)
+	defaultMasks, maskErr := processFilePerimissions()
+	if maskErr != nil {
+		permissionErrMsg(maskErr.Error())
+		return
 	}
+
+	if containsTokRef() == false {
+		buildTokSettings()
+	}
+
+	restoreFilePerimissions(defaultMasks)
+}
+
+func permissionErrMsg(path string) {
+	fmt.Printf(`
+%s
+Please make sure that you manually configure your Drupal site to use the following database connection details:
+
+Hostname: mysql
+Username: tokaido
+Password: tokaido
+Database name: tokaido
+	`, path)
 }
 
 func containsTokRef() bool {
@@ -91,13 +102,31 @@ Database name: tokaido
 	createSettingsTok()
 }
 
-func loosenFilePerimissions() {
+func processFilePerimissions() (fileMasks, error) {
+	var emptyStruct fileMasks
+	docrootDefaultMask, dirMaskErr := system.GetPermissionsMask(docrootDefault)
+	if dirMaskErr != nil {
+		return emptyStruct, dirMaskErr
+	}
+
+	docrootSettingsMask, settingsMaskErr := system.GetPermissionsMask(docrootSettingsPath)
+	if settingsMaskErr != nil {
+		return emptyStruct, settingsMaskErr
+	}
+
+	defaultMasks := fileMasks{
+		DocrootDefault:  docrootDefaultMask,
+		DocrootSettings: docrootSettingsMask,
+	}
+
 	if fs.Writable(docrootDefault) == false {
 		fmt.Println("\nIt looks like Drupal has been installed before, this operation may need elevated privileges to complete. You may be requested to supply your password.")
 
 		os.Chmod(docrootDefault, 0770)
 		os.Chmod(docrootSettingsPath, 0660)
 	}
+
+	return defaultMasks, nil
 }
 
 func restoreFilePerimissions(defaultMasks fileMasks) {
