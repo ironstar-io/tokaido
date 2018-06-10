@@ -6,9 +6,7 @@ import (
 
 // Up - Lift all containers in the compose file
 func Up() {
-	fmt.Println(`
-🚡  First time lifting your containers? There's a few images to download, this might take some time.
-	`)
+	fmt.Println(`🚡  First time lifting your containers? There's a few images to download, this might take some time.`)
 
 	ComposeStdout("up", "-d")
 }

@@ -5,7 +5,6 @@ import (
 	"bitbucket.org/ironstar/tokaido-cli/system/osx"
 	"bitbucket.org/ironstar/tokaido-cli/utils"
 
-	"fmt"
 	"os"
 )
 
@@ -21,7 +20,7 @@ func CheckDependencies() {
 		osx.CheckDependencies()
 	}
 
-	fmt.Println(`🤹‍️‍️  System readiness check successful`)
+	// fmt.Println(`🤹‍️‍️  System readiness check successful`)
 }
 
 // CheckAndCreateFolder - Check existence of `./.tok` folder
