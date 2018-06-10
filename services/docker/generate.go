@@ -17,9 +17,7 @@ func CheckForTokComposeFile() {
 
 	// create file if not exists
 	if os.IsNotExist(err) {
-		fmt.Println(`
-🏯  Generating a new docker-compose.tok.yml file
-		`)
+		fmt.Println(`🏯  Generating a new docker-compose.tok.yml file`)
 
 		createTokCompose()
 	}
