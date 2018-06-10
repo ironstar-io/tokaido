@@ -31,6 +31,8 @@ services:
     image: tokaido/varnish:latest
     depends_on:
       - nginx
+    volumes_from:
+      - syslog
   nginx:
     user: "1002"
     image: tokaido/nginx:latest
