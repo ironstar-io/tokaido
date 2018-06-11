@@ -9,7 +9,6 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
-	"log"
 	"os"
 	"strings"
 )
@@ -25,10 +24,14 @@ var docrootSettingsPath = docrootDefault + "/settings.php"
 // CheckSettings ...
 func CheckSettings() {
 	// detect if file exists
-	var _, err = os.Stat(docrootSettingsPath)
+	var _, settingPathErr = os.Stat(docrootSettingsPath)
+	if settingPathErr != nil {
+		permissionErrMsg(settingPathErr.Error())
+		return
+	}
 
 	// create file if not exists
-	if os.IsNotExist(err) {
+	if os.IsNotExist(settingPathErr) {
 		fmt.Printf(`
 Could not find a Drupal settings file located at "` + docrootSettingsPath + `", database connection may not work!"
 		`)
@@ -62,10 +65,12 @@ Database name: tokaido
 }
 
 func containsTokRef() bool {
-	f, err := os.Open(docrootSettingsPath)
-	if err != nil {
-		log.Fatal(err)
+	f, openErr := os.Open(docrootSettingsPath)
+	if openErr != nil {
+		fmt.Println(openErr)
+		return true
 	}
+
 	defer f.Close()
 
 	portLine := "/settings.tok.php"
@@ -122,23 +127,41 @@ func processFilePerimissions() (fileMasks, error) {
 	if fs.Writable(docrootDefault) == false {
 		fmt.Println("\nIt looks like Drupal has been installed before, this operation may need elevated privileges to complete. You may be requested to supply your password.")
 
-		os.Chmod(docrootDefault, 0770)
-		os.Chmod(docrootSettingsPath, 0660)
+		docrootChmodErr := os.Chmod(docrootDefault, 0770)
+		if docrootChmodErr != nil {
+			return emptyStruct, docrootChmodErr
+		}
+
+		settingsChmodErr := os.Chmod(docrootSettingsPath, 0660)
+		if settingsChmodErr != nil {
+			return emptyStruct, settingsChmodErr
+		}
 	}
 
 	return defaultMasks, nil
 }
 
 func restoreFilePerimissions(defaultMasks fileMasks) {
-	os.Chmod(docrootDefault, defaultMasks.DocrootDefault)
-	os.Chmod(docrootSettingsPath, defaultMasks.DocrootSettings)
+	docrootChmodErr := os.Chmod(docrootDefault, defaultMasks.DocrootDefault)
+	if docrootChmodErr != nil {
+		fmt.Println(docrootChmodErr)
+		return
+	}
+
+	settingsChmodErr := os.Chmod(docrootSettingsPath, defaultMasks.DocrootSettings)
+	if settingsChmodErr != nil {
+		fmt.Println(settingsChmodErr)
+		return
+	}
 }
 
 func appendTokRef() {
-	f, err := os.Open(docrootSettingsPath)
-	if err != nil {
-		log.Fatal(err)
+	f, openErr := os.Open(docrootSettingsPath)
+	if openErr != nil {
+		fmt.Println(openErr)
+		return
 	}
+
 	defer f.Close()
 
 	closePHP := "?>"
@@ -159,12 +182,17 @@ func appendTokRef() {
 }
 
 func createSettingsCopy(body string) {
-	var file, err = os.Create(docrootSettingsPath + "-copy")
-	if err != nil {
-		log.Fatal("Create: ", err)
+	var file, createErr = os.Create(docrootSettingsPath + "-copy")
+	if createErr != nil {
+		fmt.Println(createErr)
+		return
 	}
 
-	_, _ = file.WriteString(body)
+	_, writeErr := file.WriteString(body)
+	if writeErr != nil {
+		fmt.Println(writeErr)
+		return
+	}
 
 	defer file.Close()
 }
@@ -172,19 +200,32 @@ func createSettingsCopy(body string) {
 // replaceSettings - Replace `/docroot/sites/default/settings.php` with `/docroot/sites/default/settings.php-copy`
 func replaceSettings() {
 	// Remove the original settings file
-	os.Remove(docrootSettingsPath)
+	removeErr := os.Remove(docrootSettingsPath)
+	if removeErr != nil {
+		fmt.Println(removeErr)
+		return
+	}
 
 	// Rename `settings.php-copy` to be the new `settings.php` file
-	os.Rename(docrootSettingsPath+"-copy", docrootSettingsPath)
+	renameErr := os.Rename(docrootSettingsPath+"-copy", docrootSettingsPath)
+	if renameErr != nil {
+		fmt.Println(renameErr)
+		return
+	}
 }
 
 func createSettingsTok() {
-	var file, err = os.Create(docrootDefault + "/settings.tok.php")
-	if err != nil {
-		log.Fatal("Create: ", err)
+	var file, createErr = os.Create(docrootDefault + "/settings.tok.php")
+	if createErr != nil {
+		fmt.Println(createErr)
+		return
 	}
 
-	_, _ = file.WriteString(drupaltmpl.SettingsTok)
+	_, writeErr := file.WriteString(drupaltmpl.SettingsTok)
+	if writeErr != nil {
+		fmt.Println(writeErr)
+		return
+	}
 
 	defer file.Close()
 }
