@@ -29,6 +29,8 @@ var InitCmd = &cobra.Command{
 
 		ssh.GenerateKeys()
 
+		drupal.CheckSettings()
+
 		unison.DockerUp()
 		unison.CreateOrUpdatePrf()
 		unison.Sync()
