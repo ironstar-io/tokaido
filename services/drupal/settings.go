@@ -89,16 +89,26 @@ func containsTokRef() bool {
 
 func buildTokSettings() {
 	confirmCreate := utils.ConfirmationPrompt(`
-Tokaido needs to create database connection settings for your site. May we add the file 'docroot/sites/default/settings.tok.php' and reference it from 'settings.php'?`)
+Tokaido can now create database connection settings for your site. 
+Should Tokaido add the file 'docroot/sites/default/settings.tok.php' 
+and reference it from 'settings.php'?
+
+If you prefer not to do this automatically, we'll show you database connection 
+settings so that you can configure this manually.`)
 
 	if confirmCreate == false {
 		fmt.Println(`
-No problem! Please make sure that you manually configure your Drupal site to use the following database connection details:
+No problem! Please make sure that you manually configure your Drupal site to use
+the following database connection details:
 
 Hostname: mysql
 Username: tokaido
 Password: tokaido
 Database name: tokaido
+
+Please see the Tokaido environments guide at https://docs.tokaido.io/environments 
+for more information on setting up your Tokaido environment.
+
 		`)
 		return
 	}
