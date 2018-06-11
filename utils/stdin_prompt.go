@@ -16,14 +16,30 @@ func StdinPrompt(prompt string) string {
 	return text
 }
 
-// ConfirmationPrompt ...
-func ConfirmationPrompt(prompt string) bool {
-	response := StdinPrompt(prompt + " (Y/n): ")
+// ConfirmationPrompt - The 'weighting' param should be one of [ "y", "n" ].
+func ConfirmationPrompt(prompt string, weighting string) bool {
+	response := StdinPrompt(prompt + weightedString(weighting))
 	cutResponse := strings.ToLower(string([]rune(response)[0]))
+
+	if weighting == "n" {
+		if cutResponse == "y" {
+			return true
+		}
+
+		return false
+	}
 
 	if cutResponse == "n" {
 		return false
 	}
 
 	return true
+}
+
+func weightedString(weighting string) string {
+	if weighting == "y" {
+		return " (Y/n): "
+	}
+
+	return " (y/N): "
 }
