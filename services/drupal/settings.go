@@ -47,6 +47,7 @@ Could not find a Drupal settings file located at "` + docrootSettingsPath + `", 
 
 	if containsTokRef() == false {
 		buildTokSettings()
+		appendGitignore()
 	}
 
 	restoreFilePerimissions(defaultMasks)
@@ -242,4 +243,73 @@ func createSettingsTok() {
 	}
 
 	defer file.Close()
+}
+
+func appendGitignore() {
+	f, openErr := os.Open(fs.WorkDir() + "/.gitignore")
+	if openErr != nil {
+		fmt.Println("There was an issue finding your .gitignore file", openErr)
+		return
+	}
+
+	defer f.Close()
+
+	settingsFile := "docroot/sites/default/settings.php"
+	tokSettingsFile := "docroot/sites/default/settings.tok.php"
+	var settingsFound = false
+	var tokSettingsFound = false
+	var buffer bytes.Buffer
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan() {
+		if strings.Contains(scanner.Text(), settingsFile) {
+			settingsFound = true
+		} else if strings.Contains(scanner.Text(), tokSettingsFile) {
+			tokSettingsFound = true
+		}
+		buffer.Write([]byte(scanner.Text() + "\n"))
+	}
+
+	if settingsFound == false {
+		buffer.Write([]byte("/" + settingsFile + "\n"))
+	}
+
+	if tokSettingsFound == false {
+		buffer.Write([]byte("/" + tokSettingsFile + "\n"))
+	}
+
+	createGitignoreCopy(buffer.String())
+}
+
+func createGitignoreCopy(body string) {
+	var file, createErr = os.Create(fs.WorkDir() + "/.gitignore-copy")
+	if createErr != nil {
+		fmt.Println(createErr)
+		return
+	}
+
+	_, writeErr := file.WriteString(body)
+	if writeErr != nil {
+		fmt.Println(writeErr)
+		return
+	}
+
+	defer file.Close()
+
+	replaceGitignore()
+}
+
+func replaceGitignore() {
+	// Remove the original settings file
+	removeErr := os.Remove(fs.WorkDir() + "/.gitignore")
+	if removeErr != nil {
+		fmt.Println(removeErr)
+		return
+	}
+
+	// Rename `settings.php-copy` to be the new `settings.php` file
+	renameErr := os.Rename(fs.WorkDir()+"/.gitignore-copy", fs.WorkDir()+"/.gitignore")
+	if renameErr != nil {
+		fmt.Println(renameErr)
+		return
+	}
 }
