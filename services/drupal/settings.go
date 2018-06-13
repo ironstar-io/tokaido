@@ -89,11 +89,11 @@ func containsTokRef() bool {
 
 func buildTokSettings() {
 	confirmCreate := utils.ConfirmationPrompt(`
-Tokaido can now create database connection settings for your site. 
-Should Tokaido add the file 'docroot/sites/default/settings.tok.php' 
+Tokaido can now create database connection settings for your site.
+Should Tokaido add the file 'docroot/sites/default/settings.tok.php'
 and reference it from 'settings.php'?
 
-If you prefer not to do this automatically, we'll show you database connection 
+If you prefer not to do this automatically, we'll show you database connection
 settings so that you can configure this manually.`)
 
 	if confirmCreate == false {
@@ -106,7 +106,7 @@ Username: tokaido
 Password: tokaido
 Database name: tokaido
 
-Please see the Tokaido environments guide at https://docs.tokaido.io/environments 
+Please see the Tokaido environments guide at https://docs.tokaido.io/environments
 for more information on setting up your Tokaido environment.
 
 		`)
@@ -175,16 +175,20 @@ func appendTokRef() {
 	defer f.Close()
 
 	closePHP := "?>"
-	// Splits on newlines by default.
-	scanner := bufio.NewScanner(f)
-
+	var closeTagFound = false
 	var buffer bytes.Buffer
+	scanner := bufio.NewScanner(f)
 	for scanner.Scan() {
 		if strings.Contains(scanner.Text(), closePHP) {
+			closeTagFound = true
 			buffer.Write([]byte(drupaltmpl.SettingsAppend))
 		} else {
 			buffer.Write([]byte(scanner.Text() + "\n"))
 		}
+	}
+
+	if closeTagFound == false {
+		buffer.Write([]byte(drupaltmpl.SettingsAppend))
 	}
 
 	createSettingsCopy(buffer.String())
