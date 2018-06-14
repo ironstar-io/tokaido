@@ -6,8 +6,8 @@ import (
 )
 
 // Replace ...
-func Replace(path string, body string) {
-	if err := createCopy(path, body); err != nil {
+func Replace(path string, body []byte) {
+	if err := TouchByteArray(path+"-copy", body); err != nil {
 		escapeHatch(path)
 		return
 	}
@@ -16,23 +16,6 @@ func Replace(path string, body string) {
 		escapeHatch(path)
 		return
 	}
-}
-
-func createCopy(path string, body string) error {
-	file, err := os.Create(path + "-copy")
-	if err != nil {
-		fmt.Println("There was an issue creating a copy of this file: ", err)
-		return err
-	}
-
-	if _, err := file.WriteString(body); err != nil {
-		fmt.Println("There was an issue writing to a copy of this file: ", err)
-		return err
-	}
-
-	defer file.Close()
-
-	return nil
 }
 
 func replaceFile(path string) error {
