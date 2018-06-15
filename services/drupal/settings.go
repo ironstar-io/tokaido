@@ -19,115 +19,81 @@ type fileMasks struct {
 }
 
 var docrootDefault = fs.WorkDir() + "/docroot/sites/default"
-var docrootSettingsPath = docrootDefault + "/settings.php"
+var settingsPath = docrootDefault + "/settings.php"
+var settingsTokPath = docrootDefault + "/settings.tok.php"
 
 // CheckSettings ...
 func CheckSettings() {
-	// detect if file exists
-	var _, settingPathErr = os.Stat(docrootSettingsPath)
+	if checkExists(settingsPath) == false {
+		fmt.Printf(`
+Could not find a file located at "` + settingsPath + `", database connection may not work!"
+		`)
+		return
+	}
+
+	tokSettingsReferenced := fs.Contains(settingsPath, "/settings.tok.php")
+	tokSettingsExists := checkExists(settingsTokPath)
+
+	if tokSettingsReferenced == false || tokSettingsExists == false {
+		if allowBuildSettings() == false {
+			return
+		}
+	} else {
+		return
+	}
+
+	defaultMasks, err := processFilePerimissions()
+	if err != nil {
+		permissionErrMsg(err.Error())
+		return
+	}
+
+	if tokSettingsReferenced == false {
+		appendTokSettingsRef()
+	}
+
+	if tokSettingsExists == false {
+		createSettingsTok()
+	}
+
+	appendGitignore()
+	restoreFilePerimissions(defaultMasks)
+}
+
+func checkExists(path string) bool {
+	_, err := os.Stat(path)
+	if os.IsNotExist(err) {
+		return false
+	}
+
+	return true
+}
+
+func checkSettingsExist() {
+	_, settingPathErr := os.Stat(settingsPath)
 	if settingPathErr != nil {
 		permissionErrMsg(settingPathErr.Error())
 		return
 	}
-
-	// create file if not exists
 	if os.IsNotExist(settingPathErr) {
 		fmt.Printf(`
-Could not find a Drupal settings file located at "` + docrootSettingsPath + `", database connection may not work!"
-		`)
+Could not find a Drupal settings file located at "` + settingsPath + `", database connection may not work!"
+	`)
 
 		return
 	}
-
-	defaultMasks, maskErr := processFilePerimissions()
-	if maskErr != nil {
-		permissionErrMsg(maskErr.Error())
-		return
-	}
-
-	if containsTokRef() == false {
-		buildTokSettings()
-		appendGitignore()
-	}
-
-	restoreFilePerimissions(defaultMasks)
-}
-
-func permissionErrMsg(path string) {
-	fmt.Printf(`
-%s
-Please make sure that you manually configure your Drupal site to use the following database connection details:
-
-Hostname: mysql
-Username: tokaido
-Password: tokaido
-Database name: tokaido
-	`, path)
-}
-
-func containsTokRef() bool {
-	f, openErr := os.Open(docrootSettingsPath)
-	if openErr != nil {
-		fmt.Println(openErr)
-		return true
-	}
-
-	defer f.Close()
-
-	portLine := "/settings.tok.php"
-	// Splits on newlines by default.
-	scanner := bufio.NewScanner(f)
-
-	foundRef := false
-	for scanner.Scan() {
-		if strings.Contains(scanner.Text(), portLine) {
-			foundRef = true
-		}
-	}
-
-	return foundRef
-}
-
-func buildTokSettings() {
-	confirmCreate := utils.ConfirmationPrompt(`
-Tokaido can now create database connection settings for your site.
-Should Tokaido add the file 'docroot/sites/default/settings.tok.php'
-and reference it from 'settings.php'?
-
-If you prefer not to do this automatically, we'll show you database connection
-settings so that you can configure this manually.`)
-
-	if confirmCreate == false {
-		fmt.Println(`
-No problem! Please make sure that you manually configure your Drupal site to use
-the following database connection details:
-
-Hostname: mysql
-Username: tokaido
-Password: tokaido
-Database name: tokaido
-
-Please see the Tokaido environments guide at https://docs.tokaido.io/environments
-for more information on setting up your Tokaido environment.
-
-		`)
-		return
-	}
-
-	appendTokRef()
-	createSettingsTok()
 }
 
 func processFilePerimissions() (fileMasks, error) {
 	var emptyStruct fileMasks
-	docrootDefaultMask, dirMaskErr := system.GetPermissionsMask(docrootDefault)
-	if dirMaskErr != nil {
-		return emptyStruct, dirMaskErr
+	docrootDefaultMask, err := system.GetPermissionsMask(docrootDefault)
+	if err != nil {
+		return emptyStruct, err
 	}
 
-	docrootSettingsMask, settingsMaskErr := system.GetPermissionsMask(docrootSettingsPath)
-	if settingsMaskErr != nil {
-		return emptyStruct, settingsMaskErr
+	docrootSettingsMask, err := system.GetPermissionsMask(settingsPath)
+	if err != nil {
+		return emptyStruct, err
 	}
 
 	defaultMasks := fileMasks{
@@ -138,14 +104,12 @@ func processFilePerimissions() (fileMasks, error) {
 	if fs.Writable(docrootDefault) == false {
 		fmt.Println("\nIt looks like Drupal has been installed before, this operation may need elevated privileges to complete. You may be requested to supply your password.")
 
-		docrootChmodErr := os.Chmod(docrootDefault, 0770)
-		if docrootChmodErr != nil {
-			return emptyStruct, docrootChmodErr
+		if err := os.Chmod(docrootDefault, 0770); err != nil {
+			return emptyStruct, err
 		}
 
-		settingsChmodErr := os.Chmod(docrootSettingsPath, 0660)
-		if settingsChmodErr != nil {
-			return emptyStruct, settingsChmodErr
+		if err := os.Chmod(settingsPath, 0660); err != nil {
+			return emptyStruct, err
 		}
 	}
 
@@ -159,15 +123,15 @@ func restoreFilePerimissions(defaultMasks fileMasks) {
 		return
 	}
 
-	settingsChmodErr := os.Chmod(docrootSettingsPath, defaultMasks.DocrootSettings)
+	settingsChmodErr := os.Chmod(settingsPath, defaultMasks.DocrootSettings)
 	if settingsChmodErr != nil {
 		fmt.Println(settingsChmodErr)
 		return
 	}
 }
 
-func appendTokRef() {
-	f, openErr := os.Open(docrootSettingsPath)
+func appendTokSettingsRef() {
+	f, openErr := os.Open(settingsPath)
 	if openErr != nil {
 		fmt.Println(openErr)
 		return
@@ -182,73 +146,27 @@ func appendTokRef() {
 	for scanner.Scan() {
 		if strings.Contains(scanner.Text(), closePHP) {
 			closeTagFound = true
-			buffer.Write([]byte(drupaltmpl.SettingsAppend))
+			buffer.Write(drupaltmpl.SettingsAppend)
 		} else {
 			buffer.Write([]byte(scanner.Text() + "\n"))
 		}
 	}
 
 	if closeTagFound == false {
-		buffer.Write([]byte(drupaltmpl.SettingsAppend))
+		buffer.Write(drupaltmpl.SettingsAppend)
 	}
 
-	createSettingsCopy(buffer.String())
-	replaceSettings()
-}
-
-func createSettingsCopy(body string) {
-	var file, createErr = os.Create(docrootSettingsPath + "-copy")
-	if createErr != nil {
-		fmt.Println(createErr)
-		return
-	}
-
-	_, writeErr := file.WriteString(body)
-	if writeErr != nil {
-		fmt.Println(writeErr)
-		return
-	}
-
-	defer file.Close()
-}
-
-// replaceSettings - Replace `/docroot/sites/default/settings.php` with `/docroot/sites/default/settings.php-copy`
-func replaceSettings() {
-	// Remove the original settings file
-	removeErr := os.Remove(docrootSettingsPath)
-	if removeErr != nil {
-		fmt.Println(removeErr)
-		return
-	}
-
-	// Rename `settings.php-copy` to be the new `settings.php` file
-	renameErr := os.Rename(docrootSettingsPath+"-copy", docrootSettingsPath)
-	if renameErr != nil {
-		fmt.Println(renameErr)
-		return
-	}
+	fs.Replace(settingsPath, buffer.Bytes())
 }
 
 func createSettingsTok() {
-	var file, createErr = os.Create(docrootDefault + "/settings.tok.php")
-	if createErr != nil {
-		fmt.Println(createErr)
-		return
-	}
-
-	_, writeErr := file.WriteString(drupaltmpl.SettingsTok)
-	if writeErr != nil {
-		fmt.Println(writeErr)
-		return
-	}
-
-	defer file.Close()
+	fs.TouchByteArray(settingsTokPath, drupaltmpl.SettingsTok)
 }
 
 func appendGitignore() {
-	f, openErr := os.Open(fs.WorkDir() + "/.gitignore")
-	if openErr != nil {
-		fmt.Println("There was an issue finding your .gitignore file", openErr)
+	f, err := os.Open(fs.WorkDir() + "/.gitignore")
+	if err != nil {
+		fmt.Println("There was an issue finding your .gitignore file", err)
 		return
 	}
 
@@ -273,39 +191,45 @@ func appendGitignore() {
 `))
 	}
 
-	createGitignoreCopy(buffer.String())
+	fs.Replace("./.gitignore", buffer.Bytes())
 }
 
-func createGitignoreCopy(body string) {
-	var file, createErr = os.Create(fs.WorkDir() + "/.gitignore-copy")
-	if createErr != nil {
-		fmt.Println(createErr)
-		return
+func allowBuildSettings() bool {
+	confirmation := utils.ConfirmationPrompt(`
+Tokaido can now create database connection settings for your site.
+Should Tokaido add the file 'docroot/sites/default/settings.tok.php'
+and reference it from 'settings.php'?
+
+If you prefer not to do this automatically, we'll show you database connection
+settings so that you can configure this manually.`)
+
+	if confirmation == false {
+		fmt.Println(`
+No problem! Please make sure that you manually configure your Drupal site to use
+the following database connection details:
+
+Hostname: mysql
+Username: tokaido
+Password: tokaido
+Database name: tokaido
+
+Please see the Tokaido environments guide at https://docs.tokaido.io/environments
+for more information on setting up your Tokaido environment.
+
+		`)
 	}
 
-	_, writeErr := file.WriteString(body)
-	if writeErr != nil {
-		fmt.Println(writeErr)
-		return
-	}
-
-	defer file.Close()
-
-	replaceGitignore()
+	return confirmation
 }
 
-func replaceGitignore() {
-	// Remove the original settings file
-	removeErr := os.Remove(fs.WorkDir() + "/.gitignore")
-	if removeErr != nil {
-		fmt.Println(removeErr)
-		return
-	}
+func permissionErrMsg(errString string) {
+	fmt.Printf(`
+%s
+Please make sure that you manually configure your Drupal site to use the following database connection details:
 
-	// Rename `settings.php-copy` to be the new `settings.php` file
-	renameErr := os.Rename(fs.WorkDir()+"/.gitignore-copy", fs.WorkDir()+"/.gitignore")
-	if renameErr != nil {
-		fmt.Println(renameErr)
-		return
-	}
+Hostname: mysql
+Username: tokaido
+Password: tokaido
+Database name: tokaido
+	`, errString)
 }
