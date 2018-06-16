@@ -4,6 +4,7 @@ import (
 	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/services/docker"
 	"bitbucket.org/ironstar/tokaido-cli/services/drupal"
+	"bitbucket.org/ironstar/tokaido-cli/services/git"
 	"bitbucket.org/ironstar/tokaido-cli/services/unison"
 	"bitbucket.org/ironstar/tokaido-cli/system"
 	"bitbucket.org/ironstar/tokaido-cli/system/ssh"
@@ -30,6 +31,8 @@ var InitCmd = &cobra.Command{
 		ssh.GenerateKeys()
 
 		drupal.CheckSettings()
+
+		git.IgnoreDefaults()
 
 		unison.DockerUp()
 		unison.CreateOrUpdatePrf()
