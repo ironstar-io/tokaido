@@ -68,26 +68,10 @@ func checkExists(path string) bool {
 	return true
 }
 
-<<<<<<< HEAD
 func checkSettingsExist() {
 	_, settingPathErr := os.Stat(settingsPath)
 	if settingPathErr != nil {
 		permissionErrMsg(settingPathErr.Error())
-=======
-func buildTokSettings() {
-	confirmCreate := utils.ConfirmationPrompt(`
-Tokaido needs to create database connection settings for your site. May we add the file 'docroot/sites/default/settings.tok.php' and reference it from 'settings.php'?`, "y")
-
-	if confirmCreate == false {
-		fmt.Println(`
-No problem! Please make sure that you manually configure your Drupal site to use the following database connection details:
-
-Hostname: mysql
-Username: tokaido
-Password: tokaido
-Database name: tokaido
-		`)
->>>>>>> Add a confirm prompt to the destroy command. Apply weighting on confirmation prompts
 		return
 	}
 	if os.IsNotExist(settingPathErr) {
