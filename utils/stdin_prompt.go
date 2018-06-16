@@ -1,6 +1,8 @@
 package utils
 
 import (
+	"bitbucket.org/ironstar/tokaido-cli/conf"
+
 	"bufio"
 	"fmt"
 	"os"
@@ -18,6 +20,11 @@ func StdinPrompt(prompt string) string {
 
 // ConfirmationPrompt - The 'weighting' param should be one of [ "y", "n" ].
 func ConfirmationPrompt(prompt string, weighting string) bool {
+	config := conf.GetConfig()
+	if config.Force == true {
+		return true
+	}
+
 	response := StdinPrompt(prompt + weightedString(weighting))
 	cutResponse := strings.ToLower(string([]rune(response)[0]))
 
