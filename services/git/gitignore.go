@@ -13,7 +13,7 @@ import (
 
 // IgnoreDefaults - Append the baseline files that should be ignored in source control
 func IgnoreDefaults() {
-	AppendGitignore([]string{"docroot/sites/default/settings.tok.php", "docker-compose.tok.yml", ".tok/local"})
+	AppendGitignore([]string{"docroot/sites/*/settings.tok.php", "docker-compose.tok.yml", ".tok/local"})
 }
 
 // AppendGitignore ...
