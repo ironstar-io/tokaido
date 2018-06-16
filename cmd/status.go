@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/services/docker"
 	"bitbucket.org/ironstar/tokaido-cli/services/drupal"
 	"bitbucket.org/ironstar/tokaido-cli/system/ssh"
@@ -16,6 +17,7 @@ var StatusCmd = &cobra.Command{
 	Long:  "Checks the status of containers lifted against the projects' docker-compose.yml - `docker-compose ps`",
 	Run: func(cmd *cobra.Command, args []string) {
 		utils.CheckCmdHard("docker-compose")
+		conf.LoadConfig(cmd)
 
 		docker.Status()
 

@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/services/docker"
 	"bitbucket.org/ironstar/tokaido-cli/utils"
 
@@ -14,6 +15,7 @@ var DestroyCmd = &cobra.Command{
 	Long:  "Gracefully stop and destroy your Tokaido containers - `docker-compose down`",
 	Run: func(cmd *cobra.Command, args []string) {
 		utils.CheckCmdHard("docker-compose")
+		conf.LoadConfig(cmd)
 
 		docker.Down()
 	},

@@ -47,6 +47,7 @@ func RootCmd() *cobra.Command {
 	rootCmd.PersistentFlags().StringP("port", "p", "5000", "The port to use for local development")
 	rootCmd.PersistentFlags().StringP("project", "j", fs.Basename(), "The name of the project")
 	rootCmd.PersistentFlags().StringP("path", "t", fs.WorkDir(), "The project path")
+	rootCmd.PersistentFlags().BoolP("force", "", false, "Forcefully skip confirmation prompts with 'yes' response")
 
 	return &rootCmd
 }
