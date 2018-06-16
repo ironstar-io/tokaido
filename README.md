@@ -1,4 +1,4 @@
-# 🚅 TOKAIDO by Ironstar
+# 🚅 Tokaido by Ironstar
 
 A command line utility for quickly and painlessly spinning up your Drupal environment
 
@@ -19,11 +19,11 @@ TODO: Docker desktop install instructions
 TODO: Better instructions
 Tokaido is build in Golang 1.10.2
 
-* Install Go and dep with `brew install dep` (Latest go version is included)
-* Install package dependencies with `dep ensure`
-* Clone this repository
-* From the root of the cloned repo run `go build -o tok`
-* Your executable is now avaialable with `./tok [command]`
+- Install Go and dep with `brew install dep` (Latest go version is included)
+- Install package dependencies with `dep ensure`
+- Clone this repository
+- From the root of the cloned repo run `go build -o tok`
+- Your executable is now avaialable with `./tok [command]`
 
 Getting this message or something similar?
 
@@ -45,5 +45,5 @@ There are two versions of go installed on your system. Easiest is to remove the 
 
 The team at Ironstar
 
-* Mike Richardson (@otakumike)
-* Jimmy Cann (@yjimk)
+- Mike Richardson (@otakumike)
+- Jimmy Cann (@yjimk)
