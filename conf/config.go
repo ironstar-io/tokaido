@@ -13,6 +13,7 @@ type Config struct {
 	Config  string
 	Project string
 	Path    string
+	Force   bool
 }
 
 // LoadConfig loads the config from a file if specified, otherwise from the environment

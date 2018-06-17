@@ -1,6 +1,8 @@
 package docker
 
 import (
+	"bitbucket.org/ironstar/tokaido-cli/utils"
+
 	"fmt"
 )
 
@@ -18,7 +20,25 @@ func Stop() {
 
 // Down - Pull down all the containers in the compose file
 func Down() {
+	confirmDestroy := utils.ConfirmationPrompt(`
+Are you sure? Destroying your containers will delete the database inside Tokaido`, "n")
+
+	if confirmDestroy == false {
+		fmt.Println(`
+🍵  Exiting without change
+		`)
+		return
+	}
+
+	fmt.Println(`
+🚅  Tokaido is pulling down your containers!
+	`)
+
 	ComposeStdout("down")
+
+	fmt.Println(`
+🚉  Tokaido destroyed containers successfully!
+	`)
 }
 
 // Status - Print the container status to the console

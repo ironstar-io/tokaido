@@ -169,7 +169,7 @@ Should Tokaido add the file 'docroot/sites/default/settings.tok.php'
 and reference it from 'settings.php'?
 
 If you prefer not to do this automatically, we'll show you database connection
-settings so that you can configure this manually.`)
+settings so that you can configure this manually.`, "y")
 
 	if confirmation == false {
 		fmt.Println(`
