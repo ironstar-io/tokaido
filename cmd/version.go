@@ -11,8 +11,8 @@ import (
 // VersionCmd - `tok version`
 var VersionCmd = &cobra.Command{
 	Use:   "version",
-	Short: "TODO",
-	Long:  "TODO",
+	Short: "Print Tokdaido version information",
+	Long:  "Print Tokdaido version information including 'Build Date', 'Compiler' and 'Platform'",
 	Run: func(cmd *cobra.Command, args []string) {
 		info := version.Get()
 
