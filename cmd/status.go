@@ -17,6 +17,9 @@ var StatusCmd = &cobra.Command{
 	Long:  "Checks the status of containers lifted against the projects' docker-compose.yml - `docker-compose ps`",
 	Run: func(cmd *cobra.Command, args []string) {
 		utils.CheckCmdHard("docker-compose")
+
+		docker.HardCheckTokCompose()
+
 		conf.LoadConfig(cmd)
 
 		docker.Status()

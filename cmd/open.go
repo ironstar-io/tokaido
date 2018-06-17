@@ -1,8 +1,9 @@
 package cmd
 
 import (
-	"bitbucket.org/ironstar/tokaido-cli/system"
 	"bitbucket.org/ironstar/tokaido-cli/conf"
+	"bitbucket.org/ironstar/tokaido-cli/services/docker"
+	"bitbucket.org/ironstar/tokaido-cli/system"
 	"bitbucket.org/ironstar/tokaido-cli/utils"
 
 	"github.com/spf13/cobra"
@@ -17,6 +18,8 @@ var OpenCmd = &cobra.Command{
 		conf.LoadConfig(cmd)
 
 		utils.CheckCmdHard("docker-compose")
+
+		docker.HardCheckTokCompose()
 
 		system.OpenSite()
 	},

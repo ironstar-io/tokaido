@@ -19,6 +19,9 @@ var UpCmd = &cobra.Command{
 	Long:  "Runs in unison in the background - `docker-compose up -d`",
 	Run: func(cmd *cobra.Command, args []string) {
 		utils.CheckCmdHard("docker-compose")
+
+		docker.HardCheckTokCompose()
+
 		conf.LoadConfig(cmd)
 
 		fmt.Println(`
