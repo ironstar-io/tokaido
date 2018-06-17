@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"bitbucket.org/ironstar/tokaido-cli/conf"
+	"bitbucket.org/ironstar/tokaido-cli/services/docker"
 	"bitbucket.org/ironstar/tokaido-cli/services/drupal"
 	"bitbucket.org/ironstar/tokaido-cli/utils"
 
@@ -15,6 +16,9 @@ var SSHCmd = &cobra.Command{
 	Long:  "SSH into your Drush container using the Tokaido generated key",
 	Run: func(cmd *cobra.Command, args []string) {
 		utils.CheckCmdHard("docker-compose")
+
+		docker.HardCheckTokCompose()
+
 		conf.LoadConfig(cmd)
 
 		drupal.ConfigureSSH()

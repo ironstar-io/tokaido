@@ -14,8 +14,6 @@ func CheckAllContainers() {
 
 // LocalPort - Return the local port of a container
 func LocalPort(containerName string, containerPort string) string {
-	CheckForTokComposeFile()
-
 	// Example return: "unison:32757"
 	containerStr := utils.SilentStdoutCmd("docker-compose", "-f", fs.WorkDir()+"/docker-compose.tok.yml", "port", containerName, containerPort)
 
@@ -24,8 +22,6 @@ func LocalPort(containerName string, containerPort string) string {
 
 // ComposeStdout - Convenience method for docker-compose shell commands
 func ComposeStdout(args ...string) {
-	CheckForTokComposeFile()
-
 	composeFile := []string{"-f", fs.WorkDir() + "/docker-compose.tok.yml"}
 	composeParams := append(composeFile, args...)
 

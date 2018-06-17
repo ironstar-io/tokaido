@@ -11,26 +11,27 @@ import (
 
 var tokComposePath = fs.WorkDir() + "/docker-compose.tok.yml"
 
-// CheckForTokComposeFile ...
-func CheckForTokComposeFile() {
+// HardCheckTokCompose ...
+func HardCheckTokCompose() {
+	var _, err = os.Stat(tokComposePath)
+
+	// create file if not exists
+	if os.IsNotExist(err) {
+		fmt.Println(`
+🤷‍  No docker-compose.tok.yml file found. Have you run 'tok init'?
+		`)
+		log.Fatal("Exiting without change")
+	}
+}
+
+// FindOrCreateTokCompose ...
+func FindOrCreateTokCompose() {
 	var _, err = os.Stat(tokComposePath)
 
 	// create file if not exists
 	if os.IsNotExist(err) {
 		fmt.Println(`🏯  Generating a new docker-compose.tok.yml file`)
 
-		createTokCompose()
+		fs.TouchByteArray(tokComposePath, dockertmpl.TokComposeYml)
 	}
-}
-
-// createTokCompose
-func createTokCompose() {
-	var file, err = os.Create(tokComposePath)
-	if err != nil {
-		log.Fatal("Create: ", err)
-	}
-
-	_, _ = file.WriteString(dockertmpl.TokComposeYml)
-
-	defer file.Close()
 }

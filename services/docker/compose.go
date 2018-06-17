@@ -21,7 +21,7 @@ func Stop() {
 // Down - Pull down all the containers in the compose file
 func Down() {
 	confirmDestroy := utils.ConfirmationPrompt(`
-Are you sure? Destroying your containers will delete the database inside Tokaido`, "n")
+🔥	This will also destroy the database inside your Tokaido environment. Are you sure? (y/N):`, "n")
 
 	if confirmDestroy == false {
 		fmt.Println(`

@@ -17,6 +17,9 @@ var StopCmd = &cobra.Command{
 	Long:  "Gracefully stop your containers - `docker-compose stop`",
 	Run: func(cmd *cobra.Command, args []string) {
 		utils.CheckCmdHard("docker-compose")
+
+		docker.HardCheckTokCompose()
+
 		conf.LoadConfig(cmd)
 
 		fmt.Println(`

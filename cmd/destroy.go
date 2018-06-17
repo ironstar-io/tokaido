@@ -15,6 +15,9 @@ var DestroyCmd = &cobra.Command{
 	Long:  "Gracefully stop and destroy your Tokaido containers - `docker-compose down`",
 	Run: func(cmd *cobra.Command, args []string) {
 		utils.CheckCmdHard("docker-compose")
+
+		docker.HardCheckTokCompose()
+
 		conf.LoadConfig(cmd)
 
 		docker.Down()

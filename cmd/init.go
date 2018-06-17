@@ -28,6 +28,8 @@ var InitCmd = &cobra.Command{
 
 		system.CheckDependencies()
 
+		docker.FindOrCreateTokCompose()
+
 		ssh.GenerateKeys()
 
 		drupal.CheckSettings()
