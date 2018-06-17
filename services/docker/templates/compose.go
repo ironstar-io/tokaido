@@ -81,5 +81,12 @@ services:
       - syslog
     environment:
       SSH_AUTH_SOCK: /ssh/auth/sock
-
+  solr:
+    image: tokaido/solr:6.6
+    ports:
+      - "8983"    
+    entrypoint:      
+      - solr-precreate
+      - drupal
+      - /opt/solr/server/solr/configsets/search-api-solr/
 `)
