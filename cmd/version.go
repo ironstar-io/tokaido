@@ -14,6 +14,13 @@ var VersionCmd = &cobra.Command{
 	Short: "TODO",
 	Long:  "TODO",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("%#v\n", version.Get())
+		info := version.Get()
+
+		fmt.Println(`
+Tokaido Version: v` + info.Version + `
+Build Date:      ` + info.BuildDate + `
+Compiler:        ` + info.GoVersion + `
+Platform:        ` + info.Platform + `
+		`)
 	},
 }
