@@ -30,6 +30,7 @@ func init() {
 	rootCmd.AddCommand(SyscheckCmd)
 	rootCmd.AddCommand(StatusCmd)
 	rootCmd.AddCommand(SyncCmd)
+	rootCmd.AddCommand(VersionCmd)
 	rootCmd.AddCommand(WatchCmd)
 }
 
