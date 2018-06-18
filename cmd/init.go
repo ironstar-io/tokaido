@@ -41,7 +41,7 @@ var InitCmd = &cobra.Command{
 		unison.Sync()
 
 		docker.Up()
-		docker.Status()
+		docker.Ps()
 
 		drupal.ConfigureSSH()
 		config := conf.GetConfig()

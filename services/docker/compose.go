@@ -70,8 +70,8 @@ func Ps() {
 	ComposeStdout("ps")
 }
 
-// Status ...
-func Status() {
+// StatusCheck ...
+func StatusCheck() {
 	rawStatus := ComposeResult("ps")
 
 	unavailableContainers := false
@@ -96,5 +96,5 @@ You can try to fix this by running 'tok up', or by running 'tok repair'.
 	}
 
 	fmt.Println(`
-✓  All containers are running`)
+✅  All containers are running`)
 }
