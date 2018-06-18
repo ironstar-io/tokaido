@@ -31,8 +31,8 @@ func SilentStdoutCmd(name string, args ...string) string {
 	return strings.TrimSpace(string(stdoutStderr))
 }
 
-// NoFatalStdoutCmd - Execute a command on the users' OS without exiting on stdoutError
-func NoFatalStdoutCmd(name string, args ...string) string {
+// CommandSubstitution - Execute a command and return the output value. No exit on stdErr
+func CommandSubstitution(name string, args ...string) string {
 	cmd := exec.Command(name, args...)
 	cmd.Dir = fs.WorkDir()
 	stdoutStderr, _ := cmd.CombinedOutput()

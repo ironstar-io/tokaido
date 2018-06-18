@@ -19,11 +19,3 @@ func LocalPort(containerName string, containerPort string) string {
 
 	return strings.Split(containerStr, ":")[1]
 }
-
-// ComposeStdout - Convenience method for docker-compose shell commands
-func ComposeStdout(args ...string) {
-	composeFile := []string{"-f", fs.WorkDir() + "/docker-compose.tok.yml"}
-	composeParams := append(composeFile, args...)
-
-	utils.SilentStdoutCmd("docker-compose", composeParams...)
-}

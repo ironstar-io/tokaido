@@ -13,7 +13,7 @@ func Sync() {
 
 	// fmt.Println(`🚝  Running a one time Unison sync between your system and the Tokaido environment`)
 
-	utils.NoFatalStdoutCmd("unison", config.Project, "-watch=false")
+	utils.CommandSubstitution("unison", config.Project, "-watch=false")
 }
 
 // Watch ...

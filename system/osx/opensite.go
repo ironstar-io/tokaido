@@ -6,5 +6,5 @@ import (
 
 // OpenSite - Linux Root executable
 func OpenSite(url string) {
-	utils.NoFatalStdoutCmd("open", url)
+	utils.CommandSubstitution("open", url)
 }
