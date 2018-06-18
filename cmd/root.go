@@ -25,6 +25,7 @@ func init() {
 	rootCmd.AddCommand(UpCmd)
 	rootCmd.AddCommand(DestroyCmd)
 	rootCmd.AddCommand(OpenCmd)
+	rootCmd.AddCommand(PortsCmd)
 	rootCmd.AddCommand(StopCmd)
 	rootCmd.AddCommand(SSHCmd)
 	rootCmd.AddCommand(SyscheckCmd)
