@@ -22,7 +22,7 @@ var StatusCmd = &cobra.Command{
 
 		conf.LoadConfig(cmd)
 
-		docker.Status()
+		docker.StatusCheck()
 
 		ssh.CheckKey()
 
