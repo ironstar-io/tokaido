@@ -7,6 +7,8 @@ import (
 	"bitbucket.org/ironstar/tokaido-cli/system/ssh"
 	"bitbucket.org/ironstar/tokaido-cli/utils"
 
+	"fmt"
+
 	"github.com/spf13/cobra"
 )
 
@@ -27,5 +29,11 @@ var StatusCmd = &cobra.Command{
 		ssh.CheckKey()
 
 		drupal.CheckContainer()
+
+		fmt.Println(`
+🍜  Checks have passed successfully
+
+🌎  Run 'tok open' to open the environment at 'https://localhost:` + docker.LocalPort("haproxy", "8443") + `' in your default browser
+		`)
 	},
 }
