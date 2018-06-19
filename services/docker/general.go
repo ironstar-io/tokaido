@@ -57,10 +57,18 @@ func LocalPort(containerName string, containerPort string) string {
 
 // KillContainer - Kill an individual container
 func KillContainer(container string) {
+<<<<<<< HEAD
 	utils.StdoutCmd("docker-compose", "-f", fs.WorkDir()+"/docker-compose.tok.yml", "kill", container)
+=======
+	utils.SilentStdoutCmd("docker-compose", "-f", fs.WorkDir()+"/docker-compose.tok.yml", "kill", container)
+>>>>>>> Begin build out for debug configuration
 }
 
 // UpContainer - Lift an individual container
 func UpContainer(container string) {
+<<<<<<< HEAD
 	utils.StdoutCmd("docker-compose", "-f", fs.WorkDir()+"/docker-compose.tok.yml", "up", "-d", container)
+=======
+	utils.SilentStdoutCmd("docker-compose", "-f", fs.WorkDir()+"/docker-compose.tok.yml", "up", container)
+>>>>>>> Begin build out for debug configuration
 }

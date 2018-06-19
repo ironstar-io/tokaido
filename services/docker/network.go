@@ -23,7 +23,11 @@ func CheckNetworkUp() bool {
 func GetGateway() string {
 	project := conf.GetConfig().Project
 
+<<<<<<< HEAD
 	gatewayLine := utils.BashStringCmd("docker network inspect " + project + "_default | grep Gateway")
+=======
+	gatewayLine := utils.SilentBashStringCmd("docker network inspect " + project + "_default | grep Gateway")
+>>>>>>> Begin build out for debug configuration
 
 	return strings.Split(gatewayLine, ": ")[1]
 }
