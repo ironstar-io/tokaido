@@ -20,10 +20,10 @@ TODO: Better instructions
 Tokaido is build in Golang 1.10.2
 
 - Install Go and dep with `brew install dep` (Latest go version is included)
-- Install package dependencies with `dep ensure`
 - Clone this repository
-- From the root of the cloned repo run `go build -o tok`
-- Your executable is now avaialable with `./tok [command]`
+- Install package dependencies with `dep ensure`
+- From the root of the cloned repo run `make build`
+- Your local executable is now avaialable with `./dist/tok [command]`
 
 Getting this message or something similar?
 
