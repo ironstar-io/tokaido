@@ -217,9 +217,15 @@
   revision = "5420a8b6744d3b0345ab293f6fcba19c978f1183"
   version = "v2.2.1"
 
+[[projects]]
+  branch = "master"
+  name = "k8s.io/apimachinery"
+  packages = ["pkg/version"]
+  revision = "5a8013207d0d28c7fe98193e5b6cdbf92e98a000"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "621d77513d290554724df0560e970ca3c9d0f36b18fe19d6e1236231b0128168"
+  inputs-digest = "62ea0f892452266dd6d60320ed55a9617d22cb09cf3ea15e68d15f175f5b0348"
   solver-name = "gps-cdcl"
   solver-version = 1

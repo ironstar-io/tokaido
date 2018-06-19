@@ -3,9 +3,9 @@ package cmd
 import (
 	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/system/fs"
+	"bitbucket.org/ironstar/tokaido-cli/system/version"
 
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -30,6 +30,7 @@ func init() {
 	rootCmd.AddCommand(SyscheckCmd)
 	rootCmd.AddCommand(StatusCmd)
 	rootCmd.AddCommand(SyncCmd)
+	rootCmd.AddCommand(VersionCmd)
 	rootCmd.AddCommand(WatchCmd)
 }
 
@@ -48,15 +49,19 @@ func RootCmd() *cobra.Command {
 	rootCmd.PersistentFlags().StringP("project", "j", fs.Basename(), "The name of the project")
 	rootCmd.PersistentFlags().StringP("path", "t", fs.WorkDir(), "The project path")
 	rootCmd.PersistentFlags().BoolP("force", "", false, "Forcefully skip confirmation prompts with 'yes' response")
+	rootCmd.PersistentFlags().BoolP("version", "v", false, "Check the current Tokaido version (base command only)")
 
 	return &rootCmd
 }
 
 func run(cmd *cobra.Command, args []string) {
-	config, err := conf.LoadConfig(cmd)
-	if err != nil {
-		log.Fatal("Failed to load config: " + err.Error())
-	}
+	conf.LoadConfig(cmd)
+	config := conf.GetConfig()
 
-	fmt.Printf("Starting with config: %+v", config)
+	if config.Version == true {
+		fmt.Printf("v%s\n", version.Get().Version)
+	} else {
+		fmt.Printf("Tokaido v%s\n\n", version.Get().Version)
+		fmt.Println("For help with Tokaido run `tok --help` or take a look at our documentation at https://docs.tokaido.io/")
+	}
 }
