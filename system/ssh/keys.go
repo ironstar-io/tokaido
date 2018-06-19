@@ -29,7 +29,7 @@ func CheckKey() {
 	cmdStr := `ssh ` + conf.GetConfig().Project + `.tok -q -p ` + localPort + ` -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -C "echo 1" | echo $?`
 
 	keyResult := utils.SilentBashStringCmd(cmdStr)
-	if keyResult == "1" {
+	if keyResult == "0" {
 		fmt.Println("✅  SSH access is configured")
 		return
 	}
