@@ -37,13 +37,13 @@ func CheckLocal() {
 func CheckContainer() {
 	haproxyPort := docker.LocalPort("haproxy", "8443")
 
-	drupalInstalled := utils.BashStringCmd(`curl -sko /dev/null -I -w"%{http_code}" https://localhost:` + haproxyPort + ` | grep 302`)
-	if drupalInstalled == "true" {
-		fmt.Println("  ✓  Drupal is listening on HTTPS")
+	drupalStatus := utils.SilentBashStringCmd(`curl -sko /dev/null -I -w"%{http_code}" https://localhost:` + haproxyPort + ` | grep 200`)
+	if drupalStatus == "200" {
+		fmt.Println("✅  Drupal is listening on HTTPS")
 		return
 	}
 
-	fmt.Println(`  ✘  Drupal is not installed
+	fmt.Println(`😓  Drupal is not installed
 
 Tokaido is running but it looks like your Drupal site isn't installed.
 
@@ -54,8 +54,8 @@ Username: tokaido
 Password: tokaido
 Database name: tokaido
 
-It might be easier to use Drush to install your site, which you can do by connecting to SSH "tok ssh" and running "drush site-install"`)
-	return
+It might be easier to use Drush to install your site, which you can do by connecting to SSH with 'tok ssh' and running 'drush site-install'`)
+	os.Exit(1)
 }
 
 // checkDrupalVersion ...
