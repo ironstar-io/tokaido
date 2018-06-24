@@ -16,8 +16,5 @@
 # Installed vendor packages from dep
 vendor
 
-# Project binary
-tok
-
 # Other project specific files
 dist/*

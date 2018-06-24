@@ -2,12 +2,7 @@ package cmd
 
 import (
 	"bitbucket.org/ironstar/tokaido-cli/conf"
-	"bitbucket.org/ironstar/tokaido-cli/services/docker"
-	"bitbucket.org/ironstar/tokaido-cli/services/drupal"
-	"bitbucket.org/ironstar/tokaido-cli/services/git"
-	"bitbucket.org/ironstar/tokaido-cli/services/unison"
-	"bitbucket.org/ironstar/tokaido-cli/system"
-	"bitbucket.org/ironstar/tokaido-cli/system/ssh"
+	"bitbucket.org/ironstar/tokaido-cli/services/tok"
 	"bitbucket.org/ironstar/tokaido-cli/utils"
 
 	"fmt"
@@ -24,27 +19,11 @@ var InitCmd = &cobra.Command{
 		utils.CheckCmdHard("docker-compose")
 		conf.LoadConfig(cmd)
 
+		fmt.Printf("The command 'tok init' has been deprecated. Please use 'tok up' instead.\n\n")
+
 		fmt.Println(`🚅  Tokaido is initializing your project!`)
 
-		system.CheckDependencies()
-
-		docker.FindOrCreateTokCompose()
-
-		ssh.GenerateKeys()
-
-		drupal.CheckSettings()
-
-		git.IgnoreDefaults()
-
-		unison.DockerUp()
-		unison.CreateOrUpdatePrf()
-		unison.Sync()
-
-		docker.Up()
-		docker.Ps()
-
-		drupal.ConfigureSSH()
-		config := conf.GetConfig()
+		tok.Init()
 
 		fmt.Println(`
 WELCOME TO TOKAIDO
@@ -54,7 +33,7 @@ Your Drupal development environment is now up and running
 		`)
 
 		fmt.Println(`⌚  Run "tok watch" to keep files in your local system and the Tokaido environment synchronised`)
-		fmt.Printf("💻  Run \"ssh %s.tok\" to access the Drush container\n", config.Project)
+		fmt.Printf("💻  Run \"ssh %s.tok\" to access the Drush container\n", conf.GetConfig().Project)
 		fmt.Println(`🌎  Run "tok open" to open the environment in your browser`)
 		fmt.Println(`
 Check out https://docs.tokaido.io/environments for tips on managing your Tokaido environment

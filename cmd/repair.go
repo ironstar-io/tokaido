@@ -10,17 +10,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// UpCmd - `tok up`
-var UpCmd = &cobra.Command{
-	Use:   "up",
-	Short: "Compose and run your containers",
-	Long:  "Runs in unison in the background - `docker-compose up -d`",
+// RepairCmd - `tok repair`
+var RepairCmd = &cobra.Command{
+	Use:   "repair",
+	Short: "Compose and attempt repair of your containers",
+	Long:  "Functionally similar to `tok up`",
 	Run: func(cmd *cobra.Command, args []string) {
 		utils.CheckCmdHard("docker-compose")
 		conf.LoadConfig(cmd)
 
 		fmt.Println(`
-🚅  Tokaido is pulling up your containers!`)
+🚅  Tokaido is attempting to repair your project!`)
 
 		tok.Init()
 

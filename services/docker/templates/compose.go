@@ -71,7 +71,7 @@ services:
       MYSQL_PASSWORD: tokaido
       MYSQL_ROOT_PASSWORD: tokaido
   drush:
-    image: tokaido/drush:latest
+    image: tokaido/drush-heavy:latest
     hostname: 'tokaido'
     ports:
       - "22"
@@ -81,6 +81,7 @@ services:
       - syslog
     environment:
       SSH_AUTH_SOCK: /ssh/auth/sock
+      APP_ENV: local
   solr:
     image: tokaido/solr:6.6
     ports:
