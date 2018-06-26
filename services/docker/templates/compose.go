@@ -67,6 +67,13 @@ type ComposeDotTok struct {
 	}
 }
 
+// ModWarning - Displayed at the top of `docker-compose.tok.yml`
+var ModWarning = []byte(`
+# WARNING: THIS FILE IS MANAGED DIRECTLY BY TOKAIDO.
+# DO NOT MAKE MODIFICATIONS HERE, THEY WILL BE OVERWRITTEN
+
+`)
+
 // ComposeTokDefaults - Template byte array for `docker-compose.tok.yml`
 var ComposeTokDefaults = []byte(`
 version: "2"

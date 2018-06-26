@@ -46,6 +46,7 @@ func FindOrCreateTokCompose() {
 			log.Fatalf("error: %v", err)
 		}
 
-		fs.TouchByteArray(tokComposePath, tokComposeYml)
+		finalYml := append(dockertmpl.ModWarning[:], tokComposeYml[:]...)
+		fs.TouchByteArray(tokComposePath, finalYml)
 	}
 }
