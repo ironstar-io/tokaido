@@ -50,7 +50,17 @@ func PrintPorts(containers []string) {
 // LocalPort - Return the local port of a container
 func LocalPort(containerName string, containerPort string) string {
 	// Example return: "unison:32757"
-	containerStr := utils.SilentStdoutCmd("docker-compose", "-f", fs.WorkDir()+"/docker-compose.tok.yml", "port", containerName, containerPort)
+	containerStr := utils.StdoutCmd("docker-compose", "-f", fs.WorkDir()+"/docker-compose.tok.yml", "port", containerName, containerPort)
 
 	return strings.Split(containerStr, ":")[1]
+}
+
+// KillContainer - Kill an individual container
+func KillContainer(container string) {
+	utils.StdoutCmd("docker-compose", "-f", fs.WorkDir()+"/docker-compose.tok.yml", "kill", container)
+}
+
+// UpContainer - Lift an individual container
+func UpContainer(container string) {
+	utils.StdoutCmd("docker-compose", "-f", fs.WorkDir()+"/docker-compose.tok.yml", "up", "-d", container)
 }

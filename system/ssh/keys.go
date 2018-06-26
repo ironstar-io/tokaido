@@ -28,7 +28,7 @@ func CheckKey() {
 	localPort := docker.LocalPort("drush", "22")
 	cmdStr := `ssh ` + conf.GetConfig().Project + `.tok -q -p ` + localPort + ` -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -C "echo 1" | echo $?`
 
-	keyResult := utils.SilentBashStringCmd(cmdStr)
+	keyResult := utils.BashStringCmd(cmdStr)
 	if keyResult == "0" {
 		fmt.Println("✅  SSH access is configured")
 		return
