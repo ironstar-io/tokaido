@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"log"
 	"os"
+
+	"gopkg.in/yaml.v2"
 )
 
 var tokComposePath = fs.WorkDir() + "/docker-compose.tok.yml"
@@ -32,6 +34,18 @@ func FindOrCreateTokCompose() {
 	if os.IsNotExist(err) {
 		fmt.Println(`🏯  Generating a new docker-compose.tok.yml file`)
 
-		fs.TouchByteArray(tokComposePath, dockertmpl.TokComposeYml)
+		tokStruct := dockertmpl.ComposeDotTok{}
+
+		err := yaml.Unmarshal(dockertmpl.ComposeTokDefaults, &tokStruct)
+		if err != nil {
+			log.Fatalf("error: %v", err)
+		}
+
+		tokComposeYml, err := yaml.Marshal(&tokStruct)
+		if err != nil {
+			log.Fatalf("error: %v", err)
+		}
+
+		fs.TouchByteArray(tokComposePath, tokComposeYml)
 	}
 }
