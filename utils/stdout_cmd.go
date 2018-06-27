@@ -11,6 +11,8 @@ import (
 
 // StdoutCmd - Execute a command on the users' OS
 func StdoutCmd(name string, args ...string) string {
+	DebugCmd(name + " " + strings.Join(args, " "))
+
 	cmd := exec.Command(name, args...)
 	cmd.Dir = fs.WorkDir()
 	stdoutStderr, err := cmd.CombinedOutput()

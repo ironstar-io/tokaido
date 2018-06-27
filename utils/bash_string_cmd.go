@@ -9,6 +9,8 @@ import (
 
 // BashStringCmd - Execute a bash command from a string `bash -c "(cmd)" with no log output`
 func BashStringCmd(cmdStr string) string {
+	DebugCmd("bash -c " + cmdStr)
+
 	cmd := exec.Command("bash", "-c", cmdStr)
 	cmd.Dir = fs.WorkDir()
 	stdoutStderr, _ := cmd.CombinedOutput()
@@ -20,6 +22,8 @@ func BashStringCmd(cmdStr string) string {
 
 // BashStringSplitOutput - Execute a bash command splitting the resulting stdout and stderr
 func BashStringSplitOutput(cmdStr string) (string, error) {
+	DebugCmd("bash -c " + cmdStr)
+
 	cmd := exec.Command("bash", "-c", cmdStr)
 	cmd.Dir = fs.WorkDir()
 	stdoutStderr, err := cmd.CombinedOutput()

@@ -9,6 +9,8 @@ import (
 
 // CommandSubstitution - Execute a command and return the output value. No exit on stdErr
 func CommandSubstitution(name string, args ...string) string {
+	DebugCmd(name + " " + strings.Join(args, " "))
+
 	cmd := exec.Command(name, args...)
 	cmd.Dir = fs.WorkDir()
 	stdoutStderr, _ := cmd.CombinedOutput()
@@ -20,6 +22,8 @@ func CommandSubstitution(name string, args ...string) string {
 
 // CommandSubSplitOutput - Execute a command and return the output value split into stdout and stderr. No exit on stdErr
 func CommandSubSplitOutput(name string, args ...string) (string, error) {
+	DebugCmd(name + " " + strings.Join(args, " "))
+
 	cmd := exec.Command(name, args...)
 	cmd.Dir = fs.WorkDir()
 	stdoutStderr, err := cmd.CombinedOutput()
