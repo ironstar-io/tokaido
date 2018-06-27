@@ -5,6 +5,7 @@ import (
 
 	"fmt"
 	"log"
+	"os"
 	"os/exec"
 	"strings"
 )
@@ -24,4 +25,14 @@ func StdoutCmd(name string, args ...string) string {
 	DebugOutput(stdoutStderr)
 
 	return strings.TrimSpace(string(stdoutStderr))
+}
+
+// StdoutStreamCmd - Execute a command on the users' OS and stream stdout
+func StdoutStreamCmd(name string, args ...string) {
+	DebugCmd(name + " " + strings.Join(args, " "))
+
+	cmd := exec.Command(name, args...)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	cmd.Run()
 }

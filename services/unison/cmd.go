@@ -22,5 +22,5 @@ func Watch() {
 
 	fmt.Println(`Watching your files for changes and synchronising with your container`)
 
-	utils.StdoutCmd("unison", config.Project)
+	utils.StdoutStreamCmd("unison", config.Project)
 }
