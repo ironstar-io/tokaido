@@ -52,6 +52,7 @@ func RootCmd() *cobra.Command {
 	rootCmd.PersistentFlags().StringP("path", "t", fs.WorkDir(), "The project path")
 	rootCmd.PersistentFlags().BoolP("force", "", false, "Forcefully skip confirmation prompts with 'yes' response")
 	rootCmd.PersistentFlags().BoolP("version", "v", false, "Check the current Tokaido version (base command only)")
+	rootCmd.PersistentFlags().BoolP("debug", "d", false, "Enable debug mode, command output is printed to the console")
 
 	return &rootCmd
 }

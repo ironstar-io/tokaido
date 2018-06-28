@@ -5,21 +5,15 @@ import (
 
 	"fmt"
 	"log"
+	"os"
 	"os/exec"
 	"strings"
 )
 
 // StdoutCmd - Execute a command on the users' OS
 func StdoutCmd(name string, args ...string) string {
-	stdoutStderr := SilentStdoutCmd(name, args...)
+	DebugCmd(name + " " + strings.Join(args, " "))
 
-	fmt.Printf("%s\n", stdoutStderr)
-
-	return string(stdoutStderr)
-}
-
-// SilentStdoutCmd - Execute a command on the users' OS without logging result to the console
-func SilentStdoutCmd(name string, args ...string) string {
 	cmd := exec.Command(name, args...)
 	cmd.Dir = fs.WorkDir()
 	stdoutStderr, err := cmd.CombinedOutput()
@@ -28,32 +22,17 @@ func SilentStdoutCmd(name string, args ...string) string {
 		log.Fatal(err)
 	}
 
+	DebugOutput(stdoutStderr)
+
 	return strings.TrimSpace(string(stdoutStderr))
 }
 
-// CommandSubstitution - Execute a command and return the output value. No exit on stdErr
-func CommandSubstitution(name string, args ...string) string {
+// StdoutStreamCmd - Execute a command on the users' OS and stream stdout
+func StdoutStreamCmd(name string, args ...string) {
+	DebugCmd(name + " " + strings.Join(args, " "))
+
 	cmd := exec.Command(name, args...)
-	cmd.Dir = fs.WorkDir()
-	stdoutStderr, _ := cmd.CombinedOutput()
-
-	return strings.TrimSpace(string(stdoutStderr))
-}
-
-// SilentBashStringCmd - Execute a bash command from a string `bash -c "(cmd)" with no log output`
-func SilentBashStringCmd(cmdStr string) string {
-	cmd := exec.Command("bash", "-c", cmdStr)
-	cmd.Dir = fs.WorkDir()
-	stdoutStderr, _ := cmd.CombinedOutput()
-
-	return strings.TrimSpace(string(stdoutStderr))
-}
-
-// BashStringCmd - Execute a bash command from a string `bash -c "(cmd)"`
-func BashStringCmd(cmdStr string) string {
-	stdoutStderr := SilentBashStringCmd(cmdStr)
-
-	fmt.Printf("%s\n", stdoutStderr)
-
-	return string(stdoutStderr)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	cmd.Run()
 }

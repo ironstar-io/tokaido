@@ -37,7 +37,7 @@ func CheckLocal() {
 func CheckContainer() {
 	haproxyPort := docker.LocalPort("haproxy", "8443")
 
-	drupalStatus := utils.SilentBashStringCmd(`curl -sko /dev/null -I -w"%{http_code}" https://localhost:` + haproxyPort + ` | grep 200`)
+	drupalStatus := utils.BashStringCmd(`curl -sko /dev/null -I -w"%{http_code}" https://localhost:` + haproxyPort + ` | grep 200`)
 	if drupalStatus == "200" {
 		fmt.Println("✅  Drupal is listening on HTTPS")
 		return

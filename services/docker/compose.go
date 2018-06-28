@@ -14,7 +14,7 @@ import (
 func ComposeStdout(args ...string) {
 	composeParams := composeArgs(args...)
 
-	utils.SilentStdoutCmd("docker-compose", composeParams...)
+	utils.StdoutCmd("docker-compose", composeParams...)
 }
 
 // ComposeResult - Convenience method for docker-compose shell commands returning a result

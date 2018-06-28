@@ -14,6 +14,7 @@ type Config struct {
 	Project string
 	Path    string
 	Force   bool
+	Debug   bool
 	Version bool
 }
 
