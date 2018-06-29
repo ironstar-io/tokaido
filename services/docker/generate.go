@@ -1,12 +1,16 @@
 package docker
 
 import (
+	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/services/docker/templates"
 	"bitbucket.org/ironstar/tokaido-cli/system/fs"
 
+	"bufio"
+	"bytes"
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"gopkg.in/yaml.v2"
 )
@@ -28,25 +32,73 @@ func HardCheckTokCompose() {
 
 // FindOrCreateTokCompose ...
 func FindOrCreateTokCompose() {
-	var _, err = os.Stat(tokComposePath)
+	var _, errf = os.Stat(tokComposePath)
 
 	// create file if not exists
-	if os.IsNotExist(err) {
+	if os.IsNotExist(errf) {
 		fmt.Println(`🏯  Generating a new docker-compose.tok.yml file`)
 
-		tokStruct := dockertmpl.ComposeDotTok{}
+		CreateOrReplaceTokCompose()
+		return
+	}
 
-		err := yaml.Unmarshal(dockertmpl.ComposeTokDefaults, &tokStruct)
-		if err != nil {
-			log.Fatalf("error: %v", err)
+	if conf.GetConfig().CustomCompose == true {
+		StripModWarning()
+		return
+	}
+
+	CreateOrReplaceTokCompose()
+}
+
+// CreateOrReplaceTokCompose ...
+func CreateOrReplaceTokCompose() {
+	tokStruct := dockertmpl.ComposeDotTok{}
+
+	err := yaml.Unmarshal(dockertmpl.ComposeTokDefaults, &tokStruct)
+	if err != nil {
+		log.Fatalf("error: %v", err)
+	}
+
+	tokComposeYml, err := yaml.Marshal(&tokStruct)
+	if err != nil {
+		log.Fatalf("error: %v", err)
+	}
+
+	fmt.Println(conf.GetConfig().CustomCompose)
+	if conf.GetConfig().CustomCompose == false {
+		fs.TouchOrReplace(tokComposePath, append(dockertmpl.ModWarning[:], tokComposeYml[:]...))
+		return
+	}
+
+	fs.TouchOrReplace(tokComposePath, tokComposeYml)
+}
+
+// StripModWarning ...
+func StripModWarning() {
+	f, openErr := os.Open(tokComposePath)
+	if openErr != nil {
+		fmt.Println(openErr)
+		return
+	}
+
+	defer f.Close()
+
+	warningPresent := false
+	warningOne := "# WARNING: THIS FILE IS MANAGED DIRECTLY BY TOKAIDO."
+	warningTwo := "# DO NOT MAKE MODIFICATIONS HERE, THEY WILL BE OVERWRITTEN"
+
+	var buffer bytes.Buffer
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan() {
+		if strings.Contains(scanner.Text(), warningOne) || strings.Contains(scanner.Text(), warningTwo) {
+			warningPresent = true
+			continue
+		} else {
+			buffer.Write([]byte(scanner.Text() + "\n"))
 		}
+	}
 
-		tokComposeYml, err := yaml.Marshal(&tokStruct)
-		if err != nil {
-			log.Fatalf("error: %v", err)
-		}
-
-		finalYml := append(dockertmpl.ModWarning[:], tokComposeYml[:]...)
-		fs.TouchByteArray(tokComposePath, finalYml)
+	if warningPresent == true {
+		fs.Replace(tokComposePath, buffer.Bytes())
 	}
 }

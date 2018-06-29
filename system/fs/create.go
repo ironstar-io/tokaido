@@ -3,6 +3,7 @@ package fs
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
 )
 
 // TouchByteArray ...
@@ -13,4 +14,17 @@ func TouchByteArray(path string, body []byte) error {
 	}
 
 	return nil
+}
+
+// TouchOrReplace ...
+func TouchOrReplace(path string, body []byte) {
+	var _, errf = os.Stat(path)
+
+	// create file if not exists
+	if os.IsNotExist(errf) {
+		TouchByteArray(path, body)
+		return
+	}
+
+	Replace(path, body)
 }
