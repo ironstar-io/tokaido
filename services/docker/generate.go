@@ -8,6 +8,7 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"strings"
@@ -16,6 +17,7 @@ import (
 )
 
 var tokComposePath = fs.WorkDir() + "/docker-compose.tok.yml"
+var customTokPath = fs.WorkDir() + "/.tok/compose.tok.yml"
 
 // HardCheckTokCompose ...
 func HardCheckTokCompose() {
@@ -59,12 +61,23 @@ func CreateOrReplaceTokCompose() {
 		log.Fatalf("error: %v", err)
 	}
 
+	if fs.CheckExists(customTokPath) == true {
+		customTok, err := ioutil.ReadFile(customTokPath)
+		if err != nil {
+			log.Fatalf("error: %v", err)
+		}
+
+		errTwo := yaml.Unmarshal(customTok, &tokStruct)
+		if errTwo != nil {
+			log.Fatalf("error: %v", errTwo)
+		}
+	}
+
 	tokComposeYml, err := yaml.Marshal(&tokStruct)
 	if err != nil {
 		log.Fatalf("error: %v", err)
 	}
 
-	fmt.Println(conf.GetConfig().CustomCompose)
 	if conf.GetConfig().CustomCompose == false {
 		fs.TouchOrReplace(tokComposePath, append(dockertmpl.ModWarning[:], tokComposeYml[:]...))
 		return
