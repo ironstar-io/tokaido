@@ -14,11 +14,13 @@ type Config struct {
 	Config            string
 	Project           string
 	Path              string
-	SystemdPath       string
-	CreateSyncService bool
 	Force             bool
 	Debug             bool
 	Version           bool
+	CustomCompose     bool
+	SystemdPath       string
+	LaunchdPath       string
+	CreateSyncService bool
 }
 
 // LoadConfig loads the config from a file if specified, otherwise from the environment

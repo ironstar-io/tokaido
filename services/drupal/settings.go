@@ -24,7 +24,7 @@ var settingsTokPath = docrootDefault + "/settings.tok.php"
 
 // CheckSettings ...
 func CheckSettings() {
-	if checkExists(settingsPath) == false {
+	if fs.CheckExists(settingsPath) == false {
 		fmt.Printf(`
 Could not find a file located at "` + settingsPath + `", database connection may not work!"
 		`)
@@ -32,7 +32,7 @@ Could not find a file located at "` + settingsPath + `", database connection may
 	}
 
 	tokSettingsReferenced := fs.Contains(settingsPath, "/settings.tok.php")
-	tokSettingsExists := checkExists(settingsTokPath)
+	tokSettingsExists := fs.CheckExists(settingsTokPath)
 
 	if tokSettingsReferenced == false || tokSettingsExists == false {
 		if allowBuildSettings() == false {
@@ -57,15 +57,6 @@ Could not find a file located at "` + settingsPath + `", database connection may
 	}
 
 	restoreFilePerimissions(defaultMasks)
-}
-
-func checkExists(path string) bool {
-	_, err := os.Stat(path)
-	if os.IsNotExist(err) {
-		return false
-	}
-
-	return true
 }
 
 func checkSettingsExist() {
