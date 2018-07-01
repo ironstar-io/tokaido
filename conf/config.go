@@ -9,13 +9,14 @@ import (
 
 // Config the application's configuration
 type Config struct {
-	Port    string
-	Config  string
-	Project string
-	Path    string
-	Force   bool
-	Debug   bool
-	Version bool
+	Port          string
+	Config        string
+	Project       string
+	Path          string
+	Force         bool
+	Debug         bool
+	Version       bool
+	CustomCompose bool
 }
 
 // LoadConfig loads the config from a file if specified, otherwise from the environment

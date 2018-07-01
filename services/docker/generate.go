@@ -1,15 +1,23 @@
 package docker
 
 import (
+	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/services/docker/templates"
 	"bitbucket.org/ironstar/tokaido-cli/system/fs"
 
+	"bufio"
+	"bytes"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
+	"strings"
+
+	"gopkg.in/yaml.v2"
 )
 
 var tokComposePath = fs.WorkDir() + "/docker-compose.tok.yml"
+var customTokPath = fs.WorkDir() + "/.tok/compose.tok.yml"
 
 // HardCheckTokCompose ...
 func HardCheckTokCompose() {
@@ -26,12 +34,84 @@ func HardCheckTokCompose() {
 
 // FindOrCreateTokCompose ...
 func FindOrCreateTokCompose() {
-	var _, err = os.Stat(tokComposePath)
+	var _, errf = os.Stat(tokComposePath)
 
 	// create file if not exists
-	if os.IsNotExist(err) {
+	if os.IsNotExist(errf) {
 		fmt.Println(`🏯  Generating a new docker-compose.tok.yml file`)
 
-		fs.TouchByteArray(tokComposePath, dockertmpl.TokComposeYml)
+		CreateOrReplaceTokCompose()
+		return
+	}
+
+	if conf.GetConfig().CustomCompose == true {
+		StripModWarning()
+		return
+	}
+
+	CreateOrReplaceTokCompose()
+}
+
+// CreateOrReplaceTokCompose ...
+func CreateOrReplaceTokCompose() {
+	tokStruct := dockertmpl.ComposeDotTok{}
+
+	err := yaml.Unmarshal(dockertmpl.ComposeTokDefaults, &tokStruct)
+	if err != nil {
+		log.Fatalf("error: %v", err)
+	}
+
+	if fs.CheckExists(customTokPath) == true {
+		customTok, err := ioutil.ReadFile(customTokPath)
+		if err != nil {
+			log.Fatalf("error: %v", err)
+		}
+
+		errTwo := yaml.Unmarshal(customTok, &tokStruct)
+		if errTwo != nil {
+			log.Fatalf("error: %v", errTwo)
+		}
+	}
+
+	tokComposeYml, err := yaml.Marshal(&tokStruct)
+	if err != nil {
+		log.Fatalf("error: %v", err)
+	}
+
+	if conf.GetConfig().CustomCompose == false {
+		fs.TouchOrReplace(tokComposePath, append(dockertmpl.ModWarning[:], tokComposeYml[:]...))
+		return
+	}
+
+	fs.TouchOrReplace(tokComposePath, tokComposeYml)
+}
+
+// StripModWarning ...
+func StripModWarning() {
+	f, openErr := os.Open(tokComposePath)
+	if openErr != nil {
+		fmt.Println(openErr)
+		return
+	}
+
+	defer f.Close()
+
+	warningPresent := false
+	warningOne := "# WARNING: THIS FILE IS MANAGED DIRECTLY BY TOKAIDO."
+	warningTwo := "# DO NOT MAKE MODIFICATIONS HERE, THEY WILL BE OVERWRITTEN"
+
+	var buffer bytes.Buffer
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan() {
+		if strings.Contains(scanner.Text(), warningOne) || strings.Contains(scanner.Text(), warningTwo) {
+			warningPresent = true
+			continue
+		} else {
+			buffer.Write([]byte(scanner.Text() + "\n"))
+		}
+	}
+
+	if warningPresent == true {
+		fs.Replace(tokComposePath, buffer.Bytes())
 	}
 }
