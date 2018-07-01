@@ -26,7 +26,13 @@ func Init() {
 
 	unison.DockerUp()
 	unison.CreateOrUpdatePrf()
-	unison.Sync()
+
+	// Only perform sync if sync service isn't running, otherwise we'll stall
+	err := unison.CheckSyncServiceSilent()
+	if err != nil {
+		unison.Sync()
+	}
+
 	if c.CreateSyncService {
 		unison.CreateSyncService()
 	}

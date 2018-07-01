@@ -43,19 +43,19 @@ func StopSyncService() {
 	}
 }
 
-// CheckSyncService ...
-func CheckSyncService() {
+// CheckSyncService a verbose sync status check used for tok status
+func CheckSyncService() error {
 	GOOS := utils.CheckOS()
 	c := conf.GetConfig()
 	if c.CreateSyncService != true {
-		return
+		return nil
 	}
 
 	if GOOS == "linux" {
-		err := linux.CheckSyncService()
-		if err == nil {
+		linuxErr := linux.CheckSyncService()
+		if linuxErr == nil {
 			fmt.Println("✅  Background sync service is running")
-			return
+			return linuxErr
 		}
 
 		fmt.Println(`
@@ -65,12 +65,38 @@ func CheckSyncService() {
 	`)
 
 		if conf.GetConfig().Debug == true {
-			fmt.Printf("\033[33m%s\033[0m\n", err)
+			fmt.Printf("\033[33m%s\033[0m\n", linuxErr)
 		}
 	}
 
 	if GOOS == "osx" {
 		osx.CheckSyncService()
 	}
+
+	return nil
+
+}
+
+// CheckSyncServiceSilent status check for internal use, produces no output
+func CheckSyncServiceSilent() error {
+	GOOS := utils.CheckOS()
+	c := conf.GetConfig()
+	if c.CreateSyncService != true {
+		return nil
+	}
+
+	if GOOS == "linux" {
+		linuxErr := linux.CheckSyncService()
+		if conf.GetConfig().Debug == true {
+			fmt.Printf("\033[33m%s\033[0m\n", linuxErr)
+		}
+		return linuxErr
+	}
+
+	if GOOS == "osx" {
+		osx.CheckSyncService()
+	}
+
+	return nil
 
 }
