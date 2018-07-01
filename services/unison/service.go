@@ -70,7 +70,11 @@ func CheckSyncService() error {
 	}
 
 	if GOOS == "osx" {
-		osx.CheckSyncService()
+		osxErr := osx.CheckSyncService()
+		if conf.GetConfig().Debug == true {
+			fmt.Printf("\033[33m%s\033[0m\n", osxErr)
+		}
+		return osxErr
 	}
 
 	return nil
@@ -94,7 +98,11 @@ func CheckSyncServiceSilent() error {
 	}
 
 	if GOOS == "osx" {
-		osx.CheckSyncService()
+		osxErr := osx.CheckSyncService()
+		if conf.GetConfig().Debug == true {
+			fmt.Printf("\033[33m%s\033[0m\n", osxErr)
+		}
+		return osxErr
 	}
 
 	return nil

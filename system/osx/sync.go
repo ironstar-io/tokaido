@@ -19,7 +19,7 @@ type service struct {
 }
 
 type status struct {
-	PID int64
+	Pid int64 `json:"PID"`
 }
 
 func createSyncFile() {
@@ -30,7 +30,7 @@ func createSyncFile() {
 		ProjectPath: c.Path,
 	}
 
-	serviceFilename := "tokaido.sync." + s.ProjectName
+	serviceFilename := "tokaido.sync." + s.ProjectName + ".plist"
 
 	tmpl := template.New(serviceFilename)
 	tmpl, err := tmpl.Parse(synctmpl.SyncTemplateStr)
@@ -116,9 +116,10 @@ func CheckSyncService() error {
 	var j status
 	jsonErr := json.Unmarshal([]byte(s), &j)
 	if jsonErr != nil {
-		return err
+		fmt.Println("in JSON err")
+		return jsonErr
 	}
-	fmt.Printf("PID = %d", j.PID)
+	fmt.Printf("PID = %d", j.Pid)
 
 	return nil
 
