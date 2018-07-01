@@ -3,6 +3,7 @@ package cmd
 import (
 	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/services/docker"
+	"bitbucket.org/ironstar/tokaido-cli/services/unison"
 	"bitbucket.org/ironstar/tokaido-cli/utils"
 
 	"github.com/spf13/cobra"
@@ -17,6 +18,8 @@ var DestroyCmd = &cobra.Command{
 		utils.CheckCmdHard("docker-compose")
 
 		docker.HardCheckTokCompose()
+
+		unison.StopSyncService()
 
 		conf.LoadConfig(cmd)
 

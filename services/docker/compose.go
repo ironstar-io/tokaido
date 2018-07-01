@@ -1,9 +1,10 @@
 package docker
 
 import (
+	"strings"
+
 	"bitbucket.org/ironstar/tokaido-cli/system/fs"
 	"bitbucket.org/ironstar/tokaido-cli/utils"
-	"strings"
 
 	"bufio"
 	"fmt"
