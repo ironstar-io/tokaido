@@ -1,6 +1,7 @@
 package tok
 
 import (
+	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/services/docker"
 	"bitbucket.org/ironstar/tokaido-cli/services/drupal"
 	"bitbucket.org/ironstar/tokaido-cli/services/git"
@@ -12,6 +13,7 @@ import (
 
 // Init - The core run sheet of `tok init`
 func Init() {
+	c := conf.GetConfig()
 	system.CheckDependencies()
 
 	docker.FindOrCreateTokCompose()
@@ -24,7 +26,16 @@ func Init() {
 
 	unison.DockerUp()
 	unison.CreateOrUpdatePrf()
-	unison.Sync()
+
+	// Only perform sync if sync service isn't running, otherwise we'll stall
+	err := unison.CheckSyncServiceSilent()
+	if err != nil {
+		unison.Sync()
+	}
+
+	if c.CreateSyncService {
+		unison.CreateSyncService()
+	}
 
 	docker.Up()
 

@@ -4,6 +4,7 @@ import (
 	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/services/docker"
 	"bitbucket.org/ironstar/tokaido-cli/services/drupal"
+	"bitbucket.org/ironstar/tokaido-cli/services/unison"
 	"bitbucket.org/ironstar/tokaido-cli/system/ssh"
 	"bitbucket.org/ironstar/tokaido-cli/utils"
 
@@ -27,6 +28,8 @@ var StatusCmd = &cobra.Command{
 		docker.StatusCheck()
 
 		ssh.CheckKey()
+
+		unison.CheckSyncService()
 
 		drupal.CheckContainer()
 
