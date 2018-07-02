@@ -62,7 +62,7 @@ func CheckSyncService() error {
 😓  The background sync service is not running
     Tokaido will run, but your environment and local host will not be synchronised
     Use 'tok up' to repair, or 'tok sync' to sync manually
-	`)
+		`)
 
 		if conf.GetConfig().Debug == true {
 			fmt.Printf("\033[33m%s\033[0m\n", linuxErr)
@@ -71,9 +71,20 @@ func CheckSyncService() error {
 
 	if GOOS == "osx" {
 		osxErr := osx.CheckSyncService()
+		if osxErr == nil {
+			fmt.Println("✅  Background sync service is running")
+			return osxErr
+		}
 		if conf.GetConfig().Debug == true {
 			fmt.Printf("\033[33m%s\033[0m\n", osxErr)
 		}
+
+		fmt.Println(`
+😓  The background sync service is not running
+    Tokaido will run, but your environment and local host will not be synchronised
+    Use 'tok up' to repair, or 'tok sync' to sync manually
+		`)
+
 		return osxErr
 	}
 

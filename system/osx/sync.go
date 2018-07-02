@@ -2,11 +2,13 @@ package osx
 
 import (
 	"bytes"
-	"encoding/json"
+	"errors"
 	"fmt"
 	"html/template"
 	"log"
 	"os"
+	"os/user"
+	"strings"
 
 	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/system/osx/templates"
@@ -16,18 +18,20 @@ import (
 type service struct {
 	ProjectName string
 	ProjectPath string
-}
-
-type status struct {
-	Pid int64 `json:"PID"`
+	Username    string
 }
 
 func createSyncFile() {
 	c := conf.GetConfig()
+	u, uErr := user.Current()
+	if uErr != nil {
+		log.Fatal(uErr)
+	}
 
 	s := service{
 		ProjectName: c.Project,
 		ProjectPath: c.Path,
+		Username:    u.Username,
 	}
 
 	serviceFilename := "tokaido.sync." + s.ProjectName + ".plist"
@@ -106,22 +110,20 @@ func StartLaunchdService() {
 // CheckSyncService checks if the unison background process is running
 func CheckSyncService() error {
 	c := conf.GetConfig()
-	s, err := utils.CommandSubSplitOutput("launchctl", "list", "tokaido.sync."+c.Project+".plist")
-	if err != nil {
-		return err
+
+	u, uErr := user.Current()
+	if uErr != nil {
+		log.Fatal(uErr)
 	}
 
-	// Marhsal the result into JSON so we can analyse the pid number.
-	// If launchd returns a pid, that's how we know a service is running
-	var j status
-	jsonErr := json.Unmarshal([]byte(s), &j)
-	if jsonErr != nil {
-		fmt.Println("in JSON err")
-		return jsonErr
-	}
-	fmt.Printf("PID = %d", j.Pid)
+	o := utils.StdoutCmd("launchctl", "print", "gui/"+u.Uid+"/tokaido.sync."+c.Project+".plist")
+	r := strings.Contains(o, "state = running")
 
-	return nil
+	if r == true {
+		return nil
+	}
+
+	return errors.New("Background sync process is not running")
 
 }
 
