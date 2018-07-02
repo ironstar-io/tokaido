@@ -4,11 +4,11 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"html/template"
 	"log"
 	"os"
 	"os/user"
 	"strings"
+	"text/template"
 
 	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/system/osx/templates"
@@ -69,6 +69,22 @@ func writeSyncFile(body string, path string, filename string) {
 	defer file.Close()
 }
 
+func loadSyncService() {
+	c := conf.GetConfig()
+	_, err := utils.CommandSubSplitOutput("launchctl", "load", c.LaunchdPath+"/tokaido.sync."+c.Project+".plist")
+	if err != nil {
+		log.Fatal("Unable to load sync service: ", err)
+	}
+}
+
+func unloadSyncService() {
+	c := conf.GetConfig()
+	_, err := utils.CommandSubSplitOutput("launchctl", "unload", c.LaunchdPath+"/tokaido.sync."+c.Project+".plist")
+	if err != nil {
+		log.Fatal("Unable to load sync service: ", err)
+	}
+}
+
 func startSyncService() {
 	c := conf.GetConfig()
 	_, err := utils.CommandSubSplitOutput("launchctl", "start", "tokaido.sync."+c.Project+".plist")
@@ -87,10 +103,7 @@ func stopSyncService() {
 
 func deleteSyncService() {
 	c := conf.GetConfig()
-	rmErr := os.Remove(c.LaunchdPath + "/tokaido.sync." + c.Project + ".plist")
-	if rmErr != nil {
-		log.Fatal("Unable to start sync service: ", rmErr)
-	}
+	os.Remove(c.LaunchdPath + "/tokaido.sync." + c.Project + ".plist")
 }
 
 // RegisterLaunchdService Register the unison sync service for launchd
@@ -99,6 +112,7 @@ func RegisterLaunchdService() {
 🔄  Creating a background process to sync your local repo into the Tokaido environment
 	`)
 	createSyncFile()
+	loadSyncService()
 }
 
 // StartLaunchdService Start the launchd service after it is created
@@ -116,9 +130,8 @@ func CheckSyncService() error {
 		log.Fatal(uErr)
 	}
 
-	o := utils.StdoutCmd("launchctl", "print", "gui/"+u.Uid+"/tokaido.sync."+c.Project+".plist")
+	o, _ := utils.CommandSubSplitOutput("launchctl", "print", "gui/"+u.Uid+"/tokaido.sync."+c.Project+".plist")
 	r := strings.Contains(o, "state = running")
-
 	if r == true {
 		return nil
 	}
@@ -133,5 +146,6 @@ func StopLaunchdService() {
 🔄  Removing the background sync process
 	`)
 	stopSyncService()
+	unloadSyncService()
 	deleteSyncService()
 }

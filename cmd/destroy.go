@@ -19,10 +19,10 @@ var DestroyCmd = &cobra.Command{
 
 		docker.HardCheckTokCompose()
 
-		unison.StopSyncService()
-
 		conf.LoadConfig(cmd)
 
 		docker.Down()
+
+		unison.StopSyncService()
 	},
 }
