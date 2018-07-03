@@ -13,6 +13,18 @@ import (
 
 var tokComposePath = fs.WorkDir() + "/docker-compose.tok.yml"
 
+func xdebugEnvString(networkGateway) {
+	return `
+  fpm:
+    environment:
+      PHP_DISPLAY_ERRORS: "yes"
+      XDEBUG_REMOTE_ENABLE: "yes"
+      XDEBUG_REMOTE_AUTOSTART: "yes"
+      XDEBUG_REMOTE_HOST: ` + networkGateway + `
+      XDEBUG_REMOTE_PORT: "9000"
+`
+}
+
 // Configure - Amend docker-compose.tok.yml to be compatible with xdebug
 func Configure() {
 	networkUp := docker.CheckNetworkUp()
@@ -30,24 +42,24 @@ func regenerateGateway(networkUp bool) {
 
 	networkGateway := docker.GetGateway()
 
-	f, openErr := os.Open(tokComposePath)
-	if openErr != nil {
-		fmt.Println(openErr)
-		return
-	}
+	// f, openErr := os.Open(tokComposePath)
+	// if openErr != nil {
+	// 	fmt.Println(openErr)
+	// 	return
+	// }
 
-	defer f.Close()
+	// defer f.Close()
 
-	closePHP := "XDEBUG_REMOTE_HOST: "
-	var buffer bytes.Buffer
-	scanner := bufio.NewScanner(f)
-	for scanner.Scan() {
-		if strings.Contains(scanner.Text(), closePHP) {
-			buffer.Write([]byte("      XDEBUG_REMOTE_HOST: " + networkGateway + "\n"))
-		} else {
-			buffer.Write([]byte(scanner.Text() + "\n"))
-		}
-	}
+	// closePHP := "XDEBUG_REMOTE_HOST: "
+	// var buffer bytes.Buffer
+	// scanner := bufio.NewScanner(f)
+	// for scanner.Scan() {
+	// 	if strings.Contains(scanner.Text(), closePHP) {
+	// 		buffer.Write([]byte("      XDEBUG_REMOTE_HOST: " + networkGateway + "\n"))
+	// 	} else {
+	// 		buffer.Write([]byte(scanner.Text() + "\n"))
+	// 	}
+	// }
 
 	fs.Replace(tokComposePath, buffer.Bytes())
 

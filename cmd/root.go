@@ -50,6 +50,7 @@ func RootCmd() *cobra.Command {
 	rootCmd.PersistentFlags().StringP("port", "p", "5000", "The port to use for local development")
 	rootCmd.PersistentFlags().StringP("project", "j", fs.Basename(), "The name of the project")
 	rootCmd.PersistentFlags().StringP("path", "t", fs.WorkDir(), "The project path")
+	rootCmd.PersistentFlags().StringP("xdebug", "", "", "When this is enabled, Tokaido will not modify the docker-compose.tok.yml file if it exists")
 	rootCmd.PersistentFlags().BoolP("force", "", false, "Forcefully skip confirmation prompts with 'yes' response")
 	rootCmd.PersistentFlags().BoolP("version", "v", false, "Check the current Tokaido version (base command only)")
 	rootCmd.PersistentFlags().BoolP("debug", "d", false, "Enable debug mode, command output is printed to the console")
