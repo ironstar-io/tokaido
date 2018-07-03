@@ -6,6 +6,7 @@ import (
 	"bitbucket.org/ironstar/tokaido-cli/services/drupal"
 	"bitbucket.org/ironstar/tokaido-cli/services/git"
 	"bitbucket.org/ironstar/tokaido-cli/services/unison"
+	"bitbucket.org/ironstar/tokaido-cli/services/xdebug"
 	"bitbucket.org/ironstar/tokaido-cli/system"
 	"bitbucket.org/ironstar/tokaido-cli/system/ssh"
 )
@@ -39,4 +40,6 @@ func Init() {
 	docker.Up()
 
 	drupal.ConfigureSSH()
+
+	xdebug.Configure()
 }
