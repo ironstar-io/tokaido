@@ -40,7 +40,7 @@ func FindOrCreateTokCompose() {
 	if os.IsNotExist(errf) {
 		fmt.Println(`🏯  Generating a new docker-compose.tok.yml file`)
 
-		CreateOrReplaceTokCompose()
+		CreateOrReplaceTokCompose(MarshalledDefaults())
 		return
 	}
 
@@ -49,11 +49,33 @@ func FindOrCreateTokCompose() {
 		return
 	}
 
-	CreateOrReplaceTokCompose()
+	CreateOrReplaceTokCompose(MarshalledDefaults())
 }
 
 // CreateOrReplaceTokCompose ...
-func CreateOrReplaceTokCompose() {
+func CreateOrReplaceTokCompose(tokComposeYml []byte) {
+	if conf.GetConfig().CustomCompose == false {
+		fs.TouchOrReplace(tokComposePath, append(dockertmpl.ModWarning[:], tokComposeYml[:]...))
+		return
+	}
+
+	fs.TouchOrReplace(tokComposePath, tokComposeYml)
+}
+
+// MarshalledDefaults ...
+func MarshalledDefaults() []byte {
+	emptyTokStruct := UnmarshalledDefaults()
+
+	tokComposeYml, err := yaml.Marshal(&emptyTokStruct)
+	if err != nil {
+		log.Fatalf("error: %v", err)
+	}
+
+	return tokComposeYml
+}
+
+// UnmarshalledDefaults ...
+func UnmarshalledDefaults() dockertmpl.ComposeDotTok {
 	tokStruct := dockertmpl.ComposeDotTok{}
 
 	err := yaml.Unmarshal(dockertmpl.ComposeTokDefaults, &tokStruct)
@@ -73,17 +95,7 @@ func CreateOrReplaceTokCompose() {
 		}
 	}
 
-	tokComposeYml, err := yaml.Marshal(&tokStruct)
-	if err != nil {
-		log.Fatalf("error: %v", err)
-	}
-
-	if conf.GetConfig().CustomCompose == false {
-		fs.TouchOrReplace(tokComposePath, append(dockertmpl.ModWarning[:], tokComposeYml[:]...))
-		return
-	}
-
-	fs.TouchOrReplace(tokComposePath, tokComposeYml)
+	return tokStruct
 }
 
 // StripModWarning ...
