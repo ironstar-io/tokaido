@@ -91,9 +91,6 @@ func deleteSyncService() {
 
 // RegisterSystemdService Register the unison sync service for systemd
 func RegisterSystemdService() {
-	fmt.Println(`
-🔄  Creating a background process to sync your local repo into the Tokaido environment
-	`)
 	createSyncFile()
 }
 

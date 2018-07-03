@@ -1,17 +1,26 @@
 package unison
 
 import (
-	"fmt"
-
 	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/system/linux"
 	"bitbucket.org/ironstar/tokaido-cli/system/osx"
 	"bitbucket.org/ironstar/tokaido-cli/utils"
+
+	"fmt"
 )
+
+var bgSyncFailMsg = `
+😓  The background sync service is not running
+
+Tokaido will run, but your environment and local host will not be synchronised
+Use 'tok up' to repair, or 'tok sync' to sync manually
+		`
 
 // CreateSyncService Register a launchd or systemctl service for Unison active sync
 func CreateSyncService() {
 	GOOS := utils.CheckOS()
+
+	fmt.Println("🔄  Creating a background process to sync your local repo into the Tokaido environment")
 
 	if GOOS == "linux" {
 		linux.RegisterSystemdService()
@@ -58,11 +67,7 @@ func CheckSyncService() error {
 			return linuxErr
 		}
 
-		fmt.Println(`
-😓  The background sync service is not running
-    Tokaido will run, but your environment and local host will not be synchronised
-    Use 'tok up' to repair, or 'tok sync' to sync manually
-		`)
+		fmt.Println(bgSyncFailMsg)
 
 		if conf.GetConfig().Debug == true {
 			fmt.Printf("\033[33m%s\033[0m\n", linuxErr)
@@ -79,11 +84,7 @@ func CheckSyncService() error {
 			fmt.Printf("\033[33m%s\033[0m\n", osxErr)
 		}
 
-		fmt.Println(`
-😓  The background sync service is not running
-    Tokaido will run, but your environment and local host will not be synchronised
-    Use 'tok up' to repair, or 'tok sync' to sync manually
-		`)
+		fmt.Println(bgSyncFailMsg)
 
 		return osxErr
 	}

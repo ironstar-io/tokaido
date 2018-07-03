@@ -21,6 +21,15 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/gernest/wow"
+  packages = [
+    ".",
+    "spin"
+  ]
+  revision = "7e0b2a2398989a5d220eebac5742d45422ba7de8"
+
+[[projects]]
+  branch = "master"
   name = "github.com/hashicorp/hcl"
   packages = [
     ".",
@@ -41,6 +50,16 @@
   packages = ["."]
   revision = "76626ae9c91c4f2a10f34cad8ce83ea42c93bb75"
   version = "v1.0"
+
+[[projects]]
+  name = "github.com/magefile/mage"
+  packages = [
+    "mg",
+    "sh",
+    "types"
+  ]
+  revision = "771ebed3d686dce3d36cab4fc9ee55c295ed8905"
+  version = "2.1"
 
 [[projects]]
   name = "github.com/magiconair/properties"
@@ -176,7 +195,8 @@
     "ed25519/internal/edwards25519",
     "internal/chacha20",
     "poly1305",
-    "ssh"
+    "ssh",
+    "ssh/terminal"
   ]
   revision = "a3beeb748656e13e54256fd2cde19e058f41f60f"
 
@@ -193,7 +213,10 @@
 [[projects]]
   branch = "master"
   name = "golang.org/x/sys"
-  packages = ["unix"]
+  packages = [
+    "unix",
+    "windows"
+  ]
   revision = "7c87d13f8e835d2fb3a70a2912c811ed0c1d241b"
 
 [[projects]]
@@ -232,6 +255,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "08e8d7c31bea762d4878463d021a401c855da76b93b61b53e1b035a0d9f8e6ae"
+  inputs-digest = "97aaa0e7f0406d6767b0bd2835f75a698f90bfe9282311a9c79c6713f4002d46"
   solver-name = "gps-cdcl"
   solver-version = 1
