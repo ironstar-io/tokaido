@@ -21,6 +21,9 @@ type Config struct {
 	SystemdPath       string
 	LaunchdPath       string
 	CreateSyncService bool
+	Xdebug            struct {
+		Port string
+	}
 }
 
 // LoadConfig loads the config from a file if specified, otherwise from the environment
