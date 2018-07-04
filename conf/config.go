@@ -21,7 +21,10 @@ type Config struct {
 	SystemdPath       string
 	LaunchdPath       string
 	CreateSyncService bool
-	Xdebug            struct {
+	Drupal            struct {
+		Path string
+	}
+	Xdebug struct {
 		Port string
 	}
 }

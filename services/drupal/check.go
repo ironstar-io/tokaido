@@ -2,7 +2,6 @@ package drupal
 
 import (
 	"bitbucket.org/ironstar/tokaido-cli/services/docker"
-	"bitbucket.org/ironstar/tokaido-cli/system/fs"
 	"bitbucket.org/ironstar/tokaido-cli/utils"
 
 	"bufio"
@@ -16,13 +15,12 @@ import (
 )
 
 var rgx = regexp.MustCompile("'(.*?)'")
-var drupalDir = fs.WorkDir() + "/docroot/core/lib/Drupal.php"
 var validDrupalRange = ">=8.5.x"
 var checkFailMsg = "\n⚠️  There were some problems detected during the system checks. This won't stop you from running any Tokaido commands, but they may not behave as you were expecting.\n\n"
 
 // CheckLocal ...
 func CheckLocal() {
-	if _, err := os.Stat(drupalDir); os.IsNotExist(err) {
+	if _, err := os.Stat(CoreDrupalFile()); os.IsNotExist(err) {
 		fmt.Println("  ✘  A Drupal installation was not found")
 		fmt.Printf(checkFailMsg)
 		return
@@ -92,7 +90,7 @@ func getDrupalVersion() string {
 
 // versionStr ...
 func versionStr() string {
-	f, err := os.Open(drupalDir)
+	f, err := os.Open(CoreDrupalFile())
 	if err != nil {
 		log.Fatal(err)
 	}

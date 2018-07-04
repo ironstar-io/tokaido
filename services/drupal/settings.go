@@ -18,7 +18,7 @@ type fileMasks struct {
 	DocrootSettings os.FileMode
 }
 
-var docrootDefault = fs.WorkDir() + "/docroot/sites/default"
+var docrootDefault = getRootPath() + "/sites/default"
 var settingsPath = docrootDefault + "/settings.php"
 var settingsTokPath = docrootDefault + "/settings.tok.php"
 
