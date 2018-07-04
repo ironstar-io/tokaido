@@ -9,6 +9,9 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+
+	"github.com/gernest/wow"
+	"github.com/gernest/wow/spin"
 )
 
 // ComposeStdout - Convenience method for docker-compose shell commands
@@ -57,15 +60,13 @@ func Down() {
 		return
 	}
 
-	fmt.Println(`
-🚅  Tokaido is pulling down your containers!
-	`)
+	fmt.Println()
+	w := wow.New(os.Stdout, spin.Get(spin.Dots), `   Tokaido is pulling down your containers!`)
+	w.Start()
 
 	ComposeStdout("down")
 
-	fmt.Println(`
-🚉  Tokaido destroyed containers successfully!
-	`)
+	w.PersistWith(spin.Spinner{Frames: []string{"🚉"}}, `  Tokaido destroyed containers successfully!`)
 }
 
 // Ps - Print the container status to the console

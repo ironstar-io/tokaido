@@ -19,9 +19,6 @@ var UpCmd = &cobra.Command{
 		utils.CheckCmdHard("docker-compose")
 		conf.LoadConfig(cmd)
 
-		fmt.Println(`
-🚅  Tokaido is pulling up your containers!`)
-
 		tok.Init()
 
 		fmt.Println(`

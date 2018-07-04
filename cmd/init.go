@@ -21,8 +21,6 @@ var InitCmd = &cobra.Command{
 
 		fmt.Printf("The command 'tok init' has been deprecated. Please use 'tok up' instead.\n\n")
 
-		fmt.Println(`🚅  Tokaido is initializing your project!`)
-
 		tok.Init()
 
 		fmt.Println(`

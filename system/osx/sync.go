@@ -108,9 +108,6 @@ func deleteSyncService() {
 
 // RegisterLaunchdService Register the unison sync service for launchd
 func RegisterLaunchdService() {
-	fmt.Println(`
-🔄  Creating a background process to sync your local repo into the Tokaido environment
-	`)
 	createSyncFile()
 	loadSyncService()
 }
