@@ -1,9 +1,12 @@
 package conf
 
 import (
+	"bitbucket.org/ironstar/tokaido-cli/system/fs"
+
+	"fmt"
 	"strings"
 
-	"bitbucket.org/ironstar/tokaido-cli/system/fs"
+	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -52,6 +55,11 @@ func LoadConfig(cmd *cobra.Command) (*Config, error) {
 		viper.AddConfigPath("./")
 		viper.AddConfigPath("$HOME/.tok/")
 	}
+
+	viper.WatchConfig()
+	viper.OnConfigChange(func(e fsnotify.Event) {
+		fmt.Println("Config file changed:", e.Name)
+	})
 
 	if err := viper.ReadInConfig(); err != nil {
 		return nil, err

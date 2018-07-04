@@ -19,8 +19,7 @@ import (
 
 // Init - The core run sheet of `tok init`
 func Init() {
-	w := wow.New(os.Stdout, spin.Get(spin.Dots), `   Tokaido is starting up!`)
-	w.Start()
+	fmt.Printf("🚀  Tokaido is starting up!\n")
 
 	c := conf.GetConfig()
 	system.CheckDependencies()
@@ -42,12 +41,12 @@ func Init() {
 		unison.Sync()
 	}
 
-	w.PersistWith(spin.Spinner{}, "")
-
 	if c.CreateSyncService {
-		unison.CreateSyncService()
 		fmt.Println()
+		unison.CreateSyncService()
 	}
+
+	fmt.Println()
 
 	wo := wow.New(os.Stdout, spin.Get(spin.Dots), `   Tokaido is pulling up your containers!`)
 	wo.Start()

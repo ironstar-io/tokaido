@@ -18,6 +18,15 @@ func getRootPath() string {
 		return wd + c
 	}
 
+	rootPath := scanForCoreDrupal()
+
+	conf.ReplaceDrupalPath(strings.Replace(rootPath, wd, "", -1))
+
+	return rootPath
+}
+
+func scanForCoreDrupal() string {
+	wd := fs.WorkDir()
 	var dp string
 	dc := "/core/lib/Drupal.php"
 	err := filepath.Walk(wd, func(path string, info os.FileInfo, err error) error {
@@ -32,10 +41,6 @@ func getRootPath() string {
 	})
 	if err != io.EOF {
 		log.Fatalf("There was an error when searching for your Drupal installation [%v]\n", err)
-	}
-
-	if dp == "" {
-		log.Fatal("Tokaido was unable to find your Drupal installation. Exiting...")
 	}
 
 	return dp
