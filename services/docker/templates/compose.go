@@ -131,10 +131,6 @@ services:
       - "9000"
     environment:
       PHP_DISPLAY_ERRORS: "yes"
-      XDEBUG_REMOTE_ENABLE: "yes"
-      XDEBUG_REMOTE_AUTOSTART: "yes"
-      XDEBUG_REMOTE_HOST: "172.0.0.1"
-      XDEBUG_REMOTE_PORT: "9000"
   memcache:
     image: memcached:1.5-alpine
   mysql:
