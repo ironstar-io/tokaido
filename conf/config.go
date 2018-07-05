@@ -46,6 +46,7 @@ func LoadConfig(cmd *cobra.Command) (*Config, error) {
 	viper.SetDefault("CreateSyncService", true)
 	viper.SetDefault("SystemdPath", fs.HomeDir()+"/.config/systemd/user/")
 	viper.SetDefault("LaunchdPath", fs.HomeDir()+"/Library/LaunchAgents/")
+	viper.SetConfigType("yaml")
 
 	if configFile, _ := cmd.Flags().GetString("config"); configFile != "" {
 		viper.SetConfigFile(configFile)
