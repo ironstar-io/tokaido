@@ -20,7 +20,7 @@ func getRootPath() string {
 
 	rootPath := scanForCoreDrupal()
 
-	conf.ReplaceDrupalPath(strings.Replace(rootPath, wd, "", -1))
+	conf.CreateOrReplaceDrupalPath(strings.Replace(rootPath, wd, "", -1))
 
 	return rootPath
 }
