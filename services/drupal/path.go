@@ -15,6 +15,10 @@ func getRootPath() string {
 	wd := fs.WorkDir()
 	c := conf.GetConfig().Drupal.Path
 	if c != "" {
+		sa := []rune(c)
+		if string(sa[0]) != "/" {
+			c = "/" + c
+		}
 		return wd + c
 	}
 

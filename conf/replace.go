@@ -2,6 +2,7 @@ package conf
 
 import (
 	"bitbucket.org/ironstar/tokaido-cli/system/fs"
+	"fmt"
 
 	"io/ioutil"
 	"log"
@@ -50,4 +51,8 @@ func replaceDrupalPath(cf string, path string) {
 	}
 
 	fs.Replace(cf, confYml)
+
+	if err := viper.ReadInConfig(); err != nil {
+		fmt.Printf(`There was an error reading your config file. This command may need to be run again.`)
+	}
 }
