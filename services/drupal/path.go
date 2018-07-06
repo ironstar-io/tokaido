@@ -54,3 +54,11 @@ func scanForCoreDrupal() string {
 func CoreDrupalFile() string {
 	return getRootPath() + "/core/lib/Drupal.php"
 }
+
+// GetRootDir - Return the drupal root folder name without workdir
+func GetRootDir() string {
+	dr := getRootPath()
+	ds := strings.Split(dr, "/")
+
+	return ds[len(ds)-1]
+}
