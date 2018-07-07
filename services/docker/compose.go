@@ -71,7 +71,7 @@ func Down() {
 
 // Ps - Print the container status to the console
 func Ps() {
-	ComposeStdout("ps")
+	fmt.Println(ComposeResult("ps"))
 }
 
 // StatusCheck ...
