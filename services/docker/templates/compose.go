@@ -32,7 +32,7 @@ type ComposeDotTok struct {
 			VolumesFrom []string `yaml:"volumes_from"`
 			DependsOn   []string `yaml:"depends_on"`
 			Ports       []string
-			Environment map[string]string
+			Environment map[string]string `yaml:"environment,omitempty"`
 		}
 		Fpm struct {
 			User        string
@@ -56,9 +56,9 @@ type ComposeDotTok struct {
 			Image       string
 			Hostname    string
 			Ports       []string
-			WorkingDir  string   `yaml:"working_dir"`
-			VolumesFrom []string `yaml:"volumes_from"`
-			Environment map[string]string
+			WorkingDir  string            `yaml:"working_dir"`
+			VolumesFrom []string          `yaml:"volumes_from"`
+			Environment map[string]string `yaml:"environment,omitempty"`
 		}
 		Solr struct {
 			Image      string
