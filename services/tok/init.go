@@ -36,8 +36,8 @@ func Init() {
 	unison.CreateOrUpdatePrf()
 
 	// Only perform sync if sync service isn't running, otherwise we'll stall
-	err := unison.CheckSyncServiceSilent()
-	if err != nil {
+	s := unison.SyncServiceStatus()
+	if s == "stopped" {
 		unison.Sync()
 	}
 
