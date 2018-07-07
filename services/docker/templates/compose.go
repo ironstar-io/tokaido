@@ -32,6 +32,7 @@ type ComposeDotTok struct {
 			VolumesFrom []string `yaml:"volumes_from"`
 			DependsOn   []string `yaml:"depends_on"`
 			Ports       []string
+			Environment map[string]string `yaml:"environment,omitempty"`
 		}
 		Fpm struct {
 			User        string
@@ -40,7 +41,7 @@ type ComposeDotTok struct {
 			VolumesFrom []string `yaml:"volumes_from"`
 			DependsOn   []string `yaml:"depends_on"`
 			Ports       []string
-			Environment map[string]string
+			Environment map[string]string `yaml:"environment,omitempty"`
 		}
 		Memcache struct {
 			Image string
@@ -55,9 +56,9 @@ type ComposeDotTok struct {
 			Image       string
 			Hostname    string
 			Ports       []string
-			WorkingDir  string   `yaml:"working_dir"`
-			VolumesFrom []string `yaml:"volumes_from"`
-			Environment map[string]string
+			WorkingDir  string            `yaml:"working_dir"`
+			VolumesFrom []string          `yaml:"volumes_from"`
+			Environment map[string]string `yaml:"environment,omitempty"`
 		}
 		Solr struct {
 			Image      string
@@ -118,6 +119,8 @@ services:
       - fpm
     ports:
       - "8082"
+    environment:
+      DRUPAL_ROOT: docroot
   fpm:
     user: "1001"
     image: tokaido/fpm:latest
@@ -131,10 +134,6 @@ services:
       - "9000"
     environment:
       PHP_DISPLAY_ERRORS: "yes"
-      XDEBUG_REMOTE_ENABLE: "yes"
-      XDEBUG_REMOTE_AUTOSTART: "yes"
-      XDEBUG_REMOTE_HOST: "172.0.0.1"
-      XDEBUG_REMOTE_PORT: "9000"
   memcache:
     image: memcached:1.5-alpine
   mysql:

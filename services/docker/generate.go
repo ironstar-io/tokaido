@@ -17,7 +17,6 @@ import (
 )
 
 var tokComposePath = fs.WorkDir() + "/docker-compose.tok.yml"
-var customTokPath = fs.WorkDir() + "/.tok/compose.tok.yml"
 
 // HardCheckTokCompose ...
 func HardCheckTokCompose() {
@@ -83,8 +82,16 @@ func UnmarshalledDefaults() dockertmpl.ComposeDotTok {
 		log.Fatalf("error: %v", err)
 	}
 
-	if fs.CheckExists(customTokPath) == true {
-		customTok, err := ioutil.ReadFile(customTokPath)
+	appendCustomTok(tokStruct)
+	appendDrupalRoot(tokStruct)
+
+	return tokStruct
+}
+
+func appendCustomTok(tokStruct dockertmpl.ComposeDotTok) {
+	ctp := customTokPath()
+	if ctp != "" {
+		customTok, err := ioutil.ReadFile(ctp)
 		if err != nil {
 			log.Fatalf("error: %v", err)
 		}
@@ -94,8 +101,29 @@ func UnmarshalledDefaults() dockertmpl.ComposeDotTok {
 			log.Fatalf("error: %v", errTwo)
 		}
 	}
+}
 
-	return tokStruct
+func appendDrupalRoot(tokStruct dockertmpl.ComposeDotTok) {
+	dr := conf.GetRootDir()
+	dry := drupalRootTmpl(dr)
+
+	err := yaml.Unmarshal(dry, &tokStruct)
+	if err != nil {
+		log.Fatalf("error: %v", err)
+	}
+}
+
+func drupalRootTmpl(drupalRoot string) []byte {
+	return []byte(`services:
+  fpm:
+    environment:
+      DRUPAL_ROOT: ` + drupalRoot + `
+  nginx:
+    environment:
+      DRUPAL_ROOT: ` + drupalRoot + `
+  drush:
+    environment:
+      DRUPAL_ROOT: ` + drupalRoot)
 }
 
 // StripModWarning ...
@@ -126,4 +154,18 @@ func StripModWarning() {
 	if warningPresent == true {
 		fs.Replace(tokComposePath, buffer.Bytes())
 	}
+}
+
+func customTokPath() string {
+	ct := fs.WorkDir() + "/.tok/compose.tok"
+
+	if fs.CheckExists(ct+".yml") == true {
+		return ct + ".yml"
+	}
+
+	if fs.CheckExists(ct+".yaml") == true {
+		return ct + ".yaml"
+	}
+
+	return ""
 }

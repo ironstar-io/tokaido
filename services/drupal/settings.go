@@ -1,6 +1,7 @@
 package drupal
 
 import (
+	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/services/drupal/templates"
 	"bitbucket.org/ironstar/tokaido-cli/system"
 	"bitbucket.org/ironstar/tokaido-cli/system/fs"
@@ -18,21 +19,27 @@ type fileMasks struct {
 	DocrootSettings os.FileMode
 }
 
-var docrootDefault = fs.WorkDir() + "/docroot/sites/default"
-var settingsPath = docrootDefault + "/settings.php"
-var settingsTokPath = docrootDefault + "/settings.tok.php"
+func sitesDefault() string {
+	return conf.GetRootPath() + "/sites/default"
+}
+func settingsPath() string {
+	return sitesDefault() + "/settings.php"
+}
+func settingsTokPath() string {
+	return sitesDefault() + "/settings.tok.php"
+}
 
 // CheckSettings ...
 func CheckSettings() {
-	if fs.CheckExists(settingsPath) == false {
+	if fs.CheckExists(settingsPath()) == false {
 		fmt.Printf(`
-Could not find a file located at "` + settingsPath + `", database connection may not work!"
+Could not find a file located at "` + settingsPath() + `", database connection may not work!"
 		`)
 		return
 	}
 
-	tokSettingsReferenced := fs.Contains(settingsPath, "/settings.tok.php")
-	tokSettingsExists := fs.CheckExists(settingsTokPath)
+	tokSettingsReferenced := fs.Contains(settingsPath(), "/settings.tok.php")
+	tokSettingsExists := fs.CheckExists(settingsTokPath())
 
 	if tokSettingsReferenced == false || tokSettingsExists == false {
 		if allowBuildSettings() == false {
@@ -60,14 +67,14 @@ Could not find a file located at "` + settingsPath + `", database connection may
 }
 
 func checkSettingsExist() {
-	_, settingPathErr := os.Stat(settingsPath)
+	_, settingPathErr := os.Stat(settingsPath())
 	if settingPathErr != nil {
 		permissionErrMsg(settingPathErr.Error())
 		return
 	}
 	if os.IsNotExist(settingPathErr) {
 		fmt.Printf(`
-Could not find a Drupal settings file located at "` + settingsPath + `", database connection may not work!"
+Could not find a Drupal settings file located at "` + settingsPath() + `", database connection may not work!"
 	`)
 
 		return
@@ -76,12 +83,12 @@ Could not find a Drupal settings file located at "` + settingsPath + `", databas
 
 func processFilePerimissions() (fileMasks, error) {
 	var emptyStruct fileMasks
-	docrootDefaultMask, err := system.GetPermissionsMask(docrootDefault)
+	docrootDefaultMask, err := system.GetPermissionsMask(sitesDefault())
 	if err != nil {
 		return emptyStruct, err
 	}
 
-	docrootSettingsMask, err := system.GetPermissionsMask(settingsPath)
+	docrootSettingsMask, err := system.GetPermissionsMask(settingsPath())
 	if err != nil {
 		return emptyStruct, err
 	}
@@ -91,14 +98,14 @@ func processFilePerimissions() (fileMasks, error) {
 		DocrootSettings: docrootSettingsMask,
 	}
 
-	if fs.Writable(docrootDefault) == false {
+	if fs.Writable(sitesDefault()) == false {
 		fmt.Println("\nIt looks like Drupal has been installed before, this operation may need elevated privileges to complete. You may be requested to supply your password.")
 
-		if err := os.Chmod(docrootDefault, 0770); err != nil {
+		if err := os.Chmod(sitesDefault(), 0770); err != nil {
 			return emptyStruct, err
 		}
 
-		if err := os.Chmod(settingsPath, 0660); err != nil {
+		if err := os.Chmod(settingsPath(), 0660); err != nil {
 			return emptyStruct, err
 		}
 	}
@@ -107,13 +114,13 @@ func processFilePerimissions() (fileMasks, error) {
 }
 
 func restoreFilePerimissions(defaultMasks fileMasks) {
-	docrootChmodErr := os.Chmod(docrootDefault, defaultMasks.DocrootDefault)
+	docrootChmodErr := os.Chmod(sitesDefault(), defaultMasks.DocrootDefault)
 	if docrootChmodErr != nil {
 		fmt.Println(docrootChmodErr)
 		return
 	}
 
-	settingsChmodErr := os.Chmod(settingsPath, defaultMasks.DocrootSettings)
+	settingsChmodErr := os.Chmod(settingsPath(), defaultMasks.DocrootSettings)
 	if settingsChmodErr != nil {
 		fmt.Println(settingsChmodErr)
 		return
@@ -121,7 +128,7 @@ func restoreFilePerimissions(defaultMasks fileMasks) {
 }
 
 func appendTokSettingsRef() {
-	f, openErr := os.Open(settingsPath)
+	f, openErr := os.Open(settingsPath())
 	if openErr != nil {
 		fmt.Println(openErr)
 		return
@@ -146,17 +153,17 @@ func appendTokSettingsRef() {
 		buffer.Write(drupaltmpl.SettingsAppend)
 	}
 
-	fs.Replace(settingsPath, buffer.Bytes())
+	fs.Replace(settingsPath(), buffer.Bytes())
 }
 
 func createSettingsTok() {
-	fs.TouchByteArray(settingsTokPath, drupaltmpl.SettingsTok)
+	fs.TouchByteArray(settingsTokPath(), drupaltmpl.SettingsTok)
 }
 
 func allowBuildSettings() bool {
 	confirmation := utils.ConfirmationPrompt(`
 Tokaido can now create database connection settings for your site.
-Should Tokaido add the file 'docroot/sites/default/settings.tok.php'
+Should Tokaido add the file `+settingsTokPath()+`
 and reference it from 'settings.php'?
 
 If you prefer not to do this automatically, we'll show you database connection
