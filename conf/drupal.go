@@ -1,7 +1,6 @@
-package drupal
+package conf
 
 import (
-	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/system/fs"
 
 	"io"
@@ -11,9 +10,10 @@ import (
 	"strings"
 )
 
-func getRootPath() string {
+// GetRootPath ...
+func GetRootPath() string {
 	wd := fs.WorkDir()
-	c := conf.GetConfig().Drupal.Path
+	c := GetConfig().Drupal.Path
 	if c != "" {
 		sa := []rune(c)
 		if string(sa[0]) != "/" {
@@ -24,7 +24,7 @@ func getRootPath() string {
 
 	rootPath := scanForCoreDrupal()
 
-	conf.CreateOrReplaceDrupalPath(strings.Replace(rootPath, wd, "", -1))
+	CreateOrReplaceDrupalPath(strings.Replace(rootPath, wd, "", -1))
 
 	return rootPath
 }
@@ -52,12 +52,12 @@ func scanForCoreDrupal() string {
 
 // CoreDrupalFile - Return the core drupal file for the users' installation
 func CoreDrupalFile() string {
-	return getRootPath() + "/core/lib/Drupal.php"
+	return GetRootPath() + "/core/lib/Drupal.php"
 }
 
 // GetRootDir - Return the drupal root folder name without workdir
 func GetRootDir() string {
-	dr := getRootPath()
+	dr := GetRootPath()
 	ds := strings.Split(dr, "/")
 
 	return ds[len(ds)-1]

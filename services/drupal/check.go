@@ -1,6 +1,7 @@
 package drupal
 
 import (
+	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/services/docker"
 	"bitbucket.org/ironstar/tokaido-cli/utils"
 
@@ -20,7 +21,7 @@ var checkFailMsg = "\n⚠️  There were some problems detected during the syste
 
 // CheckLocal ...
 func CheckLocal() {
-	if _, err := os.Stat(CoreDrupalFile()); os.IsNotExist(err) {
+	if _, err := os.Stat(conf.CoreDrupalFile()); os.IsNotExist(err) {
 		fmt.Println("  ✘  A Drupal installation was not found")
 		fmt.Printf(checkFailMsg)
 		return
@@ -90,7 +91,7 @@ func getDrupalVersion() string {
 
 // versionStr ...
 func versionStr() string {
-	f, err := os.Open(CoreDrupalFile())
+	f, err := os.Open(conf.CoreDrupalFile())
 	if err != nil {
 		log.Fatal(err)
 	}

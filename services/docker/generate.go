@@ -82,6 +82,13 @@ func UnmarshalledDefaults() dockertmpl.ComposeDotTok {
 		log.Fatalf("error: %v", err)
 	}
 
+	appendCustomTok(tokStruct)
+	appendDrupalRoot(tokStruct)
+
+	return tokStruct
+}
+
+func appendCustomTok(tokStruct dockertmpl.ComposeDotTok) {
 	ctp := customTokPath()
 	if ctp != "" {
 		customTok, err := ioutil.ReadFile(ctp)
@@ -94,8 +101,29 @@ func UnmarshalledDefaults() dockertmpl.ComposeDotTok {
 			log.Fatalf("error: %v", errTwo)
 		}
 	}
+}
 
-	return tokStruct
+func appendDrupalRoot(tokStruct dockertmpl.ComposeDotTok) {
+	dr := conf.GetRootDir()
+	dry := drupalRootTmpl(dr)
+
+	err := yaml.Unmarshal(dry, &tokStruct)
+	if err != nil {
+		log.Fatalf("error: %v", err)
+	}
+}
+
+func drupalRootTmpl(drupalRoot string) []byte {
+	return []byte(`services:
+  fpm:
+    environment:
+      DRUPAL_ROOT: ` + drupalRoot + `
+  nginx:
+    environment:
+      DRUPAL_ROOT: ` + drupalRoot + `
+  drush:
+    environment:
+      DRUPAL_ROOT: ` + drupalRoot)
 }
 
 // StripModWarning ...

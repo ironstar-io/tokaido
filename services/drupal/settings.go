@@ -1,6 +1,7 @@
 package drupal
 
 import (
+	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/services/drupal/templates"
 	"bitbucket.org/ironstar/tokaido-cli/system"
 	"bitbucket.org/ironstar/tokaido-cli/system/fs"
@@ -19,7 +20,7 @@ type fileMasks struct {
 }
 
 func sitesDefault() string {
-	return getRootPath() + "/sites/default"
+	return conf.GetRootPath() + "/sites/default"
 }
 func settingsPath() string {
 	return sitesDefault() + "/settings.php"

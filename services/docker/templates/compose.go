@@ -32,6 +32,7 @@ type ComposeDotTok struct {
 			VolumesFrom []string `yaml:"volumes_from"`
 			DependsOn   []string `yaml:"depends_on"`
 			Ports       []string
+			Environment map[string]string
 		}
 		Fpm struct {
 			User        string
@@ -40,7 +41,7 @@ type ComposeDotTok struct {
 			VolumesFrom []string `yaml:"volumes_from"`
 			DependsOn   []string `yaml:"depends_on"`
 			Ports       []string
-			Environment map[string]string
+			Environment map[string]string `yaml:"environment,omitempty"`
 		}
 		Memcache struct {
 			Image string
@@ -118,6 +119,8 @@ services:
       - fpm
     ports:
       - "8082"
+    environment:
+      DRUPAL_ROOT: docroot
   fpm:
     user: "1001"
     image: tokaido/fpm:latest
