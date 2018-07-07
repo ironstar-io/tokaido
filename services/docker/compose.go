@@ -36,16 +36,18 @@ func composeArgs(args ...string) []string {
 
 // Up - Lift all containers in the compose file
 func Up() {
-	if ImageExists("tokaido/drush:latest") == false {
-		fmt.Println(`🚡  First time lifting your containers? There's a few images to download, this might take some time.`)
-	}
-
 	ComposeStdout("up", "-d")
 }
 
 // Stop - Stop all containers in the compose file
 func Stop() {
+	fmt.Println()
+	w := wow.New(os.Stdout, spin.Get(spin.Dots), `   Tokaido is stopping your containers!`)
+	w.Start()
+
 	ComposeStdout("stop")
+
+	w.PersistWith(spin.Spinner{Frames: []string{"🚉"}}, `  Tokaido stopped your containers successfully!`)
 }
 
 // Down - Pull down all the containers in the compose file

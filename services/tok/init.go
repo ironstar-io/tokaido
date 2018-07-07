@@ -48,6 +48,10 @@ func Init() {
 
 	fmt.Println()
 
+	if docker.ImageExists("tokaido/drush:latest") == false {
+		fmt.Println(`🚡  First time lifting your containers? There's a few images to download, this might take some time.`)
+	}
+
 	wo := wow.New(os.Stdout, spin.Get(spin.Dots), `   Tokaido is pulling up your containers!`)
 	wo.Start()
 
