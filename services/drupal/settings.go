@@ -163,7 +163,7 @@ func createSettingsTok() {
 func allowBuildSettings() bool {
 	confirmation := utils.ConfirmationPrompt(`
 Tokaido can now create database connection settings for your site.
-Should Tokaido add the file 'docroot/sites/default/settings.tok.php'
+Should Tokaido add the file `+settingsTokPath()+`
 and reference it from 'settings.php'?
 
 If you prefer not to do this automatically, we'll show you database connection
