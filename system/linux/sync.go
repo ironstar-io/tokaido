@@ -101,10 +101,18 @@ func StartSystemdService() {
 }
 
 // CheckSyncService checks if the unison background process is running
-func CheckSyncService() error {
+func CheckSyncService() string {
 	c := conf.GetConfig()
 	_, err := utils.CommandSubSplitOutput("systemctl", "--user", "status", "tokaido-sync-"+c.Project+".service")
-	return err
+	if err == nil {
+		return "running"
+	}
+
+	if c.Debug == true {
+		fmt.Printf("\033[33m%s\033[0m\n", err)
+	}
+
+	return "stopped"
 }
 
 // StopSystemdService ...

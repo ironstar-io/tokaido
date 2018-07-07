@@ -2,7 +2,6 @@ package osx
 
 import (
 	"bytes"
-	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -119,7 +118,7 @@ func StartLaunchdService() {
 }
 
 // CheckSyncService checks if the unison background process is running
-func CheckSyncService() error {
+func CheckSyncService() string {
 	c := conf.GetConfig()
 
 	u, uErr := user.Current()
@@ -128,13 +127,16 @@ func CheckSyncService() error {
 	}
 
 	o, _ := utils.CommandSubSplitOutput("launchctl", "print", "gui/"+u.Uid+"/tokaido.sync."+c.Project+".plist")
-	r := strings.Contains(o, "state = running")
-	if r == true {
-		return nil
+
+	if c.Debug == true {
+		fmt.Printf("\033[33m%s\033[0m\n", o)
 	}
 
-	return errors.New("Background sync process is not running")
+	if strings.Contains(o, "state = running") == true {
+		return "running"
+	}
 
+	return "stopped"
 }
 
 // StopLaunchdService ...

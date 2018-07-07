@@ -7,17 +7,29 @@ import (
 	"fmt"
 )
 
+var syncRunningErr = `There is already a sync service for this project running on your system. Exiting...`
+
 // Sync - Sync once without watching
 func Sync() {
-	config := conf.GetConfig()
+	s := SyncServiceStatus()
+	if s == "running" {
+		fmt.Println(syncRunningErr)
+		return
+	}
 
-	// fmt.Println(`🚝  Running a one time Unison sync between your system and the Tokaido environment`)
+	config := conf.GetConfig()
 
 	utils.CommandSubstitution("unison", config.Project, "-watch=false")
 }
 
 // Watch ...
 func Watch() {
+	s := SyncServiceStatus()
+	if s == "running" {
+		fmt.Println(syncRunningErr)
+		return
+	}
+
 	config := conf.GetConfig()
 
 	fmt.Println(`Watching your files for changes and synchronising with your container`)
