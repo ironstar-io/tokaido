@@ -52,7 +52,7 @@ func Init() {
 		fmt.Println(`🚡  First time lifting your containers? There's a few images to download, this might take some time.`)
 	}
 
-	wo := wow.New(os.Stdout, spin.Get(spin.Dots), `   Tokaido is pulling up your containers!`)
+	wo := wow.New(os.Stdout, spin.Get(spin.Dots), `   Tokaido is starting your containers`)
 	wo.Start()
 
 	docker.Up()
@@ -61,5 +61,5 @@ func Init() {
 
 	xdebug.Configure()
 
-	wo.PersistWith(spin.Spinner{Frames: []string{"🚅"}}, `  Tokaido lifted your containers!`)
+	wo.PersistWith(spin.Spinner{Frames: []string{"🚅"}}, `  Tokaido started your containers`)
 }

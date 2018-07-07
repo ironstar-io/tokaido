@@ -42,6 +42,14 @@ func createSyncFile() {
 	}
 
 	writeSyncFile(tpl.String(), c.SystemdPath, serviceFilename)
+	reloadSystemd()
+}
+
+func reloadSystemd() {
+	_, err := utils.CommandSubSplitOutput("systemctl", "--user", "daemon-reload")
+	if err != nil {
+		log.Fatal("Unable to reload the systemd config: ", err)
+	}
 }
 
 func writeSyncFile(body string, path string, filename string) {
@@ -70,23 +78,29 @@ func startSyncService() {
 
 func stopSyncService() {
 	c := conf.GetConfig()
-	_, err := utils.CommandSubSplitOutput("systemctl", "--user", "stop", "tokaido-sync-"+c.Project+".service")
-	if err != nil {
-		log.Fatal("Unable to stop the sync service: ", err)
+	_, errStatus := utils.CommandSubSplitOutput("systemctl", "--user", "status", "tokaido.sync."+c.Project+".service")
+	if errStatus == nil {
+		_, errStop := utils.CommandSubSplitOutput("systemctl", "--user", "stop", "tokaido-sync-"+c.Project+".service")
+		if errStop != nil {
+			log.Fatal("Unable to stop the sync service: ", errStop)
+		}
 	}
 }
 
 func deleteSyncService() {
 	c := conf.GetConfig()
 	rmErr := os.Remove(c.SystemdPath + "/tokaido-sync-" + c.Project + ".service")
-	if rmErr != nil {
-		log.Fatal("Unable to remove the sync service: ", rmErr)
+	if os.IsNotExist(rmErr) {
+		return
+	} else if rmErr != nil {
+		log.Fatal("Unable to remove service configuration: ", rmErr)
 	}
 
-	_, reloadErr := utils.CommandSubSplitOutput("systemctl", "--user", "daemon-reload")
-	if reloadErr != nil {
-		log.Fatal("Unable to reload the sync service: ", reloadErr)
-	}
+	reloadSystemd()
+
+	fmt.Println(`
+🔄  Removed the background sync process
+	`)
 }
 
 // RegisterSystemdService Register the unison sync service for systemd
@@ -109,9 +123,6 @@ func CheckSyncService() error {
 
 // StopSystemdService ...
 func StopSystemdService() {
-	fmt.Println(`
-🔄  Removing the background sync process
-	`)
 	stopSyncService()
 	deleteSyncService()
 }
