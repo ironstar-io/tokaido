@@ -97,7 +97,7 @@ func stopSyncService() {
 	c := conf.GetConfig()
 	_, err := utils.CommandSubSplitOutput("launchctl", "stop", "tokaido.sync."+c.Project+".plist")
 	if err != nil {
-		log.Fatal("Unable to start sync service: ", err)
+		log.Fatal("Unable to stop sync service: ", err)
 	}
 }
 
