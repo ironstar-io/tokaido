@@ -6,8 +6,6 @@ import (
 	"bitbucket.org/ironstar/tokaido-cli/services/unison"
 	"bitbucket.org/ironstar/tokaido-cli/utils"
 
-	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
@@ -23,16 +21,8 @@ var StopCmd = &cobra.Command{
 
 		conf.LoadConfig(cmd)
 
-		fmt.Println(`
-🚅  Tokaido is stopping your containers!
-		`)
-
-		unison.StopSyncService()
-
 		docker.Stop()
 
-		fmt.Println(`
-🚉  Tokaido stopped containers successfully!
-		`)
+		unison.StopSyncService()
 	},
 }
