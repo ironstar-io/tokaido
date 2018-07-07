@@ -81,7 +81,7 @@ func unloadSyncService() {
 	c := conf.GetConfig()
 	_, err := utils.CommandSubSplitOutput("launchctl", "unload", c.LaunchdPath+"/tokaido.sync."+c.Project+".plist")
 	if err != nil {
-		log.Fatal("Unable to load sync service: ", err)
+		log.Fatal("Unable to unload sync service: ", err)
 	}
 }
 
@@ -89,7 +89,7 @@ func startSyncService() {
 	c := conf.GetConfig()
 	_, err := utils.CommandSubSplitOutput("launchctl", "start", "tokaido.sync."+c.Project+".plist")
 	if err != nil {
-		log.Fatal("Unable to start sync service: ", err)
+		log.Fatal("Unable to start the sync service: ", err)
 	}
 }
 
@@ -97,7 +97,7 @@ func stopSyncService() {
 	c := conf.GetConfig()
 	_, err := utils.CommandSubSplitOutput("launchctl", "stop", "tokaido.sync."+c.Project+".plist")
 	if err != nil {
-		log.Fatal("Unable to stop sync service: ", err)
+		log.Fatal("Unable to stop the sync service: ", err)
 	}
 }
 
@@ -139,10 +139,14 @@ func CheckSyncService() error {
 
 // StopLaunchdService ...
 func StopLaunchdService() {
-	fmt.Println(`
+	c := conf.GetConfig()
+	ps, _ := utils.CommandSubSplitOutput("launchctl", "list", "tokaido.sync."+c.Project+".plist")
+	if ps != "" {
+		fmt.Println(`
 🔄  Removing the background sync process
 	`)
-	stopSyncService()
-	unloadSyncService()
-	deleteSyncService()
+		stopSyncService()
+		unloadSyncService()
+		deleteSyncService()
+	}
 }
