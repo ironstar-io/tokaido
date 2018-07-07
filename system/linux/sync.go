@@ -42,6 +42,14 @@ func createSyncFile() {
 	}
 
 	writeSyncFile(tpl.String(), c.SystemdPath, serviceFilename)
+	reloadSystemd()
+}
+
+func reloadSystemd() {
+	_, err := utils.CommandSubSplitOutput("systemctl", "--user", "daemon-reload")
+	if err != nil {
+		log.Fatal("Unable to reload the systemd config: ", err)
+	}
 }
 
 func writeSyncFile(body string, path string, filename string) {
@@ -88,14 +96,11 @@ func deleteSyncService() {
 		log.Fatal("Unable to remove service configuration: ", rmErr)
 	}
 
-	fmt.Println(`
-🔄  Removing the background sync process
-	`)
+	reloadSystemd()
 
-	_, reloadErr := utils.CommandSubSplitOutput("systemctl", "--user", "daemon-reload")
-	if reloadErr != nil {
-		log.Fatal("Unable to reload the systemd config: ", reloadErr)
-	}
+	fmt.Println(`
+🔄  Removed the background sync process
+	`)
 }
 
 // RegisterSystemdService Register the unison sync service for systemd
