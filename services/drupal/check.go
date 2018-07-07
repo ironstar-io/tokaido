@@ -42,7 +42,7 @@ func CheckContainer() {
 		return
 	}
 
-	fmt.Println(`😓  Drupal is not installed
+	fmt.Println(`😓  A Drupal site is not installed or is not working
 
 Tokaido is running but it looks like your Drupal site isn't installed.
 
