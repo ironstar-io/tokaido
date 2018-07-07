@@ -81,20 +81,25 @@ func StatusCheck() {
 	rawStatus := ComposeResult("ps")
 
 	unavailableContainers := false
+	foundContainers := false
 	scanner := bufio.NewScanner(strings.NewReader(rawStatus))
 	for scanner.Scan() {
 		if strings.Contains(scanner.Text(), "Name") || strings.Contains(scanner.Text(), "------") {
 			continue
 		} else if !strings.Contains(scanner.Text(), "Up") {
 			unavailableContainers = true
+			foundContainers = true
 		}
+		foundContainers = true
 	}
 
-	if unavailableContainers == true {
+	if unavailableContainers == true || foundContainers == false {
 		fmt.Println(`
 😓 Tokaido containers are not working properly
 
 It appears that some or all of the Tokaido containers are offline.
+
+View the status of your containers with 'tok ps'
 
 You can try to fix this by running 'tok up', or by running 'tok repair'.
 	`)
