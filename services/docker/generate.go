@@ -83,7 +83,7 @@ func UnmarshalledDefaults() dockertmpl.ComposeDotTok {
 	}
 
 	appendCustomTok(tokStruct)
-	appendDrupalRoot(tokStruct)
+	appendDrupalSettings(tokStruct)
 
 	return tokStruct
 }
@@ -108,9 +108,9 @@ func appendCustomTok(tokStruct dockertmpl.ComposeDotTok) {
 	}
 }
 
-func appendDrupalRoot(tokStruct dockertmpl.ComposeDotTok) {
+func appendDrupalSettings(tokStruct dockertmpl.ComposeDotTok) {
 	dr := conf.GetRootDir()
-	dry := drupalRootTmpl(dr)
+	dry := drupalSettingsTmpl(dr, conf.GetConfig().Project)
 
 	err := yaml.Unmarshal(dry, &tokStruct)
 	if err != nil {
@@ -118,7 +118,7 @@ func appendDrupalRoot(tokStruct dockertmpl.ComposeDotTok) {
 	}
 }
 
-func drupalRootTmpl(drupalRoot string) []byte {
+func drupalSettingsTmpl(drupalRoot string, projectName string) []byte {
 	return []byte(`services:
   fpm:
     environment:
@@ -128,7 +128,8 @@ func drupalRootTmpl(drupalRoot string) []byte {
       DRUPAL_ROOT: ` + drupalRoot + `
   drush:
     environment:
-      DRUPAL_ROOT: ` + drupalRoot)
+      DRUPAL_ROOT: ` + drupalRoot + `
+      PROJECT_NAME: ` + projectName)
 }
 
 // StripModWarning ...
