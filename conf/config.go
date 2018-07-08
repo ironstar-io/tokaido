@@ -3,6 +3,9 @@ package conf
 import (
 	"bitbucket.org/ironstar/tokaido-cli/system/fs"
 
+	"fmt"
+	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -37,6 +40,8 @@ func LoadConfig(cmd *cobra.Command) (*Config, error) {
 		return nil, err
 	}
 
+	createDotTok()
+
 	viper.SetEnvPrefix("TOK")
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 	viper.AutomaticEnv()
@@ -61,4 +66,14 @@ func LoadConfig(cmd *cobra.Command) (*Config, error) {
 	}
 
 	return populateConfig(new(Config))
+}
+
+func createDotTok() {
+	d := filepath.Join(fs.WorkDir(), ".tok")
+	if fs.CheckExists(d) == false {
+		err := os.MkdirAll(d, os.ModePerm)
+		if err != nil {
+			fmt.Println("There was an error creating the config directory:", err)
+		}
+	}
 }

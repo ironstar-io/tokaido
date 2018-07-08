@@ -90,6 +90,11 @@ func UnmarshalledDefaults() dockertmpl.ComposeDotTok {
 
 func appendCustomTok(tokStruct dockertmpl.ComposeDotTok) {
 	ctp := customTokPath()
+
+	if fs.CheckExists(ctp) == false {
+		return
+	}
+
 	if ctp != "" {
 		customTok, err := ioutil.ReadFile(ctp)
 		if err != nil {
