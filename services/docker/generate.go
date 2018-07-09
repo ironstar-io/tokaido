@@ -12,12 +12,13 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"gopkg.in/yaml.v2"
 )
 
-var tokComposePath = fs.WorkDir() + "/docker-compose.tok.yml"
+var tokComposePath = filepath.Join(fs.WorkDir(), "/docker-compose.tok.yml")
 
 // HardCheckTokCompose ...
 func HardCheckTokCompose() {
@@ -187,14 +188,14 @@ func StripModWarning() {
 }
 
 func customTokPath() string {
-	ct := fs.WorkDir() + "/.tok/compose.tok"
+	ct := filepath.Join(fs.WorkDir(), "/.tok")
 
 	if fs.CheckExists(ct+".yml") == true {
-		return ct + ".yml"
+		return filepath.Join(ct, "compose.tok.yml")
 	}
 
 	if fs.CheckExists(ct+".yaml") == true {
-		return ct + ".yaml"
+		return filepath.Join(ct, "compose.tok.yaml")
 	}
 
 	return ""

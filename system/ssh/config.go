@@ -6,10 +6,11 @@ import (
 	"bufio"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
-var sshConfigFile = fs.HomeDir() + "/.ssh/config"
+var sshConfigFile = filepath.Join(fs.HomeDir(), "/.ssh/config")
 
 // ProcessConfig ...
 func processConfig() {

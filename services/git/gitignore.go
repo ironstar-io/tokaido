@@ -8,6 +8,7 @@ import (
 	"bytes"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -18,7 +19,7 @@ func IgnoreDefaults() {
 
 // AppendGitignore ...
 func AppendGitignore(ignoreList []string) {
-	f, err := os.Open(fs.WorkDir() + "/.gitignore")
+	f, err := os.Open(filepath.Join(fs.WorkDir(), "/.gitignore"))
 	if err != nil {
 		fmt.Println("There was an issue finding your .gitignore file", err)
 		return

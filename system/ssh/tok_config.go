@@ -10,6 +10,7 @@ import (
 	"bytes"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 	"text/template"
 )
@@ -19,7 +20,7 @@ type tokConf struct {
 	DrushPort   string
 }
 
-var tokConfigFile = fs.HomeDir() + "/.ssh/tok_config"
+var tokConfigFile = filepath.Join(fs.HomeDir(), "/.ssh/tok_config")
 
 // ProcessTokConfig ...
 func ProcessTokConfig() {

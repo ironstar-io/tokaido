@@ -62,8 +62,8 @@ func LoadConfig(cmd *cobra.Command) (*Config, error) {
 	viper.SetDefault("Solr.version", "6.6")
 	viper.SetDefault("Memcache.enable", true)
 	viper.SetDefault("Memcache.version", "1.5-alpine")
-	viper.SetDefault("SystemdPath", fs.HomeDir()+"/.config/systemd/user/")
-	viper.SetDefault("LaunchdPath", fs.HomeDir()+"/Library/LaunchAgents/")
+	viper.SetDefault("SystemdPath", filepath.Join(fs.HomeDir(), "/.config/systemd/user/"))
+	viper.SetDefault("LaunchdPath", filepath.Join(fs.HomeDir(), "/Library/LaunchAgents/"))
 	viper.SetConfigType("yaml")
 
 	if configFile, _ := cmd.Flags().GetString("config"); configFile != "" {

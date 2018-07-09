@@ -7,6 +7,7 @@ import (
 
 	"io/ioutil"
 	"log"
+	"path/filepath"
 
 	"github.com/spf13/viper"
 	"gopkg.in/yaml.v2"
@@ -24,7 +25,7 @@ func CreateOrReplaceDrupalVars(path, version string) {
 	viper.Set("drupal.majorversion", version)
 	cf := viper.ConfigFileUsed()
 	if cf == "" {
-		fs.TouchByteArray(fs.WorkDir()+"/.tok/config.yml", drupalVars(path, version))
+		fs.TouchByteArray(filepath.Join(fs.WorkDir(), "/.tok/config.yml"), drupalVars(path, version))
 		return
 	}
 

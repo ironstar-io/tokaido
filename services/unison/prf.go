@@ -9,6 +9,7 @@ import (
 	"bytes"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 	"text/template"
 )
@@ -21,11 +22,11 @@ type prf struct {
 // GetPrfPath ...
 func GetPrfPath() string {
 	config := conf.GetConfig()
-	return fs.HomeDir() + "/.unison/" + config.Project
+	return filepath.Join(fs.HomeDir(), "/.unison/", config.Project)
 }
 
 func checkDotUnison() {
-	dotUnison := fs.HomeDir() + "/.unison"
+	dotUnison := filepath.Join(fs.HomeDir(), "/.unison")
 	var _, err = os.Stat(dotUnison)
 
 	if os.IsNotExist(err) {

@@ -9,6 +9,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/gernest/wow"
 	"github.com/gernest/wow/spin"
@@ -29,7 +30,7 @@ func ComposeResult(args ...string) string {
 }
 
 func composeArgs(args ...string) []string {
-	composeFile := []string{"-f", fs.WorkDir() + "/docker-compose.tok.yml"}
+	composeFile := []string{"-f", filepath.Join(fs.WorkDir(), "/docker-compose.tok.yml")}
 
 	return append(composeFile, args...)
 }

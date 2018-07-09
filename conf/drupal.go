@@ -18,11 +18,7 @@ func GetRootPath() string {
 	wd := fs.WorkDir()
 	c := GetConfig().Drupal.Path
 	if c != "" {
-		sa := []rune(c)
-		if string(sa[0]) != "/" {
-			c = "/" + c
-		}
-		return wd + c
+		return filepath.Join(wd, c)
 	}
 
 	rootPath, version := scanForCoreDrupal()

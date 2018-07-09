@@ -6,11 +6,12 @@ import (
 	"bitbucket.org/ironstar/tokaido-cli/system/fs"
 
 	"log"
+	"path/filepath"
 
 	"gopkg.in/yaml.v2"
 )
 
-var tokComposePath = fs.WorkDir() + "/docker-compose.tok.yml"
+var tokComposePath = filepath.Join(fs.WorkDir(), "/docker-compose.tok.yml")
 
 // Configure - Amend docker-compose.tok.yml to be compatible with xdebug
 func Configure() {

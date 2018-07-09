@@ -15,13 +15,14 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 
 	"golang.org/x/crypto/ssh"
 )
 
-var sshPriv = fs.HomeDir() + "/.ssh/tok_ssh.key"
-var sshPub = fs.HomeDir() + "/.ssh/tok_ssh.pub"
-var tokDir = fs.WorkDir() + "/.tok"
+var sshPriv = filepath.Join(fs.HomeDir(), "/.ssh/tok_ssh.key")
+var sshPub = filepath.Join(fs.HomeDir(), "/.ssh/tok_ssh.pub")
+var tokDir = filepath.Join(fs.WorkDir(), "/.tok")
 
 // CheckKey ...
 func CheckKey() {
