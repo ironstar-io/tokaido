@@ -3,14 +3,13 @@ package system
 import (
 	"bitbucket.org/ironstar/tokaido-cli/system/linux"
 	"bitbucket.org/ironstar/tokaido-cli/system/osx"
-	"bitbucket.org/ironstar/tokaido-cli/utils"
 
 	"os"
 )
 
 // CheckDependencies - Root executable
 func CheckDependencies() {
-	var GOOS = utils.CheckOS()
+	var GOOS = CheckOS()
 
 	if GOOS == "linux" {
 		linux.CheckDependencies()
@@ -20,7 +19,9 @@ func CheckDependencies() {
 		osx.CheckDependencies()
 	}
 
-	// fmt.Println(`🤹‍️‍️  System readiness check successful`)
+	if GOOS == "windows" {
+		// windows.CheckDependencies()  // TODO Windows
+	}
 }
 
 // CheckAndCreateFolder - Check existence of `./.tok` folder

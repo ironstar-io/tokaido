@@ -9,6 +9,14 @@ build:
 	-X $(VERSION_PATH).version=$(VERSION) \
 	" -o ./dist/tok
 
+build-win:
+	env GOOS=windows GOARCH=amd64 \
+	go build \
+	-ldflags "\
+	-X $(VERSION_PATH).buildDate=$(BUILD_DATE) \
+	-X $(VERSION_PATH).version=$(VERSION) \
+	" -o ./dist/tok.exe
+
 test:
 	ginkgo test ./...
 

@@ -4,7 +4,6 @@ import (
 	"bitbucket.org/ironstar/tokaido-cli/services/docker"
 	"bitbucket.org/ironstar/tokaido-cli/system/linux"
 	"bitbucket.org/ironstar/tokaido-cli/system/osx"
-	"bitbucket.org/ironstar/tokaido-cli/utils"
 
 	"log"
 )
@@ -17,7 +16,7 @@ func OpenSite() {
 	}
 
 	url := "https://localhost:" + httpsPort
-	if utils.CheckOS() == "osx" {
+	if CheckOS() == "osx" {
 		osx.OpenSite(url)
 	} else {
 		linux.OpenSite(url)

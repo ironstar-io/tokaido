@@ -2,9 +2,9 @@ package unison
 
 import (
 	"bitbucket.org/ironstar/tokaido-cli/conf"
+	"bitbucket.org/ironstar/tokaido-cli/system"
 	"bitbucket.org/ironstar/tokaido-cli/system/linux"
 	"bitbucket.org/ironstar/tokaido-cli/system/osx"
-	"bitbucket.org/ironstar/tokaido-cli/utils"
 
 	"fmt"
 )
@@ -18,7 +18,7 @@ Use 'tok up' to repair, or 'tok sync' to sync manually
 
 // CreateSyncService Register a launchd or systemctl service for Unison active sync
 func CreateSyncService() {
-	GOOS := utils.CheckOS()
+	GOOS := system.CheckOS()
 
 	fmt.Println("🔄  Creating a background process to sync your local repo into the Tokaido environment")
 
@@ -37,7 +37,7 @@ func CreateSyncService() {
 
 // StopSyncService stop *and* remove the systemd sync service
 func StopSyncService() {
-	GOOS := utils.CheckOS()
+	GOOS := system.CheckOS()
 	c := conf.GetConfig()
 	if c.CreateSyncService != true {
 		return
@@ -54,7 +54,7 @@ func StopSyncService() {
 
 // SyncServiceStatus ...
 func SyncServiceStatus() string {
-	GOOS := utils.CheckOS()
+	GOOS := system.CheckOS()
 
 	if GOOS == "linux" {
 		return linux.CheckSyncService()
