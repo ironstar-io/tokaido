@@ -1,6 +1,6 @@
 // +build !unix
 
-package fs
+package goos
 
 import (
 	// "bitbucket.org/ironstar/tokaido-cli/utils"

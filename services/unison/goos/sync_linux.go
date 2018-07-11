@@ -8,7 +8,7 @@ import (
 	"os"
 
 	"bitbucket.org/ironstar/tokaido-cli/conf"
-	"bitbucket.org/ironstar/tokaido-cli/system/linux/templates"
+	"bitbucket.org/ironstar/tokaido-cli/services/unison/templates"
 	"bitbucket.org/ironstar/tokaido-cli/utils"
 )
 
@@ -28,7 +28,7 @@ func createSyncFile() {
 	serviceFilename := "tokaido-sync-" + s.ProjectName + ".service"
 
 	tmpl := template.New(serviceFilename)
-	tmpl, err := tmpl.Parse(synctmpl.SyncTemplateStr)
+	tmpl, err := tmpl.Parse(unisontmpl.SyncTemplateStr)
 
 	if err != nil {
 		log.Fatal("Parse: ", err)

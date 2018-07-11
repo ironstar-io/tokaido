@@ -2,9 +2,8 @@ package unison
 
 import (
 	"bitbucket.org/ironstar/tokaido-cli/conf"
+	"bitbucket.org/ironstar/tokaido-cli/services/unison/goos"
 	"bitbucket.org/ironstar/tokaido-cli/system"
-	"bitbucket.org/ironstar/tokaido-cli/system/linux"
-	"bitbucket.org/ironstar/tokaido-cli/system/osx"
 
 	"fmt"
 )
