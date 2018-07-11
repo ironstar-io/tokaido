@@ -1,4 +1,4 @@
-package linux
+package goos
 
 import (
 	"bitbucket.org/ironstar/tokaido-cli/utils"

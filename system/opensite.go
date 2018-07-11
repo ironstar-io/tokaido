@@ -2,8 +2,7 @@ package system
 
 import (
 	"bitbucket.org/ironstar/tokaido-cli/services/docker"
-	"bitbucket.org/ironstar/tokaido-cli/system/linux"
-	"bitbucket.org/ironstar/tokaido-cli/system/osx"
+	"bitbucket.org/ironstar/tokaido-cli/system/goos"
 
 	"log"
 )
@@ -15,10 +14,5 @@ func OpenSite() {
 		log.Fatal("Unable to obtain the HTTPS port number. The HAProxy container may be broken")
 	}
 
-	url := "https://localhost:" + httpsPort
-	if CheckOS() == "osx" {
-		osx.OpenSite(url)
-	} else {
-		linux.OpenSite(url)
-	}
+	goos.OpenSite("https://localhost:" + httpsPort)
 }
