@@ -2,22 +2,28 @@ package goos
 
 import (
 	"bytes"
-	"fmt"
 	"log"
 	"os"
 	"os/user"
-	"strings"
 	"text/template"
 
 	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/services/unison/templates"
-	"bitbucket.org/ironstar/tokaido-cli/utils"
+	"bitbucket.org/ironstar/tokaido-cli/system/daemon"
 )
 
 type service struct {
 	ProjectName string
 	ProjectPath string
 	Username    string
+}
+
+func getServiceName() string {
+	return "tokaido.sync." + conf.GetConfig().Project + ".plist"
+}
+
+func getServicePath() string {
+	return conf.GetConfig().LaunchdPath + getServiceName()
 }
 
 func createSyncFile() {
@@ -33,7 +39,7 @@ func createSyncFile() {
 		Username:    u.Username,
 	}
 
-	serviceFilename := "tokaido.sync." + s.ProjectName + ".plist"
+	serviceFilename := getServiceName()
 
 	tmpl := template.New(serviceFilename)
 	tmpl, err := tmpl.Parse(unisontmpl.SyncTemplateStr)
@@ -68,85 +74,28 @@ func writeSyncFile(body string, path string, filename string) {
 	defer file.Close()
 }
 
-func loadSyncService() {
-	c := conf.GetConfig()
-	_, err := utils.CommandSubSplitOutput("launchctl", "load", c.LaunchdPath+"/tokaido.sync."+c.Project+".plist")
-	if err != nil {
-		log.Fatal("Unable to load sync service: ", err)
-	}
-}
-
-func unloadSyncService() {
-	c := conf.GetConfig()
-	_, err := utils.CommandSubSplitOutput("launchctl", "unload", c.LaunchdPath+"/tokaido.sync."+c.Project+".plist")
-	if err != nil {
-		log.Fatal("Unable to unload sync service: ", err)
-	}
-}
-
-func startSyncService() {
-	c := conf.GetConfig()
-	_, err := utils.CommandSubSplitOutput("launchctl", "start", "tokaido.sync."+c.Project+".plist")
-	if err != nil {
-		log.Fatal("Unable to start the sync service: ", err)
-	}
-}
-
 func stopSyncService() {
-	c := conf.GetConfig()
-	_, err := utils.CommandSubSplitOutput("launchctl", "stop", "tokaido.sync."+c.Project+".plist")
-	if err != nil {
-		log.Fatal("Unable to stop the sync service: ", err)
-	}
+	daemon.StopService(getServiceName())
 }
 
-func deleteSyncService() {
-	c := conf.GetConfig()
-	os.Remove(c.LaunchdPath + "/tokaido.sync." + c.Project + ".plist")
-}
-
-// RegisterLaunchdService Register the unison sync service for launchd
-func RegisterLaunchdService() {
+// RegisterSyncService Register the unison sync service for launchd
+func RegisterSyncService() {
 	createSyncFile()
-	loadSyncService()
+
+	daemon.LoadService(getServicePath())
 }
 
-// StartLaunchdService Start the launchd service after it is created
-func StartLaunchdService() {
-	startSyncService()
-	CheckSyncService()
+// StartSyncService Start the launchd service after it is created
+func StartSyncService() {
+	daemon.StartService(getServiceName())
 }
 
-// CheckSyncService checks if the unison background process is running
-func CheckSyncService() string {
-	c := conf.GetConfig()
-
-	u, uErr := user.Current()
-	if uErr != nil {
-		log.Fatal(uErr)
-	}
-
-	o, _ := utils.CommandSubSplitOutput("launchctl", "print", "gui/"+u.Uid+"/tokaido.sync."+c.Project+".plist")
-
-	if c.Debug == true {
-		fmt.Printf("\033[33m%s\033[0m\n", o)
-	}
-
-	if strings.Contains(o, "state = running") == true {
-		return "running"
-	}
-
-	return "stopped"
+// StopSyncService ...
+func StopSyncService() {
+	daemon.KillService(getServiceName(), getServicePath())
 }
 
-// StopLaunchdService ...
-func StopLaunchdService() {
-	c := conf.GetConfig()
-	ps, _ := utils.CommandSubSplitOutput("launchctl", "list", "tokaido.sync."+c.Project+".plist")
-	if ps != "" {
-		fmt.Println(`🔄  Removing the background sync process`)
-		stopSyncService()
-		unloadSyncService()
-		deleteSyncService()
-	}
+// SyncServiceStatus ...
+func SyncServiceStatus() string {
+	return daemon.SyncServiceStatus(getServiceName())
 }

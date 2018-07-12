@@ -1,9 +1,7 @@
 package daemon
 
 import (
-	"bytes"
 	"fmt"
-	"html/template"
 	"log"
 	"os"
 
@@ -23,26 +21,25 @@ func ReloadServices() {
 	}
 }
 
-func StartService(service string) {
-	_, err := utils.CommandSubSplitOutput("systemctl", "--user", "start", service)
+func StartService(serviceName string) {
+	_, err := utils.CommandSubSplitOutput("systemctl", "--user", "start", serviceName)
 	if err != nil {
 		log.Fatal("Unable to start the sync service: ", err)
 	}
 }
 
-func StopService(service string) {
-	_, errStatus := utils.CommandSubSplitOutput("systemctl", "--user", "status", service)
+func StopService(serviceName string) {
+	_, errStatus := utils.CommandSubSplitOutput("systemctl", "--user", "status", serviceName)
 	if errStatus == nil {
-		_, errStop := utils.CommandSubSplitOutput("systemctl", "--user", "stop", service)
+		_, errStop := utils.CommandSubSplitOutput("systemctl", "--user", "stop", serviceName)
 		if errStop != nil {
 			log.Fatal("Unable to stop the sync service: ", errStop)
 		}
 	}
 }
 
-func DeleteService(service string) {
-	c := conf.GetConfig()
-	err := os.Remove(filepath.Join(c.SystemdPath, service))
+func DeleteService(servicePath string) {
+	err := os.Remove(servicePath)
 	if os.IsNotExist(err) {
 		return
 	} else if err != nil {
@@ -56,14 +53,14 @@ func DeleteService(service string) {
 	`)
 }
 
-// CheckSyncService checks if the unison background process is running
-func CheckService(service string) string {
-	_, err := utils.CommandSubSplitOutput("systemctl", "--user", "status", service)
+// SyncServiceStatus checks if the unison background process is running
+func SyncServiceStatus(serviceName string) string {
+	_, err := utils.CommandSubSplitOutput("systemctl", "--user", "status", serviceName)
 	if err == nil {
 		return "running"
 	}
 
-	if c.Debug == true {
+	if conf.GetConfig().Debug == true {
 		fmt.Printf("\033[33m%s\033[0m\n", err)
 	}
 
@@ -71,7 +68,7 @@ func CheckService(service string) string {
 }
 
 // KillService ...
-func KillService(service string) {
-	StopService(service)
-	DeleteService(service)
+func KillService(serviceName string, servicePath string) {
+	StopService(serviceName)
+	DeleteService(servicePath)
 }

@@ -5,7 +5,6 @@ import (
 	"log"
 	"os"
 	"os/user"
-	"path/filepath"
 	"strings"
 
 	"bitbucket.org/ironstar/tokaido-cli/conf"
@@ -19,45 +18,44 @@ type service struct {
 }
 
 // LoadService ...
-func LoadService(service string) {
-	_, err := utils.CommandSubSplitOutput("launchctl", "load", service)
+func LoadService(servicePath string) {
+	_, err := utils.CommandSubSplitOutput("launchctl", "load", servicePath)
 	if err != nil {
 		log.Fatal("Unable to load sync service: ", err)
 	}
 }
 
 // UnloadService ...
-func UnloadService(service string) {
-	_, err := utils.CommandSubSplitOutput("launchctl", "unload", service)
+func UnloadService(servicePath string) {
+	_, err := utils.CommandSubSplitOutput("launchctl", "unload", servicePath)
 	if err != nil {
 		log.Fatal("Unable to unload sync service: ", err)
 	}
 }
 
 // StartService ...
-func StartService(service string) {
-	_, err := utils.CommandSubSplitOutput("launchctl", "start", service)
+func StartService(serviceName string) {
+	_, err := utils.CommandSubSplitOutput("launchctl", "start", serviceName)
 	if err != nil {
 		log.Fatal("Unable to start the sync service: ", err)
 	}
 }
 
 // StopService ...
-func StopService(service string) {
-	_, err := utils.CommandSubSplitOutput("launchctl", "stop", service)
+func StopService(serviceName string) {
+	_, err := utils.CommandSubSplitOutput("launchctl", "stop", serviceName)
 	if err != nil {
 		log.Fatal("Unable to stop the sync service: ", err)
 	}
 }
 
 // DeleteService ...
-func DeleteService(service string) {
-	c := conf.GetConfig()
-	os.Remove(filepath.Join(c.LaunchdPath, service))
+func DeleteService(servicePath string) {
+	os.Remove(servicePath)
 }
 
-// CheckService checks if the unison background process is running
-func CheckService(service string) string {
+// SyncServiceStatus checks if the unison background process is running
+func SyncServiceStatus(serviceName string) string {
 	c := conf.GetConfig()
 
 	u, uErr := user.Current()
@@ -65,7 +63,7 @@ func CheckService(service string) string {
 		log.Fatal(uErr)
 	}
 
-	o, _ := utils.CommandSubSplitOutput("launchctl", "print", "gui/"+u.Uid+service)
+	o, _ := utils.CommandSubSplitOutput("launchctl", "print", "gui/"+u.Uid+"/"+serviceName)
 
 	if c.Debug == true {
 		fmt.Printf("\033[33m%s\033[0m\n", o)
@@ -79,14 +77,14 @@ func CheckService(service string) string {
 }
 
 // KillService ...
-func KillService(service string) {
-	ps, _ := utils.CommandSubSplitOutput("launchctl", "list", service)
+func KillService(serviceName string, servicePath string) {
+	ps, _ := utils.CommandSubSplitOutput("launchctl", "list", serviceName)
 	if ps != "" {
 		fmt.Println(`
 🔄  Removing the background sync process
 	`)
-		StopService(service)
-		UnloadService(service)
-		DeleteService(service)
+		StopService(serviceName)
+		UnloadService(servicePath)
+		DeleteService(servicePath)
 	}
 }

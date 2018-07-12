@@ -1,20 +1,27 @@
-package linux
+package goos
 
 import (
+	"bitbucket.org/ironstar/tokaido-cli/system/daemon"
 	"bytes"
-	"fmt"
 	"html/template"
 	"log"
 	"os"
 
 	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/services/unison/templates"
-	"bitbucket.org/ironstar/tokaido-cli/utils"
 )
 
 type service struct {
 	ProjectName string
 	ProjectPath string
+}
+
+func getServiceName() string {
+	return "tokaido-sync-" + conf.GetConfig().Project + ".service"
+}
+
+func getServicePath() string {
+	return conf.GetConfig().SystemdPath + getServiceName()
 }
 
 func createSyncFile() {
@@ -25,7 +32,7 @@ func createSyncFile() {
 		ProjectPath: c.Path,
 	}
 
-	serviceFilename := "tokaido-sync-" + s.ProjectName + ".service"
+	serviceFilename := getServiceName()
 
 	tmpl := template.New(serviceFilename)
 	tmpl, err := tmpl.Parse(unisontmpl.SyncTemplateStr)
@@ -42,14 +49,7 @@ func createSyncFile() {
 	}
 
 	writeSyncFile(tpl.String(), c.SystemdPath, serviceFilename)
-	reloadSystemd()
-}
-
-func reloadSystemd() {
-	_, err := utils.CommandSubSplitOutput("systemctl", "--user", "daemon-reload")
-	if err != nil {
-		log.Fatal("Unable to reload the systemd config: ", err)
-	}
+	daemon.ReloadServices()
 }
 
 func writeSyncFile(body string, path string, filename string) {
@@ -68,67 +68,23 @@ func writeSyncFile(body string, path string, filename string) {
 	defer file.Close()
 }
 
-func startSyncService() {
-	c := conf.GetConfig()
-	_, err := utils.CommandSubSplitOutput("systemctl", "--user", "start", "tokaido-sync-"+c.Project+".service")
-	if err != nil {
-		log.Fatal("Unable to start the sync service: ", err)
-	}
-}
-
-func stopSyncService() {
-	c := conf.GetConfig()
-	_, errStatus := utils.CommandSubSplitOutput("systemctl", "--user", "status", "tokaido.sync."+c.Project+".service")
-	if errStatus == nil {
-		_, errStop := utils.CommandSubSplitOutput("systemctl", "--user", "stop", "tokaido-sync-"+c.Project+".service")
-		if errStop != nil {
-			log.Fatal("Unable to stop the sync service: ", errStop)
-		}
-	}
-}
-
-func deleteSyncService() {
-	c := conf.GetConfig()
-	rmErr := os.Remove(c.SystemdPath + "/tokaido-sync-" + c.Project + ".service")
-	if os.IsNotExist(rmErr) {
-		return
-	} else if rmErr != nil {
-		log.Fatal("Unable to remove service configuration: ", rmErr)
-	}
-
-	reloadSystemd()
-
-	fmt.Println(`🔄  Removed the background sync process`)
-}
-
 // RegisterSystemdService Register the unison sync service for systemd
-func RegisterSystemdService() {
+func RegisterSyncService() {
 	createSyncFile()
 }
 
 // StartSystemdService Start the systemd service after it is created
-func StartSystemdService() {
-	startSyncService()
-	CheckSyncService()
+func StartSyncService() {
+	daemon.StartService(getServiceName())
 }
 
-// CheckSyncService checks if the unison background process is running
-func CheckSyncService() string {
-	c := conf.GetConfig()
-	_, err := utils.CommandSubSplitOutput("systemctl", "--user", "status", "tokaido-sync-"+c.Project+".service")
-	if err == nil {
-		return "running"
-	}
-
-	if c.Debug == true {
-		fmt.Printf("\033[33m%s\033[0m\n", err)
-	}
-
-	return "stopped"
+// SyncServiceStatus ...
+func SyncServiceStatus() string {
+	return daemon.SyncServiceStatus(getServiceName())
 }
 
-// StopSystemdService ...
-func StopSystemdService() {
-	stopSyncService()
-	deleteSyncService()
+// StopSyncService ...
+func StopSyncService() {
+	daemon.StopService(getServiceName())
+	daemon.DeleteService(getServicePath())
 }
