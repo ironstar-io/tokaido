@@ -145,7 +145,7 @@ var ModWarning = []byte(`
 
 // ComposeTokDefaults - Template byte array for `docker-compose.tok.yml`
 var ComposeTokDefaults = []byte(`
-version: "2"
+version: "2.4"
 services:
   unison:
     image: tokaido/unison:2.51.2
