@@ -52,6 +52,12 @@
   version = "v1.0"
 
 [[projects]]
+  name = "github.com/judwhite/go-svc"
+  packages = ["svc"]
+  revision = "63c12402f579f0bdf022653c821a1aa5d7544f01"
+  version = "v1.0.0"
+
+[[projects]]
   name = "github.com/magefile/mage"
   packages = [
     "mg",
@@ -215,7 +221,8 @@
   name = "golang.org/x/sys"
   packages = [
     "unix",
-    "windows"
+    "windows",
+    "windows/svc"
   ]
   revision = "7c87d13f8e835d2fb3a70a2912c811ed0c1d241b"
 
@@ -255,6 +262,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "97aaa0e7f0406d6767b0bd2835f75a698f90bfe9282311a9c79c6713f4002d46"
+  inputs-digest = "768f75388ec29d6b6148ce12d37a68d4255182b5366cf995728f9d23b23b9efd"
   solver-name = "gps-cdcl"
   solver-version = 1

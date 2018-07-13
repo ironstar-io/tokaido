@@ -1,74 +1,65 @@
 package daemon
 
 import (
-	"fmt"
 	"log"
-	"os"
+	"sync"
 
-	"bitbucket.org/ironstar/tokaido-cli/conf"
-	"bitbucket.org/ironstar/tokaido-cli/utils"
+	"github.com/judwhite/go-svc/svc"
 )
 
-type service struct {
-	ProjectName string
-	ProjectPath string
+// program implements svc.Service
+type program struct {
+	wg   sync.WaitGroup
+	quit chan struct{}
 }
 
-func ReloadServices() {
-	_, err := utils.CommandSubSplitOutput("systemctl", "--user", "daemon-reload")
-	if err != nil {
-		log.Fatal("Unable to reload the systemd config: ", err)
+func StartService() {
+	prg := &program{}
+
+	// Call svc.Run to start your program/service.
+	if err := svc.Run(prg); err != nil {
+		log.Fatal(err)
 	}
 }
 
-func StartService(serviceName string) {
-	_, err := utils.CommandSubSplitOutput("systemctl", "--user", "start", serviceName)
-	if err != nil {
-		log.Fatal("Unable to start the sync service: ", err)
-	}
+func StopService() {
+	prg := &program{}
+
+	close(prg.quit)
+	prg.wg.Wait()
+	return
 }
 
-func StopService(serviceName string) {
-	_, errStatus := utils.CommandSubSplitOutput("systemctl", "--user", "status", serviceName)
-	if errStatus == nil {
-		_, errStop := utils.CommandSubSplitOutput("systemctl", "--user", "stop", serviceName)
-		if errStop != nil {
-			log.Fatal("Unable to stop the sync service: ", errStop)
-		}
-	}
+func (p *program) Init(env svc.Environment) error {
+	log.Printf("is win service? %v\n", env.IsWindowsService())
+	return nil
 }
 
-func DeleteService(servicePath string) {
-	err := os.Remove(servicePath)
-	if os.IsNotExist(err) {
-		return
-	} else if err != nil {
-		log.Fatal("Unable to remove service configuration: ", err)
-	}
+func (p *program) Start() error {
+	// The Start method must not block, or Windows may assume your service failed
+	// to start. Launch a Goroutine here to do something interesting/blocking.
 
-	ReloadServices()
+	p.quit = make(chan struct{})
 
-	fmt.Println(`
-🔄  Removed the background sync process
-	`)
+	p.wg.Add(1)
+	go func() {
+		log.Println("Starting...")
+		<-p.quit
+		log.Println("Quit signal received...")
+		p.wg.Done()
+	}()
+
+	return nil
 }
 
-// SyncServiceStatus checks if the unison background process is running
-func SyncServiceStatus(serviceName string) string {
-	_, err := utils.CommandSubSplitOutput("systemctl", "--user", "status", serviceName)
-	if err == nil {
-		return "running"
-	}
+func (p *program) Stop() error {
+	// The Stop method is invoked by stopping the Windows service, or by pressing Ctrl+C on the console.
+	// This method may block, but it's a good idea to finish quickly or your process may be killed by
+	// Windows during a shutdown/reboot. As a general rule you shouldn't rely on graceful shutdown.
 
-	if conf.GetConfig().Debug == true {
-		fmt.Printf("\033[33m%s\033[0m\n", err)
-	}
-
-	return "stopped"
-}
-
-// KillService ...
-func KillService(serviceName string, servicePath string) {
-	StopService(serviceName)
-	DeleteService(servicePath)
+	log.Println("Stopping...")
+	close(p.quit)
+	p.wg.Wait()
+	log.Println("Stopped.")
+	return nil
 }

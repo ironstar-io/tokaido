@@ -74,16 +74,16 @@ func RegisterSyncService() {
 
 // StartSystemdService Start the systemd service after it is created
 func StartSyncService() {
-	daemon.StartService(getServiceName())
+	daemon.StartService()
 }
 
 // SyncServiceStatus ...
 func SyncServiceStatus() string {
-	return daemon.SyncServiceStatus(getServiceName())
+	return ""
+	// return daemon.ServiceStatus(getServiceName())
 }
 
 // StopSyncService ...
 func StopSyncService() {
-	daemon.StopService(getServiceName())
-	daemon.DeleteService(getServicePath())
+	daemon.StopService()
 }
