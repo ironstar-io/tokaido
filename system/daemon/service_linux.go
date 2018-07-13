@@ -53,8 +53,8 @@ func DeleteService(servicePath string) {
 	`)
 }
 
-// SyncServiceStatus checks if the unison background process is running
-func SyncServiceStatus(serviceName string) string {
+// ServiceStatus checks if the unison background process is running
+func ServiceStatus(serviceName string) string {
 	_, err := utils.CommandSubSplitOutput("systemctl", "--user", "status", serviceName)
 	if err == nil {
 		return "running"

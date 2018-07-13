@@ -54,8 +54,8 @@ func DeleteService(servicePath string) {
 	os.Remove(servicePath)
 }
 
-// SyncServiceStatus checks if the unison background process is running
-func SyncServiceStatus(serviceName string) string {
+// ServiceStatus checks if the unison background process is running
+func ServiceStatus(serviceName string) string {
 	c := conf.GetConfig()
 
 	u, uErr := user.Current()

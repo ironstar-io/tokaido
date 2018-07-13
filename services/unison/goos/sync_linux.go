@@ -80,7 +80,7 @@ func StartSyncService() {
 
 // SyncServiceStatus ...
 func SyncServiceStatus() string {
-	return daemon.SyncServiceStatus(getServiceName())
+	return daemon.ServiceStatus(getServiceName())
 }
 
 // StopSyncService ...

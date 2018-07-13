@@ -37,6 +37,6 @@ test:
 	ginkgo test ./...
 
 clean:
-	rm -rf ./dist/tok
+	rm -rf ./dist/*
 
-.PHONY: build test clean
+.PHONY: build build-windows build-linux build-osx test clean

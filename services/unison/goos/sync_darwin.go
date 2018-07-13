@@ -97,5 +97,5 @@ func StopSyncService() {
 
 // SyncServiceStatus ...
 func SyncServiceStatus() string {
-	return daemon.SyncServiceStatus(getServiceName())
+	return daemon.ServiceStatus(getServiceName())
 }
