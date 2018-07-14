@@ -3,7 +3,6 @@ package ssh
 import (
 	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/services/docker"
-	"bitbucket.org/ironstar/tokaido-cli/system"
 	"bitbucket.org/ironstar/tokaido-cli/system/fs"
 	"bitbucket.org/ironstar/tokaido-cli/utils"
 
@@ -52,6 +51,7 @@ func GenerateKeys() {
 	// create file if not exists
 	if os.IsNotExist(err) {
 		fmt.Println("Generating a new set of SSH keys")
+		fs.Mkdir(filepath.Join(fs.HomeDir(), "/.ssh"))
 		generateAndCopyPub()
 	} else {
 		copyPub()
@@ -59,16 +59,16 @@ func GenerateKeys() {
 }
 
 func copyPub() {
-	system.CheckAndCreateFolder(tokDir)
-	system.CheckAndCreateFolder(tokDir + "/local")
+	fs.Mkdir(tokDir)
+	fs.Mkdir(filepath.Join(tokDir + "/local"))
 
-	fs.Copy(sshPub, tokDir+"/local/ssh_key.pub-copy")
+	fs.Copy(sshPub, filepath.Join(tokDir, "/local/ssh_key.pub-copy"))
 	replacePub()
 }
 
 // replacePub - Replace `.pub-copy` with `.pub` file in `./.tok/local`
 func replacePub() {
-	mainPub := tokDir + "/local/ssh_key.pub"
+	mainPub := filepath.Join(tokDir, "/local/ssh_key.pub")
 	copyPub := mainPub + "-copy"
 
 	// Remove the original .pub key
