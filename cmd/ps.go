@@ -19,6 +19,8 @@ var PsCmd = &cobra.Command{
 		utils.CheckCmdHard("docker-compose")
 		conf.LoadConfig(cmd)
 
+		docker.HardCheckTokCompose()
+
 		docker.Ps()
 	},
 }
