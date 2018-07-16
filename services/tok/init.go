@@ -18,7 +18,7 @@ import (
 	"github.com/gernest/wow/spin"
 )
 
-// Init - The core run sheet of `tok init`
+// Init - The core run sheet of `tok up`
 func Init() {
 	c := conf.GetConfig()
 
