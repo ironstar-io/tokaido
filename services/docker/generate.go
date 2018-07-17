@@ -24,7 +24,7 @@ func HardCheckTokCompose() {
 
 	// create file if not exists
 	if os.IsNotExist(err) {
-		fmt.Println(`🤷‍  No docker-compose.tok.yml file found. Have you run 'tok init'?`)
+		fmt.Println(`🤷‍  No docker-compose.tok.yml file found. Have you run 'tok up'?`)
 		log.Fatal("Exiting without change")
 	}
 }
@@ -82,6 +82,9 @@ func UnmarshalledDefaults() dockertmpl.ComposeDotTok {
 
 	appendCustomTok(tokStruct)
 	appendDrupalSettings(tokStruct)
+	if conf.GetConfig().BetaContainers {
+		appendEdgeContainers(tokStruct)
+	}
 
 	return tokStruct
 }
@@ -128,6 +131,29 @@ func drupalSettingsTmpl(drupalRoot string, projectName string) []byte {
     environment:
       DRUPAL_ROOT: ` + drupalRoot + `
       PROJECT_NAME: ` + projectName)
+}
+
+func appendEdgeContainers(tokStruct dockertmpl.ComposeDotTok) {
+	t := []byte(`services:
+  syslog:
+    image: tokaido/syslog:edge
+  haproxy:   
+    image: tokaido/haproxy:edge
+  varnish:
+    image: tokaido/varnish:edge
+  nginx:
+    image: tokaido/nginx:edge
+  fpm:
+    image: tokaido/fpm:edge
+  drush:
+    image: tokaido/drush-heavy:edge
+  solr:
+    image: tokaido/solr:edge`)
+
+	err := yaml.Unmarshal(t, &tokStruct)
+	if err != nil {
+		log.Fatalf("error: %v", err)
+	}
 }
 
 // StripModWarning ...

@@ -21,6 +21,7 @@ type Config struct {
 	Force             bool   `yaml:"force,omitempty"`
 	Debug             bool   `yaml:"debug,omitempty"`
 	Version           bool   `yaml:"version,omitempty"`
+	BetaContainers    bool   `yaml:"betacontainers,omitempty"`
 	CustomCompose     bool   `yaml:"customcompose,omitempty"`
 	SystemdPath       string `yaml:"systemdpath,omitempty"`
 	LaunchdPath       string `yaml:"launchdpath,omitempty"`

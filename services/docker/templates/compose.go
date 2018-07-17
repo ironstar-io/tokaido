@@ -159,6 +159,7 @@ services:
     environment:
       SSH_AUTH_SOCK: /ssh/auth/sock
       APP_ENV: local
+      PROJECT_NAME: tokaido
   solr:
     image: tokaido/solr:6.6
     ports:
