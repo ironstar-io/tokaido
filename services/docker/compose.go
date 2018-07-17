@@ -52,13 +52,10 @@ func Stop() {
 
 // Down - Pull down all the containers in the compose file
 func Down() {
-	confirmDestroy := utils.ConfirmationPrompt(`
-🔥  This will also destroy the database inside your Tokaido environment. Are you sure?`, "n")
+	confirmDestroy := utils.ConfirmationPrompt(`🔥  This will also destroy the database inside your Tokaido environment. Are you sure?`, "n")
 
 	if confirmDestroy == false {
-		fmt.Println(`
-🍵  Exiting without change
-		`)
+		fmt.Println(`🍵  Exiting without change`)
 		return
 	}
 

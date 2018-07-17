@@ -91,6 +91,7 @@ func getDrupalVersion() string {
 
 // versionStr ...
 func versionStr() string {
+	fmt.Println("Core drupal file is " + conf.CoreDrupalFile())
 	f, err := os.Open(conf.CoreDrupalFile())
 	if err != nil {
 		log.Fatal(err)

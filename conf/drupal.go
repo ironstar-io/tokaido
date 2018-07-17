@@ -1,6 +1,9 @@
 package conf
 
 import (
+	"fmt"
+	"io/ioutil"
+
 	"bitbucket.org/ironstar/tokaido-cli/system/fs"
 
 	"io"
@@ -22,37 +25,69 @@ func GetRootPath() string {
 		return wd + c
 	}
 
-	rootPath := scanForCoreDrupal()
+	rootPath, version := scanForCoreDrupal()
 
-	CreateOrReplaceDrupalPath(strings.Replace(rootPath, wd, "", -1))
+	CreateOrReplaceDrupalVars(strings.Replace(rootPath, wd, "", -1), version)
 
 	return rootPath
 }
 
-func scanForCoreDrupal() string {
+func scanForCoreDrupal() (string, string) {
 	wd := fs.WorkDir()
 	var dp string
-	dc := "/core/lib/Drupal.php"
+	var dv string
+	d7 := "/includes/bootstrap.inc"
+	d8 := "/core/lib/Drupal.php"
 	err := filepath.Walk(wd, func(path string, info os.FileInfo, err error) error {
 		if info.IsDir() {
 			return nil
 		}
-		if strings.Contains(path, dc) == true {
-			dp = strings.Replace(path, dc, "", -1)
+		if strings.Contains(path, d7) == true {
+			f, err := ioutil.ReadFile(path)
+			if err != nil {
+				log.Fatal("Could not read bootstrap file: ", err)
+			}
+			s := string(f)
+			// bootstrap.inc is a pretty common path, make sure this is _the_ bootstrap.inc from Drupal
+			if strings.Contains(s, "'VERSION', '7.") {
+				fmt.Printf("🚂  Found a Drupal 7 site")
+				dp = strings.Replace(path, d7, "", -1)
+				dv = "7"
+				return io.EOF
+			}
+		}
+		if strings.Contains(path, d8) == true {
+			fmt.Printf("🚇  Found a Drupal 8 site")
+			dp = strings.Replace(path, d8, "", -1)
+			dv = "8"
 			return io.EOF
 		}
 		return nil
 	})
 	if err != io.EOF {
-		log.Fatalf("There was an error when searching for your Drupal installation [%v]\n", err)
+		log.Fatalf("Could not find a valid Drupal 7 or 8 installation. You will need to manually specify your Drupal root. Error: [%v]\n", err)
 	}
 
-	return dp
+	return dp, dv
 }
 
 // CoreDrupalFile - Return the core drupal file for the users' installation
 func CoreDrupalFile() string {
-	return GetRootPath() + "/core/lib/Drupal.php"
+	rp := GetRootPath()
+	dv := GetConfig().Drupal.MajorVersion
+
+	var path string
+	switch dv {
+	case "7":
+		path = rp + "/includes/bootstrap.inc"
+	case "8":
+		path = rp + "/core/lib/Drupal.php"
+	default:
+		log.Fatal("Unknown or unspecified Drupal majorVersion in config file")
+	}
+
+	return path
+
 }
 
 // GetRootDir - Return the drupal root folder name without workdir

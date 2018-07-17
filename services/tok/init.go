@@ -19,7 +19,7 @@ import (
 
 // Init - The core run sheet of `tok init`
 func Init() {
-	fmt.Printf("🚀  Tokaido is starting up!\n")
+	fmt.Printf("\n🚀  Tokaido is starting up!\n")
 
 	c := conf.GetConfig()
 	system.CheckDependencies()
@@ -49,7 +49,7 @@ func Init() {
 	fmt.Println()
 
 	if docker.ImageExists("tokaido/drush:latest") == false {
-		fmt.Println(`🚡  First time lifting your containers? There's a few images to download, this might take some time.`)
+		fmt.Printf(`🚡  First time running Tokaido? There's a few images to download, this might take some time.`)
 	}
 
 	wo := wow.New(os.Stdout, spin.Get(spin.Dots), `   Tokaido is starting your containers`)

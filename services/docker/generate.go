@@ -24,9 +24,7 @@ func HardCheckTokCompose() {
 
 	// create file if not exists
 	if os.IsNotExist(err) {
-		fmt.Println(`
-🤷‍  No docker-compose.tok.yml file found. Have you run 'tok init'?
-		`)
+		fmt.Println(`🤷‍  No docker-compose.tok.yml file found. Have you run 'tok init'?`)
 		log.Fatal("Exiting without change")
 	}
 }
