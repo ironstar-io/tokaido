@@ -4,13 +4,13 @@ import (
 	"bitbucket.org/ironstar/tokaido-cli/system/fs"
 
 	"bufio"
+	"bytes"
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
 	"strings"
 )
-
-var sshConfigFile = filepath.Join(fs.HomeDir(), "/.ssh/config")
 
 // ProcessConfig ...
 func processConfig() {
@@ -20,18 +20,31 @@ func processConfig() {
 	}
 }
 
-// checkTokInclude ...
+func sshConfigFile() string {
+	return filepath.Join(fs.HomeDir(), "/.ssh/config")
+}
+
+func checkOrCreateSSHConfig() {
+	sc := sshConfigFile()
+	if fs.CheckExists(sc) == false {
+		err := fs.TouchEmpty(sc)
+		if err != nil {
+			fmt.Println("There was an error creating the config directory:", err)
+		}
+	}
+}
+
 func checkTokInclude() bool {
-	f, err := os.Open(sshConfigFile)
+	checkOrCreateSSHConfig()
+
+	f, err := os.Open(sshConfigFile())
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer f.Close()
 
 	includeLine := "Include ~/.ssh/tok_config"
-	// Splits on newlines by default.
 	scanner := bufio.NewScanner(f)
-
 	for scanner.Scan() {
 		if strings.Contains(scanner.Text(), includeLine) {
 			return true
@@ -43,44 +56,20 @@ func checkTokInclude() bool {
 
 // prependTokInclude - Prepend `~/.ssh/config` with `Include ~/.ssh/tok_config`
 func prependTokInclude() {
-	f, err := os.Open(sshConfigFile)
+	checkOrCreateSSHConfig()
+
+	f, err := os.Open(sshConfigFile())
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer f.Close()
 
-	// Splits on newlines by default.
+	var buffer bytes.Buffer
 	scanner := bufio.NewScanner(f)
-
-	var confString []string
-	confString = append(confString, "Include ~/.ssh/tok_config\n")
+	buffer.Write([]byte("Include ~/.ssh/tok_config\n"))
 	for scanner.Scan() {
-		confString = append(confString, scanner.Text())
+		buffer.Write([]byte(scanner.Text() + "\n"))
 	}
 
-	createTempConfig(strings.Join(confString, "\n"))
-	replaceConfig()
-}
-
-// createTempConfig - Write generated temp config file to `~/.ssh/`
-func createTempConfig(body string) {
-	var file, err = os.Create(sshConfigFile + "-tmp")
-	if err != nil {
-		log.Fatal("Create: ", err)
-	}
-
-	_, _ = file.WriteString(body)
-
-	defer file.Close()
-}
-
-// replaceConfig - Replace `~/.ssh/config` with `~/.ssh/config-tmp` file
-func replaceConfig() {
-	tmpConfig := sshConfigFile + "-tmp"
-
-	// Remove the original `config` file
-	os.Remove(sshConfigFile)
-
-	// Rename `config-tmp` to be the new `config` file
-	os.Rename(tmpConfig, sshConfigFile)
+	fs.Replace(sshConfigFile(), buffer.Bytes())
 }
