@@ -16,6 +16,18 @@ func TouchByteArray(path string, body []byte) error {
 	return nil
 }
 
+// TouchEmpty ...
+func TouchEmpty(path string) error {
+	n, err := os.Create(path)
+	if err != nil {
+		fmt.Println("There was an error creating a file: ", err)
+		return err
+	}
+	n.Close()
+
+	return nil
+}
+
 // TouchOrReplace ...
 func TouchOrReplace(path string, body []byte) {
 	var _, errf = os.Stat(path)
