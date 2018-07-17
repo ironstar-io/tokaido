@@ -26,7 +26,8 @@ type Config struct {
 	LaunchdPath       string `yaml:"launchdpath,omitempty"`
 	CreateSyncService bool   `yaml:"createsyncservice"`
 	Drupal            struct {
-		Path string `yaml:"path,omitempty"`
+		Path         string `yaml:"path,omitempty"`
+		MajorVersion string `yaml:"majorVersion,omitempty"`
 	} `yaml:"drupal,omitempty"`
 	Xdebug struct {
 		Port string `yaml:"port,omitempty"`

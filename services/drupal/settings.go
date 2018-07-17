@@ -136,6 +136,14 @@ func appendTokSettingsRef() {
 
 	defer f.Close()
 
+	dv := conf.GetConfig().Drupal.MajorVersion
+	var settingsBody []byte
+	if dv == "7" {
+		settingsBody = drupaltmpl.SettingsD7Append
+	} else {
+		settingsBody = drupaltmpl.SettingsD8Append
+	}
+
 	closePHP := "?>"
 	var closeTagFound = false
 	var buffer bytes.Buffer
@@ -143,21 +151,29 @@ func appendTokSettingsRef() {
 	for scanner.Scan() {
 		if strings.Contains(scanner.Text(), closePHP) {
 			closeTagFound = true
-			buffer.Write(drupaltmpl.SettingsAppend)
+			buffer.Write(settingsBody)
 		} else {
 			buffer.Write([]byte(scanner.Text() + "\n"))
 		}
 	}
 
 	if closeTagFound == false {
-		buffer.Write(drupaltmpl.SettingsAppend)
+		buffer.Write(settingsBody)
 	}
 
 	fs.Replace(settingsPath(), buffer.Bytes())
 }
 
 func createSettingsTok() {
-	fs.TouchByteArray(settingsTokPath(), drupaltmpl.SettingsTok)
+	dv := conf.GetConfig().Drupal.MajorVersion
+	var settingsTokBody []byte
+	if dv == "7" {
+		settingsTokBody = drupaltmpl.SettingsD7Tok
+	} else {
+		settingsTokBody = drupaltmpl.SettingsD8Tok
+	}
+
+	fs.TouchByteArray(settingsTokPath(), settingsTokBody)
 }
 
 func allowBuildSettings() bool {

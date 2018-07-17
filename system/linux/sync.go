@@ -98,9 +98,7 @@ func deleteSyncService() {
 
 	reloadSystemd()
 
-	fmt.Println(`
-🔄  Removed the background sync process
-	`)
+	fmt.Println(`🔄  Removed the background sync process`)
 }
 
 // RegisterSystemdService Register the unison sync service for systemd

@@ -1,8 +1,9 @@
 package conf
 
 import (
-	"bitbucket.org/ironstar/tokaido-cli/system/fs"
 	"fmt"
+
+	"bitbucket.org/ironstar/tokaido-cli/system/fs"
 
 	"io/ioutil"
 	"log"
@@ -11,25 +12,26 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-func drupalPath(path string) []byte {
+func drupalVars(path, version string) []byte {
 	return []byte(`drupal:
-  path: ` + path)
+  path: ` + path + `
+  majorVersion: ` + version)
 }
 
-// CreateOrReplaceDrupalPath ...
-func CreateOrReplaceDrupalPath(path string) {
+// CreateOrReplaceDrupalVars ...
+func CreateOrReplaceDrupalVars(path, version string) {
 	viper.Set("drupal.path", path)
 	cf := viper.ConfigFileUsed()
 	if cf == "" {
-		fs.TouchByteArray(fs.WorkDir()+"/.tok/config.yml", drupalPath(path))
+		fs.TouchByteArray(fs.WorkDir()+"/.tok/config.yml", drupalVars(path, version))
 		return
 	}
 
-	replaceDrupalPath(cf, path)
+	replaceDrupalVars(cf, path, version)
 }
 
-// replaceDrupalPath ...
-func replaceDrupalPath(cf string, path string) {
+// replaceDrupalVars ...
+func replaceDrupalVars(cf, path, version string) {
 	confStruct := Config{
 		CreateSyncService: true,
 	}

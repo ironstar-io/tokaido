@@ -144,9 +144,7 @@ func StopLaunchdService() {
 	c := conf.GetConfig()
 	ps, _ := utils.CommandSubSplitOutput("launchctl", "list", "tokaido.sync."+c.Project+".plist")
 	if ps != "" {
-		fmt.Println(`
-🔄  Removing the background sync process
-	`)
+		fmt.Println(`🔄  Removing the background sync process`)
 		stopSyncService()
 		unloadSyncService()
 		deleteSyncService()
