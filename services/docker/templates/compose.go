@@ -68,6 +68,40 @@ type ComposeDotTok struct {
 	}
 }
 
+// DrupalSettings ...
+func DrupalSettings(drupalRoot string, projectName string) []byte {
+	return []byte(`services:
+  fpm:
+    environment:
+      DRUPAL_ROOT: ` + drupalRoot + `
+  nginx:
+    environment:
+      DRUPAL_ROOT: ` + drupalRoot + `
+  drush:
+    environment:
+      DRUPAL_ROOT: ` + drupalRoot + `
+      PROJECT_NAME: ` + projectName)
+}
+
+// EdgeContainers ...
+func EdgeContainers() []byte {
+	return []byte(`services:
+  syslog:
+    image: tokaido/syslog:edge
+  haproxy:
+    image: tokaido/haproxy:edge
+  varnish:
+    image: tokaido/varnish:edge
+  nginx:
+    image: tokaido/nginx:edge
+  fpm:
+    image: tokaido/fpm:edge
+  drush:
+    image: tokaido/drush-heavy:edge
+  solr:
+    image: tokaido/solr:edge`)
+}
+
 // ModWarning - Displayed at the top of `docker-compose.tok.yml`
 var ModWarning = []byte(`
 # WARNING: THIS FILE IS MANAGED DIRECTLY BY TOKAIDO.
@@ -159,6 +193,7 @@ services:
     environment:
       SSH_AUTH_SOCK: /ssh/auth/sock
       APP_ENV: local
+      PROJECT_NAME: tokaido
   solr:
     image: tokaido/solr:6.6
     ports:

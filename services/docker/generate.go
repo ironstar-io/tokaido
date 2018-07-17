@@ -24,7 +24,7 @@ func HardCheckTokCompose() {
 
 	// create file if not exists
 	if os.IsNotExist(err) {
-		fmt.Println(`🤷‍  No docker-compose.tok.yml file found. Have you run 'tok init'?`)
+		fmt.Println(`🤷‍  No docker-compose.tok.yml file found. Have you run 'tok up'?`)
 		log.Fatal("Exiting without change")
 	}
 }
@@ -80,54 +80,47 @@ func UnmarshalledDefaults() dockertmpl.ComposeDotTok {
 		log.Fatalf("error: %v", err)
 	}
 
-	appendCustomTok(tokStruct)
-	appendDrupalSettings(tokStruct)
+	err2 := yaml.Unmarshal(getDrupalSettings(), &tokStruct)
+	if err2 != nil {
+		log.Fatalf("error: %v", err)
+	}
+
+	if conf.GetConfig().BetaContainers {
+		err3 := yaml.Unmarshal(dockertmpl.EdgeContainers(), &tokStruct)
+		if err3 != nil {
+			log.Fatalf("error: %v", err)
+		}
+	}
+
+	err4 := yaml.Unmarshal(getCustomTok(), &tokStruct)
+	if err4 != nil {
+		log.Fatalf("error: %v", err)
+	}
 
 	return tokStruct
 }
 
-func appendCustomTok(tokStruct dockertmpl.ComposeDotTok) {
+func getCustomTok() []byte {
 	ctp := customTokPath()
 
 	if fs.CheckExists(ctp) == false {
-		return
+		return nil
 	}
 
 	if ctp != "" {
-		customTok, err := ioutil.ReadFile(ctp)
+		ct, err := ioutil.ReadFile(ctp)
 		if err != nil {
 			log.Fatalf("error: %v", err)
 		}
 
-		errTwo := yaml.Unmarshal(customTok, &tokStruct)
-		if errTwo != nil {
-			log.Fatalf("error: %v", errTwo)
-		}
+		return ct
 	}
+
+	return nil
 }
 
-func appendDrupalSettings(tokStruct dockertmpl.ComposeDotTok) {
-	dr := conf.GetRootDir()
-	dry := drupalSettingsTmpl(dr, conf.GetConfig().Project)
-
-	err := yaml.Unmarshal(dry, &tokStruct)
-	if err != nil {
-		log.Fatalf("error: %v", err)
-	}
-}
-
-func drupalSettingsTmpl(drupalRoot string, projectName string) []byte {
-	return []byte(`services:
-  fpm:
-    environment:
-      DRUPAL_ROOT: ` + drupalRoot + `
-  nginx:
-    environment:
-      DRUPAL_ROOT: ` + drupalRoot + `
-  drush:
-    environment:
-      DRUPAL_ROOT: ` + drupalRoot + `
-      PROJECT_NAME: ` + projectName)
+func getDrupalSettings() []byte {
+	return dockertmpl.DrupalSettings(conf.GetRootDir(), conf.GetConfig().Project)
 }
 
 // StripModWarning ...
