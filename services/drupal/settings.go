@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"log"
 )
 
 type fileMasks struct {
@@ -138,10 +139,12 @@ func appendTokSettingsRef() {
 
 	dv := conf.GetConfig().Drupal.MajorVersion
 	var settingsBody []byte
-	if dv == "7" {
+	if dv == "7" {	
 		settingsBody = drupaltmpl.SettingsD7Append
-	} else {
+	} else if dv == "8" {
 		settingsBody = drupaltmpl.SettingsD8Append
+	} else {
+		log.Fatalf("Could not apply Drupal settings")
 	}
 
 	closePHP := "?>"
@@ -167,10 +170,12 @@ func appendTokSettingsRef() {
 func createSettingsTok() {
 	dv := conf.GetConfig().Drupal.MajorVersion
 	var settingsTokBody []byte
-	if dv == "7" {
+	if dv == "7" {	
 		settingsTokBody = drupaltmpl.SettingsD7Tok
-	} else {
+	} else if dv == "8" {
 		settingsTokBody = drupaltmpl.SettingsD8Tok
+	} else {
+		log.Fatalf("Could not add Tokaido settings file")
 	}
 
 	fs.TouchByteArray(settingsTokPath(), settingsTokBody)
