@@ -26,7 +26,15 @@ type Config struct {
 	SystemdPath       string `yaml:"systemdpath,omitempty"`
 	LaunchdPath       string `yaml:"launchdpath,omitempty"`
 	CreateSyncService bool   `yaml:"createsyncservice"`
-	Drupal            struct {
+	Solr              struct {
+		Enable  bool   `yaml:"enable,omitempty"`
+		Version string `yaml:"version,omitempty"`
+	} `yaml:"solr,omitempty"`
+	Memcache struct {
+		Enable  bool   `yaml:"enable,omitempty"`
+		Version string `yaml:"version,omitempty"`
+	} `yaml:"memcache,omitempty"`
+	Drupal struct {
 		Path         string `yaml:"path,omitempty"`
 		MajorVersion string `yaml:"majorVersion,omitempty"`
 	} `yaml:"drupal,omitempty"`
@@ -50,6 +58,10 @@ func LoadConfig(cmd *cobra.Command) (*Config, error) {
 
 	viper.SetDefault("CreateSyncService", true)
 	viper.SetDefault("CustomCompose", false)
+	viper.SetDefault("Solr.enable", false)
+	viper.SetDefault("Solr.version", "6.6")
+	viper.SetDefault("Memcache.enable", true)
+	viper.SetDefault("Memcache.version", "1.5-alpine")
 	viper.SetDefault("SystemdPath", fs.HomeDir()+"/.config/systemd/user/")
 	viper.SetDefault("LaunchdPath", fs.HomeDir()+"/Library/LaunchAgents/")
 	viper.SetConfigType("yaml")
