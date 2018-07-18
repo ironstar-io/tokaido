@@ -89,7 +89,6 @@ func CoreDrupalFile() string {
 // GetRootDir - Return the drupal root folder name without workdir
 func GetRootDir() string {
 	dr := GetRootPath()
-	ds := strings.Split(dr, "/")
 
-	return ds[len(ds)-1]
+	return filepath.Base(dr)
 }
