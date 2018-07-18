@@ -65,7 +65,7 @@ func scanForCoreDrupal() (string, string) {
 		return nil
 	})
 	if err != io.EOF {
-		log.Fatalf("Could not find a valid Drupal 7 or 8 installation. You will need to manually specify your Drupal root. Error: [%v]\n", err)
+		log.Fatalf("Could not find a valid Drupal 7 or 8 installation. You may need to run `composer install` first. Error: [%v]\n", err)
 	}
 
 	return dp, dv

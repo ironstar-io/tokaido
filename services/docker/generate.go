@@ -77,24 +77,50 @@ func UnmarshalledDefaults() dockertmpl.ComposeDotTok {
 
 	err := yaml.Unmarshal(dockertmpl.ComposeTokDefaults, &tokStruct)
 	if err != nil {
-		log.Fatalf("error: %v", err)
+		log.Fatalf("Error setting Compose file defaults: %v", err)
 	}
 
 	err2 := yaml.Unmarshal(getDrupalSettings(), &tokStruct)
 	if err2 != nil {
-		log.Fatalf("error: %v", err)
+		log.Fatalf("Error adding Drupal settings to Compose file: %v", err)
+	}
+
+	if conf.GetConfig().Solr.Enable {
+		var v string
+		if conf.GetConfig().BetaContainers {
+			v = "edge"
+		} else {
+			v = conf.GetConfig().Solr.Version
+		}
+		errSolr := yaml.Unmarshal(dockertmpl.EnableSolr(v), &tokStruct)
+		if errSolr != nil {
+			log.Fatalf("Error enabling Solr in Compose file: %v", err)
+		}
+	}
+
+	if conf.GetConfig().Memcache.Enable {
+		var v string
+		if conf.GetConfig().BetaContainers {
+			v = "edge"
+		} else {
+			v = conf.GetConfig().Memcache.Version
+		}
+		errMemcache := yaml.Unmarshal(dockertmpl.EnableMemcache(v), &tokStruct)
+		if errMemcache != nil {
+			log.Fatalf("Error enabling Memcache in Compose file: %v", err)
+		}
 	}
 
 	if conf.GetConfig().BetaContainers {
 		err3 := yaml.Unmarshal(dockertmpl.EdgeContainers(), &tokStruct)
 		if err3 != nil {
-			log.Fatalf("error: %v", err)
+			log.Fatalf("Error enabling edge containers in Compose file: %v", err)
 		}
 	}
 
 	err4 := yaml.Unmarshal(getCustomTok(), &tokStruct)
 	if err4 != nil {
-		log.Fatalf("error: %v", err)
+		log.Fatalf("Error enabling custom Compose config: %v", err)
 	}
 
 	return tokStruct

@@ -45,7 +45,7 @@ type ComposeDotTok struct {
 		}
 		Memcache struct {
 			Image string
-		}
+		} `yaml:"memcache,omitempty"`
 		Mysql struct {
 			Image       string
 			VolumesFrom []string `yaml:"volumes_from"`
@@ -61,10 +61,11 @@ type ComposeDotTok struct {
 			Environment map[string]string `yaml:"environment,omitempty"`
 		}
 		Solr struct {
-			Image      string
-			Ports      []string
-			Entrypoint []string
-		}
+			Image       string
+			Ports       []string
+			Entrypoint  []string
+			Environment map[string]string `yaml:"environment,omitempty"`
+		} `yaml:"solr,omitempty"`
 	}
 }
 
@@ -97,9 +98,27 @@ func EdgeContainers() []byte {
   fpm:
     image: tokaido/fpm:edge
   drush:
-    image: tokaido/drush-heavy:edge
+    image: tokaido/drush-heavy:edge`)
+}
+
+// EnableSolr ...
+func EnableSolr(version string) []byte {
+	return []byte(`services:
   solr:
-    image: tokaido/solr:edge`)
+    image: tokaido/solr:` + version + `
+    ports:
+      - "8983"
+    entrypoint:
+      - solr-precreate
+      - drupal
+      - /opt/solr/server/solr/configsets/search-api-solr/`)
+}
+
+// EnableMemcache ...
+func EnableMemcache(version string) []byte {
+	return []byte(`services:
+  memcache:
+    image: memcached:` + version)
 }
 
 // ModWarning - Displayed at the top of `docker-compose.tok.yml`
@@ -168,8 +187,6 @@ services:
       - "9000"
     environment:
       PHP_DISPLAY_ERRORS: "yes"
-  memcache:
-    image: memcached:1.5-alpine
   mysql:
     image: mysql:5.7
     volumes_from:
@@ -194,12 +211,4 @@ services:
       SSH_AUTH_SOCK: /ssh/auth/sock
       APP_ENV: local
       PROJECT_NAME: tokaido
-  solr:
-    image: tokaido/solr:6.6
-    ports:
-      - "8983"
-    entrypoint:
-      - solr-precreate
-      - drupal
-      - /opt/solr/server/solr/configsets/search-api-solr/
 `)
