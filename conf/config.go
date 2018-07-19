@@ -26,6 +26,7 @@ type Config struct {
 	SystemdPath       string `yaml:"systemdpath,omitempty"`
 	LaunchdPath       string `yaml:"launchdpath,omitempty"`
 	CreateSyncService bool   `yaml:"createsyncservice"`
+	DependencyChecks  bool   `yaml:"dependencychecks"`
 	Solr              struct {
 		Enable  bool   `yaml:"enable,omitempty"`
 		Version string `yaml:"version,omitempty"`
@@ -58,6 +59,7 @@ func LoadConfig(cmd *cobra.Command) (*Config, error) {
 
 	viper.SetDefault("CreateSyncService", true)
 	viper.SetDefault("CustomCompose", false)
+	viper.SetDefault("DependencyChecks", true)
 	viper.SetDefault("Solr.enable", false)
 	viper.SetDefault("Solr.version", "6.6")
 	viper.SetDefault("Memcache.enable", true)
