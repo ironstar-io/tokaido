@@ -82,7 +82,7 @@ func StatusCheck() {
 	foundContainers := false
 	scanner := bufio.NewScanner(strings.NewReader(rawStatus))
 	for scanner.Scan() {
-		if strings.Contains(scanner.Text(), "Name") || strings.Contains(scanner.Text(), "------") {
+		if strings.Contains(scanner.Text(), "Name") || strings.Contains(scanner.Text(), "------") || strings.Contains(scanner.Text(), "cannot find the path specified") {
 			continue
 		} else if !strings.Contains(scanner.Text(), "Up") {
 			unavailableContainers = true
