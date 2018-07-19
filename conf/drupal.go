@@ -32,8 +32,8 @@ func scanForCoreDrupal() (string, string) {
 	wd := fs.WorkDir()
 	var dp string
 	var dv string
-	d7 := "/includes/bootstrap.inc"
-	d8 := "/core/lib/Drupal.php"
+	d7 := filepath.Join("includes", "bootstrap.inc")
+	d8 := filepath.Join("core", "lib", "Drupal.php")
 	err := filepath.Walk(wd, func(path string, info os.FileInfo, err error) error {
 		if info.IsDir() {
 			return nil
