@@ -13,6 +13,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 
 	"gopkg.in/yaml.v2"
@@ -83,8 +84,8 @@ func UnmarshalledDefaults() dockertmpl.ComposeDotTok {
 		log.Fatalf("Error setting Compose file defaults: %v", err)
 	}
 
-	err2 := yaml.Unmarshal(getDrupalSettings(), &tokStruct)
-	if err2 != nil {
+	errDrupal := yaml.Unmarshal(getDrupalSettings(), &tokStruct)
+	if errDrupal != nil {
 		log.Fatalf("Error adding Drupal settings to Compose file: %v", err)
 	}
 
@@ -120,14 +121,21 @@ func UnmarshalledDefaults() dockertmpl.ComposeDotTok {
 	}
 
 	if conf.GetConfig().BetaContainers {
-		err3 := yaml.Unmarshal(dockertmpl.EdgeContainers(), &tokStruct)
-		if err3 != nil {
+		errEdge := yaml.Unmarshal(dockertmpl.EdgeContainers(), &tokStruct)
+		if errEdge != nil {
 			log.Fatalf("Error enabling edge containers in Compose file: %v", err)
 		}
 	}
 
-	err4 := yaml.Unmarshal(getCustomTok(), &tokStruct)
-	if err4 != nil {
+	if runtime.GOOS == "windows" {
+		errOs := yaml.Unmarshal(dockertmpl.WindowsAjustments(), &tokStruct)
+		if errOs != nil {
+			log.Fatalf("Error enabling Windows containers in Compose file: %v", err)
+		}
+	}
+
+	errCt := yaml.Unmarshal(getCustomTok(), &tokStruct)
+	if errCt != nil {
 		log.Fatalf("Error enabling custom Compose config: %v", err)
 	}
 
