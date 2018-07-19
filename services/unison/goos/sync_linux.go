@@ -1,8 +1,11 @@
+// +build linux
+
 package goos
 
 import (
 	"bitbucket.org/ironstar/tokaido-cli/system/daemon"
 	"bytes"
+	"fmt"
 	"html/template"
 	"log"
 	"os"
@@ -10,6 +13,13 @@ import (
 	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/services/unison/templates"
 )
+
+var bgSyncFailMsg = `
+😓  The background sync service is not running
+
+Tokaido will run, but your environment and local host will not be synchronised
+Use 'tok up' to repair, or 'tok sync' to sync manually
+		`
 
 type service struct {
 	ProjectName string
@@ -68,6 +78,14 @@ func writeSyncFile(body string, path string, filename string) {
 	defer file.Close()
 }
 
+// CreateSyncService Register a launchd or systemctl service for Unison active sync
+func CreateSyncService() {
+	fmt.Println("🔄  Creating a background process to sync your local repo into the Tokaido environment")
+
+	RegisterSyncService()
+	StartSyncService()
+}
+
 // RegisterSystemdService Register the unison sync service for systemd
 func RegisterSyncService() {
 	createSyncFile()
@@ -87,4 +105,20 @@ func SyncServiceStatus() string {
 func StopSyncService() {
 	daemon.StopService(getServiceName())
 	daemon.DeleteService(getServicePath())
+}
+
+// CheckSyncService a verbose sync status check used for tok status
+func CheckSyncService() {
+	c := conf.GetConfig()
+	if c.CreateSyncService != true {
+		return
+	}
+
+	s := SyncServiceStatus()
+	if s == "running" {
+		fmt.Println("✅  Background sync service is running")
+		return
+	}
+
+	fmt.Println(bgSyncFailMsg)
 }

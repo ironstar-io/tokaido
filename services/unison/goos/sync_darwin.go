@@ -1,7 +1,10 @@
+// +build darwin
+
 package goos
 
 import (
 	"bytes"
+	"fmt"
 	"log"
 	"os"
 	"os/user"
@@ -17,6 +20,13 @@ type service struct {
 	ProjectPath string
 	Username    string
 }
+
+var bgSyncFailMsg = `
+😓  The background sync service is not running
+
+Tokaido will run, but your environment and local host will not be synchronised
+Use 'tok up' to repair, or 'tok sync' to sync manually
+		`
 
 func getServiceName() string {
 	return "tokaido.sync." + conf.GetConfig().Project + ".plist"
@@ -78,6 +88,14 @@ func stopSyncService() {
 	daemon.StopService(getServiceName())
 }
 
+// CreateSyncService Register a launchd or systemctl service for Unison active sync
+func CreateSyncService() {
+	fmt.Println("🔄  Creating a background process to sync your local repo into the Tokaido environment")
+
+	RegisterSyncService()
+	StartSyncService()
+}
+
 // RegisterSyncService Register the unison sync service for launchd
 func RegisterSyncService() {
 	createSyncFile()
@@ -98,4 +116,20 @@ func StopSyncService() {
 // SyncServiceStatus ...
 func SyncServiceStatus() string {
 	return daemon.ServiceStatus(getServiceName())
+}
+
+// CheckSyncService a verbose sync status check used for tok status
+func CheckSyncService() {
+	c := conf.GetConfig()
+	if c.CreateSyncService != true {
+		return
+	}
+
+	s := SyncServiceStatus()
+	if s == "running" {
+		fmt.Println("✅  Background sync service is running")
+		return
+	}
+
+	fmt.Println(bgSyncFailMsg)
 }
