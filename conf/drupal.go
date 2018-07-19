@@ -75,9 +75,9 @@ func CoreDrupalFile() string {
 	var path string
 	switch dv {
 	case "7":
-		path = rp + "/includes/bootstrap.inc"
+		path = filepath.Join(rp, "includes", "bootstrap.inc")
 	case "8":
-		path = rp + "/core/lib/Drupal.php"
+		path = filepath.Join(rp, "core", "lib", "Drupal.php")
 	default:
 		log.Fatal("Unknown or unspecified Drupal majorVersion in config file")
 	}
