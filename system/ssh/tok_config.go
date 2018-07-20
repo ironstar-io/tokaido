@@ -35,15 +35,14 @@ func createOrUpdate() {
 
 	// create file if not exists
 	if os.IsNotExist(err) {
-		tpl := generateTokConfig()
-		createTokConfig(tpl, tokConfigFile)
+		fs.TouchByteArray(tokConfigFile, generateTokConfig())
 	} else {
 		updateTokConfig()
 	}
 }
 
 // generateTokConfig - Generate a `tok_config` file
-func generateTokConfig() string {
+func generateTokConfig() []byte {
 	config := conf.GetConfig()
 	s := tokConf{DrushPort: docker.LocalPort("drush", "22"), ProjectName: config.Project}
 
@@ -59,19 +58,7 @@ func generateTokConfig() string {
 		log.Fatal("Parse: ", err)
 	}
 
-	return tpl.String()
-}
-
-// createTokConfig - Write generated config file to `~/.ssh/`
-func createTokConfig(body string, path string) {
-	var file, err = os.Create(path)
-	if err != nil {
-		log.Fatal("Create: ", err)
-	}
-
-	_, _ = file.WriteString(body)
-
-	defer file.Close()
+	return tpl.Bytes()
 }
 
 // updateTokConfig - Update a `tok_config` file in `~/.ssh/`
@@ -119,17 +106,5 @@ func updateTokConfig() {
 		buffer.Write([]byte(generateTokConfig()))
 	}
 
-	createTokConfig(buffer.String(), tokConfigFile+"-tmp")
-	replaceTokConfig()
-}
-
-// replaceTokConfig - Replace `~/.ssh/tok_config` with `~/.ssh/tok_config-tmp` file
-func replaceTokConfig() {
-	tmpTokConfig := tokConfigFile + "-tmp"
-
-	// Remove the original tok_config file
-	os.Remove(tokConfigFile)
-
-	// Rename `tok_config-tmp` to be the new `tok_config` file
-	os.Rename(tmpTokConfig, tokConfigFile)
+	fs.Replace(tokConfigFile, buffer.Bytes())
 }
