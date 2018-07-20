@@ -5,6 +5,7 @@ import (
 	"bitbucket.org/ironstar/tokaido-cli/services/docker"
 	"bitbucket.org/ironstar/tokaido-cli/services/drupal"
 	"bitbucket.org/ironstar/tokaido-cli/services/git"
+	"bitbucket.org/ironstar/tokaido-cli/services/tok/goos"
 	"bitbucket.org/ironstar/tokaido-cli/services/unison"
 	"bitbucket.org/ironstar/tokaido-cli/services/xdebug"
 	"bitbucket.org/ironstar/tokaido-cli/system"
@@ -62,4 +63,9 @@ func Init() {
 	xdebug.Configure()
 
 	wo.PersistWith(spin.Spinner{Frames: []string{"🚅"}}, `  Tokaido started your containers`)
+}
+
+// InitMessage ...
+func InitMessage() {
+	goos.InitMessage()
 }
