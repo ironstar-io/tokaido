@@ -60,22 +60,9 @@ func GenerateKeys() {
 
 func copyPub() {
 	fs.Mkdir(tokDir)
-	fs.Mkdir(filepath.Join(tokDir + "/local"))
+	fs.Mkdir(filepath.Join(tokDir, "/local"))
 
-	fs.Copy(sshPub, filepath.Join(tokDir, "/local/ssh_key.pub-copy"))
-	replacePub()
-}
-
-// replacePub - Replace `.pub-copy` with `.pub` file in `./.tok/local`
-func replacePub() {
-	mainPub := filepath.Join(tokDir, "/local/ssh_key.pub")
-	copyPub := mainPub + "-copy"
-
-	// Remove the original .pub key
-	os.Remove(mainPub)
-
-	// Rename `.pub-copy` to be the new `.pub` key
-	os.Rename(copyPub, mainPub)
+	fs.Copy(sshPub, filepath.Join(tokDir, "/local/ssh_key.pub"))
 }
 
 func generateAndCopyPub() {
