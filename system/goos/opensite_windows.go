@@ -6,5 +6,5 @@ import (
 
 // OpenSite - Windows
 func OpenSite(url string) {
-	utils.CommandSubstitution("explorer", `"`+url+`"`)
+	utils.CommandSubstitution("start", `"`+url+`"`)
 }
