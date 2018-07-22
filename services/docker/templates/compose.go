@@ -133,7 +133,7 @@ var ComposeTokDefaults = []byte(`
 version: "2"
 services:
   unison:
-    image: onnimonni/unison
+    image: tokaido/unison:2.51.2
     environment:
       - UNISON_DIR=/tokaido/site
       - UNISON_UID=1001
