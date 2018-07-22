@@ -4,6 +4,7 @@ import (
 	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/services/docker/templates"
 	"bitbucket.org/ironstar/tokaido-cli/system/fs"
+	"bitbucket.org/ironstar/tokaido-cli/utils"
 
 	"bufio"
 	"bytes"
@@ -74,6 +75,7 @@ func MarshalledDefaults() []byte {
 // UnmarshalledDefaults ...
 func UnmarshalledDefaults() dockertmpl.ComposeDotTok {
 	tokStruct := dockertmpl.ComposeDotTok{}
+	unisonVersion := getUnisonVersion()
 
 	err := yaml.Unmarshal(dockertmpl.ComposeTokDefaults, &tokStruct)
 	if err != nil {
@@ -83,6 +85,11 @@ func UnmarshalledDefaults() dockertmpl.ComposeDotTok {
 	err2 := yaml.Unmarshal(getDrupalSettings(), &tokStruct)
 	if err2 != nil {
 		log.Fatalf("Error adding Drupal settings to Compose file: %v", err)
+	}
+
+	errUnison := yaml.Unmarshal(dockertmpl.SetUnisonVersion(unisonVersion), &tokStruct)
+	if errUnison != nil {
+		log.Fatalf("Error setting Unison version: %v", err)
 	}
 
 	if conf.GetConfig().Solr.Enable {
@@ -147,6 +154,19 @@ func getCustomTok() []byte {
 
 func getDrupalSettings() []byte {
 	return dockertmpl.DrupalSettings(conf.GetRootDir(), conf.GetConfig().Project)
+}
+
+func getUnisonVersion() string {
+	v := utils.CommandSubstitution("unison", "-version")
+
+	if strings.Contains(v, "2.48.4") {
+		v = "2.48.4"
+	} else if strings.Contains(v, "2.51.2") {
+		v = "2.51.2"
+	} else {
+		log.Fatalf("Error matching Unison version. You need Unison 2.48.4 or 2.51.2 on your local system.")
+	}
+	return v
 }
 
 // StripModWarning ...

@@ -18,11 +18,12 @@ import (
 )
 
 // Init - The core run sheet of `tok init`
-func Init() {	
+func Init() {
 	fmt.Printf("\n🚀  Tokaido is starting up!\n")
 
 	c := conf.GetConfig()
 	system.CheckDependencies()
+	unison.CheckVersion()
 
 	docker.FindOrCreateTokCompose()
 

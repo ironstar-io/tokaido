@@ -114,6 +114,13 @@ func EnableSolr(version string) []byte {
       - /opt/solr/server/solr/configsets/search-api-solr/`)
 }
 
+// SetUnisonVersion ...
+func SetUnisonVersion(version string) []byte {
+	return []byte(`services:
+  unison:
+    image: tokaido/unison:` + version)
+}
+
 // EnableMemcache ...
 func EnableMemcache(version string) []byte {
 	return []byte(`services:
