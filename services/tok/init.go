@@ -9,14 +9,11 @@ import (
 	"bitbucket.org/ironstar/tokaido-cli/services/unison"
 	"bitbucket.org/ironstar/tokaido-cli/services/xdebug"
 	"bitbucket.org/ironstar/tokaido-cli/system"
+	"bitbucket.org/ironstar/tokaido-cli/system/console"
 	"bitbucket.org/ironstar/tokaido-cli/system/ssh"
 	"bitbucket.org/ironstar/tokaido-cli/system/version"
 
 	"fmt"
-	"os"
-
-	"github.com/gernest/wow"
-	"github.com/gernest/wow/spin"
 )
 
 // Init - The core run sheet of `tok up`
@@ -24,7 +21,7 @@ func Init() {
 	c := conf.GetConfig()
 
 	// System readiness checks
-	fmt.Printf("\n🚀  Tokaido is starting up!\n")
+	console.Printf("\n🚀  Tokaido is starting up!\n", "")
 	system.CheckDependencies()
 	version.GetUnisonVersion()
 	git.CheckGitRepo()
@@ -46,23 +43,25 @@ func Init() {
 	if c.CreateSyncService {
 		fmt.Println()
 		unison.CreateSyncService()
+		fmt.Println()
 	}
 
 	fmt.Println()
 
 	// Fire up the Docker environment
 	if docker.ImageExists("tokaido/drush-heavy:latest") == false {
-		fmt.Printf(`🚡  First time running Tokaido? There's a few images to download, this might take some time.`)
+		console.Printf(`🚡  First time running Tokaido? There's a few images to download, this might take some time.`, "")
 	}
-	wo := wow.New(os.Stdout, spin.Get(spin.Dots), `   Tokaido is starting your containers`)
-	wo.Start()
+
+	wo := console.SpinStart("Tokaido is starting your containers")
+
 	docker.Up()
 
 	// Perform post-launch configuration
 	drupal.ConfigureSSH()
 	xdebug.Configure()
 
-	wo.PersistWith(spin.Spinner{Frames: []string{"🚅"}}, `  Tokaido started your containers`)
+	console.SpinPersist(wo, "🚅", "Tokaido started your containers")
 }
 
 // InitMessage ...

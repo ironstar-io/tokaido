@@ -4,9 +4,8 @@ import (
 	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/services/docker"
 	"bitbucket.org/ironstar/tokaido-cli/services/drupal"
+	"bitbucket.org/ironstar/tokaido-cli/system/console"
 	"bitbucket.org/ironstar/tokaido-cli/utils"
-
-	"fmt"
 
 	"github.com/spf13/cobra"
 )
@@ -23,14 +22,14 @@ var SyscheckCmd = &cobra.Command{
 
 		conf.LoadConfig(cmd)
 
-		fmt.Println(`
+		console.Println(`
 🚅  Checking Drupal for compatibility with Tokaido
-		`)
+		`, "")
 
 		drupal.CheckLocal()
 
-		fmt.Println(`
+		console.Println(`
 🚉  Drupal compatibility checks complete!
-		`)
+		`, "")
 	},
 }

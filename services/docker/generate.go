@@ -3,6 +3,7 @@ package docker
 import (
 	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/services/docker/templates"
+	"bitbucket.org/ironstar/tokaido-cli/system/console"
 	"bitbucket.org/ironstar/tokaido-cli/system/fs"
 	"bitbucket.org/ironstar/tokaido-cli/system/version"
 
@@ -27,7 +28,7 @@ func HardCheckTokCompose() {
 
 	// create file if not exists
 	if os.IsNotExist(err) {
-		fmt.Println(`🤷‍  No docker-compose.tok.yml file found. Have you run 'tok up'?`)
+		console.Println(`🤷‍  No docker-compose.tok.yml file found. Have you run 'tok up'?`, "×")
 		log.Fatal("Exiting without change")
 	}
 }
@@ -38,7 +39,7 @@ func FindOrCreateTokCompose() {
 
 	// create file if not exists
 	if os.IsNotExist(errf) {
-		fmt.Println(`🏯  Generating a new docker-compose.tok.yml file`)
+		console.Println(`🏯  Generating a new docker-compose.tok.yml file`, "")
 
 		CreateOrReplaceTokCompose(MarshalledDefaults())
 		return

@@ -3,6 +3,7 @@ package ssh
 import (
 	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/services/docker"
+	"bitbucket.org/ironstar/tokaido-cli/system/console"
 	"bitbucket.org/ironstar/tokaido-cli/system/fs"
 	"bitbucket.org/ironstar/tokaido-cli/utils"
 
@@ -30,17 +31,17 @@ func CheckKey() {
 
 	keyResult := utils.BashStringCmd(cmdStr)
 	if keyResult == "0" {
-		fmt.Println("✅  SSH access is configured")
+		console.Println("✅  SSH access is configured", "√")
 		return
 	}
 
-	fmt.Println(`😓  SSH access not configured
+	console.Println(`😓  SSH access not configured
 
 Tokaido is running but your SSH access to the Drush container looks broken.
 Make sure you have an SSH public key uploaded in './.tok/local/ssh_key.pub'.
 
 You should be able to run 'tok repair' to attempt to fix this automatically
-	`)
+	`, "×")
 	os.Exit(1)
 }
 

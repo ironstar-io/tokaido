@@ -1,12 +1,13 @@
 package daemon
 
 import (
+	"bitbucket.org/ironstar/tokaido-cli/conf"
+	"bitbucket.org/ironstar/tokaido-cli/system/console"
+	"bitbucket.org/ironstar/tokaido-cli/utils"
+
 	"fmt"
 	"log"
 	"os"
-
-	"bitbucket.org/ironstar/tokaido-cli/conf"
-	"bitbucket.org/ironstar/tokaido-cli/utils"
 )
 
 type service struct {
@@ -48,9 +49,9 @@ func DeleteService(servicePath string) {
 
 	ReloadServices()
 
-	fmt.Println(`
+	console.Println(`
 🔄  Removed the background sync process
-	`)
+	`, "")
 }
 
 // ServiceStatus checks if the unison background process is running

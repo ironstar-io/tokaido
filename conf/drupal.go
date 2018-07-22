@@ -1,12 +1,11 @@
 package conf
 
 import (
-	"fmt"
-	"io/ioutil"
-
+	"bitbucket.org/ironstar/tokaido-cli/system/console"
 	"bitbucket.org/ironstar/tokaido-cli/system/fs"
 
 	"io"
+	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -46,14 +45,14 @@ func scanForCoreDrupal() (string, string) {
 			s := string(f)
 			// bootstrap.inc is a pretty common path, make sure this is _the_ bootstrap.inc from Drupal
 			if strings.Contains(s, "'VERSION', '7.") {
-				fmt.Println("🚂  Found a Drupal 7 site")
+				console.Println("🚂  Found a Drupal 7 site", "")
 				dp = strings.Replace(path, d7, "", -1)
 				dv = "7"
 				return io.EOF
 			}
 		}
 		if strings.Contains(path, d8) == true {
-			fmt.Println("🚇  Found a Drupal 8 site")
+			console.Println("🚇  Found a Drupal 8 site", "")
 			dp = strings.Replace(path, d8, "", -1)
 			dv = "8"
 			return io.EOF

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -21,6 +22,7 @@ type Config struct {
 	Force             bool   `yaml:"force,omitempty"`
 	Debug             bool   `yaml:"debug,omitempty"`
 	Version           bool   `yaml:"version,omitempty"`
+	EnableEmoji       bool   `yaml:"enableemoji,omitempty"`
 	BetaContainers    bool   `yaml:"betacontainers,omitempty"`
 	CustomCompose     bool   `yaml:"customcompose,omitempty"`
 	SystemdPath       string `yaml:"systemdpath,omitempty"`
@@ -60,6 +62,7 @@ func LoadConfig(cmd *cobra.Command) (*Config, error) {
 	viper.SetDefault("CreateSyncService", true)
 	viper.SetDefault("CustomCompose", false)
 	viper.SetDefault("DependencyChecks", true)
+	viper.SetDefault("EnableEmoji", emojiDefaults())
 	viper.SetDefault("Solr.enable", false)
 	viper.SetDefault("Solr.version", "6.6")
 	viper.SetDefault("Memcache.enable", true)
@@ -82,6 +85,14 @@ func LoadConfig(cmd *cobra.Command) (*Config, error) {
 	}
 
 	return populateConfig(new(Config))
+}
+
+func emojiDefaults() bool {
+	if runtime.GOOS == "windows" {
+		return false
+	}
+
+	return true
 }
 
 func createDotTok() {

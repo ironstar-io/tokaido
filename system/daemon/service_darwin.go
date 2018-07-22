@@ -1,14 +1,15 @@
 package daemon
 
 import (
+	"bitbucket.org/ironstar/tokaido-cli/conf"
+	"bitbucket.org/ironstar/tokaido-cli/system/console"
+	"bitbucket.org/ironstar/tokaido-cli/utils"
+
 	"fmt"
 	"log"
 	"os"
 	"os/user"
 	"strings"
-
-	"bitbucket.org/ironstar/tokaido-cli/conf"
-	"bitbucket.org/ironstar/tokaido-cli/utils"
 )
 
 type service struct {
@@ -80,9 +81,9 @@ func ServiceStatus(serviceName string) string {
 func KillService(serviceName string, servicePath string) {
 	ps, _ := utils.CommandSubSplitOutput("launchctl", "list", serviceName)
 	if ps != "" {
-		fmt.Println(`
+		console.Println(`
 🔄  Removing the background sync process
-	`)
+	`, "")
 		StopService(serviceName)
 		UnloadService(servicePath)
 		DeleteService(servicePath)

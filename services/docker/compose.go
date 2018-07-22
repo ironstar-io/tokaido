@@ -3,6 +3,7 @@ package docker
 import (
 	"strings"
 
+	"bitbucket.org/ironstar/tokaido-cli/system/console"
 	"bitbucket.org/ironstar/tokaido-cli/system/fs"
 	"bitbucket.org/ironstar/tokaido-cli/utils"
 
@@ -56,7 +57,7 @@ func Down() {
 	confirmDestroy := utils.ConfirmationPrompt(`🔥  This will also destroy the database inside your Tokaido environment. Are you sure?`, "n")
 
 	if confirmDestroy == false {
-		fmt.Println(`🍵  Exiting without change`)
+		console.Println(`🍵  Exiting without change`, "")
 		return
 	}
 
@@ -92,9 +93,9 @@ func StatusCheck() {
 	}
 
 	if unavailableContainers == true || foundContainers == false {
+		console.Println(`
+😓 Tokaido containers are not working properly`, "")
 		fmt.Println(`
-😓 Tokaido containers are not working properly
-
 It appears that some or all of the Tokaido containers are offline.
 
 View the status of your containers with 'tok ps'
@@ -104,6 +105,6 @@ You can try to fix this by running 'tok up', or by running 'tok repair'.
 		os.Exit(1)
 	}
 
-	fmt.Println(`
-✅  All containers are running`)
+	console.Println(`
+✅  All containers are running`, "√")
 }

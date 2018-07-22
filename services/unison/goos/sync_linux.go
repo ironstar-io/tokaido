@@ -3,15 +3,16 @@
 package goos
 
 import (
+	"bitbucket.org/ironstar/tokaido-cli/conf"
+	"bitbucket.org/ironstar/tokaido-cli/services/unison/templates"
+	"bitbucket.org/ironstar/tokaido-cli/system/console"
 	"bitbucket.org/ironstar/tokaido-cli/system/daemon"
+
 	"bytes"
 	"fmt"
 	"html/template"
 	"log"
 	"os"
-
-	"bitbucket.org/ironstar/tokaido-cli/conf"
-	"bitbucket.org/ironstar/tokaido-cli/services/unison/templates"
 )
 
 var bgSyncFailMsg = `
@@ -80,7 +81,7 @@ func writeSyncFile(body string, path string, filename string) {
 
 // CreateSyncService Register a launchd or systemctl service for Unison active sync
 func CreateSyncService() {
-	fmt.Println("🔄  Creating a background process to sync your local repo into the Tokaido environment")
+	console.Println("🔄  Creating a background process to sync your local repo into the Tokaido environment", "")
 
 	RegisterSyncService()
 	StartSyncService()
@@ -116,7 +117,7 @@ func CheckSyncService() {
 
 	s := SyncServiceStatus()
 	if s == "running" {
-		fmt.Println("✅  Background sync service is running")
+		console.Println("✅  Background sync service is running", "√")
 		return
 	}
 

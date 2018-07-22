@@ -3,6 +3,7 @@ package drupal
 import (
 	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/services/docker"
+	"bitbucket.org/ironstar/tokaido-cli/system/console"
 	"bitbucket.org/ironstar/tokaido-cli/utils"
 
 	"bufio"
@@ -22,12 +23,12 @@ var checkFailMsg = "\n⚠️  There were some problems detected during the syste
 // CheckLocal ...
 func CheckLocal() {
 	if _, err := os.Stat(conf.CoreDrupalFile()); os.IsNotExist(err) {
-		fmt.Println("  ✘  A Drupal installation was not found")
-		fmt.Printf(checkFailMsg)
+		fmt.Println("  ×  A Drupal installation was not found")
+		console.Printf(checkFailMsg, "")
 		return
 	}
 
-	fmt.Println("  ✓  A Drupal installation was found")
+	fmt.Println("  √  A Drupal installation was found")
 
 	checkDrupalVersion()
 }
@@ -38,12 +39,13 @@ func CheckContainer() {
 
 	drupalStatus := utils.BashStringCmd(`curl -sko /dev/null -I -w"%{http_code}" https://localhost:` + haproxyPort + ` | grep 200`)
 	if drupalStatus == "200" {
-		fmt.Println("✅  Drupal is listening on HTTPS")
+		console.Println("✅  Drupal is listening on HTTPS", "√")
 		return
 	}
 
-	fmt.Println(`😓  A Drupal site is not installed or is not working
-
+	console.Println(`😓  A Drupal site is not installed or is not working
+	`, "×")
+	fmt.Println(`
 Tokaido is running but it looks like your Drupal site isn't installed.
 
 You can install Drupal by using the web interface at https://project-name:port_number. Note that your database credentials should be:
@@ -61,8 +63,8 @@ It might be easier to use Drush to install your site, which you can do by connec
 func checkDrupalVersion() {
 	drupalVersion := getDrupalVersion()
 	if drupalVersion == "" {
-		fmt.Printf("  ✘  Tokaido was unable to determine the Drupal version, it should be %s\n", validDrupalRange)
-		fmt.Printf(checkFailMsg)
+		fmt.Printf("  ×  Tokaido was unable to determine the Drupal version, it should be %s\n", validDrupalRange)
+		console.Printf(checkFailMsg, "")
 		return
 	}
 
@@ -70,10 +72,10 @@ func checkDrupalVersion() {
 	validRange, _ := semver.ParseRange(validDrupalRange)
 
 	if validRange(drupalSemver) {
-		fmt.Printf("  ✓  The Drupal version (%s) is supported by Tokaido\n\n", drupalVersion)
+		fmt.Printf("  √  The Drupal version (%s) is supported by Tokaido\n\n", drupalVersion)
 	} else {
-		fmt.Printf("  ✘  The Drupal version (%s) is not supported by Tokaido. Drupal version %s has been tested and is working with Tokaido\n", drupalVersion, validDrupalRange)
-		fmt.Printf(checkFailMsg)
+		fmt.Printf("  ×  The Drupal version (%s) is not supported by Tokaido. Drupal version %s has been tested and is working with Tokaido\n", drupalVersion, validDrupalRange)
+		console.Printf(checkFailMsg, "")
 	}
 }
 
