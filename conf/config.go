@@ -41,9 +41,8 @@ func LoadConfig(cmd *cobra.Command) (*Config, error) {
 		viper.SetConfigFile(configFile)
 	} else {
 		viper.SetConfigName("config")
+		viper.AddConfigPath(filepath.Join(fs.WorkDir(), ".tok", "local"))
 		viper.AddConfigPath(filepath.Join(fs.WorkDir(), ".tok"))
-		viper.AddConfigPath(fs.WorkDir())
-		viper.AddConfigPath(filepath.Join("$HOME", ".tok"))
 	}
 
 	if err := viper.ReadInConfig(); err != nil {
