@@ -61,7 +61,7 @@ func ServiceStatus(serviceName string) string {
 		return "running"
 	}
 
-	if conf.GetConfig().Debug == true {
+	if conf.GetConfig().Tokaido.Debug == true {
 		fmt.Printf("\033[33m%s\033[0m\n", err)
 	}
 

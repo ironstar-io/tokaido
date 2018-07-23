@@ -28,19 +28,19 @@ type service struct {
 }
 
 func getServiceName() string {
-	return "tokaido-sync-" + conf.GetConfig().Project + ".service"
+	return "tokaido-sync-" + conf.GetConfig().Tokaido.Project.Name + ".service"
 }
 
 func getServicePath() string {
-	return conf.GetConfig().SystemdPath + getServiceName()
+	return conf.GetConfig().System.SyncSvc.SystemdPath + getServiceName()
 }
 
 func createSyncFile() {
 	c := conf.GetConfig()
 
 	s := service{
-		ProjectName: c.Project,
-		ProjectPath: c.Path,
+		ProjectName: c.Tokaido.Project.Name,
+		ProjectPath: c.Tokaido.Project.Path,
 	}
 
 	serviceFilename := getServiceName()
@@ -59,7 +59,7 @@ func createSyncFile() {
 		return
 	}
 
-	writeSyncFile(tpl.String(), c.SystemdPath, serviceFilename)
+	writeSyncFile(tpl.String(), c.System.SyncSvc.SystemdPath, serviceFilename)
 	daemon.ReloadServices()
 }
 
@@ -111,8 +111,7 @@ func StopSyncService() {
 
 // CheckSyncService a verbose sync status check used for tok status
 func CheckSyncService() {
-	c := conf.GetConfig()
-	if c.CreateSyncService != true {
+	if conf.GetConfig().System.SyncSvc.Enabled != true {
 		return
 	}
 

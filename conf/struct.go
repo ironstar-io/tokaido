@@ -23,7 +23,7 @@ type Config struct {
 		Xdebug struct {
 			Port      string `yaml:"port,omitempty"`
 			LogPath   string `yaml:"logpath,omitempty"`
-			Enable    string `yaml:"enable,omitempty"`
+			Enabled   bool   `yaml:"enabled,omitempty"`
 			Autostart bool   `yaml:"autostart,omitempty"`
 		} `yaml:"xdebug,omitempty"`
 		SyncSvc struct {
@@ -103,6 +103,7 @@ type Config struct {
 			Environment map[string]string `yaml:"environment,omitempty"`
 		}
 		Memcache struct {
+			Enabled     bool              `yaml:"enabled,omitempty"`
 			Image       string            `yaml:"image,omitempty"`
 			Hostname    string            `yaml:"hostname,omitempty"`
 			Ports       []string          `yaml:"ports,omitempty"`
@@ -132,6 +133,7 @@ type Config struct {
 			Environment map[string]string `yaml:"environment,omitempty"`
 		}
 		Solr struct {
+			Enabled     bool              `yaml:"enabled,omitempty"`
 			Image       string            `yaml:"image,omitempty"`
 			Hostname    string            `yaml:"hostname,omitempty"`
 			Ports       []string          `yaml:"ports,omitempty"`

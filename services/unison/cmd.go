@@ -35,11 +35,9 @@ func Watch() {
 		return
 	}
 
-	config := conf.GetConfig()
-
 	fmt.Println(`Watching your files for changes and synchronising with your container
 Please keep this command running in order to retain sync
 	`)
 
-	utils.StdoutStreamCmd("unison", config.Project)
+	utils.StdoutStreamCmd("unison", conf.GetConfig().Tokaido.Project.Name)
 }

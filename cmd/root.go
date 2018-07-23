@@ -2,13 +2,13 @@ package cmd
 
 import (
 	"bitbucket.org/ironstar/tokaido-cli/conf"
-	"bitbucket.org/ironstar/tokaido-cli/system/fs"
 	"bitbucket.org/ironstar/tokaido-cli/system/version"
 
 	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // RootCmd - `tok`
@@ -48,9 +48,6 @@ func Execute() {
 // RootCmd will setup and return the root command
 func RootCmd() *cobra.Command {
 	rootCmd.PersistentFlags().StringP("config", "c", "", "Specify the Tokaido config file to use")
-	rootCmd.PersistentFlags().StringP("port", "p", "5000", "The port to use for local development")
-	rootCmd.PersistentFlags().StringP("project", "j", fs.Basename(), "The name of the project")
-	rootCmd.PersistentFlags().StringP("path", "t", fs.WorkDir(), "The project path")
 	rootCmd.PersistentFlags().BoolP("force", "", false, "Forcefully skip confirmation prompts with 'yes' response")
 	rootCmd.PersistentFlags().BoolP("version", "v", false, "Check the current Tokaido version (base command only)")
 	rootCmd.PersistentFlags().BoolP("debug", "d", false, "Enable debug mode, command output is printed to the console")
@@ -61,9 +58,8 @@ func RootCmd() *cobra.Command {
 
 func run(cmd *cobra.Command, args []string) {
 	conf.LoadConfig(cmd)
-	config := conf.GetConfig()
 
-	if config.Version == true {
+	if viper.GetBool("version") == true {
 		fmt.Printf("v%s\n", version.Get().Version)
 	} else {
 		fmt.Printf("Tokaido v%s\n\n", version.Get().Version)

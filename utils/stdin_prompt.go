@@ -20,8 +20,7 @@ func StdinPrompt(prompt string) string {
 
 // ConfirmationPrompt - The 'weighting' param should be one of [ "y", "n" ].
 func ConfirmationPrompt(prompt string, weighting string) bool {
-	config := conf.GetConfig()
-	if config.Force == true {
+	if conf.GetConfig().Tokaido.Force == true {
 		return true
 	}
 

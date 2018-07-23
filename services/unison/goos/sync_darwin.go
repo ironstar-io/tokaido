@@ -30,11 +30,11 @@ Use 'tok up' to repair, or 'tok sync' to sync manually
 		`
 
 func getServiceName() string {
-	return "tokaido.sync." + conf.GetConfig().Project + ".plist"
+	return "tokaido.sync." + conf.GetConfig().Tokaido.Project.Name + ".plist"
 }
 
 func getServicePath() string {
-	return conf.GetConfig().LaunchdPath + getServiceName()
+	return conf.GetConfig().System.SyncSvc.LaunchdPath + getServiceName()
 }
 
 func createSyncFile() {
@@ -45,8 +45,8 @@ func createSyncFile() {
 	}
 
 	s := service{
-		ProjectName: c.Project,
-		ProjectPath: c.Path,
+		ProjectName: c.Tokaido.Project.Name,
+		ProjectPath: c.Tokaido.Project.Path,
 		Username:    u.Username,
 	}
 
@@ -66,7 +66,7 @@ func createSyncFile() {
 		return
 	}
 
-	writeSyncFile(tpl.String(), c.LaunchdPath, serviceFilename)
+	writeSyncFile(tpl.String(), c.System.SyncSvc.LaunchdPath, serviceFilename)
 }
 
 func writeSyncFile(body string, path string, filename string) {
@@ -122,8 +122,7 @@ func SyncServiceStatus() string {
 
 // CheckSyncService a verbose sync status check used for tok status
 func CheckSyncService() {
-	c := conf.GetConfig()
-	if c.CreateSyncService != true {
+	if conf.GetConfig().System.SyncSvc.Enabled != true {
 		return
 	}
 

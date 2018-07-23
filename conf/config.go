@@ -26,15 +26,20 @@ func LoadConfig(cmd *cobra.Command) (*Config, error) {
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 	viper.AutomaticEnv()
 
-	viper.SetDefault("Tokaido.CustomCompose", false)
-	viper.SetDefault("Tokaido.Debug", false)
-	viper.SetDefault("Tokaido.Force", false)
+	viper.SetDefault("Tokaido.CustomCompose", viper.GetBool("customCompose"))
+	viper.SetDefault("Tokaido.Debug", viper.GetBool("debug"))
+	viper.SetDefault("Tokaido.Force", viper.GetBool("force"))
 	viper.SetDefault("Tokaido.BetaContainers", false)
 	viper.SetDefault("Tokaido.DependencyChecks", true)
 	viper.SetDefault("Tokaido.EnableEmoji", emojiDefaults())
+	viper.SetDefault("Tokaido.Project.Name", fs.Basename())
+	viper.SetDefault("Tokaido.Project.Path", fs.WorkDir())
 	viper.SetDefault("System.SyncSvc.Enabled", true)
 	viper.SetDefault("System.SyncSvc.SystemdPath", filepath.Join(fs.HomeDir(), "/.config/systemd/user/"))
 	viper.SetDefault("System.SyncSvc.LaunchdPath", filepath.Join(fs.HomeDir(), "/Library/LaunchAgents/"))
+	viper.SetDefault("Services.Memcache.Enabled", true)
+	viper.SetDefault("Services.Solr.Enabled", false)
+
 	viper.SetConfigType("yaml")
 
 	if configFile, _ := cmd.Flags().GetString("config"); configFile != "" {

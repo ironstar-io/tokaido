@@ -43,8 +43,7 @@ func createOrUpdate() {
 
 // generateTokConfig - Generate a `tok_config` file
 func generateTokConfig() []byte {
-	config := conf.GetConfig()
-	s := tokConf{DrushPort: docker.LocalPort("drush", "22"), ProjectName: config.Project}
+	s := tokConf{DrushPort: docker.LocalPort("drush", "22"), ProjectName: conf.GetConfig().Tokaido.Project.Name}
 
 	tmpl := template.New("tok_config")
 	tmpl, err := tmpl.Parse(sshtmpl.TokConfTmplStr)
@@ -69,9 +68,7 @@ func updateTokConfig() {
 	}
 	defer f.Close()
 
-	config := conf.GetConfig()
-
-	hostLine := "Host " + config.Project + ".tok"
+	hostLine := "Host " + conf.GetConfig().Tokaido.Project.Name + ".tok"
 	// Splits on newlines by default.
 	scanner := bufio.NewScanner(f)
 

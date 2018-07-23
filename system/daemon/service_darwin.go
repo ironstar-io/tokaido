@@ -66,7 +66,7 @@ func ServiceStatus(serviceName string) string {
 
 	o, _ := utils.CommandSubSplitOutput("launchctl", "print", "gui/"+u.Uid+"/"+serviceName)
 
-	if c.Debug == true {
+	if c.Tokaido.Debug == true {
 		fmt.Printf("\033[33m%s\033[0m\n", o)
 	}
 

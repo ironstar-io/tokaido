@@ -45,7 +45,7 @@ func FindOrCreateTokCompose() {
 		return
 	}
 
-	if conf.GetConfig().CustomCompose == true {
+	if conf.GetConfig().System.SyncSvc.Enabled == true {
 		StripModWarning()
 		return
 	}
@@ -55,7 +55,7 @@ func FindOrCreateTokCompose() {
 
 // CreateOrReplaceTokCompose ...
 func CreateOrReplaceTokCompose(tokComposeYml []byte) {
-	if conf.GetConfig().CustomCompose == false {
+	if conf.GetConfig().Tokaido.CustomCompose == false {
 		fs.TouchOrReplace(tokComposePath, append(dockertmpl.ModWarning[:], tokComposeYml[:]...))
 		return
 	}
@@ -95,12 +95,12 @@ func UnmarshalledDefaults() dockertmpl.ComposeDotTok {
 		log.Fatalf("Error setting Unison version: %v", err)
 	}
 
-	if conf.GetConfig().Solr.Enable {
+	if conf.GetConfig().Services.Solr.Enabled {
 		var v string
-		if conf.GetConfig().BetaContainers {
+		if conf.GetConfig().Tokaido.BetaContainers {
 			v = "edge"
 		} else {
-			v = conf.GetConfig().Solr.Version
+			v = "6.6"
 		}
 		errSolr := yaml.Unmarshal(dockertmpl.EnableSolr(v), &tokStruct)
 		if errSolr != nil {
@@ -108,12 +108,12 @@ func UnmarshalledDefaults() dockertmpl.ComposeDotTok {
 		}
 	}
 
-	if conf.GetConfig().Memcache.Enable {
+	if conf.GetConfig().Services.Memcache.Enabled {
 		var v string
-		if conf.GetConfig().BetaContainers {
+		if conf.GetConfig().Tokaido.BetaContainers {
 			v = "edge"
 		} else {
-			v = conf.GetConfig().Memcache.Version
+			v = "1.5-alpine"
 		}
 		errMemcache := yaml.Unmarshal(dockertmpl.EnableMemcache(v), &tokStruct)
 		if errMemcache != nil {
@@ -121,7 +121,7 @@ func UnmarshalledDefaults() dockertmpl.ComposeDotTok {
 		}
 	}
 
-	if conf.GetConfig().BetaContainers {
+	if conf.GetConfig().Tokaido.BetaContainers {
 		errEdge := yaml.Unmarshal(dockertmpl.EdgeContainers(), &tokStruct)
 		if errEdge != nil {
 			log.Fatalf("Error enabling edge containers in Compose file: %v", err)
@@ -163,7 +163,7 @@ func getCustomTok() []byte {
 }
 
 func getDrupalSettings() []byte {
-	return dockertmpl.DrupalSettings(conf.GetRootDir(), conf.GetConfig().Project)
+	return dockertmpl.DrupalSettings(conf.GetRootDir(), conf.GetConfig().Tokaido.Project.Name)
 }
 
 // StripModWarning ...
