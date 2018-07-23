@@ -13,39 +13,6 @@ import (
 	"github.com/spf13/viper"
 )
 
-// Config the application's configuration
-type Config struct {
-	Port              string `yaml:"port,omitempty"`
-	Config            string `yaml:"config,omitempty"`
-	Project           string `yaml:"project,omitempty"`
-	Path              string `yaml:"path,omitempty"`
-	Force             bool   `yaml:"force,omitempty"`
-	Debug             bool   `yaml:"debug,omitempty"`
-	Version           bool   `yaml:"version,omitempty"`
-	EnableEmoji       bool   `yaml:"enableemoji,omitempty"`
-	BetaContainers    bool   `yaml:"betacontainers,omitempty"`
-	CustomCompose     bool   `yaml:"customcompose,omitempty"`
-	SystemdPath       string `yaml:"systemdpath,omitempty"`
-	LaunchdPath       string `yaml:"launchdpath,omitempty"`
-	CreateSyncService bool   `yaml:"createsyncservice"`
-	DependencyChecks  bool   `yaml:"dependencychecks"`
-	Solr              struct {
-		Enable  bool   `yaml:"enable,omitempty"`
-		Version string `yaml:"version,omitempty"`
-	} `yaml:"solr,omitempty"`
-	Memcache struct {
-		Enable  bool   `yaml:"enable,omitempty"`
-		Version string `yaml:"version,omitempty"`
-	} `yaml:"memcache,omitempty"`
-	Drupal struct {
-		Path         string `yaml:"path,omitempty"`
-		MajorVersion string `yaml:"majorVersion,omitempty"`
-	} `yaml:"drupal,omitempty"`
-	Xdebug struct {
-		Port string `yaml:"port,omitempty"`
-	} `yaml:"xdebug,omitempty"`
-}
-
 // LoadConfig loads the config from a file if specified, otherwise from the environment
 func LoadConfig(cmd *cobra.Command) (*Config, error) {
 	err := viper.BindPFlags(cmd.Flags())
@@ -59,16 +26,15 @@ func LoadConfig(cmd *cobra.Command) (*Config, error) {
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 	viper.AutomaticEnv()
 
-	viper.SetDefault("CreateSyncService", true)
-	viper.SetDefault("CustomCompose", false)
-	viper.SetDefault("DependencyChecks", true)
-	viper.SetDefault("EnableEmoji", emojiDefaults())
-	viper.SetDefault("Solr.enable", false)
-	viper.SetDefault("Solr.version", "6.6")
-	viper.SetDefault("Memcache.enable", true)
-	viper.SetDefault("Memcache.version", "1.5-alpine")
-	viper.SetDefault("SystemdPath", filepath.Join(fs.HomeDir(), "/.config/systemd/user/"))
-	viper.SetDefault("LaunchdPath", filepath.Join(fs.HomeDir(), "/Library/LaunchAgents/"))
+	viper.SetDefault("Tokaido.CustomCompose", false)
+	viper.SetDefault("Tokaido.Debug", false)
+	viper.SetDefault("Tokaido.Force", false)
+	viper.SetDefault("Tokaido.BetaContainers", false)
+	viper.SetDefault("Tokaido.DependencyChecks", true)
+	viper.SetDefault("Tokaido.EnableEmoji", emojiDefaults())
+	viper.SetDefault("System.SyncSvc.Enabled", true)
+	viper.SetDefault("System.SyncSvc.SystemdPath", filepath.Join(fs.HomeDir(), "/.config/systemd/user/"))
+	viper.SetDefault("System.SyncSvc.LaunchdPath", filepath.Join(fs.HomeDir(), "/Library/LaunchAgents/"))
 	viper.SetConfigType("yaml")
 
 	if configFile, _ := cmd.Flags().GetString("config"); configFile != "" {
