@@ -10,7 +10,6 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -45,7 +44,7 @@ func FindOrCreateTokCompose() {
 		return
 	}
 
-	if conf.GetConfig().System.SyncSvc.Enabled == true {
+	if conf.GetConfig().Tokaido.CustomCompose == true {
 		StripModWarning()
 		return
 	}
@@ -76,8 +75,8 @@ func MarshalledDefaults() []byte {
 }
 
 // UnmarshalledDefaults ...
-func UnmarshalledDefaults() dockertmpl.ComposeDotTok {
-	tokStruct := dockertmpl.ComposeDotTok{}
+func UnmarshalledDefaults() conf.DockerCompose {
+	tokStruct := conf.DockerCompose{}
 	unisonVersion := version.GetUnisonVersion()
 
 	err := yaml.Unmarshal(dockertmpl.ComposeTokDefaults, &tokStruct)
@@ -108,10 +107,10 @@ func UnmarshalledDefaults() dockertmpl.ComposeDotTok {
 		}
 	}
 
-	if conf.GetConfig().Services.Memcache.Enabled {
+	if conf.GetConfig().DockerCompose.Services.Memcache.Enabled {
 		var v string
 		if conf.GetConfig().Tokaido.BetaContainers {
-			v = "edge"
+			v = "1.5-alpine" // Temporary, there is currently no edge memcache container
 		} else {
 			v = "1.5-alpine"
 		}
@@ -144,22 +143,18 @@ func UnmarshalledDefaults() dockertmpl.ComposeDotTok {
 }
 
 func getCustomTok() []byte {
-	ctp := customTokPath()
+	dc := &conf.GetConfig().DockerCompose
 
-	if fs.CheckExists(ctp) == false {
-		return nil
+	// Nulify the invalid docker-compose file values
+	dc.Services.Memcache.Enabled = false
+	dc.Services.Solr.Enabled = false
+
+	cc, err := yaml.Marshal(dc)
+	if err != nil {
+		log.Fatalf("error: %v", err)
 	}
 
-	if ctp != "" {
-		ct, err := ioutil.ReadFile(ctp)
-		if err != nil {
-			log.Fatalf("error: %v", err)
-		}
-
-		return ct
-	}
-
-	return nil
+	return cc
 }
 
 func getDrupalSettings() []byte {
