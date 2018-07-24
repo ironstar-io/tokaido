@@ -37,8 +37,8 @@ func LoadConfig(cmd *cobra.Command) (*Config, error) {
 	viper.SetDefault("System.SyncSvc.Enabled", true)
 	viper.SetDefault("System.SyncSvc.SystemdPath", filepath.Join(fs.HomeDir(), "/.config/systemd/user/"))
 	viper.SetDefault("System.SyncSvc.LaunchdPath", filepath.Join(fs.HomeDir(), "/Library/LaunchAgents/"))
-	viper.SetDefault("DockerCompose.Services.Memcache.Enabled", true)
-	viper.SetDefault("DockerCompose.Services.Solr.Enabled", false)
+	viper.SetDefault("Services.Memcache.Enabled", true)
+	viper.SetDefault("Services.Solr.Enabled", false)
 
 	viper.SetConfigType("yaml")
 

@@ -75,8 +75,8 @@ func MarshalledDefaults() []byte {
 }
 
 // UnmarshalledDefaults ...
-func UnmarshalledDefaults() conf.DockerCompose {
-	tokStruct := conf.DockerCompose{}
+func UnmarshalledDefaults() conf.ComposeDotTok {
+	tokStruct := conf.ComposeDotTok{}
 	unisonVersion := version.GetUnisonVersion()
 
 	err := yaml.Unmarshal(dockertmpl.ComposeTokDefaults, &tokStruct)
@@ -107,7 +107,7 @@ func UnmarshalledDefaults() conf.DockerCompose {
 		}
 	}
 
-	if conf.GetConfig().DockerCompose.Services.Memcache.Enabled {
+	if conf.GetConfig().Services.Memcache.Enabled {
 		var v string
 		if conf.GetConfig().Tokaido.BetaContainers {
 			v = "1.5-alpine" // Temporary, there is currently no edge memcache container
@@ -143,7 +143,10 @@ func UnmarshalledDefaults() conf.DockerCompose {
 }
 
 func getCustomTok() []byte {
-	dc := &conf.GetConfig().DockerCompose
+	dc := &conf.ComposeDotTok{
+		Version:  "2",
+		Services: conf.GetConfig().Services,
+	}
 
 	// Nulify the invalid docker-compose file values
 	dc.Services.Memcache.Enabled = false
