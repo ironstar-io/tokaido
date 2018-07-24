@@ -4,7 +4,7 @@ import (
 	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/services/docker/templates"
 	"bitbucket.org/ironstar/tokaido-cli/system/fs"
-	"bitbucket.org/ironstar/tokaido-cli/utils"
+	"bitbucket.org/ironstar/tokaido-cli/system/version"
 
 	"bufio"
 	"bytes"
@@ -75,7 +75,7 @@ func MarshalledDefaults() []byte {
 // UnmarshalledDefaults ...
 func UnmarshalledDefaults() dockertmpl.ComposeDotTok {
 	tokStruct := dockertmpl.ComposeDotTok{}
-	unisonVersion := getUnisonVersion()
+	unisonVersion := version.GetUnisonVersion()
 
 	err := yaml.Unmarshal(dockertmpl.ComposeTokDefaults, &tokStruct)
 	if err != nil {
@@ -154,19 +154,6 @@ func getCustomTok() []byte {
 
 func getDrupalSettings() []byte {
 	return dockertmpl.DrupalSettings(conf.GetRootDir(), conf.GetConfig().Project)
-}
-
-func getUnisonVersion() string {
-	v := utils.CommandSubstitution("unison", "-version")
-
-	if strings.Contains(v, "2.48.4") {
-		v = "2.48.4"
-	} else if strings.Contains(v, "2.51.2") {
-		v = "2.51.2"
-	} else {
-		log.Fatalf("Error matching Unison version. You need Unison 2.48.4 or 2.51.2 on your local system.")
-	}
-	return v
 }
 
 // StripModWarning ...

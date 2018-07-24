@@ -9,6 +9,7 @@ import (
 	"bitbucket.org/ironstar/tokaido-cli/services/xdebug"
 	"bitbucket.org/ironstar/tokaido-cli/system"
 	"bitbucket.org/ironstar/tokaido-cli/system/ssh"
+	"bitbucket.org/ironstar/tokaido-cli/system/version"
 
 	"fmt"
 	"os"
@@ -23,7 +24,7 @@ func Init() {
 
 	c := conf.GetConfig()
 	system.CheckDependencies()
-	unison.CheckVersion()
+	version.GetUnisonVersion()
 
 	docker.FindOrCreateTokCompose()
 
