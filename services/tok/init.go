@@ -9,6 +9,7 @@ import (
 	"bitbucket.org/ironstar/tokaido-cli/services/xdebug"
 	"bitbucket.org/ironstar/tokaido-cli/system"
 	"bitbucket.org/ironstar/tokaido-cli/system/ssh"
+	"bitbucket.org/ironstar/tokaido-cli/system/version"
 
 	"fmt"
 	"os"
@@ -18,11 +19,12 @@ import (
 )
 
 // Init - The core run sheet of `tok init`
-func Init() {	
+func Init() {
 	fmt.Printf("\n🚀  Tokaido is starting up!\n")
 
 	c := conf.GetConfig()
 	system.CheckDependencies()
+	version.GetUnisonVersion()
 
 	docker.FindOrCreateTokCompose()
 

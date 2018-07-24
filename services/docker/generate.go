@@ -4,6 +4,7 @@ import (
 	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/services/docker/templates"
 	"bitbucket.org/ironstar/tokaido-cli/system/fs"
+	"bitbucket.org/ironstar/tokaido-cli/system/version"
 
 	"bufio"
 	"bytes"
@@ -74,6 +75,7 @@ func MarshalledDefaults() []byte {
 // UnmarshalledDefaults ...
 func UnmarshalledDefaults() dockertmpl.ComposeDotTok {
 	tokStruct := dockertmpl.ComposeDotTok{}
+	unisonVersion := version.GetUnisonVersion()
 
 	err := yaml.Unmarshal(dockertmpl.ComposeTokDefaults, &tokStruct)
 	if err != nil {
@@ -83,6 +85,11 @@ func UnmarshalledDefaults() dockertmpl.ComposeDotTok {
 	err2 := yaml.Unmarshal(getDrupalSettings(), &tokStruct)
 	if err2 != nil {
 		log.Fatalf("Error adding Drupal settings to Compose file: %v", err)
+	}
+
+	errUnison := yaml.Unmarshal(dockertmpl.SetUnisonVersion(unisonVersion), &tokStruct)
+	if errUnison != nil {
+		log.Fatalf("Error setting Unison version: %v", err)
 	}
 
 	if conf.GetConfig().Solr.Enable {
