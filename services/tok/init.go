@@ -20,24 +20,23 @@ import (
 
 // Init - The core run sheet of `tok init`
 func Init() {
-	fmt.Printf("\n🚀  Tokaido is starting up!\n")
-
 	c := conf.GetConfig()
+
+	// System readiness checks
+	fmt.Printf("\n🚀  Tokaido is starting up!\n")
 	system.CheckDependencies()
 	version.GetUnisonVersion()
+	git.CheckGitRepo()
 
+	// Create Tokaido configuration
 	docker.FindOrCreateTokCompose()
-
 	ssh.GenerateKeys()
-
 	drupal.CheckSettings()
-
 	git.IgnoreDefaults()
 
+	// Run Unison for syncing
 	unison.DockerUp()
 	unison.CreateOrUpdatePrf()
-
-	// Only perform sync if sync service isn't running, otherwise we'll stall
 	s := unison.SyncServiceStatus()
 	if s == "stopped" {
 		unison.Sync()
@@ -50,17 +49,16 @@ func Init() {
 
 	fmt.Println()
 
-	if docker.ImageExists("tokaido/drush:latest") == false {
+	// Fire up the Docker environment
+	if docker.ImageExists("tokaido/drush-heavy:latest") == false {
 		fmt.Printf(`🚡  First time running Tokaido? There's a few images to download, this might take some time.`)
 	}
-
 	wo := wow.New(os.Stdout, spin.Get(spin.Dots), `   Tokaido is starting your containers`)
 	wo.Start()
-
 	docker.Up()
 
+	// Perform post-launch configuration
 	drupal.ConfigureSSH()
-
 	xdebug.Configure()
 
 	wo.PersistWith(spin.Spinner{Frames: []string{"🚅"}}, `  Tokaido started your containers`)
