@@ -14,18 +14,8 @@ import (
 
 // CheckDependencies - Root executable
 func CheckDependencies() {
-	checkChoco()
+	utils.CheckCmdHard("choco")
 	checkUnison()
-}
-
-// CheckChoco ...
-func checkChoco() {
-	_, err := exec.LookPath("choco")
-	if err != nil {
-		fmt.Println("\nChocolately isn't installed. Tokaido will install it")
-		utils.PowershellCmd("Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))")
-		fmt.Println("Chocolatey installed successfully")
-	}
 }
 
 // checkUnison ...
@@ -34,7 +24,7 @@ func checkUnison() {
 	if err != nil {
 		fmt.Println("Unison isn't installed. Tokaido will install it with Chocolately")
 
-		utils.StdoutCmd("choco", "install", "unison")
+		utils.StdoutCmd("choco", "install", "unison", "-y")
 
 		// Unison doesn't install as unison.exe in the chocolatey bin, this copies the installed binary so it's accessible from your PATH
 		var ue string
@@ -64,7 +54,7 @@ func CheckAndChocoInstall(program string) *string {
 	_, err := exec.LookPath(program)
 	if err != nil {
 		fmt.Println("     " + program + " isn't installed. Tokaido will install it with Homebrew")
-		utils.StdoutCmd("choco", "install", program)
+		utils.StdoutCmd("choco", "install", program, "-y")
 		fmt.Println(program + " installed successfully")
 	}
 
