@@ -50,7 +50,8 @@ func Init() {
 
 	// Fire up the Docker environment
 	if docker.ImageExists("tokaido/drush-heavy:latest") == false {
-		console.Printf(`🚡  First time running Tokaido? There's a few images to download, this might take some time.`, "")
+		console.Println(`🚡  First time running Tokaido? There's a few images to download, this might take some time.`, "")
+		fmt.Println()
 	}
 
 	wo := console.SpinStart("Tokaido is starting your containers")
