@@ -5,6 +5,7 @@ import (
 	"bitbucket.org/ironstar/tokaido-cli/utils"
 
 	"fmt"
+	"runtime"
 )
 
 var syncRunningErr = `There is already a sync service for this project running on your system. Exiting...`
@@ -19,6 +20,10 @@ func Sync() {
 
 	config := conf.GetConfig()
 
+	if runtime.GOOS == "windows" {
+		fmt.Println("Synchronizing your files between your local filesystem and the container. This may take some time.")
+	}
+
 	utils.CommandSubstitution("unison", config.Project, "-watch=false")
 }
 
@@ -32,7 +37,9 @@ func Watch() {
 
 	config := conf.GetConfig()
 
-	fmt.Println(`Watching your files for changes and synchronising with your container`)
+	fmt.Println(`Watching your files for changes and synchronising with your container
+Please keep this command running in order to retain sync
+	`)
 
 	utils.StdoutStreamCmd("unison", config.Project)
 }

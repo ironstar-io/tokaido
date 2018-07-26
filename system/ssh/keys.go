@@ -3,7 +3,7 @@ package ssh
 import (
 	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/services/docker"
-	"bitbucket.org/ironstar/tokaido-cli/system"
+	"bitbucket.org/ironstar/tokaido-cli/system/console"
 	"bitbucket.org/ironstar/tokaido-cli/system/fs"
 	"bitbucket.org/ironstar/tokaido-cli/utils"
 
@@ -15,13 +15,14 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 
 	"golang.org/x/crypto/ssh"
 )
 
-var sshPriv = fs.HomeDir() + "/.ssh/tok_ssh.key"
-var sshPub = fs.HomeDir() + "/.ssh/tok_ssh.pub"
-var tokDir = fs.WorkDir() + "/.tok"
+var sshPriv = filepath.Join(fs.HomeDir(), "/.ssh/tok_ssh.key")
+var sshPub = filepath.Join(fs.HomeDir(), "/.ssh/tok_ssh.pub")
+var tokDir = filepath.Join(fs.WorkDir(), "/.tok")
 
 // CheckKey ...
 func CheckKey() {
@@ -30,17 +31,17 @@ func CheckKey() {
 
 	keyResult := utils.BashStringCmd(cmdStr)
 	if keyResult == "0" {
-		fmt.Println("✅  SSH access is configured")
+		console.Println("✅  SSH access is configured", "√")
 		return
 	}
 
-	fmt.Println(`😓  SSH access not configured
+	console.Println(`😓  SSH access not configured
 
 Tokaido is running but your SSH access to the Drush container looks broken.
 Make sure you have an SSH public key uploaded in './.tok/local/ssh_key.pub'.
 
 You should be able to run 'tok repair' to attempt to fix this automatically
-	`)
+	`, "×")
 	os.Exit(1)
 }
 
@@ -51,6 +52,7 @@ func GenerateKeys() {
 	// create file if not exists
 	if os.IsNotExist(err) {
 		fmt.Println("Generating a new set of SSH keys")
+		fs.Mkdir(filepath.Join(fs.HomeDir(), "/.ssh"))
 		generateAndCopyPub()
 	} else {
 		copyPub()
@@ -58,23 +60,10 @@ func GenerateKeys() {
 }
 
 func copyPub() {
-	system.CheckAndCreateFolder(tokDir)
-	system.CheckAndCreateFolder(tokDir + "/local")
+	fs.Mkdir(tokDir)
+	fs.Mkdir(filepath.Join(tokDir, "/local"))
 
-	fs.Copy(sshPub, tokDir+"/local/ssh_key.pub-copy")
-	replacePub()
-}
-
-// replacePub - Replace `.pub-copy` with `.pub` file in `./.tok/local`
-func replacePub() {
-	mainPub := tokDir + "/local/ssh_key.pub"
-	copyPub := mainPub + "-copy"
-
-	// Remove the original .pub key
-	os.Remove(mainPub)
-
-	// Rename `.pub-copy` to be the new `.pub` key
-	os.Rename(copyPub, mainPub)
+	fs.Copy(sshPub, filepath.Join(tokDir, "/local/ssh_key.pub"))
 }
 
 func generateAndCopyPub() {

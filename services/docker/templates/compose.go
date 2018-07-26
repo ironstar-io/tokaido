@@ -136,6 +136,13 @@ func EnableMemcache(version string) []byte {
     image: memcached:` + version)
 }
 
+// WindowsAjustments ...
+func WindowsAjustments() []byte {
+	return []byte(`services:
+  unison:
+    image: onnimonni/unison:2.48.4`)
+}
+
 // ModWarning - Displayed at the top of `docker-compose.tok.yml`
 var ModWarning = []byte(`
 # WARNING: THIS FILE IS MANAGED DIRECTLY BY TOKAIDO.
@@ -151,8 +158,8 @@ services:
     image: tokaido/unison:2.51.2
     environment:
       - UNISON_DIR=/tokaido/site
-      - UNISON_UID=1001
-      - UNISON_GID=1001
+      - UNISON_UID=1007
+      - UNISON_GID=1006
     ports:
       - "5000"
     volumes:

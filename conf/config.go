@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -21,11 +22,13 @@ type Config struct {
 	Force             bool   `yaml:"force,omitempty"`
 	Debug             bool   `yaml:"debug,omitempty"`
 	Version           bool   `yaml:"version,omitempty"`
+	EnableEmoji       bool   `yaml:"enableemoji,omitempty"`
 	BetaContainers    bool   `yaml:"betacontainers,omitempty"`
 	CustomCompose     bool   `yaml:"customcompose,omitempty"`
 	SystemdPath       string `yaml:"systemdpath,omitempty"`
 	LaunchdPath       string `yaml:"launchdpath,omitempty"`
 	CreateSyncService bool   `yaml:"createsyncservice"`
+	DependencyChecks  bool   `yaml:"dependencychecks"`
 	Solr              struct {
 		Enable  bool   `yaml:"enable,omitempty"`
 		Version string `yaml:"version,omitempty"`
@@ -58,21 +61,23 @@ func LoadConfig(cmd *cobra.Command) (*Config, error) {
 
 	viper.SetDefault("CreateSyncService", true)
 	viper.SetDefault("CustomCompose", false)
+	viper.SetDefault("DependencyChecks", true)
+	viper.SetDefault("EnableEmoji", emojiDefaults())
 	viper.SetDefault("Solr.enable", false)
 	viper.SetDefault("Solr.version", "6.6")
 	viper.SetDefault("Memcache.enable", true)
 	viper.SetDefault("Memcache.version", "1.5-alpine")
-	viper.SetDefault("SystemdPath", fs.HomeDir()+"/.config/systemd/user/")
-	viper.SetDefault("LaunchdPath", fs.HomeDir()+"/Library/LaunchAgents/")
+	viper.SetDefault("SystemdPath", filepath.Join(fs.HomeDir(), "/.config/systemd/user/"))
+	viper.SetDefault("LaunchdPath", filepath.Join(fs.HomeDir(), "/Library/LaunchAgents/"))
 	viper.SetConfigType("yaml")
 
 	if configFile, _ := cmd.Flags().GetString("config"); configFile != "" {
 		viper.SetConfigFile(configFile)
 	} else {
 		viper.SetConfigName("config")
-		viper.AddConfigPath("./.tok/")
-		viper.AddConfigPath("./")
-		viper.AddConfigPath("$HOME/.tok/")
+		viper.AddConfigPath(filepath.Join(fs.WorkDir(), ".tok"))
+		viper.AddConfigPath(fs.WorkDir())
+		viper.AddConfigPath(filepath.Join("$HOME", ".tok"))
 	}
 
 	if err := viper.ReadInConfig(); err != nil {
@@ -80,6 +85,14 @@ func LoadConfig(cmd *cobra.Command) (*Config, error) {
 	}
 
 	return populateConfig(new(Config))
+}
+
+func emojiDefaults() bool {
+	if runtime.GOOS == "windows" {
+		return false
+	}
+
+	return true
 }
 
 func createDotTok() {

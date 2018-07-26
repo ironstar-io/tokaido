@@ -3,6 +3,7 @@ package docker
 import (
 	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/services/docker/templates"
+	"bitbucket.org/ironstar/tokaido-cli/system/console"
 	"bitbucket.org/ironstar/tokaido-cli/system/fs"
 	"bitbucket.org/ironstar/tokaido-cli/system/version"
 
@@ -12,12 +13,14 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
+	"runtime"
 	"strings"
 
 	"gopkg.in/yaml.v2"
 )
 
-var tokComposePath = fs.WorkDir() + "/docker-compose.tok.yml"
+var tokComposePath = filepath.Join(fs.WorkDir(), "/docker-compose.tok.yml")
 
 // HardCheckTokCompose ...
 func HardCheckTokCompose() {
@@ -25,7 +28,7 @@ func HardCheckTokCompose() {
 
 	// create file if not exists
 	if os.IsNotExist(err) {
-		fmt.Println(`🤷‍  No docker-compose.tok.yml file found. Have you run 'tok up'?`)
+		console.Println(`🤷‍  No docker-compose.tok.yml file found. Have you run 'tok up'?`, "×")
 		log.Fatal("Exiting without change")
 	}
 }
@@ -36,7 +39,7 @@ func FindOrCreateTokCompose() {
 
 	// create file if not exists
 	if os.IsNotExist(errf) {
-		fmt.Println(`🏯  Generating a new docker-compose.tok.yml file`)
+		console.Println(`🏯  Generating a new docker-compose.tok.yml file`, "")
 
 		CreateOrReplaceTokCompose(MarshalledDefaults())
 		return
@@ -82,8 +85,8 @@ func UnmarshalledDefaults() dockertmpl.ComposeDotTok {
 		log.Fatalf("Error setting Compose file defaults: %v", err)
 	}
 
-	err2 := yaml.Unmarshal(getDrupalSettings(), &tokStruct)
-	if err2 != nil {
+	errDrupal := yaml.Unmarshal(getDrupalSettings(), &tokStruct)
+	if errDrupal != nil {
 		log.Fatalf("Error adding Drupal settings to Compose file: %v", err)
 	}
 
@@ -119,14 +122,21 @@ func UnmarshalledDefaults() dockertmpl.ComposeDotTok {
 	}
 
 	if conf.GetConfig().BetaContainers {
-		err3 := yaml.Unmarshal(dockertmpl.EdgeContainers(), &tokStruct)
-		if err3 != nil {
+		errEdge := yaml.Unmarshal(dockertmpl.EdgeContainers(), &tokStruct)
+		if errEdge != nil {
 			log.Fatalf("Error enabling edge containers in Compose file: %v", err)
 		}
 	}
 
-	err4 := yaml.Unmarshal(getCustomTok(), &tokStruct)
-	if err4 != nil {
+	if runtime.GOOS == "windows" {
+		errOs := yaml.Unmarshal(dockertmpl.WindowsAjustments(), &tokStruct)
+		if errOs != nil {
+			log.Fatalf("Error enabling Windows containers in Compose file: %v", err)
+		}
+	}
+
+	errCt := yaml.Unmarshal(getCustomTok(), &tokStruct)
+	if errCt != nil {
 		log.Fatalf("Error enabling custom Compose config: %v", err)
 	}
 
@@ -187,14 +197,14 @@ func StripModWarning() {
 }
 
 func customTokPath() string {
-	ct := fs.WorkDir() + "/.tok/compose.tok"
+	ct := filepath.Join(fs.WorkDir(), "/.tok")
 
 	if fs.CheckExists(ct+".yml") == true {
-		return ct + ".yml"
+		return filepath.Join(ct, "compose.tok.yml")
 	}
 
 	if fs.CheckExists(ct+".yaml") == true {
-		return ct + ".yaml"
+		return filepath.Join(ct, "compose.tok.yaml")
 	}
 
 	return ""

@@ -9,6 +9,7 @@ import (
 	"bytes"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 	"text/template"
 )
@@ -18,25 +19,10 @@ type prf struct {
 	ProjectPath string
 }
 
-// GetPrfPath ...
-func GetPrfPath() string {
-	config := conf.GetConfig()
-	return fs.HomeDir() + "/.unison/" + config.Project
-}
-
-func checkDotUnison() {
-	dotUnison := fs.HomeDir() + "/.unison"
-	var _, err = os.Stat(dotUnison)
-
-	if os.IsNotExist(err) {
-		os.Mkdir(dotUnison, os.ModePerm)
-	}
-}
-
 // CreateOrUpdatePrf - Create or Update a `.prf` file in `~/.unison/`
 func CreateOrUpdatePrf() {
 	// detect if file exists
-	var _, err = os.Stat(GetPrfPath() + ".prf")
+	var _, err = os.Stat(getPrfPath())
 
 	// create file if not exists
 	if os.IsNotExist(err) {
@@ -44,6 +30,10 @@ func CreateOrUpdatePrf() {
 	} else {
 		updatePrf()
 	}
+}
+
+func getPrfPath() string {
+	return filepath.Join(fs.HomeDir(), "/.unison/", conf.GetConfig().Project+".prf")
 }
 
 // generatePrf - Generate a `.prf` file for unison
@@ -65,26 +55,19 @@ func generatePrf() {
 		return
 	}
 
-	createPrf(tpl.String(), GetPrfPath()+".prf")
+	createPrf(tpl.Bytes(), getPrfPath())
 }
 
 // createPrf - Write generated `.prf` file to `~/.unison/`
-func createPrf(body string, path string) {
-	checkDotUnison()
+func createPrf(body []byte, path string) {
+	fs.Mkdir(filepath.Join(fs.HomeDir(), "/.unison"))
 
-	var file, err = os.Create(path)
-	if err != nil {
-		log.Fatal("Create: ", err)
-	}
-
-	_, _ = file.WriteString(body)
-
-	defer file.Close()
+	fs.TouchByteArray(path, body)
 }
 
 // updatePrf - Update a `.prf` file in `~/.unison/`
 func updatePrf() {
-	f, err := os.Open(GetPrfPath() + ".prf")
+	f, err := os.Open(getPrfPath())
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -103,19 +86,5 @@ func updatePrf() {
 		}
 	}
 
-	createPrf(buffer.String(), GetPrfPath()+".tmp.prf")
-	replacePrf()
-}
-
-// replacePrf - Replace `.tmp.prf` with `.prf` file in `~/.unison/`
-func replacePrf() {
-	rootPrf := GetPrfPath()
-	mainPrf := rootPrf + ".prf"
-	tmpPrf := rootPrf + ".tmp.prf"
-
-	// Remove the original .prf file
-	os.Remove(mainPrf)
-
-	// Rename `.tmp.prf` to be the new `.prf` file
-	os.Rename(tmpPrf, mainPrf)
+	fs.Replace(getPrfPath(), buffer.Bytes())
 }

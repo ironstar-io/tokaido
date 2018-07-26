@@ -1,4 +1,4 @@
-package linux
+package goos
 
 // CheckDependencies - Root executable
 func CheckDependencies() *string {

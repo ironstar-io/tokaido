@@ -1,22 +1,10 @@
 package utils
 
 import (
-	"fmt"
+	"bitbucket.org/ironstar/tokaido-cli/system/console"
+
 	"log"
 )
-
-// if err != nil {
-// 		fmt.Println(`
-// 🔓  Tokaido requires privilege escalation to register the background sync service.
-//     Your system will prompt you for your password so that we can add this service.
-// 		`)
-// 		utils.GainSudo()
-// 	}
-
-// 	_, subSplitErr := utils.CommandSubSplitOutput("sudo", "touch", "/tmp/tokaido-test-sudo")
-// 	if subSplitErr != nil {
-// 		fmt.Println("error")
-// 	}
 
 // CheckSudo - Check if a user has permissions to run sudo
 // It's up to the calling function to prime the user to input their password,
@@ -31,9 +19,9 @@ func CheckSudo() error {
 func GainSudo() {
 	_, err := CommandSubSplitOutput("sudo", "true")
 	if err != nil {
-		fmt.Println(`
+		console.Println(`
 😢  Tokaido can't gain sudo privileges. Unable to proceed.
-		`)
+		`, "×")
 		log.Fatal(err)
 	}
 

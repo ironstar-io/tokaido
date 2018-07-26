@@ -8,8 +8,6 @@ import (
 
 // DockerUp - Lift the unison container
 func DockerUp() {
-	// fmt.Println(`🔥  Firing up the bi-directional file-sync container`)
-
 	docker.ComposeStdout("up", "-d", "unison")
 }
 

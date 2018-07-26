@@ -1,12 +1,11 @@
 package conf
 
 import (
-	"fmt"
-	"io/ioutil"
-
+	"bitbucket.org/ironstar/tokaido-cli/system/console"
 	"bitbucket.org/ironstar/tokaido-cli/system/fs"
 
 	"io"
+	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -18,11 +17,7 @@ func GetRootPath() string {
 	wd := fs.WorkDir()
 	c := GetConfig().Drupal.Path
 	if c != "" {
-		sa := []rune(c)
-		if string(sa[0]) != "/" {
-			c = "/" + c
-		}
-		return wd + c
+		return filepath.Join(wd, c)
 	}
 
 	rootPath, version := scanForCoreDrupal()
@@ -36,8 +31,8 @@ func scanForCoreDrupal() (string, string) {
 	wd := fs.WorkDir()
 	var dp string
 	var dv string
-	d7 := "/includes/bootstrap.inc"
-	d8 := "/core/lib/Drupal.php"
+	d7 := filepath.Join("includes", "bootstrap.inc")
+	d8 := filepath.Join("core", "lib", "Drupal.php")
 	err := filepath.Walk(wd, func(path string, info os.FileInfo, err error) error {
 		if info.IsDir() {
 			return nil
@@ -50,14 +45,14 @@ func scanForCoreDrupal() (string, string) {
 			s := string(f)
 			// bootstrap.inc is a pretty common path, make sure this is _the_ bootstrap.inc from Drupal
 			if strings.Contains(s, "'VERSION', '7.") {
-				fmt.Printf("🚂  Found a Drupal 7 site")
+				console.Println("🚂  Found a Drupal 7 site", "")
 				dp = strings.Replace(path, d7, "", -1)
 				dv = "7"
 				return io.EOF
 			}
 		}
 		if strings.Contains(path, d8) == true {
-			fmt.Printf("🚇  Found a Drupal 8 site")
+			console.Println("🚇  Found a Drupal 8 site", "")
 			dp = strings.Replace(path, d8, "", -1)
 			dv = "8"
 			return io.EOF
@@ -65,7 +60,7 @@ func scanForCoreDrupal() (string, string) {
 		return nil
 	})
 	if err != io.EOF {
-		log.Fatalf("Could not find a valid Drupal 7 or 8 installation. You may need to run `composer install` first. Error: [%v]\n", err)
+		log.Fatalf("Could not find a valid Drupal 7 or 8 installation. You will need to manually specify your Drupal root. \n\nHave you run 'composer install' on your project yet?")
 	}
 
 	return dp, dv
@@ -79,9 +74,9 @@ func CoreDrupalFile() string {
 	var path string
 	switch dv {
 	case "7":
-		path = rp + "/includes/bootstrap.inc"
+		path = filepath.Join(rp, "includes", "bootstrap.inc")
 	case "8":
-		path = rp + "/core/lib/Drupal.php"
+		path = filepath.Join(rp, "core", "lib", "Drupal.php")
 	default:
 		log.Fatal("Unknown or unspecified Drupal majorVersion in config file")
 	}
@@ -93,7 +88,6 @@ func CoreDrupalFile() string {
 // GetRootDir - Return the drupal root folder name without workdir
 func GetRootDir() string {
 	dr := GetRootPath()
-	ds := strings.Split(dr, "/")
 
-	return ds[len(ds)-1]
+	return filepath.Base(dr)
 }

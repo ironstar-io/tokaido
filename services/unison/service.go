@@ -2,11 +2,7 @@ package unison
 
 import (
 	"bitbucket.org/ironstar/tokaido-cli/conf"
-	"bitbucket.org/ironstar/tokaido-cli/system/linux"
-	"bitbucket.org/ironstar/tokaido-cli/system/osx"
-	"bitbucket.org/ironstar/tokaido-cli/utils"
-
-	"fmt"
+	"bitbucket.org/ironstar/tokaido-cli/services/unison/goos"
 )
 
 var bgSyncFailMsg = `
@@ -18,67 +14,24 @@ Use 'tok up' to repair, or 'tok sync' to sync manually
 
 // CreateSyncService Register a launchd or systemctl service for Unison active sync
 func CreateSyncService() {
-	GOOS := utils.CheckOS()
-
-	fmt.Println("🔄  Creating a background process to sync your local repo into the Tokaido environment")
-
-	if GOOS == "linux" {
-		linux.RegisterSystemdService()
-		linux.StartSystemdService()
-	}
-
-	if GOOS == "osx" {
-		osx.RegisterLaunchdService()
-		osx.StartLaunchdService()
-	}
+	goos.CreateSyncService()
 }
-
-// func StartSyncService() -- not needed yet
 
 // StopSyncService stop *and* remove the systemd sync service
 func StopSyncService() {
-	GOOS := utils.CheckOS()
-	c := conf.GetConfig()
-	if c.CreateSyncService != true {
+	if conf.GetConfig().CreateSyncService != true {
 		return
 	}
 
-	if GOOS == "linux" {
-		linux.StopSystemdService()
-	}
-
-	if GOOS == "osx" {
-		osx.StopLaunchdService()
-	}
+	goos.StopSyncService()
 }
 
 // SyncServiceStatus ...
 func SyncServiceStatus() string {
-	GOOS := utils.CheckOS()
-
-	if GOOS == "linux" {
-		return linux.CheckSyncService()
-	}
-
-	if GOOS == "osx" {
-		return osx.CheckSyncService()
-	}
-
-	return ""
+	return goos.SyncServiceStatus()
 }
 
 // CheckSyncService a verbose sync status check used for tok status
 func CheckSyncService() {
-	c := conf.GetConfig()
-	if c.CreateSyncService != true {
-		return
-	}
-
-	s := SyncServiceStatus()
-	if s == "running" {
-		fmt.Println("✅  Background sync service is running")
-		return
-	}
-
-	fmt.Println(bgSyncFailMsg)
+	goos.CheckSyncService()
 }
