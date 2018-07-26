@@ -11,9 +11,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-
-	"github.com/gernest/wow"
-	"github.com/gernest/wow/spin"
 )
 
 // ComposeStdout - Convenience method for docker-compose shell commands
@@ -44,12 +41,11 @@ func Up() {
 // Stop - Stop all containers in the compose file
 func Stop() {
 	fmt.Println()
-	w := wow.New(os.Stdout, spin.Get(spin.Dots), `   Tokaido is stopping your containers!`)
-	w.Start()
+	w := console.SpinStart("Tokaido is stopping your containers!")
 
 	ComposeStdout("stop")
 
-	w.PersistWith(spin.Spinner{Frames: []string{"🚉"}}, `  Tokaido stopped your containers successfully!`)
+	console.SpinPersist(w, "🚉", "Tokaido stopped your containers successfully!")
 }
 
 // Down - Pull down all the containers in the compose file
@@ -62,12 +58,11 @@ func Down() {
 	}
 
 	fmt.Println()
-	w := wow.New(os.Stdout, spin.Get(spin.Dots), `   Tokaido is pulling down your containers!`)
-	w.Start()
+	w := console.SpinStart("Tokaido is pulling down your containers!")
 
 	ComposeStdout("down")
 
-	w.PersistWith(spin.Spinner{Frames: []string{"🚉"}}, `  Tokaido destroyed containers successfully!`)
+	console.SpinPersist(w, "🚉", "Tokaido destroyed containers successfully!")
 }
 
 // Ps - Print the container status to the console
