@@ -21,7 +21,7 @@ func Init() {
 	c := conf.GetConfig()
 
 	// System readiness checks
-	console.Printf("\n🚀  Tokaido is starting up!\n", "")
+	console.Println("\n🚀  Tokaido is starting up!", "")
 	system.CheckDependencies()
 	version.GetUnisonVersion()
 	git.CheckGitRepo()
@@ -41,18 +41,16 @@ func Init() {
 	}
 
 	if c.CreateSyncService {
-		fmt.Println()
 		unison.CreateSyncService()
-		fmt.Println()
 	}
-
-	fmt.Println()
 
 	// Fire up the Docker environment
 	if docker.ImageExists("tokaido/drush-heavy:latest") == false {
 		console.Println(`🚡  First time running Tokaido? There's a few images to download, this might take some time.`, "")
 		fmt.Println()
 	}
+
+	fmt.Println()
 
 	wo := console.SpinStart("Tokaido is starting your containers")
 

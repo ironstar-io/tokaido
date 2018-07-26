@@ -4,6 +4,7 @@ package goos
 
 import (
 	"bytes"
+	"fmt"
 	"log"
 	"os"
 	"os/user"
@@ -90,6 +91,7 @@ func stopSyncService() {
 
 // CreateSyncService Register a launchd or systemctl service for Unison active sync
 func CreateSyncService() {
+	fmt.Println()
 	console.Println("🔄  Creating a background process to sync your local repo into the Tokaido environment", "")
 
 	RegisterSyncService()
