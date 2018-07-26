@@ -10,9 +10,9 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
+	"log"
 	"os"
 	"strings"
-	"log"
 )
 
 type fileMasks struct {
@@ -30,7 +30,7 @@ func settingsTokPath() string {
 	return sitesDefault() + "/settings.tok.php"
 }
 
-// CheckSettings ...
+// CheckSettings checks that Drupal is ready to run in the Tokaido environment
 func CheckSettings() {
 	if fs.CheckExists(settingsPath()) == false {
 		fmt.Printf(`
@@ -139,7 +139,7 @@ func appendTokSettingsRef() {
 
 	dv := conf.GetConfig().Drupal.MajorVersion
 	var settingsBody []byte
-	if dv == "7" {	
+	if dv == "7" {
 		settingsBody = drupaltmpl.SettingsD7Append
 	} else if dv == "8" {
 		settingsBody = drupaltmpl.SettingsD8Append
@@ -170,7 +170,7 @@ func appendTokSettingsRef() {
 func createSettingsTok() {
 	dv := conf.GetConfig().Drupal.MajorVersion
 	var settingsTokBody []byte
-	if dv == "7" {	
+	if dv == "7" {
 		settingsTokBody = drupaltmpl.SettingsD7Tok
 	} else if dv == "8" {
 		settingsTokBody = drupaltmpl.SettingsD8Tok
