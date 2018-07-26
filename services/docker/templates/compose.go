@@ -66,6 +66,11 @@ type ComposeDotTok struct {
 			Entrypoint  []string
 			Environment map[string]string `yaml:"environment,omitempty"`
 		} `yaml:"solr,omitempty"`
+		Kishu struct {
+			Image       string
+			VolumesFrom []string          `yaml:"volumes_from"`
+			Environment map[string]string `yaml:"environment,omitempty"`
+		} `yaml:"kishu,omitempty"`
 	}
 }
 
@@ -81,7 +86,10 @@ func DrupalSettings(drupalRoot string, projectName string) []byte {
   drush:
     environment:
       DRUPAL_ROOT: ` + drupalRoot + `
-      PROJECT_NAME: ` + projectName)
+      PROJECT_NAME: ` + projectName + `
+  kishu:
+      environment:
+        DRUPAL_ROOT: ` + drupalRoot)
 }
 
 // EdgeContainers ...
@@ -218,4 +226,10 @@ services:
       SSH_AUTH_SOCK: /ssh/auth/sock
       APP_ENV: local
       PROJECT_NAME: tokaido
+  kishu:
+    image: tokaido/kishu:latest
+    volumes_from:
+      - unison
+    environment:
+      DRUPAL_ROOT: docroot
 `)
