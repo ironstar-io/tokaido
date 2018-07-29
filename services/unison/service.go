@@ -19,7 +19,7 @@ func CreateSyncService() {
 
 // StopSyncService stop *and* remove the systemd sync service
 func StopSyncService() {
-	if conf.GetConfig().System.SyncSvc.Enabled != true {
+	if conf.GetConfig().System.Syncsvc.Enabled != true {
 		return
 	}
 

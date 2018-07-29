@@ -32,7 +32,7 @@ func getServiceName() string {
 }
 
 func getServicePath() string {
-	return conf.GetConfig().System.SyncSvc.SystemdPath + getServiceName()
+	return conf.GetConfig().System.Syncsvc.Systemdpath + getServiceName()
 }
 
 func createSyncFile() {
@@ -59,7 +59,7 @@ func createSyncFile() {
 		return
 	}
 
-	writeSyncFile(tpl.String(), c.System.SyncSvc.SystemdPath, serviceFilename)
+	writeSyncFile(tpl.String(), c.System.Syncsvc.Systemdpath, serviceFilename)
 	daemon.ReloadServices()
 }
 
@@ -111,7 +111,7 @@ func StopSyncService() {
 
 // CheckSyncService a verbose sync status check used for tok status
 func CheckSyncService() {
-	if conf.GetConfig().System.SyncSvc.Enabled != true {
+	if conf.GetConfig().System.Syncsvc.Enabled != true {
 		return
 	}
 

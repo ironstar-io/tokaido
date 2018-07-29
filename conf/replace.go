@@ -35,7 +35,7 @@ func CreateOrReplaceDrupalVars(path, version string) {
 // replaceDrupalVars ...
 func replaceDrupalVars(cf, path, version string) {
 	confStruct := Config{}
-	confStruct.System.SyncSvc.Enabled = true
+	confStruct.System.Syncsvc.Enabled = true
 
 	iocf, err := ioutil.ReadFile(cf)
 	if err != nil {
@@ -48,7 +48,7 @@ func replaceDrupalVars(cf, path, version string) {
 	}
 
 	confStruct.Drupal.Path = path
-	confStruct.Drupal.MajorVersion = version
+	confStruct.Drupal.Majorversion = version
 
 	confYml, err := yaml.Marshal(&confStruct)
 	if err != nil {

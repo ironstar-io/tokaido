@@ -7,7 +7,7 @@ import (
 
 // CheckDependencies - Root executable
 func CheckDependencies() {
-	if conf.GetConfig().Tokaido.DependencyChecks == true {
+	if conf.GetConfig().Tokaido.Dependencychecks == true {
 		goos.CheckDependencies()
 	}
 }

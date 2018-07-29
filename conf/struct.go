@@ -1,15 +1,21 @@
 package conf
 
 // Config the application's configuration
+// IMPORTANT!
+// Casing of the `Config` struct properties is important to note
+// All properties must be cased as capital letter first, followed by all lowercase
+// eg. `Customcompose` (correct), `CustomCompose` (incorrect)
+// This is to ensure they both conform to the golang convention
+// and that they are able to be properly parsed by the `tok config-x` commands
 type Config struct {
 	Tokaido struct {
 		Force            bool   `yaml:"force,omitempty"`
-		CustomCompose    bool   `yaml:"customcompose,omitempty"`
+		Customcompose    bool   `yaml:"customcompose,omitempty"`
 		Debug            bool   `yaml:"debug,omitempty"`
 		Config           string `yaml:"config,omitempty"`
-		EnableEmoji      bool   `yaml:"enableemoji,omitempty"`
-		BetaContainers   bool   `yaml:"betacontainers,omitempty"`
-		DependencyChecks bool   `yaml:"dependencychecks"`
+		Enableemoji      bool   `yaml:"enableemoji,omitempty"`
+		Betacontainers   bool   `yaml:"betacontainers,omitempty"`
+		Dependencychecks bool   `yaml:"dependencychecks"`
 		Project          struct {
 			Name string `yaml:"name,omitempty"`
 			Path string `yaml:"path,omitempty"`
@@ -17,18 +23,18 @@ type Config struct {
 	} `yaml:"tokaido,omitempty"`
 	Drupal struct {
 		Path         string `yaml:"path,omitempty"`
-		MajorVersion string `yaml:"majorversion,omitempty"`
+		Majorversion string `yaml:"majorversion,omitempty"`
 	} `yaml:"drupal,omitempty"`
 	System struct {
 		Xdebug struct {
 			Port      string `yaml:"port,omitempty"`
-			LogPath   string `yaml:"logpath,omitempty"`
+			Logpath   string `yaml:"logpath,omitempty"`
 			Enabled   bool   `yaml:"enabled,omitempty"`
 			Autostart bool   `yaml:"autostart,omitempty"`
 		} `yaml:"xdebug,omitempty"`
-		SyncSvc struct {
-			SystemdPath string `yaml:"systemdpath,omitempty"`
-			LaunchdPath string `yaml:"launchdpath,omitempty"`
+		Syncsvc struct {
+			Systemdpath string `yaml:"systemdpath,omitempty"`
+			Launchdpath string `yaml:"launchdpath,omitempty"`
 			Enabled     bool   `yaml:"enabled"`
 		} `yaml:"syncsvc,omitempty"`
 	} `yaml:"system,omitempty"`
@@ -44,8 +50,8 @@ type Services struct {
 		Entrypoint  []string `yaml:"entrypoint,omitempty"`
 		User        string   `yaml:"user,omitempty"`
 		Cmd         string   `yaml:"cmd,omitempty"`
-		VolumesFrom []string `yaml:"volumes_from,omitempty"`
-		DependsOn   []string `yaml:"depends_on,omitempty"`
+		Volumesfrom []string `yaml:"volumes_from,omitempty"`
+		Dependson   []string `yaml:"depends_on,omitempty"`
 		Environment []string `yaml:"environment,omitempty"`
 		Volumes     []string `yaml:"volumes,omitempty"`
 	} `yaml:"unison,omitempty"`
@@ -56,8 +62,8 @@ type Services struct {
 		Entrypoint  []string          `yaml:"entrypoint,omitempty"`
 		User        string            `yaml:"user,omitempty"`
 		Cmd         string            `yaml:"cmd,omitempty"`
-		VolumesFrom []string          `yaml:"volumes_from,omitempty"`
-		DependsOn   []string          `yaml:"depends_on,omitempty"`
+		Volumesfrom []string          `yaml:"volumes_from,omitempty"`
+		Dependson   []string          `yaml:"depends_on,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`
 		Volumes     []string          `yaml:"volumes,omitempty"`
 	} `yaml:"syslog,omitempty"`
@@ -68,8 +74,8 @@ type Services struct {
 		Entrypoint  []string          `yaml:"entrypoint,omitempty"`
 		User        string            `yaml:"user,omitempty"`
 		Cmd         string            `yaml:"cmd,omitempty"`
-		VolumesFrom []string          `yaml:"volumes_from,omitempty"`
-		DependsOn   []string          `yaml:"depends_on,omitempty"`
+		Volumesfrom []string          `yaml:"volumes_from,omitempty"`
+		Dependson   []string          `yaml:"depends_on,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`
 	} `yaml:"haproxy,omitempty"`
 	Varnish struct {
@@ -79,8 +85,8 @@ type Services struct {
 		Entrypoint  []string          `yaml:"entrypoint,omitempty"`
 		User        string            `yaml:"user,omitempty"`
 		Cmd         string            `yaml:"cmd,omitempty"`
-		VolumesFrom []string          `yaml:"volumes_from,omitempty"`
-		DependsOn   []string          `yaml:"depends_on,omitempty"`
+		Volumesfrom []string          `yaml:"volumes_from,omitempty"`
+		Dependson   []string          `yaml:"depends_on,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`
 	} `yaml:"varnish,omitempty"`
 	Nginx struct {
@@ -90,8 +96,8 @@ type Services struct {
 		Entrypoint  []string          `yaml:"entrypoint,omitempty"`
 		User        string            `yaml:"user,omitempty"`
 		Cmd         string            `yaml:"cmd,omitempty"`
-		VolumesFrom []string          `yaml:"volumes_from,omitempty"`
-		DependsOn   []string          `yaml:"depends_on,omitempty"`
+		Volumesfrom []string          `yaml:"volumes_from,omitempty"`
+		Dependson   []string          `yaml:"depends_on,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`
 	} `yaml:"nginx,omitempty"`
 	Fpm struct {
@@ -101,9 +107,9 @@ type Services struct {
 		Entrypoint  []string          `yaml:"entrypoint,omitempty"`
 		User        string            `yaml:"user,omitempty"`
 		Cmd         string            `yaml:"cmd,omitempty"`
-		VolumesFrom []string          `yaml:"volumes_from,omitempty"`
-		WorkingDir  string            `yaml:"working_dir,omitempty"`
-		DependsOn   []string          `yaml:"depends_on,omitempty"`
+		Volumesfrom []string          `yaml:"volumes_from,omitempty"`
+		Workingdir  string            `yaml:"working_dir,omitempty"`
+		Dependson   []string          `yaml:"depends_on,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`
 	} `yaml:"fpm,omitempty"`
 	Memcache struct {
@@ -132,8 +138,8 @@ type Services struct {
 		Entrypoint  []string          `yaml:"entrypoint,omitempty"`
 		User        string            `yaml:"user,omitempty"`
 		Cmd         string            `yaml:"cmd,omitempty"`
-		WorkingDir  string            `yaml:"working_dir,omitempty"`
-		VolumesFrom []string          `yaml:"volumes_from,omitempty"`
+		Workingdir  string            `yaml:"working_dir,omitempty"`
+		Volumesfrom []string          `yaml:"volumes_from,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`
 	} `yaml:"drush,omitempty"`
 	Solr struct {

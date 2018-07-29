@@ -40,7 +40,7 @@ func Init() {
 		unison.Sync()
 	}
 
-	if c.System.SyncSvc.Enabled {
+	if c.System.Syncsvc.Enabled {
 		unison.CreateSyncService()
 		fmt.Println()
 	}

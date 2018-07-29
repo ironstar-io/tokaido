@@ -44,7 +44,7 @@ func FindOrCreateTokCompose() {
 		return
 	}
 
-	if conf.GetConfig().Tokaido.CustomCompose == true {
+	if conf.GetConfig().Tokaido.Customcompose == true {
 		StripModWarning()
 		return
 	}
@@ -54,7 +54,7 @@ func FindOrCreateTokCompose() {
 
 // CreateOrReplaceTokCompose ...
 func CreateOrReplaceTokCompose(tokComposeYml []byte) {
-	if conf.GetConfig().Tokaido.CustomCompose == false {
+	if conf.GetConfig().Tokaido.Customcompose == false {
 		fs.TouchOrReplace(tokComposePath, append(dockertmpl.ModWarning[:], tokComposeYml[:]...))
 		return
 	}
@@ -96,7 +96,7 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 
 	if conf.GetConfig().Services.Solr.Enabled {
 		var v string
-		if conf.GetConfig().Tokaido.BetaContainers {
+		if conf.GetConfig().Tokaido.Betacontainers {
 			v = "edge"
 		} else {
 			v = "6.6"
@@ -109,7 +109,7 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 
 	if conf.GetConfig().Services.Memcache.Enabled {
 		var v string
-		if conf.GetConfig().Tokaido.BetaContainers {
+		if conf.GetConfig().Tokaido.Betacontainers {
 			v = "1.5-alpine" // Temporary, there is currently no edge memcache container
 		} else {
 			v = "1.5-alpine"
@@ -120,7 +120,7 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 		}
 	}
 
-	if conf.GetConfig().Tokaido.BetaContainers {
+	if conf.GetConfig().Tokaido.Betacontainers {
 		errEdge := yaml.Unmarshal(dockertmpl.EdgeContainers(), &tokStruct)
 		if errEdge != nil {
 			log.Fatalf("Error enabling edge containers in Compose file: %v", err)
