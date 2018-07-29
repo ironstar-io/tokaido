@@ -24,7 +24,7 @@ func Sync() {
 		fmt.Println("Synchronizing your files between your local filesystem and the container. This may take some time.")
 	}
 
-	utils.CommandSubstitution("unison", config.Project, "-watch=false")
+	utils.CommandSubstitution("unison", config.Tokaido.Project.Name, "-watch=false")
 }
 
 // Watch ...
