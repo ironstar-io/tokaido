@@ -20,10 +20,10 @@ var rootCmd = cobra.Command{
 }
 
 func init() {
+	rootCmd.AddCommand(ConfigGetCmd)
+	rootCmd.AddCommand(DestroyCmd)
 	rootCmd.AddCommand(InitCmd)
 	rootCmd.AddCommand(IronstarCmd)
-	rootCmd.AddCommand(UpCmd)
-	rootCmd.AddCommand(DestroyCmd)
 	rootCmd.AddCommand(OpenCmd)
 	rootCmd.AddCommand(PortsCmd)
 	rootCmd.AddCommand(PsCmd)
@@ -33,6 +33,7 @@ func init() {
 	rootCmd.AddCommand(SyscheckCmd)
 	rootCmd.AddCommand(StatusCmd)
 	rootCmd.AddCommand(SyncCmd)
+	rootCmd.AddCommand(UpCmd)
 	rootCmd.AddCommand(VersionCmd)
 	rootCmd.AddCommand(WatchCmd)
 }
