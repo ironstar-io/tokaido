@@ -10,17 +10,17 @@ package conf
 type Config struct {
 	Tokaido struct {
 		Force            bool   `yaml:"force,omitempty"`
-		Customcompose    bool   `yaml:"customcompose,omitempty"`
+		Customcompose    bool   `yaml:"customcompose"`
 		Debug            bool   `yaml:"debug,omitempty"`
 		Config           string `yaml:"config,omitempty"`
-		Enableemoji      bool   `yaml:"enableemoji,omitempty"`
-		Betacontainers   bool   `yaml:"betacontainers,omitempty"`
+		Enableemoji      bool   `yaml:"enableemoji"`
+		Betacontainers   bool   `yaml:"betacontainers"`
 		Dependencychecks bool   `yaml:"dependencychecks"`
 		Project          struct {
-			Name string `yaml:"name,omitempty"`
-			Path string `yaml:"path,omitempty"`
-		} `yaml:"project,omitempty"`
-	} `yaml:"tokaido,omitempty"`
+			Name string `yaml:"name"`
+			Path string `yaml:"path"`
+		} `yaml:"project"`
+	} `yaml:"tokaido"`
 	Drupal struct {
 		Path         string `yaml:"path,omitempty"`
 		Majorversion string `yaml:"majorversion,omitempty"`
@@ -29,8 +29,8 @@ type Config struct {
 		Xdebug struct {
 			Port      string `yaml:"port,omitempty"`
 			Logpath   string `yaml:"logpath,omitempty"`
-			Enabled   bool   `yaml:"enabled,omitempty"`
-			Autostart bool   `yaml:"autostart,omitempty"`
+			Enabled   bool   `yaml:"enabled"`
+			Autostart bool   `yaml:"autostart"`
 		} `yaml:"xdebug,omitempty"`
 		Syncsvc struct {
 			Systemdpath string `yaml:"systemdpath,omitempty"`
@@ -156,6 +156,6 @@ type Services struct {
 
 // ComposeDotTok ...
 type ComposeDotTok struct {
-	Version  string
+	Version  string   `yaml:"version,omitempty"`
 	Services Services `yaml:"services,omitempty"`
 }

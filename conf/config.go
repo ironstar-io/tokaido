@@ -35,8 +35,14 @@ func LoadConfig(cmd *cobra.Command) (*Config, error) {
 	viper.SetDefault("Tokaido.Project.Name", fs.Basename())
 	viper.SetDefault("Tokaido.Project.Path", fs.WorkDir())
 	viper.SetDefault("System.Syncsvc.Enabled", true)
-	viper.SetDefault("System.Syncsvc.Systemdpath", filepath.Join(fs.HomeDir(), "/.config/systemd/user/"))
-	viper.SetDefault("System.Syncsvc.Launchdpath", filepath.Join(fs.HomeDir(), "/Library/LaunchAgents/"))
+
+	if runtime.GOOS == "linux" {
+		viper.SetDefault("System.Syncsvc.Systemdpath", filepath.Join(fs.HomeDir(), "/.config/systemd/user/"))
+	}
+	if runtime.GOOS == "darwin" {
+		viper.SetDefault("System.Syncsvc.Launchdpath", filepath.Join(fs.HomeDir(), "/Library/LaunchAgents/"))
+	}
+
 	viper.SetDefault("Services.Memcache.Enabled", true)
 	viper.SetDefault("Services.Solr.Enabled", false)
 

@@ -21,6 +21,7 @@ var rootCmd = cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(ConfigGetCmd)
+	rootCmd.AddCommand(ConfigSetCmd)
 	rootCmd.AddCommand(DestroyCmd)
 	rootCmd.AddCommand(InitCmd)
 	rootCmd.AddCommand(IronstarCmd)
