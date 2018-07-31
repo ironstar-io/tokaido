@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/services/docker"
 	"bitbucket.org/ironstar/tokaido-cli/services/unison"
 	"bitbucket.org/ironstar/tokaido-cli/system/console"
@@ -21,8 +20,6 @@ var DestroyCmd = &cobra.Command{
 		utils.CheckCmdHard("docker-compose")
 
 		docker.HardCheckTokCompose()
-
-		conf.LoadConfig(cmd)
 
 		confirmDestroy := utils.ConfirmationPrompt(`🔥  This will also destroy the database inside your Tokaido environment. Are you sure?`, "n")
 		if confirmDestroy == false {

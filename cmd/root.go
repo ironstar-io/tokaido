@@ -2,10 +2,14 @@ package cmd
 
 import (
 	"bitbucket.org/ironstar/tokaido-cli/conf"
+	"bitbucket.org/ironstar/tokaido-cli/system/fs"
 	"bitbucket.org/ironstar/tokaido-cli/system/version"
 
 	"fmt"
 	"os"
+	"path/filepath"
+	"runtime"
+	"strings"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -20,6 +24,11 @@ var rootCmd = cobra.Command{
 }
 
 func init() {
+	viper.RegisterAlias("config-get", "get-config")
+	viper.RegisterAlias("config-set", "set-config")
+
+	cobra.OnInitialize(initConfig)
+
 	rootCmd.AddCommand(ConfigGetCmd)
 	rootCmd.AddCommand(ConfigSetCmd)
 	rootCmd.AddCommand(DestroyCmd)
@@ -59,12 +68,73 @@ func RootCmd() *cobra.Command {
 }
 
 func run(cmd *cobra.Command, args []string) {
-	conf.LoadConfig(cmd)
-
 	if viper.GetBool("version") == true {
 		fmt.Printf("v%s\n", version.Get().Version)
 	} else {
 		fmt.Printf("Tokaido v%s\n\n", version.Get().Version)
 		fmt.Println("For help with Tokaido run `tok --help` or take a look at our documentation at https://docs.tokaido.io/")
+	}
+}
+
+// LoadConfig loads the config from a file if specified, otherwise from the environment
+func initConfig() {
+	viper.BindPFlags(rootCmd.Flags())
+
+	createDotTok()
+
+	viper.SetEnvPrefix("TOK")
+	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+	viper.AutomaticEnv()
+
+	viper.SetDefault("Tokaido.Customcompose", viper.GetBool("customCompose"))
+	viper.SetDefault("Tokaido.Debug", viper.GetBool("debug"))
+	viper.SetDefault("Tokaido.Force", viper.GetBool("force"))
+	viper.SetDefault("Tokaido.Betacontainers", false)
+	viper.SetDefault("Tokaido.Dependencychecks", true)
+	viper.SetDefault("Tokaido.Enableemoji", emojiDefaults())
+	viper.SetDefault("Tokaido.Project.Name", fs.Basename())
+	viper.SetDefault("Tokaido.Project.Path", fs.WorkDir())
+	viper.SetDefault("System.Syncsvc.Enabled", true)
+
+	if runtime.GOOS == "linux" {
+		viper.SetDefault("System.Syncsvc.Systemdpath", filepath.Join(fs.HomeDir(), "/.config/systemd/user/"))
+	}
+	if runtime.GOOS == "darwin" {
+		viper.SetDefault("System.Syncsvc.Launchdpath", filepath.Join(fs.HomeDir(), "/Library/LaunchAgents/"))
+	}
+
+	viper.SetDefault("Services.Memcache.Enabled", true)
+	viper.SetDefault("Services.Solr.Enabled", false)
+
+	viper.SetConfigType("yaml")
+
+	if configFile, _ := rootCmd.Flags().GetString("config"); configFile != "" {
+		viper.SetConfigFile(configFile)
+	} else {
+		viper.SetConfigName("config")
+		viper.AddConfigPath(filepath.Join(fs.WorkDir(), ".tok", "local"))
+		viper.AddConfigPath(filepath.Join(fs.WorkDir(), ".tok"))
+	}
+
+	viper.ReadInConfig()
+
+	conf.PopulateConfig(new(conf.Config))
+}
+
+func emojiDefaults() bool {
+	if runtime.GOOS == "windows" {
+		return false
+	}
+
+	return true
+}
+
+func createDotTok() {
+	d := filepath.Join(fs.WorkDir(), ".tok")
+	if fs.CheckExists(d) == false {
+		err := os.MkdirAll(d, os.ModePerm)
+		if err != nil {
+			fmt.Println("There was an error creating the config directory:", err)
+		}
 	}
 }

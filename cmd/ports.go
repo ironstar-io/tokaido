@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/services/docker"
 	"bitbucket.org/ironstar/tokaido-cli/utils"
 
@@ -17,8 +16,6 @@ var PortsCmd = &cobra.Command{
 		utils.CheckCmdHard("docker-compose")
 
 		docker.HardCheckTokCompose()
-
-		conf.LoadConfig(cmd)
 
 		docker.PrintPorts(args)
 	},

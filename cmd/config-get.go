@@ -15,8 +15,6 @@ var ConfigGetCmd = &cobra.Command{
 	Short: "Get a config property value",
 	Long:  "Get a config property value at a position defined in command arguments. Eg. `tok config-get drupal path`",
 	Run: func(cmd *cobra.Command, args []string) {
-		conf.LoadConfig(cmd)
-
 		c, err := conf.GetConfigValueByArgs(args)
 		if err != nil {
 			log.Fatal(err)
