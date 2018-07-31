@@ -29,7 +29,6 @@ func init() {
 	rootCmd.AddCommand(PsCmd)
 	rootCmd.AddCommand(RepairCmd)
 	rootCmd.AddCommand(StopCmd)
-	rootCmd.AddCommand(SSHCmd)
 	rootCmd.AddCommand(SyscheckCmd)
 	rootCmd.AddCommand(StatusCmd)
 	rootCmd.AddCommand(SyncCmd)
