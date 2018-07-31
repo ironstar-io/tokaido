@@ -24,9 +24,6 @@ var rootCmd = cobra.Command{
 }
 
 func init() {
-	viper.RegisterAlias("config-get", "get-config")
-	viper.RegisterAlias("config-set", "set-config")
-
 	cobra.OnInitialize(initConfig)
 
 	rootCmd.AddCommand(ConfigGetCmd)
