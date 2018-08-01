@@ -158,8 +158,8 @@ services:
     image: tokaido/unison:2.51.2
     environment:
       - UNISON_DIR=/tokaido/site
-      - UNISON_UID=1007
-      - UNISON_GID=1006
+      - UNISON_UID=1001
+      - UNISON_GID=1001
     ports:
       - "5000"
     volumes:
