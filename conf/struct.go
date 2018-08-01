@@ -18,7 +18,7 @@ type Config struct {
 		Dependencychecks bool   `yaml:"dependencychecks"`
 		Project          struct {
 			Name string `yaml:"name"`
-			Path string `yaml:"path"`
+			Path string `yaml:"path,omitempty"`
 		} `yaml:"project"`
 	} `yaml:"tokaido"`
 	Drupal struct {

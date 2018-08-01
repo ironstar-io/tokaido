@@ -13,7 +13,7 @@ import (
 func GetConfig() *Config {
 	config := new(Config)
 	if err := viper.Unmarshal(config); err != nil {
-		log.Fatal("Failed to retrieve configuration values")
+		log.Fatal("Failed to retrieve configuration values\n", err)
 	}
 
 	return config
@@ -32,7 +32,7 @@ func GetConfigValueByArgs(args []string) (reflect.Value, error) {
 		return reflect.ValueOf(nil), err
 	}
 	if !r.IsValid() {
-		return reflect.ValueOf(nil), errors.New("Could not find the specified property in your configuration")
+		return reflect.ValueOf(nil), errors.New("`" + strings.ToLower(strings.Join(args, " ")) + "` is not a valid Tokaido configuration path")
 	}
 
 	return r, nil
@@ -62,9 +62,21 @@ func getField(v *Config, fields []string) (reflect.Value, error) {
 			continue
 		}
 		if !f.IsValid() {
-			return reflect.ValueOf(nil), errors.New("Could not find the specified property in your configuration")
+			return reflect.ValueOf(nil), errors.New("`" + strings.ToLower(strings.Join(fields, " ")) + "` is not a valid Tokaido configuration path")
 		}
-		f = f.FieldByName(a)
+
+		switch f.Kind() {
+		case reflect.String:
+			fallthrough
+		case reflect.Bool:
+			fallthrough
+		case reflect.Int:
+			return reflect.ValueOf(nil), errors.New("`" + strings.ToLower(strings.Join(fields, " ")) + "` is a value and cannot have a value set against it as a key")
+		case reflect.Map:
+			return f, nil
+		default:
+			f = f.FieldByName(a)
+		}
 	}
 
 	return f, nil

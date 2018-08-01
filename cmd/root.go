@@ -4,6 +4,7 @@ import (
 	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/system/fs"
 	"bitbucket.org/ironstar/tokaido-cli/system/version"
+	"log"
 
 	"fmt"
 	"os"
@@ -115,7 +116,11 @@ func initConfig() {
 
 	viper.ReadInConfig()
 
-	conf.PopulateConfig(new(conf.Config))
+	// Check and error if trying to pass in invalid values
+	_, err := conf.PopulateConfig(new(conf.Config))
+	if err != nil {
+		log.Fatalln("Unable to load your configuration\n", err)
+	}
 }
 
 func emojiDefaults() bool {

@@ -10,6 +10,7 @@ import (
 
 const tagPrefix = "viper"
 
+// PopulateConfig ...
 func PopulateConfig(config *Config) (*Config, error) {
 	err := recursivelySet(reflect.ValueOf(config), "")
 	if err != nil {
@@ -52,6 +53,10 @@ func recursivelySet(val reflect.Value, prefix string) error {
 			// you can only set with an int64 -> int
 			configVal := int64(viper.GetInt(tag))
 			thisField.SetInt(configVal)
+		case reflect.Slice:
+			continue
+		case reflect.Map:
+			continue
 		case reflect.String:
 			thisField.SetString(viper.GetString(tag))
 		case reflect.Bool:
