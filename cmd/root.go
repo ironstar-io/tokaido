@@ -24,6 +24,7 @@ func init() {
 	rootCmd.AddCommand(IronstarCmd)
 	rootCmd.AddCommand(UpCmd)
 	rootCmd.AddCommand(DestroyCmd)
+	rootCmd.AddCommand(LogsCmd)
 	rootCmd.AddCommand(OpenCmd)
 	rootCmd.AddCommand(PortsCmd)
 	rootCmd.AddCommand(PsCmd)
