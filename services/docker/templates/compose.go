@@ -18,28 +18,28 @@ type ComposeDotTok struct {
 			User      string
 			Image     string
 			Ports     []string
-			DependsOn []string `yaml:"depends_on"`
+			Dependson []string `yaml:"depends_on"`
 		}
 		Varnish struct {
 			User        string
 			Image       string
-			DependsOn   []string `yaml:"depends_on"`
-			VolumesFrom []string `yaml:"volumes_from"`
+			Dependson   []string `yaml:"depends_on"`
+			Volumesfrom []string `yaml:"volumes_from"`
 		}
 		Nginx struct {
 			User        string
 			Image       string
-			VolumesFrom []string `yaml:"volumes_from"`
-			DependsOn   []string `yaml:"depends_on"`
+			Volumesfrom []string `yaml:"volumes_from"`
+			Dependson   []string `yaml:"depends_on"`
 			Ports       []string
 			Environment map[string]string `yaml:"environment,omitempty"`
 		}
 		Fpm struct {
 			User        string
 			Image       string
-			WorkingDir  string   `yaml:"working_dir"`
-			VolumesFrom []string `yaml:"volumes_from"`
-			DependsOn   []string `yaml:"depends_on"`
+			Workingdir  string   `yaml:"working_dir"`
+			Volumesfrom []string `yaml:"volumes_from"`
+			Dependson   []string `yaml:"depends_on"`
 			Ports       []string
 			Environment map[string]string `yaml:"environment,omitempty"`
 		}
@@ -48,7 +48,7 @@ type ComposeDotTok struct {
 		} `yaml:"memcache,omitempty"`
 		Mysql struct {
 			Image       string
-			VolumesFrom []string `yaml:"volumes_from"`
+			Volumesfrom []string `yaml:"volumes_from"`
 			Ports       []string
 			Environment map[string]string
 		}
@@ -56,8 +56,8 @@ type ComposeDotTok struct {
 			Image       string
 			Hostname    string
 			Ports       []string
-			WorkingDir  string            `yaml:"working_dir"`
-			VolumesFrom []string          `yaml:"volumes_from"`
+			Workingdir  string            `yaml:"working_dir"`
+			Volumesfrom []string          `yaml:"volumes_from"`
 			Environment map[string]string `yaml:"environment,omitempty"`
 		}
 		Solr struct {
@@ -68,7 +68,7 @@ type ComposeDotTok struct {
 		} `yaml:"solr,omitempty"`
 		Kishu struct {
 			Image       string
-			VolumesFrom []string          `yaml:"volumes_from"`
+			Volumesfrom []string          `yaml:"volumes_from"`
 			Environment map[string]string `yaml:"environment,omitempty"`
 		} `yaml:"kishu,omitempty"`
 	}
@@ -158,8 +158,8 @@ services:
     image: tokaido/unison:2.51.2
     environment:
       - UNISON_DIR=/tokaido/site
-      - UNISON_UID=1007
-      - UNISON_GID=1006
+      - UNISON_UID=1001
+      - UNISON_GID=1001
     ports:
       - "5000"
     volumes:
