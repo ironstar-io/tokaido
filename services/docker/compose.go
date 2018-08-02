@@ -65,6 +65,13 @@ func Down() {
 	console.SpinPersist(w, "🚉", "Tokaido destroyed containers successfully!")
 }
 
+// PrintLogs - Print all logs or the container logs to the console
+func PrintLogs(args []string) {
+	ls := append([]string{"logs"}, args...)
+
+	fmt.Println(ComposeResult(ls...))
+}
+
 // Ps - Print the container status to the console
 func Ps() {
 	fmt.Println(ComposeResult("ps"))

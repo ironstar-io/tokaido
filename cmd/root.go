@@ -1,10 +1,11 @@
 package cmd
 
 import (
+	"log"
+
 	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/system/fs"
 	"bitbucket.org/ironstar/tokaido-cli/system/version"
-	"log"
 
 	"fmt"
 	"os"
@@ -32,6 +33,9 @@ func init() {
 	rootCmd.AddCommand(DestroyCmd)
 	rootCmd.AddCommand(InitCmd)
 	rootCmd.AddCommand(IronstarCmd)
+	rootCmd.AddCommand(UpCmd)
+	rootCmd.AddCommand(DestroyCmd)
+	rootCmd.AddCommand(LogsCmd)
 	rootCmd.AddCommand(OpenCmd)
 	rootCmd.AddCommand(PortsCmd)
 	rootCmd.AddCommand(PsCmd)
