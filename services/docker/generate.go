@@ -10,7 +10,6 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -45,7 +44,7 @@ func FindOrCreateTokCompose() {
 		return
 	}
 
-	if conf.GetConfig().CustomCompose == true {
+	if conf.GetConfig().Tokaido.Customcompose == true {
 		StripModWarning()
 		return
 	}
@@ -55,7 +54,7 @@ func FindOrCreateTokCompose() {
 
 // CreateOrReplaceTokCompose ...
 func CreateOrReplaceTokCompose(tokComposeYml []byte) {
-	if conf.GetConfig().CustomCompose == false {
+	if conf.GetConfig().Tokaido.Customcompose == false {
 		fs.TouchOrReplace(tokComposePath, append(dockertmpl.ModWarning[:], tokComposeYml[:]...))
 		return
 	}
@@ -76,8 +75,8 @@ func MarshalledDefaults() []byte {
 }
 
 // UnmarshalledDefaults ...
-func UnmarshalledDefaults() dockertmpl.ComposeDotTok {
-	tokStruct := dockertmpl.ComposeDotTok{}
+func UnmarshalledDefaults() conf.ComposeDotTok {
+	tokStruct := conf.ComposeDotTok{}
 	unisonVersion := version.GetUnisonVersion()
 
 	err := yaml.Unmarshal(dockertmpl.ComposeTokDefaults, &tokStruct)
@@ -95,12 +94,12 @@ func UnmarshalledDefaults() dockertmpl.ComposeDotTok {
 		log.Fatalf("Error setting Unison version: %v", err)
 	}
 
-	if conf.GetConfig().Solr.Enable {
+	if conf.GetConfig().Services.Solr.Enabled {
 		var v string
-		if conf.GetConfig().BetaContainers {
+		if conf.GetConfig().Tokaido.Betacontainers {
 			v = "edge"
 		} else {
-			v = conf.GetConfig().Solr.Version
+			v = "6.6"
 		}
 		errSolr := yaml.Unmarshal(dockertmpl.EnableSolr(v), &tokStruct)
 		if errSolr != nil {
@@ -108,12 +107,12 @@ func UnmarshalledDefaults() dockertmpl.ComposeDotTok {
 		}
 	}
 
-	if conf.GetConfig().Memcache.Enable {
+	if conf.GetConfig().Services.Memcache.Enabled {
 		var v string
-		if conf.GetConfig().BetaContainers {
-			v = "edge"
+		if conf.GetConfig().Tokaido.Betacontainers {
+			v = "1.5-alpine" // Temporary, there is currently no edge memcache container
 		} else {
-			v = conf.GetConfig().Memcache.Version
+			v = "1.5-alpine"
 		}
 		errMemcache := yaml.Unmarshal(dockertmpl.EnableMemcache(v), &tokStruct)
 		if errMemcache != nil {
@@ -121,7 +120,7 @@ func UnmarshalledDefaults() dockertmpl.ComposeDotTok {
 		}
 	}
 
-	if conf.GetConfig().BetaContainers {
+	if conf.GetConfig().Tokaido.Betacontainers {
 		errEdge := yaml.Unmarshal(dockertmpl.EdgeContainers(), &tokStruct)
 		if errEdge != nil {
 			log.Fatalf("Error enabling edge containers in Compose file: %v", err)
@@ -144,26 +143,25 @@ func UnmarshalledDefaults() dockertmpl.ComposeDotTok {
 }
 
 func getCustomTok() []byte {
-	ctp := customTokPath()
-
-	if fs.CheckExists(ctp) == false {
-		return nil
+	dc := &conf.ComposeDotTok{
+		Version:  "2",
+		Services: conf.GetConfig().Services,
 	}
 
-	if ctp != "" {
-		ct, err := ioutil.ReadFile(ctp)
-		if err != nil {
-			log.Fatalf("error: %v", err)
-		}
+	// Nulify the invalid docker-compose file values
+	dc.Services.Memcache.Enabled = false
+	dc.Services.Solr.Enabled = false
 
-		return ct
+	cc, err := yaml.Marshal(dc)
+	if err != nil {
+		log.Fatalf("error: %v", err)
 	}
 
-	return nil
+	return cc
 }
 
 func getDrupalSettings() []byte {
-	return dockertmpl.DrupalSettings(conf.GetRootDir(), conf.GetConfig().Project)
+	return dockertmpl.DrupalSettings(conf.GetRootDir(), conf.GetConfig().Tokaido.Project.Name)
 }
 
 // StripModWarning ...

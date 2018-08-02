@@ -137,7 +137,7 @@ func appendTokSettingsRef() {
 
 	defer f.Close()
 
-	dv := conf.GetConfig().Drupal.MajorVersion
+	dv := conf.GetConfig().Drupal.Majorversion
 	var settingsBody []byte
 	if dv == "7" {
 		settingsBody = drupaltmpl.SettingsD7Append
@@ -168,7 +168,7 @@ func appendTokSettingsRef() {
 }
 
 func createSettingsTok() {
-	dv := conf.GetConfig().Drupal.MajorVersion
+	dv := conf.GetConfig().Drupal.Majorversion
 	var settingsTokBody []byte
 	if dv == "7" {
 		settingsTokBody = drupaltmpl.SettingsD7Tok

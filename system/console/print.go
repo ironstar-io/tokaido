@@ -11,7 +11,7 @@ import (
 
 // Println ...
 func Println(message string, replacement string) {
-	if viper.Get("EnableEmoji") == false {
+	if viper.Get("Enableemoji") == false {
 		fmt.Println(StripEmoji(message, replacement))
 	} else {
 		fmt.Println(message)
@@ -20,7 +20,7 @@ func Println(message string, replacement string) {
 
 // Printf ...
 func Printf(message string, replacement string) {
-	if viper.Get("EnableEmoji") == false {
+	if viper.Get("Enableemoji") == false {
 		fmt.Printf(StripEmoji(message, replacement))
 	} else {
 		fmt.Printf(message)
@@ -29,7 +29,7 @@ func Printf(message string, replacement string) {
 
 // SpinStart ...
 func SpinStart(message string) *wow.Wow {
-	if viper.Get("EnableEmoji") == false {
+	if viper.Get("Enableemoji") == false {
 		Println(message, "")
 		return nil
 	}
@@ -42,7 +42,7 @@ func SpinStart(message string) *wow.Wow {
 
 // SpinPersist ...
 func SpinPersist(wo *wow.Wow, emoji string, message string) {
-	if viper.Get("EnableEmoji") == false {
+	if viper.Get("Enableemoji") == false {
 		Println(message, "")
 	} else {
 		wo.PersistWith(spin.Spinner{Frames: []string{emoji}}, `  `+message)

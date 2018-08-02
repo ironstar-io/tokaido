@@ -15,7 +15,7 @@ var tokComposePath = filepath.Join(fs.WorkDir(), "/docker-compose.tok.yml")
 
 // Configure - Amend docker-compose.tok.yml to be compatible with xdebug
 func Configure() {
-	xdebugPort := conf.GetConfig().Xdebug.Port
+	xdebugPort := conf.GetConfig().System.Xdebug.Port
 	if xdebugPort != "" {
 		networkUp := docker.CheckNetworkUp()
 

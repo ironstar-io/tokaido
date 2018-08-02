@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/services/docker"
 	"bitbucket.org/ironstar/tokaido-cli/services/drupal"
 	"bitbucket.org/ironstar/tokaido-cli/system/console"
@@ -19,8 +18,6 @@ var SyscheckCmd = &cobra.Command{
 		utils.CheckCmdHard("docker-compose")
 
 		docker.HardCheckTokCompose()
-
-		conf.LoadConfig(cmd)
 
 		console.Println(`
 🚅  Checking Drupal for compatibility with Tokaido

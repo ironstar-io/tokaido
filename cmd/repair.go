@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/services/tok"
 	"bitbucket.org/ironstar/tokaido-cli/system/console"
 	"bitbucket.org/ironstar/tokaido-cli/utils"
@@ -16,7 +15,6 @@ var RepairCmd = &cobra.Command{
 	Long:  "Functionally similar to `tok up`",
 	Run: func(cmd *cobra.Command, args []string) {
 		utils.CheckCmdHard("docker-compose")
-		conf.LoadConfig(cmd)
 
 		console.Println(`
 🚅  Tokaido is attempting to repair your project!`, "")

@@ -33,13 +33,13 @@ func CreateOrUpdatePrf() {
 }
 
 func getPrfPath() string {
-	return filepath.Join(fs.HomeDir(), "/.unison/", conf.GetConfig().Project+".prf")
+	return filepath.Join(fs.HomeDir(), "/.unison/", conf.GetConfig().Tokaido.Project.Name+".prf")
 }
 
 // generatePrf - Generate a `.prf` file for unison
 func generatePrf() {
 	config := conf.GetConfig()
-	s := prf{UnisonPort: LocalPort(), ProjectPath: config.Path}
+	s := prf{UnisonPort: LocalPort(), ProjectPath: config.Tokaido.Project.Path}
 
 	tmpl := template.New("unison.prf")
 	tmpl, err := tmpl.Parse(unisontmpl.PRFTemplateStr)
