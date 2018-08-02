@@ -27,7 +27,7 @@ var tokDir = filepath.Join(fs.WorkDir(), "/.tok")
 // CheckKey ...
 func CheckKey() {
 	localPort := docker.LocalPort("drush", "22")
-	cmdStr := `ssh ` + conf.GetConfig().Project + `.tok -q -p ` + localPort + ` -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -C "echo 1" | echo $?`
+	cmdStr := `ssh ` + conf.GetConfig().Tokaido.Project.Name + `.tok -q -p ` + localPort + ` -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -C "echo 1" | echo $?`
 
 	keyResult := utils.BashStringCmd(cmdStr)
 	if keyResult == "0" {

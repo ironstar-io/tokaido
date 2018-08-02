@@ -69,7 +69,7 @@ func scanForCoreDrupal() (string, string) {
 // CoreDrupalFile - Return the core drupal file for the users' installation
 func CoreDrupalFile() string {
 	rp := GetRootPath()
-	dv := GetConfig().Drupal.MajorVersion
+	dv := GetConfig().Drupal.Majorversion
 
 	var path string
 	switch dv {

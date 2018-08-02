@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/services/docker"
 	"bitbucket.org/ironstar/tokaido-cli/services/unison"
 	"bitbucket.org/ironstar/tokaido-cli/utils"
@@ -15,8 +14,6 @@ var SyncCmd = &cobra.Command{
 	Short: "Use unison to sync your files",
 	Long:  "One-time sync to your container",
 	Run: func(cmd *cobra.Command, args []string) {
-		conf.LoadConfig(cmd)
-
 		utils.CheckCmdHard("docker-compose")
 
 		docker.HardCheckTokCompose()

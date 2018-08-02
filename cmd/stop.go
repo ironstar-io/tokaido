@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"bitbucket.org/ironstar/tokaido-cli/conf"
 	"bitbucket.org/ironstar/tokaido-cli/services/docker"
 	"bitbucket.org/ironstar/tokaido-cli/services/unison"
 	"bitbucket.org/ironstar/tokaido-cli/utils"
@@ -18,8 +17,6 @@ var StopCmd = &cobra.Command{
 		utils.CheckCmdHard("docker-compose")
 
 		docker.HardCheckTokCompose()
-
-		conf.LoadConfig(cmd)
 
 		docker.Stop()
 

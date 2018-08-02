@@ -40,8 +40,9 @@ func Init() {
 		unison.Sync()
 	}
 
-	if c.CreateSyncService {
+	if c.System.Syncsvc.Enabled {
 		unison.CreateSyncService()
+		fmt.Println()
 	}
 
 	// Fire up the Docker environment
