@@ -152,6 +152,12 @@ type Services struct {
 		Cmd         string            `yaml:"cmd,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`
 	} `yaml:"solr,omitempty"`
+	Kishu struct {
+		Enabled     bool              `yaml:"enabled,omitempty"`
+		Image       string            `yaml:"image,omitempty"`
+		Volumesfrom []string          `yaml:"volumes_from"`
+		Environment map[string]string `yaml:"environment,omitempty"`
+	} `yaml:"kishu,omitempty"`
 }
 
 // ComposeDotTok ...
