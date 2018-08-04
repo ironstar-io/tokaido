@@ -5,10 +5,6 @@
 [![GitHub issues](https://img.shields.io/github/issues/ironstar-io/tokaido.svg)](https://github.com/ironstar-io/tokaido/issues)
 [![GitHub license](https://img.shields.io/badge/license-BSD-blue.svg)](https://github.com/ironstar-io/tokaido)
 
-
-
-
-
 A command line utility for quickly and painlessly spinning up your Drupal environment
 
 ## Why
