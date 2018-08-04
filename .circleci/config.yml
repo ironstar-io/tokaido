@@ -66,11 +66,15 @@ workflows:
     jobs:
       - build:
           filters:
+            branches:
+              ignore: /.*/
             tags:
               only: /^\d+.\d+.\d+$/
       - release-stable:
           requires: 
             - build
           filters:
+            branches:
+              ignore: /.*/
             tags:
               only: /^\d+.\d+.\d+$/
