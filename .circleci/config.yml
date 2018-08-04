@@ -12,9 +12,11 @@ jobs:
       - run: dep ensure
 
       - run: make build-windows
+      - run: sha256sum dist/tok-windows-amd64.exe > dist/tok-windows-amd64-sha.txt
       - run: make build-linux
+      - run: sha256sum dist/tok-linux-amd64 > dist/tok-linux-amd64-sha.txt
       - run: make build-osx
-      - run: ls dist/
+      - run: sha256sum dist/tok-macos > dist/tok-macos-sha.txt      
 
       - store_artifacts:
           path: /go/src/github.com/ironstar-io/tokaido/dist/
@@ -45,13 +47,14 @@ jobs:
       - attach_workspace:
           at: ./
       - run: go get github.com/tcnksm/ghr          
+      - run: echo tag = ${CIRCLE_TAG}
       - run:
           name: "Publish Linux Release on GitHub"
-          command: ghr -t ${GITHUB_TOKEN} -u ironstar-io -r tokaido -b "Please your change log here" -c ${CIRCLE_SHA1} -draft -prerelease -delete ${VERSION} ./dist/
+          command: ghr -t ${GITHUB_TOKEN} -u ironstar-io -r tokaido -b "Please your change log here" -c ${CIRCLE_SHA1} -draft -prerelease -delete ${CIRCLE_TAG} ./dist/
 
 workflows:
   version: 2
-  build-and-release:
+  untagged-build:
     jobs:
       - build
       - release-edge:
@@ -61,12 +64,19 @@ workflows:
             branches:
               only:               
                 - develop
+  tagged-build:
+    jobs:
+      - build:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^([0-9]+)\.([0-9]+)\.([0-9]+)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+)?$/
       - release-stable:
           requires: 
             - build
           filters:
             branches:
-              only:               
-                - master
+              ignore: /.*/
             tags:
               only: /^([0-9]+)\.([0-9]+)\.([0-9]+)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+)?$/
