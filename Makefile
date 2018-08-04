@@ -15,7 +15,7 @@ build-windows:
 	-ldflags "\
 	-X $(VERSION_PATH).buildDate=$(BUILD_DATE) \
 	-X $(VERSION_PATH).version=$(VERSION) \
-	" -o ./dist/windows/tok.exe
+	" -o ./dist/tok-windows-amd64.exe
 
 build-linux:
 	env GOOS=linux GOARCH=amd64 \
@@ -23,7 +23,7 @@ build-linux:
 	-ldflags "\
 	-X $(VERSION_PATH).buildDate=$(BUILD_DATE) \
 	-X $(VERSION_PATH).version=$(VERSION) \
-	" -o ./dist/linux/tok
+	" -o ./dist/tok-linux-amd64
 
 build-osx:
 	env GOOS=darwin GOARCH=amd64 \
@@ -31,7 +31,7 @@ build-osx:
 	-ldflags "\
 	-X $(VERSION_PATH).buildDate=$(BUILD_DATE) \
 	-X $(VERSION_PATH).version=$(VERSION) \
-	" -o ./dist/osx/tok
+	" -o ./dist/tok-macos
 
 test:
 	ginkgo test ./...
