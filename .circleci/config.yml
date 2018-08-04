@@ -64,7 +64,7 @@ workflows:
                 - develop
   tagged-build:
     jobs:
-      - build
+      - build:
           filters:
             tags:
               only: /^v\d+.\d+.\d+$/
