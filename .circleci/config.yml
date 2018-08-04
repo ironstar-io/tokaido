@@ -65,6 +65,9 @@ workflows:
   tagged-build:
     jobs:
       - build
+          filters:
+            tags:
+              only: /^v\d+.\d+.\d+$/
       - release-stable:
           requires: 
             - build
