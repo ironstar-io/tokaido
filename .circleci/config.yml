@@ -67,10 +67,10 @@ workflows:
       - build:
           filters:
             tags:
-              only: /^v\d+.\d+.\d+$/
+              only: /^\d+.\d+.\d+$/
       - release-stable:
           requires: 
             - build
           filters:
             tags:
-              only: /^v\d+.\d+.\d+$/
+              only: /^\d+.\d+.\d+$/
