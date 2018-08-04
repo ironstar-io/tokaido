@@ -77,6 +77,12 @@ func Ps() {
 	fmt.Println(ComposeResult("ps"))
 }
 
+// Exec - Execute a command inside the service container
+func Exec(args []string) {
+	cm := append([]string{"exec", "-T"}, args...)
+	fmt.Println(ComposeResult(cm...))
+}
+
 // StatusCheck ...
 func StatusCheck() {
 	rawStatus := ComposeResult("ps")

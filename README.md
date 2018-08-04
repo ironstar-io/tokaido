@@ -33,7 +33,7 @@ Tokaido is build in Golang 1.10.2
 Getting this message or something similar?
 
 ```sh
-import /Users/jimmycann/www/golang/pkg/darwin_amd64/bitbucket.org/ironstar/tokaido-cli/utils.a: object is [darwin amd64 go1.9.2 X:framepointer] expected [darwin amd64 go1.10.2 X:framepointer]
+import /Users/jimmycann/www/golang/pkg/darwin_amd64/github.com/ironstar-io/tokaido/utils.a: object is [darwin amd64 go1.9.2 X:framepointer] expected [darwin amd64 go1.10.2 X:framepointer]
 ```
 
 There are two versions of go installed on your system. Easiest is to remove the version in `/usr/local/go` with `sudo rm -rfv /usr/local/go`. Your brew installed version should now be working, check your version with `go version`
