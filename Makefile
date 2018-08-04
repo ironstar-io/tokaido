@@ -1,4 +1,4 @@
-VERSION_PATH ?= bitbucket.org/ironstar/tokaido-cli/system/version
+VERSION_PATH ?= github.com/ironstar-io/tokaido/system/version
 BUILD_DATE ?= $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 VERSION ?= $(shell git describe --tags)
 
