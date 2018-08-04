@@ -24,6 +24,7 @@ func CreateOrReplaceDrupalVars(path, version string) {
 	viper.Set("drupal.path", path)
 	viper.Set("drupal.majorversion", version)
 	cf := viper.ConfigFileUsed()
+
 	if cf == "" {
 		fs.TouchByteArray(filepath.Join(fs.WorkDir(), "/.tok/config.yml"), drupalVars(path, version))
 		return

@@ -29,6 +29,7 @@ func Init() {
 	// Create Tokaido configuration
 	docker.FindOrCreateTokCompose()
 	ssh.GenerateKeys()
+	conf.SetDefaultDrupalVars()
 	drupal.CheckSettings()
 	git.IgnoreDefaults()
 

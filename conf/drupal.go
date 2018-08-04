@@ -27,10 +27,25 @@ func GetRootPath() string {
 	return rootPath
 }
 
+// SetDefaultDrupalVars will look for and set default drupal vars like path and version
+func SetDefaultDrupalVars() {
+	cp := GetConfig().Drupal.Path
+	cv := GetConfig().Drupal.Majorversion
+
+	// Set drupal variables only if we're missing one
+	if cv == "" || cp == "" {
+		wd := fs.WorkDir()
+		rootPath, version := scanForCoreDrupal()
+
+		CreateOrReplaceDrupalVars(strings.Replace(rootPath, wd, "", -1), version)
+	}
+}
+
 func scanForCoreDrupal() (string, string) {
 	wd := fs.WorkDir()
 	var dp string
 	var dv string
+
 	d7 := filepath.Join("includes", "bootstrap.inc")
 	d8 := filepath.Join("core", "lib", "Drupal.php")
 	err := filepath.Walk(wd, func(path string, info os.FileInfo, err error) error {
