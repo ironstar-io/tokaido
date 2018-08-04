@@ -10,7 +10,7 @@ jobs:
       - checkout     
 
       - run: dep ensure
-      
+
       - run: make build-windows
       - run: make build-linux
       - run: make build-osx
@@ -38,6 +38,17 @@ jobs:
           name: "Publish Linux Release on GitHub"
           command: ghr -t ${GITHUB_TOKEN} -u ironstar-io -r tokaido -b "The latest (unstable) build of the Tokaido CLI. Please use a numbered release if you need a stable Tokaido environment." -c ${CIRCLE_SHA1} -prerelease -delete ${VERSION} ./dist/
 
+  release-stable:
+    docker:
+      - image: circleci/golang:1.10-stretch        
+    steps:
+      - attach_workspace:
+          at: ./
+      - run: go get github.com/tcnksm/ghr          
+      - run:
+          name: "Publish Linux Release on GitHub"
+          command: ghr -t ${GITHUB_TOKEN} -u ironstar-io -r tokaido -b "Please your change log here" -c ${CIRCLE_SHA1} -draft -prerelease -delete ${VERSION} ./dist/
+
 workflows:
   version: 2
   build-and-release:
@@ -49,13 +60,13 @@ workflows:
           filters:
             branches:
               only:               
-                - build-system
-      # - release-stable:
-      #     requires: 
-      #       - build
-      #     filters:
-      #       branches:
-      #         only:               
-      #           - master
-      #       tags:
-      #         only: /^v.*/
+                - develop
+      - release-stable:
+          requires: 
+            - build
+          filters:
+            branches:
+              only:               
+                - master
+            tags:
+              only: /^([0-9]+)\.([0-9]+)\.([0-9]+)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+)?$/
