@@ -5,50 +5,37 @@
 [![GitHub issues](https://img.shields.io/github/issues/ironstar-io/tokaido.svg)](https://github.com/ironstar-io/tokaido/issues)
 [![GitHub license](https://img.shields.io/badge/license-BSD-blue.svg)](https://github.com/ironstar-io/tokaido)
 
-A command line utility for quickly and painlessly spinning up your Drupal environment
+Tokaido is a command line utility which makes it easier than ever before to 
+create, manage, and destroy local Drupal development environments.
 
-## Why
+https://tokaido.io
 
-## Dependencies
+[![Tokaido Demo](https://releases.tokaido.io/screenshots/tok-alpha10.gif)](https://asciinema.org/a/190655)
 
-### Docker and Docker Compose
+## Features
 
-TODO: Docker desktop install instructions
+- Drupal 7 and 8 Support.
+- Easy to use! Just type `tok up` for a zero-configuration environment.
+- Fast! Most environments are ready in less than 30 seconds.
+- Highly configurable with an extensive YAML-based config.
+- Production-grade environments with Varnish and HAProxy included. 
+- Runs on MacOS, Linux, and Windows (experimental).
+- Built-in shell environment with Drush, so you don't need any local environment
 
 ## Installation
 
-### The Easy Way
+Full install instructions are available on the [Tokaido website](https://tokaido.io/docs/getting-started/)
 
-### Build From Source
+## Talk to us! 
 
-TODO: Better instructions
-Tokaido is build in Golang 1.10.2
+If you have any feedback on Tokaido, or you're running into problems, we'd love
+to hear from you.
 
-- Install Go and dep with `brew install dep` (Latest go version is included)
-- Clone this repository
-- Install package dependencies with `dep ensure`
-- From the root of the cloned repo run `make build`
-- Your local executable is now avaialable with `./dist/tok [command]`
+For general support and queries, please visit us on the `#tokaido` channel in
+the [offical Drupal Slack workspace](https://www.drupal.org/slack). 
 
-Getting this message or something similar?
+If you have a bug or feature request, please open a [GitHub Issue](https://github.com/ironstar-io/tokaido/issues/new/choose)
 
-```sh
-import /Users/jimmycann/www/golang/pkg/darwin_amd64/bitbucket.org/ironstar/tokaido-cli/utils.a: object is [darwin amd64 go1.9.2 X:framepointer] expected [darwin amd64 go1.10.2 X:framepointer]
-```
-
-There are two versions of go installed on your system. Easiest is to remove the version in `/usr/local/go` with `sudo rm -rfv /usr/local/go`. Your brew installed version should now be working, check your version with `go version`
-
-## Usage
-
-## Roadmap
-
-## About Tokaido
-
-## About Ironstar
-
-## Authors
-
-The team at Ironstar
-
-- Mike Richardson (@otakumike)
-- Jimmy Cann (@yjimk)
+PRs are _more_ than welcome, but we suggest getting in touch if you'd like to
+contribute any major feature. We have an open fortnightly planning session we
+will be happy to invite you to. 
