@@ -18,7 +18,12 @@ jobs:
 
       - store_artifacts:
           path: /go/src/github.com/ironstar-io/tokaido/dist/
-          destination: dist/
+          destination: artifacts
+
+      - persist_to_workspace:        
+          root: /go/src/github.com/ironstar-io/tokaido/
+          paths: 
+            - dist
 
   release-edge:
     docker:
