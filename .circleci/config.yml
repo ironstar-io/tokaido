@@ -18,4 +18,4 @@ jobs:
 
       - store_artifacts:
           path: /go/src/github.com/ironstar-io/tokaido
-          destination: dist
+          destination: dist/
