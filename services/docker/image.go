@@ -1,7 +1,7 @@
 package docker
 
 import (
-	"bitbucket.org/ironstar/tokaido-cli/utils"
+	"github.com/ironstar-io/tokaido/utils"
 )
 
 // ImageExists - Check if an image exists

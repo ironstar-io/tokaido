@@ -1,9 +1,9 @@
 package conf
 
 import (
-	"bitbucket.org/ironstar/tokaido-cli/system/console"
-	"bitbucket.org/ironstar/tokaido-cli/system/fs"
-	"bitbucket.org/ironstar/tokaido-cli/system/hash"
+	"github.com/ironstar-io/tokaido/system/console"
+	"github.com/ironstar-io/tokaido/system/fs"
+	"github.com/ironstar-io/tokaido/system/hash"
 	"fmt"
 
 	"io/ioutil"

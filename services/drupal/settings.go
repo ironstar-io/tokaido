@@ -1,11 +1,11 @@
 package drupal
 
 import (
-	"bitbucket.org/ironstar/tokaido-cli/conf"
-	"bitbucket.org/ironstar/tokaido-cli/services/drupal/templates"
-	"bitbucket.org/ironstar/tokaido-cli/system"
-	"bitbucket.org/ironstar/tokaido-cli/system/fs"
-	"bitbucket.org/ironstar/tokaido-cli/utils"
+	"github.com/ironstar-io/tokaido/conf"
+	"github.com/ironstar-io/tokaido/services/drupal/templates"
+	"github.com/ironstar-io/tokaido/system"
+	"github.com/ironstar-io/tokaido/system/fs"
+	"github.com/ironstar-io/tokaido/utils"
 
 	"bufio"
 	"bytes"

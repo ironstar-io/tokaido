@@ -1,8 +1,8 @@
 package system
 
 import (
-	"bitbucket.org/ironstar/tokaido-cli/services/docker"
-	"bitbucket.org/ironstar/tokaido-cli/system/goos"
+	"github.com/ironstar-io/tokaido/services/docker"
+	"github.com/ironstar-io/tokaido/system/goos"
 
 	"log"
 )

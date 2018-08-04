@@ -3,10 +3,10 @@
 package goos
 
 import (
-	"bitbucket.org/ironstar/tokaido-cli/conf"
-	"bitbucket.org/ironstar/tokaido-cli/services/unison/templates"
-	"bitbucket.org/ironstar/tokaido-cli/system/console"
-	"bitbucket.org/ironstar/tokaido-cli/system/daemon"
+	"github.com/ironstar-io/tokaido/conf"
+	"github.com/ironstar-io/tokaido/services/unison/templates"
+	"github.com/ironstar-io/tokaido/system/console"
+	"github.com/ironstar-io/tokaido/system/daemon"
 
 	"bytes"
 	"fmt"

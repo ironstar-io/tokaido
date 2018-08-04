@@ -1,8 +1,8 @@
 package goos
 
 import (
-	"bitbucket.org/ironstar/tokaido-cli/system/fs"
-	"bitbucket.org/ironstar/tokaido-cli/utils"
+	"github.com/ironstar-io/tokaido/system/fs"
+	"github.com/ironstar-io/tokaido/utils"
 
 	"fmt"
 	"io"

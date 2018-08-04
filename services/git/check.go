@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"bitbucket.org/ironstar/tokaido-cli/system/fs"
+	"github.com/ironstar-io/tokaido/system/fs"
 )
 
 // CheckGitRepo checks if we're running with a Git repo, fails if not

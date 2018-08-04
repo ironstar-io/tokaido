@@ -3,9 +3,9 @@ package cmd
 import (
 	"log"
 
-	"bitbucket.org/ironstar/tokaido-cli/conf"
-	"bitbucket.org/ironstar/tokaido-cli/system/fs"
-	"bitbucket.org/ironstar/tokaido-cli/system/version"
+	"github.com/ironstar-io/tokaido/conf"
+	"github.com/ironstar-io/tokaido/system/fs"
+	"github.com/ironstar-io/tokaido/system/version"
 
 	"fmt"
 	"os"

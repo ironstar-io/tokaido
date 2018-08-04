@@ -1,8 +1,8 @@
 package unison
 
 import (
-	"bitbucket.org/ironstar/tokaido-cli/conf"
-	"bitbucket.org/ironstar/tokaido-cli/services/unison/goos"
+	"github.com/ironstar-io/tokaido/conf"
+	"github.com/ironstar-io/tokaido/services/unison/goos"
 )
 
 var bgSyncFailMsg = `

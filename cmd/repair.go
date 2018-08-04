@@ -1,9 +1,9 @@
 package cmd
 
 import (
-	"bitbucket.org/ironstar/tokaido-cli/services/tok"
-	"bitbucket.org/ironstar/tokaido-cli/system/console"
-	"bitbucket.org/ironstar/tokaido-cli/utils"
+	"github.com/ironstar-io/tokaido/services/tok"
+	"github.com/ironstar-io/tokaido/system/console"
+	"github.com/ironstar-io/tokaido/utils"
 
 	"github.com/spf13/cobra"
 )

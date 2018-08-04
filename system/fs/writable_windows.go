@@ -3,7 +3,7 @@
 package fs
 
 import (
-	// "bitbucket.org/ironstar/tokaido-cli/utils"
+	// "github.com/ironstar-io/tokaido/utils"
 
 	"os"
 )

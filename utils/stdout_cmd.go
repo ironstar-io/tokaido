@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"bitbucket.org/ironstar/tokaido-cli/system/fs"
+	"github.com/ironstar-io/tokaido/system/fs"
 
 	"fmt"
 	"log"

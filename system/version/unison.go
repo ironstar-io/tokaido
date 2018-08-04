@@ -4,7 +4,7 @@ import (
 	"log"
 	"strings"
 
-	"bitbucket.org/ironstar/tokaido-cli/utils"
+	"github.com/ironstar-io/tokaido/utils"
 )
 
 // GetUnisonVersion retrieves the current version of Unison and returns it.

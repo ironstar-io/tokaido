@@ -1,9 +1,9 @@
 package unison
 
 import (
-	"bitbucket.org/ironstar/tokaido-cli/conf"
-	"bitbucket.org/ironstar/tokaido-cli/services/unison/templates"
-	"bitbucket.org/ironstar/tokaido-cli/system/fs"
+	"github.com/ironstar-io/tokaido/conf"
+	"github.com/ironstar-io/tokaido/services/unison/templates"
+	"github.com/ironstar-io/tokaido/system/fs"
 
 	"bufio"
 	"bytes"

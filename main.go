@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"bitbucket.org/ironstar/tokaido-cli/cmd"
+	"github.com/ironstar-io/tokaido/cmd"
 )
 
 func main() {

@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"bitbucket.org/ironstar/tokaido-cli/conf"
+	"github.com/ironstar-io/tokaido/conf"
 
 	"github.com/spf13/cobra"
 )

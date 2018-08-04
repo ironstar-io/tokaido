@@ -1,12 +1,12 @@
 package cmd
 
 import (
-	"bitbucket.org/ironstar/tokaido-cli/services/docker"
-	"bitbucket.org/ironstar/tokaido-cli/services/drupal"
-	"bitbucket.org/ironstar/tokaido-cli/services/unison"
-	"bitbucket.org/ironstar/tokaido-cli/system/console"
-	"bitbucket.org/ironstar/tokaido-cli/system/ssh"
-	"bitbucket.org/ironstar/tokaido-cli/utils"
+	"github.com/ironstar-io/tokaido/services/docker"
+	"github.com/ironstar-io/tokaido/services/drupal"
+	"github.com/ironstar-io/tokaido/services/unison"
+	"github.com/ironstar-io/tokaido/system/console"
+	"github.com/ironstar-io/tokaido/system/ssh"
+	"github.com/ironstar-io/tokaido/utils"
 
 	"github.com/spf13/cobra"
 )
