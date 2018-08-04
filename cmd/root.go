@@ -40,7 +40,7 @@ func init() {
 	rootCmd.AddCommand(PortsCmd)
 	rootCmd.AddCommand(PsCmd)
 	rootCmd.AddCommand(RepairCmd)
-	rootCmd.AddCommand(RunCmd)
+	rootCmd.AddCommand(ExecCmd)
 	rootCmd.AddCommand(StopCmd)
 	rootCmd.AddCommand(SyscheckCmd)
 	rootCmd.AddCommand(StatusCmd)
