@@ -1,0 +1,21 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/golang:1.10-stretch
+
+    working_directory: /go/src/github.com/ironstar-io/tokaido
+
+    steps:
+      - checkout     
+
+      - run: dep ensure
+      
+      - run: make build-windows
+      - run: make build-linux
+      - run: make build-osx
+      - run: ls dist/
+
+      - store_artifacts:
+          path: /go/src/github.com/ironstar-io/tokaido
+          destination: dist
