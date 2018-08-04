@@ -1,8 +1,8 @@
 package system
 
 import (
-	"bitbucket.org/ironstar/tokaido-cli/conf"
-	"bitbucket.org/ironstar/tokaido-cli/system/goos"
+	"github.com/ironstar-io/tokaido/conf"
+	"github.com/ironstar-io/tokaido/system/goos"
 )
 
 // CheckDependencies - Root executable

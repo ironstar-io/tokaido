@@ -1,7 +1,7 @@
 package goos
 
 import (
-	"bitbucket.org/ironstar/tokaido-cli/utils"
+	"github.com/ironstar-io/tokaido/utils"
 )
 
 // OpenSite - Windows

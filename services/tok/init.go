@@ -1,17 +1,17 @@
 package tok
 
 import (
-	"bitbucket.org/ironstar/tokaido-cli/conf"
-	"bitbucket.org/ironstar/tokaido-cli/services/docker"
-	"bitbucket.org/ironstar/tokaido-cli/services/drupal"
-	"bitbucket.org/ironstar/tokaido-cli/services/git"
-	"bitbucket.org/ironstar/tokaido-cli/services/tok/goos"
-	"bitbucket.org/ironstar/tokaido-cli/services/unison"
-	"bitbucket.org/ironstar/tokaido-cli/services/xdebug"
-	"bitbucket.org/ironstar/tokaido-cli/system"
-	"bitbucket.org/ironstar/tokaido-cli/system/console"
-	"bitbucket.org/ironstar/tokaido-cli/system/ssh"
-	"bitbucket.org/ironstar/tokaido-cli/system/version"
+	"github.com/ironstar-io/tokaido/conf"
+	"github.com/ironstar-io/tokaido/services/docker"
+	"github.com/ironstar-io/tokaido/services/drupal"
+	"github.com/ironstar-io/tokaido/services/git"
+	"github.com/ironstar-io/tokaido/services/tok/goos"
+	"github.com/ironstar-io/tokaido/services/unison"
+	"github.com/ironstar-io/tokaido/services/xdebug"
+	"github.com/ironstar-io/tokaido/system"
+	"github.com/ironstar-io/tokaido/system/console"
+	"github.com/ironstar-io/tokaido/system/ssh"
+	"github.com/ironstar-io/tokaido/system/version"
 
 	"fmt"
 )

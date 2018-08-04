@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"bitbucket.org/ironstar/tokaido-cli/system/version"
+	"github.com/ironstar-io/tokaido/system/version"
 
 	"fmt"
 

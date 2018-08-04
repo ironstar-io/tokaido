@@ -1,9 +1,9 @@
 package cmd
 
 import (
-	"bitbucket.org/ironstar/tokaido-cli/services/docker"
-	"bitbucket.org/ironstar/tokaido-cli/services/unison"
-	"bitbucket.org/ironstar/tokaido-cli/utils"
+	"github.com/ironstar-io/tokaido/services/docker"
+	"github.com/ironstar-io/tokaido/services/unison"
+	"github.com/ironstar-io/tokaido/utils"
 
 	"github.com/spf13/cobra"
 )

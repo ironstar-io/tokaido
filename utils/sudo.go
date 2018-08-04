@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"bitbucket.org/ironstar/tokaido-cli/system/console"
+	"github.com/ironstar-io/tokaido/system/console"
 
 	"log"
 )

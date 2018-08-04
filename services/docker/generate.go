@@ -1,11 +1,11 @@
 package docker
 
 import (
-	"bitbucket.org/ironstar/tokaido-cli/conf"
-	"bitbucket.org/ironstar/tokaido-cli/services/docker/templates"
-	"bitbucket.org/ironstar/tokaido-cli/system/console"
-	"bitbucket.org/ironstar/tokaido-cli/system/fs"
-	"bitbucket.org/ironstar/tokaido-cli/system/version"
+	"github.com/ironstar-io/tokaido/conf"
+	"github.com/ironstar-io/tokaido/services/docker/templates"
+	"github.com/ironstar-io/tokaido/system/console"
+	"github.com/ironstar-io/tokaido/system/fs"
+	"github.com/ironstar-io/tokaido/system/version"
 
 	"bufio"
 	"bytes"

@@ -1,10 +1,10 @@
 package drupal
 
 import (
-	"bitbucket.org/ironstar/tokaido-cli/conf"
-	"bitbucket.org/ironstar/tokaido-cli/services/docker"
-	"bitbucket.org/ironstar/tokaido-cli/system/console"
-	"bitbucket.org/ironstar/tokaido-cli/utils"
+	"github.com/ironstar-io/tokaido/conf"
+	"github.com/ironstar-io/tokaido/services/docker"
+	"github.com/ironstar-io/tokaido/system/console"
+	"github.com/ironstar-io/tokaido/utils"
 
 	"bufio"
 	"fmt"

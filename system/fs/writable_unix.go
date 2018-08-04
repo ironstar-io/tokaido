@@ -3,7 +3,7 @@
 package fs
 
 import (
-	"bitbucket.org/ironstar/tokaido-cli/system/fs/goos"
+	"github.com/ironstar-io/tokaido/system/fs/goos"
 )
 
 // Writable - Check if a file/folder is writable

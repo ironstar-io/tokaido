@@ -3,7 +3,7 @@ package conf
 import (
 	"fmt"
 
-	"bitbucket.org/ironstar/tokaido-cli/system/fs"
+	"github.com/ironstar-io/tokaido/system/fs"
 
 	"io/ioutil"
 	"log"

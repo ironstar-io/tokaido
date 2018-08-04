@@ -1,8 +1,8 @@
 package unison
 
 import (
-	"bitbucket.org/ironstar/tokaido-cli/conf"
-	"bitbucket.org/ironstar/tokaido-cli/utils"
+	"github.com/ironstar-io/tokaido/conf"
+	"github.com/ironstar-io/tokaido/utils"
 
 	"fmt"
 	"runtime"
