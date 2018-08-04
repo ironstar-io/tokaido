@@ -50,7 +50,7 @@ jobs:
       - run: echo tag = ${CIRCLE_TAG}
       - run:
           name: "Publish Linux Release on GitHub"
-          command: ghr -t ${GITHUB_TOKEN} -u ironstar-io -r tokaido -b "Please your change log here" -c ${CIRCLE_SHA1} -draft -prerelease -delete ${CIRCLE_TAG} ./dist/
+          command: ghr -t ${GITHUB_TOKEN} -u ironstar-io -r tokaido -b "Please your change log here" -c ${CIRCLE_TAG} -draft -prerelease -delete ${CIRCLE_TAG} ./dist/
 
 workflows:
   version: 2
