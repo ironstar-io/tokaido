@@ -36,7 +36,7 @@ jobs:
       - run: go get github.com/tcnksm/ghr          
       - run:
           name: "Publish Linux Release on GitHub"
-          command: ghr -t ${GITHUB_TOKEN} -u ironstar-io -r tokaido -b "The latest unstable build of the Tokaido CLI.\nPlease don't use this if you need a stable Tokaidoe environment." -c ${CIRCLE_SHA1} -prerelease -delete ${VERSION} ./dist/
+          command: ghr -t ${GITHUB_TOKEN} -u ironstar-io -r tokaido -b "The latest (unstable) build of the Tokaido CLI. Please don't use this if you need a stable Tokaidoe environment." -c ${CIRCLE_SHA1} -prerelease -delete ${VERSION} ./dist/
 
 workflows:
   version: 2
