@@ -11,7 +11,7 @@ import (
 var LogsCmd = &cobra.Command{
 	Use:   "logs",
 	Short: "Output container logs to the console",
-	Long:  "Output container logs to the console for all or a single container. Aliases `docker-compose -f x logs [container]`",
+	Long:  "Output container logs to the console for all or a single container. Example: tok logs fpm",
 	Run: func(cmd *cobra.Command, args []string) {
 		utils.CheckCmdHard("docker-compose")
 
