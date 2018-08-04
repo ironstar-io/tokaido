@@ -166,6 +166,12 @@
   version = "v1.0.0"
 
 [[projects]]
+  name = "github.com/sanity-io/litter"
+  packages = ["."]
+  revision = "ae543b7ba8fd6af63e4976198f146e1348ae53c1"
+  version = "v1.1.0"
+
+[[projects]]
   name = "github.com/spf13/afero"
   packages = [
     ".",
@@ -280,6 +286,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "6365704ff1dc914f9ffc1005df7384f777c94796ba3fe30b052d9b321af5615d"
+  inputs-digest = "643f5685a72598c8885c4cd1ab81f6b663035bd745e64e3269a70ea04d16955b"
   solver-name = "gps-cdcl"
   solver-version = 1

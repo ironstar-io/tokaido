@@ -2,10 +2,13 @@ package cmd
 
 import (
 	"github.com/ironstar-io/tokaido/conf"
+	"reflect"
 
 	"fmt"
 	"log"
+	"regexp"
 
+	"github.com/sanity-io/litter"
 	"github.com/spf13/cobra"
 )
 
@@ -18,6 +21,14 @@ var ConfigGetCmd = &cobra.Command{
 		c, err := conf.GetConfigValueByArgs(args)
 		if err != nil {
 			log.Fatal(err)
+		}
+
+		if c.Kind() == reflect.Struct {
+			d := litter.Sdump(c.Interface())
+			s := regexp.MustCompile(`(?s)struct {.*?}{`).ReplaceAllString(d, "{")
+
+			fmt.Println(s)
+			return
 		}
 
 		fmt.Printf("%+v\n", c)
