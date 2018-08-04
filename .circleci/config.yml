@@ -17,5 +17,5 @@ jobs:
       - run: ls dist/
 
       - store_artifacts:
-          path: /go/src/github.com/ironstar-io/tokaido
+          path: /go/src/github.com/ironstar-io/tokaido/dist/
           destination: dist/
