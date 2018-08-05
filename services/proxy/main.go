@@ -7,6 +7,8 @@ import (
 
 // Setup ...
 func Setup() {
+	buildDirectories()
+
 	ssl.GenerateCert() // Check then create
 	// GenerateProxyDockerCompose() // Check then create
 	unison.CreateOrUpdatePrf("TODO: Proxy Container Local Port", "proxy", getProxyClientDir())
