@@ -64,14 +64,26 @@ func detectDrupalSettings() (string, string) {
 			// there will be bootstrap.inc files in a Drupal site, make sure this is _the_ bootstrap.inc from Drupal core
 			if strings.Contains(s, "'VERSION', '7.") {
 				console.Println("🚂  Found a Drupal 7 site", "")
+				// Strip the Drupal component from the full path
 				dp = strings.Replace(path, d7, "", -1)
+				// Strip the work dir from the remainder
+				dp = strings.Replace(dp, wd, "", -1)
+				// Strip slashes
+				dp = strings.Replace(dp, "/", "", -1)
 				dv = "7"
 				return io.EOF
 			}
 		}
 		if strings.Contains(path, d8) == true {
 			console.Println("🚇  Found a Drupal 8 site", "")
+			fmt.Println(":::: path is ", path)
+			fmt.Println(":::: d8 is ", d8)
+			// Strip the Drupal component from the full path
 			dp = strings.Replace(path, d8, "", -1)
+			// Strip the work dir from the remainder
+			dp = strings.Replace(dp, wd, "", -1)
+			// Strip slashes
+			dp = strings.Replace(dp, "/", "", -1)
 			dv = "8"
 			return io.EOF
 		}
@@ -81,6 +93,9 @@ func detectDrupalSettings() (string, string) {
 		fmt.Println("\n🤷‍  Tokaido could not auto-detect your Drupal installation. You'll need to tell us about it.")
 		dp, dv = manualDrupalSettings()
 	}
+
+	fmt.Println(":::: drupal path = ", dp)
+	fmt.Println(":::: drupal version = ", dv)
 
 	return dp, dv
 }
