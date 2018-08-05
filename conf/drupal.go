@@ -76,8 +76,6 @@ func detectDrupalSettings() (string, string) {
 		}
 		if strings.Contains(path, d8) == true {
 			console.Println("🚇  Found a Drupal 8 site", "")
-			fmt.Println(":::: path is ", path)
-			fmt.Println(":::: d8 is ", d8)
 			// Strip the Drupal component from the full path
 			dp = strings.Replace(path, d8, "", -1)
 			// Strip the work dir from the remainder
@@ -93,9 +91,6 @@ func detectDrupalSettings() (string, string) {
 		fmt.Println("\n🤷‍  Tokaido could not auto-detect your Drupal installation. You'll need to tell us about it.")
 		dp, dv = manualDrupalSettings()
 	}
-
-	fmt.Println(":::: drupal path = ", dp)
-	fmt.Println(":::: drupal version = ", dv)
 
 	return dp, dv
 }
