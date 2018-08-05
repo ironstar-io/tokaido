@@ -19,8 +19,8 @@ func drupalVars(path, version string) []byte {
   majorVersion: ` + version)
 }
 
-// CreateOrReplaceDrupalVars ...
-func CreateOrReplaceDrupalVars(path, version string) {
+// CreateOrReplaceDrupalConfig ...
+func CreateOrReplaceDrupalConfig(path, version string) {
 	viper.Set("drupal.path", path)
 	viper.Set("drupal.majorversion", version)
 	cf := viper.ConfigFileUsed()
