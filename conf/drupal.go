@@ -133,9 +133,6 @@ func manualDrupalSettings() (string, string) {
 
 	path := strings.Replace(dp, "/", "", -1)
 
-	fmt.Println("Got drupal version: ", version)
-	fmt.Println("Got drupal path: ", path)
-
 	return path, version
 }
 
