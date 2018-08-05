@@ -1,6 +1,7 @@
 package git
 
 import (
+	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/utils"
 
@@ -14,7 +15,14 @@ import (
 
 // IgnoreDefaults - Append the baseline files that should be ignored in source control
 func IgnoreDefaults() {
-	AppendGitignore([]string{"docroot/sites/*/settings.tok.php", "docker-compose.tok.yml", ".tok/local"})
+	p := conf.GetConfig().Drupal.Path
+	AppendGitignore([]string{
+		"docker-compose.tok.yml",
+		".tok/local",
+		"private/default/*",
+		p + "/sites/*/settings.tok.php",
+		p + "sites/*/files/*",
+	})
 }
 
 // AppendGitignore ...
