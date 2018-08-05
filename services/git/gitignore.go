@@ -21,7 +21,7 @@ func IgnoreDefaults() {
 		".tok/local",
 		"private/default/*",
 		p + "/sites/*/settings.tok.php",
-		p + "sites/*/files/*",
+		p + "/sites/*/files/*",
 	})
 }
 
