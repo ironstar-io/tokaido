@@ -5,7 +5,7 @@ import (
 	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/services/drupal"
 	"github.com/ironstar-io/tokaido/services/git"
-	"github.com/ironstar-io/tokaido/services/proxy"
+	// "github.com/ironstar-io/tokaido/services/proxy"
 	"github.com/ironstar-io/tokaido/services/tok/goos"
 	"github.com/ironstar-io/tokaido/services/unison"
 	"github.com/ironstar-io/tokaido/services/xdebug"
@@ -33,15 +33,15 @@ func Init() {
 	docker.FindOrCreateTokCompose()
 	ssh.GenerateKeys()
 
-	if c.System.Syncsvc.Enabled && c.System.Proxy.Enabled {
-		proxy.Setup()
-	}
+	// if c.System.Syncsvc.Enabled && c.System.Proxy.Enabled {
+	// 	proxy.Setup()
+	// }
 
 	git.IgnoreDefaults()
 
 	// Run Unison for syncing
 	unison.DockerUp()
-	unison.CreateOrUpdatePrf()
+	unison.CreateOrUpdatePrf(unison.LocalPort(), c.Tokaido.Project.Name, c.Tokaido.Project.Path)
 	s := unison.SyncServiceStatus()
 	if s == "stopped" {
 		unison.Sync()
