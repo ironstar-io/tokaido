@@ -10,8 +10,11 @@ func Setup() {
 	buildDirectories()
 
 	ssl.Configure(getProxyClientTLSDir())
-	// GenerateProxyDockerCompose() // Check then create
-	// unison.CreateOrUpdatePrf("TODO: Proxy Container Local Port", "proxy", getProxyClientDir())
+
+	GenerateProxyDockerCompose()
+	DockerComposeUp()
+
+	// unison.CreateOrUpdatePrf(UnisonPort(), "proxy", getProxyClientDir())
 
 	// RebuildNginxConfigFile() // Every run
 	// RestartProxyContainer()  // Every run

@@ -31,6 +31,10 @@ func getTokDir() string {
 	return filepath.Join(fs.HomeDir(), ".tok")
 }
 
+func getComposePath() string {
+	return filepath.Join(getProxyDir(), "docker-compose.yml")
+}
+
 func buildDirectories() {
 	fs.Mkdir(getTokDir())
 	fs.Mkdir(getProxyDir())
