@@ -1,7 +1,7 @@
 package proxy
 
 import (
-	// "github.com/ironstar-io/tokaido/services/unison"
+	"github.com/ironstar-io/tokaido/services/unison"
 	"github.com/ironstar-io/tokaido/system/ssl"
 )
 
@@ -14,7 +14,7 @@ func Setup() {
 	GenerateProxyDockerCompose()
 	DockerComposeUp()
 
-	// unison.CreateOrUpdatePrf(UnisonPort(), "proxy", getProxyClientDir())
+	unison.CreateOrUpdatePrf(UnisonPort(), "proxy", getProxyClientDir())
 
 	// RebuildNginxConfigFile() // Every run
 	// RestartProxyContainer()  // Every run
