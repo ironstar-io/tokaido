@@ -1,7 +1,7 @@
 package proxy
 
 import (
-	"github.com/ironstar-io/tokaido/services/unison"
+	// "github.com/ironstar-io/tokaido/services/unison"
 	"github.com/ironstar-io/tokaido/system/ssl"
 )
 
@@ -9,13 +9,13 @@ import (
 func Setup() {
 	buildDirectories()
 
-	ssl.GenerateCert() // Check then create
+	ssl.Configure(getProxyClientTLSDir())
 	// GenerateProxyDockerCompose() // Check then create
-	unison.CreateOrUpdatePrf("TODO: Proxy Container Local Port", "proxy", getProxyClientDir())
+	// unison.CreateOrUpdatePrf("TODO: Proxy Container Local Port", "proxy", getProxyClientDir())
 
 	// RebuildNginxConfigFile() // Every run
 	// RestartProxyContainer()  // Every run
 
 	// AppendHostsfile() // Check then append
-
+	// StartUnisonSyncSvc() // If not already started?
 }
