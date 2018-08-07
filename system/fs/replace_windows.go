@@ -9,6 +9,13 @@ import (
 
 // Replace ...
 func Replace(path string, body []byte) {
+	var _, err = os.Stat(path)
+
+	if os.IsNotExist(err) {
+		TouchByteArray(path, body)
+		return
+	}
+
 	if err := TouchByteArray(path+"-copy", body); err != nil {
 		escapeHatch(path)
 		return
