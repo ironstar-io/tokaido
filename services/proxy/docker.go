@@ -13,6 +13,11 @@ func DockerComposeUp() {
 	ComposeStdout("up", "-d")
 }
 
+// RestartContainer ...
+func RestartContainer(container string) {
+	ComposeStdout("restart", container)
+}
+
 // ComposeStdout - Convenience method for docker-compose shell commands
 func ComposeStdout(args ...string) {
 	composeParams := composeArgs(args...)

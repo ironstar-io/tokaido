@@ -1,6 +1,7 @@
 package proxy
 
 import (
+	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/services/unison"
 	"github.com/ironstar-io/tokaido/system/ssl"
 )
@@ -17,7 +18,7 @@ func Setup() {
 	unison.CreateOrUpdatePrf(UnisonPort(), "proxy", getProxyClientDir())
 
 	RebuildNginxConfigFile()
-	// RestartProxyContainer()  // Every run
+	RestartContainer("proxy")
 
 	// AppendHostsfile() // Check then append
 	// StartUnisonSyncSvc() // If not already started?
