@@ -8,6 +8,12 @@
   version = "v3.5.1"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/chzyer/readline"
+  packages = ["."]
+  revision = "2972be24d48e78746da79ba8e24e8b488c9880de"
+
+[[projects]]
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
   revision = "346938d642f2ec3594ed81d874461961cd0faa76"
@@ -52,6 +58,12 @@
   revision = "ef8a98b0bbce4a65b5aa4c368430a80ddc533168"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/howeyc/gopass"
+  packages = ["."]
+  revision = "bf9dde6d0d2c004a008c27aaee91170c786f6db8"
+
+[[projects]]
   name = "github.com/inconshreveable/mousetrap"
   packages = ["."]
   revision = "76626ae9c91c4f2a10f34cad8ce83ea42c93bb75"
@@ -62,6 +74,21 @@
   packages = ["svc"]
   revision = "63c12402f579f0bdf022653c821a1aa5d7544f01"
   version = "v1.0.0"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/juju/ansiterm"
+  packages = [
+    ".",
+    "tabwriter"
+  ]
+  revision = "720a0952cc2ac777afc295d9861263e2a4cf96a1"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/lunixbochs/vtclean"
+  packages = ["."]
+  revision = "2d01aacdc34a083dca635ba869909f5fc0cd4f41"
 
 [[projects]]
   name = "github.com/magefile/mage"
@@ -78,6 +105,16 @@
   packages = ["."]
   revision = "c2353362d570a7bfa228149c62842019201cfb71"
   version = "v1.8.0"
+
+[[projects]]
+  name = "github.com/manifoldco/promptui"
+  packages = [
+    ".",
+    "list",
+    "screenbuf"
+  ]
+  revision = "157c96fb638a14d268b305cf2012582431fcc410"
+  version = "v0.3.1"
 
 [[projects]]
   name = "github.com/mattn/go-colorable"
@@ -170,6 +207,12 @@
   packages = ["."]
   revision = "ae543b7ba8fd6af63e4976198f146e1348ae53c1"
   version = "v1.1.0"
+
+[[projects]]
+  name = "github.com/segmentio/go-prompt"
+  packages = ["."]
+  revision = "0be3d6bb7dff1db1f7d4127e5861ce97772dd891"
+  version = "v1.2.0"
 
 [[projects]]
   name = "github.com/spf13/afero"
@@ -286,6 +329,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "643f5685a72598c8885c4cd1ab81f6b663035bd745e64e3269a70ea04d16955b"
+  inputs-digest = "b850ce4928f5a157dab72cf92a1d9ade573bf19742967647448b0493a5a958f8"
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -1,8 +1,11 @@
 package conf
 
 import (
+	"fmt"
+
 	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/fs"
+	"github.com/manifoldco/promptui"
 
 	"io"
 	"io/ioutil"
@@ -20,32 +23,26 @@ func GetRootPath() string {
 		return filepath.Join(wd, c)
 	}
 
-	rootPath, version := scanForCoreDrupal()
-
-	CreateOrReplaceDrupalVars(strings.Replace(rootPath, wd, "", -1), version)
-
-	return rootPath
+	log.Fatalf("Drupal path setting is missing.")
+	return ""
 }
 
-// SetDefaultDrupalVars will look for and set default drupal vars like path and version
-func SetDefaultDrupalVars() {
-	cp := GetConfig().Drupal.Path
-	cv := GetConfig().Drupal.Majorversion
+// SetDrupalConfig if there is no config already applied
+func SetDrupalConfig() {
+	p := GetConfig().Drupal.Path
+	v := GetConfig().Drupal.Majorversion
 
-	// Set drupal variables only if we're missing one
-	if cv == "" || cp == "" {
-		wd := fs.WorkDir()
-		rootPath, version := scanForCoreDrupal()
-
-		CreateOrReplaceDrupalVars(strings.Replace(rootPath, wd, "", -1), version)
+	if (p == "") || (v == "") {
+		p, v = detectDrupalSettings()
 	}
+
+	CreateOrReplaceDrupalConfig(p, v)
 }
 
-func scanForCoreDrupal() (string, string) {
+func detectDrupalSettings() (string, string) {
 	wd := fs.WorkDir()
 	var dp string
 	var dv string
-
 	d7 := filepath.Join("includes", "bootstrap.inc")
 	d8 := filepath.Join("core", "lib", "Drupal.php")
 	err := filepath.Walk(wd, func(path string, info os.FileInfo, err error) error {
@@ -58,32 +55,94 @@ func scanForCoreDrupal() (string, string) {
 				log.Fatal("Could not read bootstrap file: ", err)
 			}
 			s := string(f)
-			// bootstrap.inc is a pretty common path, make sure this is _the_ bootstrap.inc from Drupal
+			// there will be bootstrap.inc files in a Drupal site, make sure this is _the_ bootstrap.inc from Drupal core
 			if strings.Contains(s, "'VERSION', '7.") {
 				console.Println("🚂  Found a Drupal 7 site", "")
+				// Strip the Drupal component from the full path
 				dp = strings.Replace(path, d7, "", -1)
+				// Strip the work dir from the remainder
+				dp = strings.Replace(dp, wd, "", -1)
+				// Strip slashes
+				dp = strings.Replace(dp, "/", "", -1)
 				dv = "7"
 				return io.EOF
 			}
 		}
 		if strings.Contains(path, d8) == true {
 			console.Println("🚇  Found a Drupal 8 site", "")
+			// Strip the Drupal component from the full path
 			dp = strings.Replace(path, d8, "", -1)
+			// Strip the work dir from the remainder
+			dp = strings.Replace(dp, wd, "", -1)
+			// Strip slashes
+			dp = strings.Replace(dp, "/", "", -1)
 			dv = "8"
 			return io.EOF
 		}
 		return nil
 	})
 	if err != io.EOF {
-		log.Fatalf("Could not find a valid Drupal 7 or 8 installation. You will need to manually specify your Drupal root. \n\nHave you run 'composer install' on your project yet?")
+		fmt.Println("\n🤷‍  Tokaido could not auto-detect your Drupal installation. You'll need to tell us about it.")
+		dp, dv = manualDrupalSettings()
 	}
 
 	return dp, dv
 }
 
+func manualDrupalSettings() (string, string) {
+	vPrompt := promptui.Select{
+		Label: "What major version of Drupal are you running?",
+		Items: []string{"Drupal 8", "Drupal 7"},
+	}
+
+	_, dv, vErr := vPrompt.Run()
+
+	if vErr != nil {
+		log.Fatalf("Prompt failed %v\n", vErr)
+
+	}
+
+	pPrompt := promptui.Select{
+		Label: "Where is your Drupal root?",
+		Items: []string{"/docroot", "/app", "/web", "other"},
+	}
+
+	_, dp, pErr := pPrompt.Run()
+
+	if dp == "other" {
+		var err error
+		prompt := promptui.Prompt{
+			Label: "Please enter the name of your Drupal root directory",
+		}
+
+		dp, err = prompt.Run()
+
+		if err != nil {
+			log.Fatalf("Prompt failed %v\n", err)
+		}
+	}
+
+	if pErr != nil {
+		log.Fatalf("Prompt failed %v\n", pErr)
+	}
+
+	// Convert the human-friendly values to something Tokaido can use
+	var version string
+	switch dv {
+	case "Drupal 8":
+		version = "8"
+	case "Drupal 7":
+		version = "7"
+	}
+
+	path := strings.Replace(dp, "/", "", -1)
+
+	return path, version
+}
+
 // CoreDrupalFile - Return the core drupal file for the users' installation
 func CoreDrupalFile() string {
-	rp := GetRootPath()
+	rp := GetConfig().Drupal.Path
 	dv := GetConfig().Drupal.Majorversion
 
 	var path string
