@@ -16,7 +16,7 @@ func Setup() {
 
 	unison.CreateOrUpdatePrf(UnisonPort(), "proxy", getProxyClientDir())
 
-	// RebuildNginxConfigFile() // Every run
+	RebuildNginxConfigFile()
 	// RestartProxyContainer()  // Every run
 
 	// AppendHostsfile() // Check then append
