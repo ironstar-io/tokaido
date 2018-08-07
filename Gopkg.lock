@@ -58,12 +58,6 @@
   revision = "ef8a98b0bbce4a65b5aa4c368430a80ddc533168"
 
 [[projects]]
-  branch = "master"
-  name = "github.com/howeyc/gopass"
-  packages = ["."]
-  revision = "bf9dde6d0d2c004a008c27aaee91170c786f6db8"
-
-[[projects]]
   name = "github.com/inconshreveable/mousetrap"
   packages = ["."]
   revision = "76626ae9c91c4f2a10f34cad8ce83ea42c93bb75"
@@ -83,6 +77,12 @@
     "tabwriter"
   ]
   revision = "720a0952cc2ac777afc295d9861263e2a4cf96a1"
+
+[[projects]]
+  name = "github.com/lextoumbourou/goodhosts"
+  packages = ["."]
+  revision = "f9508a5690d9f48bfe5449d967cee37434591a29"
+  version = "v2.1.0"
 
 [[projects]]
   branch = "master"
@@ -209,12 +209,6 @@
   version = "v1.1.0"
 
 [[projects]]
-  name = "github.com/segmentio/go-prompt"
-  packages = ["."]
-  revision = "0be3d6bb7dff1db1f7d4127e5861ce97772dd891"
-  version = "v1.2.0"
-
-[[projects]]
   name = "github.com/spf13/afero"
   packages = [
     ".",
@@ -329,6 +323,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "b850ce4928f5a157dab72cf92a1d9ade573bf19742967647448b0493a5a958f8"
+  inputs-digest = "be8901993af35a0f21ecb6f1946a2a6970120bc7fa66905baa9fd8df7d9a7c7e"
   solver-name = "gps-cdcl"
   solver-version = 1
