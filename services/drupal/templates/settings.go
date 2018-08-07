@@ -85,7 +85,7 @@ $databases['default']['default'] = [
   'prefix' => '',
 ];
 
-$settings['file_private_path'] = '/tokaido/site/files-private/';
+$settings['file_private_path'] = '/tokaido/site/private/default/';
 $settings['file_temporary_path'] = '/tmp';
 
 /*
