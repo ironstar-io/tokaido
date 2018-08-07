@@ -25,12 +25,6 @@ func GetRootPath() string {
 
 	log.Fatalf("Drupal path setting is missing.")
 	return ""
-
-	// rootPath, version := scanForCoreDrupal()
-
-	// CreateOrReplaceDrupalConfig(strings.Replace(rootPath, wd, "", -1), version)
-
-	// return rootPath
 }
 
 // SetDrupalConfig if there is no config already applied
