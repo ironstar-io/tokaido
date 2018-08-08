@@ -3,45 +3,80 @@ package hostsfile
 import (
 	"github.com/ironstar-io/tokaido/utils"
 
-	"log"
-
-	"github.com/lextoumbourou/goodhosts"
+	"fmt"
 )
 
-// AddEntry - Add an entry to /etc/hosts or equivalent
-func AddEntry(hostname string) {
-	hosts, err := goodhosts.NewHosts()
-	if err != nil {
-		log.Fatal(err)
+const localhost = "127.0.0.1"
+
+func confirmAmend() bool {
+	c := utils.ConfirmationPrompt("Would you like Tokaido to automatically update your hostsfile?", "n")
+	if c == false {
+		fmt.Println(`Your hostsfile can be amended manually in order to enable this feature. See XXXXXXX for more information.`)
 	}
 
-	if !hosts.Has("127.0.0.1", hostname) {
-		utils.GainSudo()
+	return c
+}
 
-		hosts.Add("127.0.0.1", hostname)
+// AddEntry - Add an entry to /etc/hosts or equivalent
+func AddEntry(hostname string) error {
+	hosts, err := NewHosts()
+	if err != nil {
+		return err
+	}
+
+	if !hosts.Has(localhost, hostname) {
+		if confirmAmend() == false {
+			return nil
+		}
+
+		hosts.Add(localhost, hostname)
+		if hosts.IsWritable() == false {
+			err := hosts.WriteElevated()
+			if err != nil {
+				return err
+			}
+
+			return nil
+		}
 
 		if err := hosts.Flush(); err != nil {
-			log.Fatal(err)
+			return err
 		}
-		return
+
+		return nil
 	}
+
+	return nil
 }
 
 // RemoveEntry - Remove an entry from /etc/hosts or equivalent
-func RemoveEntry(hostname string) {
-	hosts, err := goodhosts.NewHosts()
+func RemoveEntry(hostname string) error {
+	hosts, err := NewHosts()
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
-	if !hosts.Has("127.0.0.1", hostname) {
-		utils.GainSudo()
+	if !hosts.Has(localhost, hostname) {
+		if confirmAmend() == false {
+			return nil
+		}
 
-		hosts.Remove("127.0.0.1", hostname)
+		hosts.Remove(localhost, hostname)
+		if hosts.IsWritable() == false {
+			err := hosts.WriteElevated()
+			if err != nil {
+				return err
+			}
+
+			return nil
+		}
 
 		if err := hosts.Flush(); err != nil {
-			log.Fatal(err)
+			return err
 		}
-		return
+
+		return nil
 	}
+
+	return nil
 }
