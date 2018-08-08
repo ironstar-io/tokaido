@@ -10,8 +10,8 @@ import (
 // UpCmd - `tok up`
 var UpCmd = &cobra.Command{
 	Use:   "up",
-	Short: "Compose and run your containers",
-	Long:  "Runs in unison in the background - `docker-compose up -d`",
+	Short: "Start a Tokaido local development environment",
+	Long:  "Start a Tokaido local development environment",
 	Run: func(cmd *cobra.Command, args []string) {
 		utils.CheckCmdHard("docker-compose")
 
