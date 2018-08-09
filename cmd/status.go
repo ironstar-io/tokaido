@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/services/drupal"
 	"github.com/ironstar-io/tokaido/services/unison"
@@ -25,7 +26,7 @@ var StatusCmd = &cobra.Command{
 
 		ssh.CheckKey()
 
-		unison.CheckSyncService()
+		unison.CheckSyncService(conf.GetConfig().Tokaido.Project.Name)
 
 		drupal.CheckContainer()
 

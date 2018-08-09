@@ -42,13 +42,13 @@ func Init() {
 	// Run Unison for syncing
 	unison.DockerUp()
 	unison.CreateOrUpdatePrf(unison.LocalPort(), c.Tokaido.Project.Name, c.Tokaido.Project.Path)
-	s := unison.SyncServiceStatus()
+	s := unison.SyncServiceStatus(c.Tokaido.Project.Name)
 	if s == "stopped" {
 		unison.Sync()
 	}
 
 	if c.System.Syncsvc.Enabled {
-		unison.CreateSyncService()
+		unison.CreateSyncService(c.Tokaido.Project.Name, c.Tokaido.Project.Path)
 		fmt.Println()
 	}
 

@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/services/unison"
 	"github.com/ironstar-io/tokaido/system/console"
@@ -30,6 +31,6 @@ var DestroyCmd = &cobra.Command{
 
 		docker.Down()
 
-		unison.StopSyncService()
+		unison.StopSyncService(conf.GetConfig().Tokaido.Project.Name)
 	},
 }
