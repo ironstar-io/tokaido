@@ -15,7 +15,6 @@ Use 'tok up' to repair, or 'tok sync' to sync manually
 // CreateSyncService Register a launchd or systemctl service for Unison active sync
 func CreateSyncService(syncName, syncDir string) {
 	s := goos.NewUnisonSvc(syncName, syncDir)
-
 	s.CreateSyncService()
 }
 

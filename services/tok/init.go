@@ -48,6 +48,9 @@ func Init() {
 	}
 
 	if c.System.Syncsvc.Enabled {
+		fmt.Println()
+		console.Println("🔄  Creating a background process to sync your local repo into the Tokaido environment", "")
+
 		unison.CreateSyncService(c.Tokaido.Project.Name, c.Tokaido.Project.Path)
 		fmt.Println()
 	}

@@ -91,9 +91,6 @@ func writeSyncFile(body string, path string, filename string) {
 
 // CreateSyncService Register a launchd or systemctl service for Unison active sync
 func (s UnisonSvc) CreateSyncService() {
-	fmt.Println()
-	console.Println("🔄  Creating a background process to sync your local repo into the Tokaido environment", "")
-
 	s.RegisterSyncService()
 	s.StartSyncService()
 }

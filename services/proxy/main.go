@@ -8,6 +8,8 @@ import (
 	"github.com/ironstar-io/tokaido/system/ssl"
 )
 
+const proxy = "proxy"
+
 // Setup ...
 func Setup() {
 	pn := conf.GetConfig().Tokaido.Project.Name
@@ -18,8 +20,8 @@ func Setup() {
 	GenerateProxyDockerCompose()
 	DockerComposeUp()
 
-	unison.CreateOrUpdatePrf(UnisonPort(), "proxy", getProxyClientDir())
-	// unison.StartProxySyncSvc() // If not already started?
+	unison.CreateOrUpdatePrf(UnisonPort(), proxy, getProxyClientDir())
+	unison.CreateSyncService(proxy, getProxyClientDir())
 
 	err := hostsfile.AddEntry(pn + ".tokaido.local")
 	if err != nil {
@@ -28,5 +30,5 @@ func Setup() {
 	}
 
 	RebuildNginxConfigFile()
-	RestartContainer("proxy")
+	RestartContainer(proxy)
 }
