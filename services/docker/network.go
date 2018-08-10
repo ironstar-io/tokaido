@@ -20,10 +20,8 @@ func CheckNetworkUp() bool {
 }
 
 // GetGateway - Get the Gateway IP adress of the docker network
-func GetGateway() string {
-	project := conf.GetConfig().Tokaido.Project.Name
-
-	gatewayLine := utils.BashStringCmd("docker network inspect " + project + "_default | grep Gateway")
+func GetGateway(networkName string) string {
+	gatewayLine := utils.BashStringCmd("docker network inspect " + networkName + " | grep Gateway")
 
 	return strings.Split(gatewayLine, ": ")[1]
 }
