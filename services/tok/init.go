@@ -33,10 +33,6 @@ func Init() {
 	docker.FindOrCreateTokCompose()
 	ssh.GenerateKeys()
 
-	if c.System.Syncsvc.Enabled && c.System.Proxy.Enabled {
-		proxy.Setup()
-	}
-
 	git.IgnoreDefaults()
 
 	// Run Unison for syncing
@@ -72,6 +68,10 @@ func Init() {
 	xdebug.Configure()
 
 	console.SpinPersist(wo, "🚅", "Tokaido started your containers")
+
+	if c.System.Syncsvc.Enabled && c.System.Proxy.Enabled {
+		proxy.Setup()
+	}
 }
 
 // InitMessage ...
