@@ -3,6 +3,7 @@ package proxy
 import (
 	"fmt"
 	"github.com/ironstar-io/tokaido/conf"
+	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/services/unison"
 	"github.com/ironstar-io/tokaido/system/hostsfile"
 	"github.com/ironstar-io/tokaido/system/ssl"
@@ -14,6 +15,12 @@ const proxy = "proxy"
 func Setup() {
 	pn := conf.GetConfig().Tokaido.Project.Name
 	buildDirectories()
+
+	hp := docker.LocalPort("haproxy", "8443")
+	if hp == "" {
+		fmt.Println("The haproxy container doesn't appear to be running. Skipping HTTPS proxy setup...")
+		return
+	}
 
 	ssl.Configure(getProxyClientTLSDir())
 
@@ -29,6 +36,6 @@ func Setup() {
 		fmt.Println(err)
 	}
 
-	RebuildNginxConfigFile()
+	RebuildNginxConfigFile(hp)
 	RestartContainer(proxy)
 }

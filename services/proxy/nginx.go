@@ -12,17 +12,17 @@ import (
 const proxyNetwork = "proxy_proxy"
 
 // RebuildNginxConfigFile ...
-func RebuildNginxConfigFile() {
+func RebuildNginxConfigFile(haproxyPort string) {
 	pn := conf.GetConfig().Tokaido.Project.Name
 	ng := docker.GetGateway(proxyNetwork)
-	nc := generateNginxConf(pn, strings.Replace(ng, `"`, "", -1))
+	nc := generateNginxConf(pn, strings.Replace(ng, `"`, "", -1), haproxyPort)
 	np := filepath.Join(getProxyClientConfdDir(), pn+".conf")
 
 	fs.Replace(np, nc)
 }
 
 // generateNginxConf ...
-func generateNginxConf(projectName, networkGateway string) []byte {
+func generateNginxConf(projectName, networkGateway, haproxyPort string) []byte {
 	return []byte(`server {
   listen          5154 ssl;
   server_name     ` + projectName + `.tokaido.local;
@@ -32,7 +32,7 @@ func generateNginxConf(projectName, networkGateway string) []byte {
   ssl_certificate_key       /tokaido/proxy/config/client/tls/tokaido-key.pem;
 
   location / {
-    proxy_pass https://` + networkGateway + `:8443;
+    proxy_pass https://` + networkGateway + `:` + haproxyPort + `;
   }
 }
 `)
