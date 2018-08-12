@@ -2,6 +2,7 @@ package ssl
 
 import (
 	"github.com/ironstar-io/tokaido/constants"
+	"github.com/ironstar-io/tokaido/system/fs"
 
 	"log"
 	"path/filepath"
@@ -22,4 +23,13 @@ func Configure(certPath string) {
 	}
 
 	ConfigureTrustedCerts(c)
+}
+
+// RemoveTrustedCert ...
+func RemoveTrustedCert(certPath string) {
+	c := filepath.Join(certPath, "tokaido.pem")
+
+	if fs.CheckExists(c) == true {
+		RemoveTrustedCertFromKeychain(c)
+	}
 }
