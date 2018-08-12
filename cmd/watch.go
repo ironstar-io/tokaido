@@ -11,8 +11,8 @@ import (
 // WatchCmd - `tok watch`
 var WatchCmd = &cobra.Command{
 	Use:   "watch",
-	Short: "Watch and sync your files",
-	Long:  "Watch your files for changes and sync them to your container",
+	Short: "Maintain a foreground sync service using Unison",
+	Long:  "Watch your files for changes and sync them to your Tokaido environment, until you exit.",
 	Run: func(cmd *cobra.Command, args []string) {
 		utils.CheckCmdHard("docker-compose")
 

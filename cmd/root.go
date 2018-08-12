@@ -31,20 +31,15 @@ func init() {
 	rootCmd.AddCommand(ConfigGetCmd)
 	rootCmd.AddCommand(ConfigSetCmd)
 	rootCmd.AddCommand(DestroyCmd)
-	rootCmd.AddCommand(InitCmd)
-	rootCmd.AddCommand(IronstarCmd)
-	rootCmd.AddCommand(UpCmd)
-	rootCmd.AddCommand(DestroyCmd)
+	rootCmd.AddCommand(ExecCmd)
 	rootCmd.AddCommand(LogsCmd)
 	rootCmd.AddCommand(OpenCmd)
 	rootCmd.AddCommand(PortsCmd)
 	rootCmd.AddCommand(PsCmd)
-	rootCmd.AddCommand(RepairCmd)
-	rootCmd.AddCommand(ExecCmd)
-	rootCmd.AddCommand(StopCmd)
-	rootCmd.AddCommand(SyscheckCmd)
 	rootCmd.AddCommand(StatusCmd)
+	rootCmd.AddCommand(StopCmd)
 	rootCmd.AddCommand(SyncCmd)
+	rootCmd.AddCommand(SyscheckCmd)
 	rootCmd.AddCommand(UpCmd)
 	rootCmd.AddCommand(VersionCmd)
 	rootCmd.AddCommand(WatchCmd)
@@ -62,9 +57,7 @@ func Execute() {
 func RootCmd() *cobra.Command {
 	rootCmd.PersistentFlags().StringP("config", "c", "", "Specify the Tokaido config file to use")
 	rootCmd.PersistentFlags().BoolP("force", "", false, "Forcefully skip confirmation prompts with 'yes' response")
-	rootCmd.PersistentFlags().BoolP("version", "v", false, "Check the current Tokaido version (base command only)")
 	rootCmd.PersistentFlags().BoolP("debug", "d", false, "Enable debug mode, command output is printed to the console")
-	rootCmd.PersistentFlags().BoolP("customCompose", "", false, "When this is enabled, Tokaido will not modify the docker-compose.tok.yml file if it exists")
 
 	return &rootCmd
 }
@@ -74,7 +67,7 @@ func run(cmd *cobra.Command, args []string) {
 		fmt.Printf("v%s\n", version.Get().Version)
 	} else {
 		fmt.Printf("Tokaido v%s\n\n", version.Get().Version)
-		fmt.Println("For help with Tokaido run `tok --help` or take a look at our documentation at https://docs.tokaido.io/")
+		fmt.Println("For help with Tokaido run `tok help` or take a look at our documentation at https://tokaido.io/docs")
 	}
 }
 

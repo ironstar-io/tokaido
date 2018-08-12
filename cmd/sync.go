@@ -11,8 +11,8 @@ import (
 // SyncCmd - `tok sync`
 var SyncCmd = &cobra.Command{
 	Use:   "sync",
-	Short: "Use unison to sync your files",
-	Long:  "One-time sync to your container",
+	Short: "Perform a one-time sync of your Tokaido environment and local host",
+	Long:  "Perform a one-time sync of your Tokaido environment and local host",
 	Run: func(cmd *cobra.Command, args []string) {
 		utils.CheckCmdHard("docker-compose")
 

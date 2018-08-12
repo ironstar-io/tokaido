@@ -11,8 +11,8 @@ import (
 // StopCmd - `tok stop`
 var StopCmd = &cobra.Command{
 	Use:   "stop",
-	Short: "Stop all containers",
-	Long:  "Gracefully stop your containers - `docker-compose stop`",
+	Short: "Gracefully stop/pause your Tokaido environment",
+	Long:  "Gracefully stop/pause your Tokaido environment. Restart with `tok up`",
 	Run: func(cmd *cobra.Command, args []string) {
 		utils.CheckCmdHard("docker-compose")
 
