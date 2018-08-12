@@ -19,6 +19,8 @@ var containerPorts = map[string]string{
 	"mysql":   "3306",
 	"nginx":   "8082",
 	"solr":    "8983",
+	"redis":   "6379",
+	"adminer": "8080",
 	"unison":  "5000",
 }
 

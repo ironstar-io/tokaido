@@ -48,6 +48,34 @@ func EnableSolr(version string) []byte {
       - /opt/solr/server/solr/configsets/search-api-solr/`)
 }
 
+// EnableRedis ...
+func EnableRedis(version string) []byte {
+	return []byte(`services:
+  redis:
+    image: redis:` + version + `
+    ports:
+      - "6379"`)
+}
+
+// EnableMailhog ...
+func EnableMailhog(version string) []byte {
+	return []byte(`services:
+  mailhog:
+    image: mailhog/mailhog:` + version + `
+    ports:
+      - "1025"
+      - "8025"`)
+}
+
+// EnableAdminer ...
+func EnableAdminer(version string) []byte {
+	return []byte(`services:
+  adminer:
+    image: adminer:` + version + `
+    ports:
+      - "8080"`)
+}
+
 // SetUnisonVersion ...
 func SetUnisonVersion(version string) []byte {
 	return []byte(`services:
