@@ -162,6 +162,26 @@ type Services struct {
 		Cmd         string            `yaml:"cmd,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`
 	} `yaml:"redis,omitempty"`
+	Mailhog struct {
+		Enabled     bool              `yaml:"enabled,omitempty"`
+		Image       string            `yaml:"image,omitempty"`
+		Hostname    string            `yaml:"hostname,omitempty"`
+		Ports       []string          `yaml:"ports,omitempty"`
+		Entrypoint  []string          `yaml:"entrypoint,omitempty"`
+		User        string            `yaml:"user,omitempty"`
+		Cmd         string            `yaml:"cmd,omitempty"`
+		Environment map[string]string `yaml:"environment,omitempty"`
+	} `yaml:"mailhog,omitempty"`
+	Adminer struct {
+		Enabled     bool              `yaml:"enabled,omitempty"`
+		Image       string            `yaml:"image,omitempty"`
+		Hostname    string            `yaml:"hostname,omitempty"`
+		Ports       []string          `yaml:"ports,omitempty"`
+		Entrypoint  []string          `yaml:"entrypoint,omitempty"`
+		User        string            `yaml:"user,omitempty"`
+		Cmd         string            `yaml:"cmd,omitempty"`
+		Environment map[string]string `yaml:"environment,omitempty"`
+	} `yaml:"adminer,omitempty"`
 	Kishu struct {
 		Enabled     bool              `yaml:"enabled,omitempty"`
 		Image       string            `yaml:"image,omitempty"`
