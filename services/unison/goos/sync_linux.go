@@ -7,12 +7,13 @@ import (
 	"github.com/ironstar-io/tokaido/services/unison/templates"
 	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/daemon"
+	"github.com/ironstar-io/tokaido/system/fs"
 
 	"bytes"
 	"fmt"
 	"html/template"
 	"log"
-	"os"
+	"path/filepath"
 )
 
 var bgSyncFailMsg = `
