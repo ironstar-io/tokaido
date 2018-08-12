@@ -8,6 +8,7 @@ package ssl
 
 import (
 	"github.com/ironstar-io/tokaido/constants"
+	"github.com/ironstar-io/tokaido/utils"
 
 	"crypto/ecdsa"
 	"crypto/elliptic"
@@ -26,7 +27,7 @@ import (
 
 var (
 	validFrom  = ""
-	validFor   = 365 * 24 * time.Hour
+	validFor   = 10 * 365 * 24 * time.Hour
 	isCA       = true
 	rsaBits    = 2048
 	ecdsaCurve = ""
@@ -113,6 +114,8 @@ func GenerateCerts(certPath string, keyPath string, hosts []string) error {
 		return err
 	}
 
+	rs, _ := utils.RandomString()
+
 	template := x509.Certificate{
 		SerialNumber: serialNumber,
 		Subject: pkix.Name{
@@ -121,10 +124,11 @@ func GenerateCerts(certPath string, keyPath string, hosts []string) error {
 			Province:           []string{constants.PkixProvince},
 			Country:            []string{constants.PkixCountry},
 			OrganizationalUnit: []string{constants.PkixOrganizationalUnit},
-			CommonName:         constants.PkixCommonName,
 		},
 		NotBefore: notBefore,
 		NotAfter:  notAfter,
+
+		EmailAddresses: []string{rs + "." + constants.CertEmailAddress},
 
 		KeyUsage:              x509.KeyUsageKeyEncipherment | x509.KeyUsageDigitalSignature,
 		ExtKeyUsage:           []x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth},
