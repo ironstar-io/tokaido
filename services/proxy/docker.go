@@ -13,6 +13,11 @@ func DockerComposeUp() {
 	ComposeStdout("up", "-d")
 }
 
+// DockerComposeDown ...
+func DockerComposeDown() {
+	ComposeStdout("down")
+}
+
 // RestartContainer ...
 func RestartContainer(container string) {
 	ComposeStdout("restart", container)

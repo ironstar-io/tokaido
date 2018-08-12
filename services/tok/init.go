@@ -48,7 +48,6 @@ func Init() {
 		console.Println("🔄  Creating a background process to sync your local repo into the Tokaido environment", "")
 
 		unison.CreateSyncService(c.Tokaido.Project.Name, c.Tokaido.Project.Path)
-		fmt.Println()
 	}
 
 	// Fire up the Docker environment

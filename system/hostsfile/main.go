@@ -9,7 +9,7 @@ import (
 const localhost = "127.0.0.1"
 
 func confirmAmend() bool {
-	c := utils.ConfirmationPrompt("Would you like Tokaido to automatically update your hostsfile?", "n")
+	c := utils.ConfirmationPrompt("Would you like Tokaido to automatically update your hostsfile? You may be prompted for elevated access.", "n")
 	if c == false {
 		fmt.Println(`Your hostsfile can be amended manually in order to enable this feature. See XXXXXXX for more information.`)
 	}
@@ -56,7 +56,7 @@ func RemoveEntry(hostname string) error {
 		return err
 	}
 
-	if !hosts.Has(localhost, hostname) {
+	if hosts.Has(localhost, hostname) {
 		if confirmAmend() == false {
 			return nil
 		}

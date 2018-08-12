@@ -69,24 +69,9 @@ func (s UnisonSvc) CreateSyncFile() {
 		return
 	}
 
-	writeSyncFile(tpl.String(), s.Systemdpath, s.Filename)
+	fs.TouchOrReplace(filepath.Join(s.Systemdpath, s.Filename), tpl.Bytes())
+
 	daemon.ReloadServices()
-}
-
-func writeSyncFile(body string, path string, filename string) {
-	mkdErr := os.MkdirAll(path, os.ModePerm)
-	if mkdErr != nil {
-		log.Fatal("Mkdir: ", mkdErr)
-	}
-
-	var file, err = os.Create(path + filename)
-	if err != nil {
-		log.Fatal("Create: ", err)
-	}
-
-	_, _ = file.WriteString(body)
-
-	defer file.Close()
 }
 
 // CreateSyncService Register a launchd or systemctl service for Unison active sync

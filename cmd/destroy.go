@@ -1,13 +1,9 @@
 package cmd
 
 import (
-	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/services/docker"
-	"github.com/ironstar-io/tokaido/services/unison"
-	"github.com/ironstar-io/tokaido/system/console"
+	"github.com/ironstar-io/tokaido/services/tok"
 	"github.com/ironstar-io/tokaido/utils"
-
-	"fmt"
 
 	"github.com/spf13/cobra"
 )
@@ -22,15 +18,6 @@ var DestroyCmd = &cobra.Command{
 
 		docker.HardCheckTokCompose()
 
-		confirmDestroy := utils.ConfirmationPrompt(`🔥  This will also destroy the database inside your Tokaido environment. Are you sure?`, "n")
-		if confirmDestroy == false {
-			console.Println(`🍵  Exiting without change`, "")
-			return
-		}
-		fmt.Println()
-
-		docker.Down()
-
-		unison.StopSyncService(conf.GetConfig().Tokaido.Project.Name)
+		tok.Destroy()
 	},
 }

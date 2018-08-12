@@ -26,6 +26,7 @@ func Configure(certPath string) {
 		return
 	}
 
+	fmt.Println()
 	p := utils.ConfirmationPrompt("Would you like Tokaido to add the generated SSL certificate to your keychain? You may be prompted for elevated access", "n")
 	if p == false {
 		fmt.Println(`The generated SSL certificates can be manually added to your keychain later. See XXXXXXX for more information.`)

@@ -5,7 +5,6 @@ package goos
 import (
 	"bytes"
 	"log"
-	"os"
 	"os/user"
 	"path/filepath"
 	"text/template"
@@ -14,6 +13,7 @@ import (
 	"github.com/ironstar-io/tokaido/services/unison/templates"
 	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/daemon"
+	"github.com/ironstar-io/tokaido/system/fs"
 )
 
 // UnisonSvc ...
@@ -77,23 +77,7 @@ func (s UnisonSvc) CreateSyncFile() {
 		return
 	}
 
-	writeSyncFile(tpl.String(), s.Launchdpath, s.Filename)
-}
-
-func writeSyncFile(body string, path string, filename string) {
-	mkdErr := os.MkdirAll(path, os.ModePerm)
-	if mkdErr != nil {
-		log.Fatal("Mkdir: ", mkdErr)
-	}
-
-	var file, err = os.Create(path + filename)
-	if err != nil {
-		log.Fatal("Create: ", err)
-	}
-
-	_, _ = file.WriteString(body)
-
-	defer file.Close()
+	fs.TouchOrReplace(filepath.Join(s.Launchdpath, s.Filename), tpl.Bytes())
 }
 
 // CreateSyncService Register a launchd or systemctl service for Unison active sync

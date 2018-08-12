@@ -128,12 +128,6 @@ func (h *Hosts) WriteElevated() error {
 		return errors.New(`Unable to amend your hostsfile! Tokaido requires elevated permissions in order to be able to complete this task`)
 	}
 
-	confirmDestroy := utils.ConfirmationPrompt("Tokaido requires elevated permissions in order to automatically amend your hostfile. You may be asked to enter a password.\n\nContinue attempt to automatically update your hostsfile?", "n")
-	if confirmDestroy == false {
-		fmt.Println(`Your hostsfile can be amended manually in order to enable this feature. See XXXXXXX for more information.`)
-		return nil
-	}
-
 	var s string
 	for _, line := range h.Lines {
 		s = s + line.Raw + "\n"
