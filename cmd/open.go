@@ -18,6 +18,6 @@ var OpenCmd = &cobra.Command{
 
 		docker.HardCheckTokCompose()
 
-		system.OpenSite()
+		system.OpenSite(args)
 	},
 }

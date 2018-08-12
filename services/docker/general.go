@@ -2,6 +2,8 @@ package docker
 
 import (
 	"github.com/ironstar-io/tokaido/system/fs"
+	"github.com/spf13/viper"
+
 	"github.com/ironstar-io/tokaido/utils"
 
 	"fmt"
@@ -12,22 +14,35 @@ import (
 	"github.com/olekukonko/tablewriter"
 )
 
-var containerPorts = map[string]string{
+var defaultContainers = map[string]string{
 	"drush":   "22",
 	"fpm":     "9000",
 	"haproxy": "8443",
 	"mysql":   "3306",
 	"nginx":   "8082",
-	"solr":    "8983",
 	"unison":  "5000",
+}
+
+var optionalContainers = map[string]string{
+	"solr":    "8983",
+	"redis":   "6379",
+	"adminer": "8080",
+	"mailhog": "8025",
 }
 
 // PrintPorts - Print a port map of all containers, or a single container
 func PrintPorts(containers []string) {
 	if len(containers) == 0 {
-		data := make([][]string, len(containerPorts))
-		for k, v := range containerPorts {
+		data := make([][]string, len(defaultContainers))
+
+		for k, v := range defaultContainers {
 			data = append(data, []string{k, LocalPort(k, v)})
+		}
+
+		for k, v := range optionalContainers {
+			if viper.GetString("services."+k+".enabled") == "true" {
+				data = append(data, []string{k, LocalPort(k, v)})
+			}
 		}
 
 		table := tablewriter.NewWriter(os.Stdout)
@@ -40,12 +55,12 @@ func PrintPorts(containers []string) {
 	}
 
 	target := containers[0]
-	if containerPorts[target] == "" {
+	if defaultContainers[target] == "" {
 		fmt.Println("There aren't any containers matching the name '" + target + "'")
 		return
 	}
 
-	fmt.Println(LocalPort(target, containerPorts[target]))
+	fmt.Println(LocalPort(target, defaultContainers[target]))
 }
 
 // LocalPort - Return the local port of a container

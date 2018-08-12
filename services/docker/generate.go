@@ -107,6 +107,35 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 		}
 	}
 
+	if conf.GetConfig().Services.Redis.Enabled {
+		var v string
+		if conf.GetConfig().Tokaido.Betacontainers {
+			v = "edge"
+		} else {
+			v = "4.0.11"
+		}
+		errRedis := yaml.Unmarshal(dockertmpl.EnableRedis(v), &tokStruct)
+		if errRedis != nil {
+			log.Fatalf("Error enabling Redis in Compose file: %v", err)
+		}
+	}
+
+	if conf.GetConfig().Services.Mailhog.Enabled {
+		v := "v1.0.0"
+		errMailhog := yaml.Unmarshal(dockertmpl.EnableMailhog(v), &tokStruct)
+		if errMailhog != nil {
+			log.Fatalf("Error enabling Mailhog in Compose file: %v", err)
+		}
+	}
+
+	if conf.GetConfig().Services.Adminer.Enabled {
+		v := "4-standalone"
+		errAdminer := yaml.Unmarshal(dockertmpl.EnableAdminer(v), &tokStruct)
+		if errAdminer != nil {
+			log.Fatalf("Error enabling Adminer in Compose file: %v", err)
+		}
+	}
+
 	if conf.GetConfig().Services.Memcache.Enabled {
 		var v string
 		if conf.GetConfig().Tokaido.Betacontainers {
@@ -151,6 +180,9 @@ func getCustomTok() []byte {
 	// Nulify the invalid docker-compose file values
 	dc.Services.Memcache.Enabled = false
 	dc.Services.Solr.Enabled = false
+	dc.Services.Redis.Enabled = false
+	dc.Services.Mailhog.Enabled = false
+	dc.Services.Adminer.Enabled = false
 
 	cc, err := yaml.Marshal(dc)
 	if err != nil {
