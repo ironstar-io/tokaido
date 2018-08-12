@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"os/user"
+	"path/filepath"
 	"text/template"
 
 	"github.com/ironstar-io/tokaido/conf"
@@ -57,7 +58,7 @@ func getServiceFilename(syncName string) string {
 }
 
 func getServicePath(syncName string) string {
-	return conf.GetConfig().System.Syncsvc.Launchdpath + getServiceFilename(syncName)
+	return filepath.Join(conf.GetConfig().System.Syncsvc.Launchdpath, getServiceFilename(syncName))
 }
 
 // CreateSyncFile - Create a .plist file for the unison service
