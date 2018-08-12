@@ -10,7 +10,7 @@ import (
 var ConfigSetCmd = &cobra.Command{
 	Use:   "config-set",
 	Short: "Set a config property value",
-	Long:  "Set a config property value at a position defined in command arguments. Eg. `tok config-set drupal path`",
+	Long:  "Set a config property value. Eg. `tok config-set services solr enabled true`. See https://tokaido.io/docs/config for a full list of available options",
 	Run: func(cmd *cobra.Command, args []string) {
 		conf.SetConfigValueByArgs(args)
 	},

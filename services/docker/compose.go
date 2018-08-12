@@ -50,19 +50,11 @@ func Stop() {
 
 // Down - Pull down all the containers in the compose file
 func Down() {
-	confirmDestroy := utils.ConfirmationPrompt(`🔥  This will also destroy the database inside your Tokaido environment. Are you sure?`, "n")
-
-	if confirmDestroy == false {
-		console.Println(`🍵  Exiting without change`, "")
-		return
-	}
-
-	fmt.Println()
-	w := console.SpinStart("Tokaido is pulling down your containers!")
+	w := console.SpinStart("Tokaido is taking down your containers!")
 
 	ComposeStdout("down")
 
-	console.SpinPersist(w, "🚉", "Tokaido destroyed containers successfully!")
+	console.SpinPersist(w, "🚉", "Successfully destroyed your Tokaido environment")
 }
 
 // PrintLogs - Print all logs or the container logs to the console

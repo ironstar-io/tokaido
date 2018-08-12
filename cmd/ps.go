@@ -10,8 +10,8 @@ import (
 // PsCmd - `tok ps`
 var PsCmd = &cobra.Command{
 	Use:   "ps",
-	Short: "docker ps for your containers",
-	Long:  "Alias for running `docker-compose -f <composefile> ps`",
+	Short: "Show Tokaido containers and status",
+	Long:  "Alias for running `docker-compose ps`",
 	Run: func(cmd *cobra.Command, args []string) {
 		utils.CheckCmdHard("docker-compose")
 
