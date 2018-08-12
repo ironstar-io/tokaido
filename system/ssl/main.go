@@ -1,6 +1,7 @@
 package ssl
 
 import (
+	"github.com/ironstar-io/tokaido/constants"
 	"github.com/ironstar-io/tokaido/utils"
 
 	"fmt"
@@ -12,7 +13,7 @@ import (
 func Configure(certPath string) {
 	c := filepath.Join(certPath, "tokaido.pem")
 	k := filepath.Join(certPath, "tokaido-key.pem")
-	h := []string{"*.tokaido.local", "tokaido.local"}
+	h := []string{"*." + constants.ProxyDomain, constants.ProxyDomain}
 
 	err := CheckCerts(c, k)
 	if err != nil {

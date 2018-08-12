@@ -1,10 +1,30 @@
 package proxy
 
 import (
+	"github.com/ironstar-io/tokaido/conf"
+	"github.com/ironstar-io/tokaido/constants"
 	"github.com/ironstar-io/tokaido/system/fs"
+	"github.com/ironstar-io/tokaido/utils"
 
 	"path/filepath"
 )
+
+// CheckProxyUp ...
+func CheckProxyUp() bool {
+	_, err := utils.BashStringSplitOutput("curl --insecure -sSf " + GetProxyURL() + " > /dev/null")
+	if err != nil {
+		return false
+	}
+
+	return true
+}
+
+// GetProxyURL ...
+func GetProxyURL() string {
+	pn := conf.GetConfig().Tokaido.Project.Name
+
+	return "https://" + pn + "." + constants.ProxyDomain + ":" + constants.ProxyPort
+}
 
 // `~/.tok/proxy/client/tls`
 func getProxyClientTLSDir() string {

@@ -2,6 +2,7 @@ package proxy
 
 import (
 	"github.com/ironstar-io/tokaido/conf"
+	"github.com/ironstar-io/tokaido/constants"
 	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/system/fs"
 
@@ -24,8 +25,8 @@ func RebuildNginxConfigFile(haproxyPort string) {
 // generateNginxConf ...
 func generateNginxConf(projectName, networkGateway, haproxyPort string) []byte {
 	return []byte(`server {
-  listen          5154 ssl;
-  server_name     ` + projectName + `.tokaido.local;
+  listen          ` + constants.ProxyPort + ` ssl;
+  server_name     ` + projectName + `.` + constants.ProxyDomain + `;
   server_tokens   off;
 
   ssl_certificate           /tokaido/proxy/config/client/tls/tokaido.pem;

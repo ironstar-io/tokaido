@@ -2,6 +2,7 @@ package proxy
 
 import (
 	"github.com/ironstar-io/tokaido/conf"
+	"github.com/ironstar-io/tokaido/constants"
 	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/system/hostsfile"
 
@@ -26,7 +27,7 @@ func DestroyProject() {
 // RemoveFromHostsfile ...
 func RemoveFromHostsfile() {
 	pn := conf.GetConfig().Tokaido.Project.Name
-	err := hostsfile.RemoveEntry(pn + ".tokaido.local")
+	err := hostsfile.RemoveEntry(pn + "." + constants.ProxyDomain)
 	if err != nil {
 		fmt.Println("There was an issue updating your hostsfile. Your hostsfile can be amended manually in order to enable this feature. See XXXXXXX for more information.")
 		fmt.Println(err)

@@ -16,4 +16,4 @@ const PkixCountry = "Japan"
 const PkixOrganizationalUnit = "Tokaido Local Development Environment"
 
 // CertEmailAddress ...
-const CertEmailAddress = "developer@tokaido.local"
+const CertEmailAddress = "developer@" + ProxyDomain

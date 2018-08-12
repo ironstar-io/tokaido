@@ -1,6 +1,8 @@
 package proxy
 
-import ()
+import (
+	"github.com/ironstar-io/tokaido/constants"
+)
 
 // DockerCompose ...
 type DockerCompose struct {
@@ -54,7 +56,7 @@ services:
   proxy:
     image: tokaido/proxy:latest
     ports:
-      - "5154:5154"
+      - "` + constants.ProxyPort + `:` + constants.ProxyPort + `"
     volumes_from:
       - unison
     networks:
