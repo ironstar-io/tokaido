@@ -32,7 +32,6 @@ func Init() {
 	docker.FindOrCreateTokCompose()
 	ssh.GenerateKeys()
 	conf.SetDrupalConfig()
-	drupal.CheckSettings()
 	git.IgnoreDefaults()
 
 	// Run Unison for syncing
