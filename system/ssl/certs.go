@@ -7,6 +7,8 @@
 package ssl
 
 import (
+	"github.com/ironstar-io/tokaido/constants"
+
 	"crypto/ecdsa"
 	"crypto/elliptic"
 	"crypto/rand"
@@ -114,11 +116,12 @@ func GenerateCerts(certPath string, keyPath string, hosts []string) error {
 	template := x509.Certificate{
 		SerialNumber: serialNumber,
 		Subject: pkix.Name{
-			Organization:       []string{"Tokaido"},
-			Locality:           []string{"Shin-Osaka"},
-			Province:           []string{"Osaka"},
-			Country:            []string{"Japan"},
-			OrganizationalUnit: []string{"Tokido Local Development Environment"},
+			Organization:       []string{constants.PkixOrganization},
+			Locality:           []string{constants.PkixLocality},
+			Province:           []string{constants.PkixProvince},
+			Country:            []string{constants.PkixCountry},
+			OrganizationalUnit: []string{constants.PkixOrganizationalUnit},
+			CommonName:         constants.PkixCommonName,
 		},
 		NotBefore: notBefore,
 		NotAfter:  notAfter,
