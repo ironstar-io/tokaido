@@ -10,3 +10,4 @@
 - Add MailHog support (enable with: `tok config-set service mailhog enabled true`)
 - 'Open' can now be used to open secondary services like mailhog, adminer (eg `tok open adminer`)
 - 'ports' now dynamically returns ports only for services which are enabled
+- Add dependency checks for Linux
