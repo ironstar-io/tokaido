@@ -9,3 +9,5 @@
 - Add Adminer service (enable with: `tok config-set service adminer enabled true`) 
 - Add Redis service (enable with: `tok config-set service redis enabled true`)
 - Add MailHog support (enable with: `tok config-set service mailhog enabled true`)
+
+- 'Open' can now be used to open secondary services like mailhog, adminer (eg `tok open adminer`)
