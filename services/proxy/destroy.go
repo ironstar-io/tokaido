@@ -29,7 +29,7 @@ func RemoveFromHostsfile() {
 	pn := conf.GetConfig().Tokaido.Project.Name
 	err := hostsfile.RemoveEntry(pn + "." + constants.ProxyDomain)
 	if err != nil {
-		fmt.Println("There was an issue updating your hostsfile. Your hostsfile can be amended manually in order to enable this feature. See XXXXXXX for more information.")
+		fmt.Println("There was an issue updating your hostsfile. Your hostsfile can be amended manually in order to enable this feature. See https://tokaido.io/docs/config/#updating-your-hostsfile for more information.")
 		fmt.Println(err)
 	}
 }

@@ -11,7 +11,7 @@ const localhost = "127.0.0.1"
 func confirmAmend() bool {
 	c := utils.ConfirmationPrompt("Would you like Tokaido to automatically update your hostsfile? You may be prompted for elevated access.", "n")
 	if c == false {
-		fmt.Println(`Your hostsfile can be amended manually in order to enable this feature. See XXXXXXX for more information.`)
+		fmt.Println(`Your hostsfile can be amended manually in order to enable this feature. See https://tokaido.io/docs/config/#updating-your-hostsfile for more information.`)
 	}
 
 	return c
