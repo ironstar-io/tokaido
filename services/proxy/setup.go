@@ -4,11 +4,11 @@ import (
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/constants"
 	"github.com/ironstar-io/tokaido/services/docker"
-	"github.com/ironstar-io/tokaido/services/unison"
-	"github.com/ironstar-io/tokaido/system/hostsfile"
+	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/system/ssl"
 
 	"fmt"
+	"path/filepath"
 )
 
 const proxy = "proxy"
@@ -19,38 +19,44 @@ func Setup() {
 
 	ssl.Configure(getProxyClientTLSDir())
 
-	ConfigureUnison()
-	ConfigureHostsfile()
-	ConfigureNginx()
-}
-
-// ConfigureUnison ...
-func ConfigureUnison() {
 	GenerateProxyDockerCompose()
 	DockerComposeUp()
 
-	unison.CreateOrUpdatePrf(UnisonPort(), proxy, getProxyClientDir())
-	unison.CreateSyncService(proxy, getProxyClientDir())
+	ConfigureUnison()
+	ConfigureProjectHostsfile()
+
+	ConfigureYamanote()
+
+	ConfigureProjectNginx()
+	RestartContainer(proxy)
 }
 
-// ConfigureHostsfile ...
-func ConfigureHostsfile() {
+// ConfigureProjectHostsfile ...
+func ConfigureProjectHostsfile() {
 	pn := conf.GetConfig().Tokaido.Project.Name
-	err := hostsfile.AddEntry(pn + "." + constants.ProxyDomain)
-	if err != nil {
-		fmt.Println("There was an issue updating your hostsfile. Your hostsfile can be amended manually in order to enable this feature. See https://tokaido.io/docs/config/#updating-your-hostsfile for more information.")
-		fmt.Println(err)
-	}
+	ConfigureHostsfile(pn + "." + constants.ProxyDomain)
 }
 
-// ConfigureNginx ...
-func ConfigureNginx() {
-	hp := docker.LocalPort("haproxy", "8443")
-	if hp == "" {
+// ConfigureProjectNginx ...
+func ConfigureProjectNginx() {
+	h, err := docker.GetContainerIP("haproxy")
+	if err != nil {
+		fmt.Printf("%s. Skipping HTTPS proxy setup...\n", err)
+		return
+	}
+
+	if h == "" {
 		fmt.Println("The haproxy container doesn't appear to be running. Skipping HTTPS proxy setup...")
 		return
 	}
 
-	RebuildNginxConfigFile(hp)
-	RestartContainer(proxy)
+	pp := constants.HTTPSProtocol + h + ":" + constants.HaproxyInternalPort
+
+	pn := conf.GetConfig().Tokaido.Project.Name
+	do := pn + `.` + constants.ProxyDomain
+
+	nc := GenerateNginxConf(do, pp)
+
+	np := filepath.Join(getProxyClientConfdDir(), pn+".conf")
+	fs.Replace(np, nc)
 }

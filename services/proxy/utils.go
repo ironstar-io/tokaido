@@ -36,6 +36,11 @@ func getProxyClientConfdDir() string {
 	return filepath.Join(getProxyClientDir(), "conf.d")
 }
 
+// `~/.tok/proxy/client/.env.production`
+func getProxyClientGatsbyEnv() string {
+	return filepath.Join(getProxyClientDir(), ".env.production")
+}
+
 // `~/.tok/proxy/client`
 func getProxyClientDir() string {
 	return filepath.Join(getProxyDir(), "client")

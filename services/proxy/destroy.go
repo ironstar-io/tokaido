@@ -7,21 +7,22 @@ import (
 	"github.com/ironstar-io/tokaido/system/hostsfile"
 
 	"fmt"
-	"os"
 	"path/filepath"
 )
 
 // DestroyProject ...
 func DestroyProject() {
-	var _, err = os.Stat(getComposePath())
-
-	if !os.IsNotExist(err) {
-		DockerComposeDown()
+	if fs.CheckExists(getComposePath()) == true {
 		RemoveProjectFromDockerCompose()
 	}
 
 	RemoveNginxConf()
 	RemoveFromHostsfile()
+
+	DetachFromGatsbyEnvFile()
+
+	RestartContainer("yamanote")
+	RestartContainer("proxy")
 }
 
 // RemoveFromHostsfile ...
