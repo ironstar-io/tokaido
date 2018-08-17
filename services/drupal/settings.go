@@ -183,12 +183,11 @@ func createSettingsTok() {
 
 func allowBuildSettings() bool {
 	confirmation := utils.ConfirmationPrompt(`
-Tokaido can now create database connection settings for your site.
-Should Tokaido add the file `+settingsTokPath()+`
-and reference it from 'settings.php'?
+Tokaido can automatically add database connection settings to your Drupal site.  
 
-If you prefer not to do this automatically, we'll show you database connection
-settings so that you can configure this manually.`, "y")
+If you prefer to make these changes yourself, choose no and we'll show you the database connection settings you'll need.
+
+Let Tokaido automatically configure your database connection settings?`, "y")
 
 	if confirmation == false {
 		fmt.Println(`
