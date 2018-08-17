@@ -49,7 +49,7 @@ type Services struct {
 		Ports       []string `yaml:"ports,omitempty"`
 		Entrypoint  []string `yaml:"entrypoint,omitempty"`
 		User        string   `yaml:"user,omitempty"`
-		Cmd         string   `yaml:"cmd,omitempty"`
+		Command     string   `yaml:"command,omitempty"`
 		Volumesfrom []string `yaml:"volumes_from,omitempty"`
 		Dependson   []string `yaml:"depends_on,omitempty"`
 		Environment []string `yaml:"environment,omitempty"`
@@ -61,7 +61,7 @@ type Services struct {
 		Ports       []string          `yaml:"ports,omitempty"`
 		Entrypoint  []string          `yaml:"entrypoint,omitempty"`
 		User        string            `yaml:"user,omitempty"`
-		Cmd         string            `yaml:"cmd,omitempty"`
+		Command     string            `yaml:"command,omitempty"`
 		Volumesfrom []string          `yaml:"volumes_from,omitempty"`
 		Dependson   []string          `yaml:"depends_on,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`
@@ -73,7 +73,7 @@ type Services struct {
 		Ports       []string          `yaml:"ports,omitempty"`
 		Entrypoint  []string          `yaml:"entrypoint,omitempty"`
 		User        string            `yaml:"user,omitempty"`
-		Cmd         string            `yaml:"cmd,omitempty"`
+		Command     string            `yaml:"command,omitempty"`
 		Volumesfrom []string          `yaml:"volumes_from,omitempty"`
 		Dependson   []string          `yaml:"depends_on,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`
@@ -84,7 +84,7 @@ type Services struct {
 		Ports       []string          `yaml:"ports,omitempty"`
 		Entrypoint  []string          `yaml:"entrypoint,omitempty"`
 		User        string            `yaml:"user,omitempty"`
-		Cmd         string            `yaml:"cmd,omitempty"`
+		Command     string            `yaml:"command,omitempty"`
 		Volumesfrom []string          `yaml:"volumes_from,omitempty"`
 		Dependson   []string          `yaml:"depends_on,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`
@@ -95,7 +95,7 @@ type Services struct {
 		Ports       []string          `yaml:"ports,omitempty"`
 		Entrypoint  []string          `yaml:"entrypoint,omitempty"`
 		User        string            `yaml:"user,omitempty"`
-		Cmd         string            `yaml:"cmd,omitempty"`
+		Command     string            `yaml:"command,omitempty"`
 		Volumesfrom []string          `yaml:"volumes_from,omitempty"`
 		Dependson   []string          `yaml:"depends_on,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`
@@ -106,7 +106,7 @@ type Services struct {
 		Ports       []string          `yaml:"ports,omitempty"`
 		Entrypoint  []string          `yaml:"entrypoint,omitempty"`
 		User        string            `yaml:"user,omitempty"`
-		Cmd         string            `yaml:"cmd,omitempty"`
+		Command     string            `yaml:"command,omitempty"`
 		Volumesfrom []string          `yaml:"volumes_from,omitempty"`
 		Workingdir  string            `yaml:"working_dir,omitempty"`
 		Dependson   []string          `yaml:"depends_on,omitempty"`
@@ -119,7 +119,7 @@ type Services struct {
 		Ports       []string          `yaml:"ports,omitempty"`
 		Entrypoint  []string          `yaml:"entrypoint,omitempty"`
 		User        string            `yaml:"user,omitempty"`
-		Cmd         string            `yaml:"cmd,omitempty"`
+		Command     string            `yaml:"command,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`
 	} `yaml:"memcache,omitempty"`
 	Mysql struct {
@@ -128,7 +128,7 @@ type Services struct {
 		Ports       []string          `yaml:"ports,omitempty"`
 		Entrypoint  []string          `yaml:"entrypoint,omitempty"`
 		User        string            `yaml:"user,omitempty"`
-		Cmd         string            `yaml:"cmd,omitempty"`
+		Command     string            `yaml:"command,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`
 	} `yaml:"mysql,omitempty"`
 	Drush struct {
@@ -137,7 +137,7 @@ type Services struct {
 		Ports       []string          `yaml:"ports,omitempty"`
 		Entrypoint  []string          `yaml:"entrypoint,omitempty"`
 		User        string            `yaml:"user,omitempty"`
-		Cmd         string            `yaml:"cmd,omitempty"`
+		Command     string            `yaml:"command,omitempty"`
 		Workingdir  string            `yaml:"working_dir,omitempty"`
 		Volumesfrom []string          `yaml:"volumes_from,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`
@@ -149,7 +149,7 @@ type Services struct {
 		Ports       []string          `yaml:"ports,omitempty"`
 		Entrypoint  []string          `yaml:"entrypoint,omitempty"`
 		User        string            `yaml:"user,omitempty"`
-		Cmd         string            `yaml:"cmd,omitempty"`
+		Command     string            `yaml:"command,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`
 	} `yaml:"solr,omitempty"`
 	Redis struct {
@@ -159,7 +159,7 @@ type Services struct {
 		Ports       []string          `yaml:"ports,omitempty"`
 		Entrypoint  []string          `yaml:"entrypoint,omitempty"`
 		User        string            `yaml:"user,omitempty"`
-		Cmd         string            `yaml:"cmd,omitempty"`
+		Command     string            `yaml:"command,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`
 	} `yaml:"redis,omitempty"`
 	Mailhog struct {
@@ -169,7 +169,7 @@ type Services struct {
 		Ports       []string          `yaml:"ports,omitempty"`
 		Entrypoint  []string          `yaml:"entrypoint,omitempty"`
 		User        string            `yaml:"user,omitempty"`
-		Cmd         string            `yaml:"cmd,omitempty"`
+		Command     string            `yaml:"command,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`
 	} `yaml:"mailhog,omitempty"`
 	Adminer struct {
@@ -179,7 +179,7 @@ type Services struct {
 		Ports       []string          `yaml:"ports,omitempty"`
 		Entrypoint  []string          `yaml:"entrypoint,omitempty"`
 		User        string            `yaml:"user,omitempty"`
-		Cmd         string            `yaml:"cmd,omitempty"`
+		Command     string            `yaml:"command,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`
 	} `yaml:"adminer,omitempty"`
 	Kishu struct {

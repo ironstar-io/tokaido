@@ -169,6 +169,7 @@ services:
       - syslog
     ports:
       - "3306"
+    command: --max_allowed_packet=67108864
     environment:
       MYSQL_DATABASE: tokaido
       MYSQL_USER: tokaido
