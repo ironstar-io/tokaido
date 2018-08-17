@@ -11,3 +11,6 @@
 - 'Open' can now be used to open secondary services like mailhog, adminer (eg `tok open adminer`)
 - 'ports' now dynamically returns ports only for services which are enabled
 - Add dependency checks for Linux
+- MySQL max_allowed_packet is now set to 64MB by default. 
+- Fixed a bug with Compose file used 'cmd' instead of 'command' parameters. 
+
