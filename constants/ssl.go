@@ -1,5 +1,20 @@
 package constants
 
+// CommonName ...
+const CommonName = "tokaido.local"
+
+// TopLevelHost ...
+const TopLevelHost = "tokaido.local"
+
+// WildcardHost ...
+const WildcardHost = "*." + TopLevelHost
+
+// KeyAlgorithm ...
+const KeyAlgorithm = "rsa"
+
+// KeySize ...
+const KeySize = 2048
+
 // PkixOrganization ...
 const PkixOrganization = "Tokaido"
 
@@ -10,7 +25,7 @@ const PkixLocality = "Shin-Osaka"
 const PkixProvince = "Osaka"
 
 // PkixCountry ...
-const PkixCountry = "Japan"
+const PkixCountry = "JP"
 
 // PkixOrganizationalUnit ...
 const PkixOrganizationalUnit = "Tokaido Local Development Environment"

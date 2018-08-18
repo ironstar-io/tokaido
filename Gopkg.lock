@@ -79,12 +79,6 @@
   revision = "720a0952cc2ac777afc295d9861263e2a4cf96a1"
 
 [[projects]]
-  name = "github.com/lextoumbourou/goodhosts"
-  packages = ["."]
-  revision = "f9508a5690d9f48bfe5449d967cee37434591a29"
-  version = "v2.1.0"
-
-[[projects]]
   branch = "master"
   name = "github.com/lunixbochs/vtclean"
   packages = ["."]
@@ -323,6 +317,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "be8901993af35a0f21ecb6f1946a2a6970120bc7fa66905baa9fd8df7d9a7c7e"
+  inputs-digest = "37e227241f92b0ea91d8a7fd366a66f32d55a2ab012e9298eec1bd115e44222a"
   solver-name = "gps-cdcl"
   solver-version = 1
