@@ -4,6 +4,7 @@ import (
 	"github.com/ironstar-io/tokaido/constants"
 	"github.com/ironstar-io/tokaido/system/fs"
 
+	"fmt"
 	"path/filepath"
 
 	"github.com/cloudflare/cfssl/cli"
@@ -34,19 +35,20 @@ func GetCertificateGroupPath(certPath, filename string) CertificateGroupPath {
 }
 
 // Configure ...
-func Configure(certPath string) error {
-
+func Configure(certPath string) {
 	if err := FindOrCreateCA(certPath); err != nil {
-		return err
+		fmt.Printf("There was an issue creating a certificate authority: %s", err)
+		fmt.Println("Skipping local HTTPS setup...")
+		return
 	}
 
 	if err := FindOrCreateClientCert(certPath); err != nil {
-		return err
+		fmt.Printf("There was an issue creating client certificate: %s", err)
+		fmt.Println("Skipping local HTTPS setup...")
+		return
 	}
 
 	ConfigureTrustedCerts(filepath.Join(certPath, "proxy_ca.pem"))
-
-	return nil
 }
 
 // FindOrCreateClientCert ...
