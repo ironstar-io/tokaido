@@ -15,7 +15,7 @@ import (
 )
 
 // GenerateCertificate ...
-func GenerateCertificate(c cli.Config) (CertificateGroup, error) {
+func GenerateCertificate(c cli.Config) (CertificateGroupBody, error) {
 	req := csr.CertificateRequest{
 		KeyRequest: &csr.BasicKeyRequest{A: constants.KeyAlgorithm, S: constants.KeySize},
 		CN:         constants.CommonName,
@@ -29,14 +29,12 @@ func GenerateCertificate(c cli.Config) (CertificateGroup, error) {
 		Hosts: []string{constants.WildcardHost, constants.TopLevelHost},
 	}
 
-	c.Profile = "{\"tokaido\":{\"usages\":[\"signing\",\"key encipherment\",\"server auth\",\"client auth\"],\"expiry\":\"87600h\"}}"
-
 	if c.CAFile == "" {
-		return CertificateGroup{}, errors.New("CAFile property must be supplied")
+		return CertificateGroupBody{}, errors.New("CAFile property must be supplied")
 	}
 
 	if c.CAKeyFile == "" {
-		return CertificateGroup{}, errors.New("CAKeyFile property must be supplied")
+		return CertificateGroupBody{}, errors.New("CAKeyFile property must be supplied")
 	}
 
 	var err error
@@ -44,12 +42,12 @@ func GenerateCertificate(c cli.Config) (CertificateGroup, error) {
 	g := &csr.Generator{Validator: genkey.Validator}
 	csrBytes, key, err = g.ProcessRequest(&req)
 	if err != nil {
-		return CertificateGroup{}, err
+		return CertificateGroupBody{}, err
 	}
 
 	s, err := sign.SignerFromConfig(c)
 	if err != nil {
-		return CertificateGroup{}, err
+		return CertificateGroupBody{}, err
 	}
 
 	var cert []byte
@@ -62,7 +60,7 @@ func GenerateCertificate(c cli.Config) (CertificateGroup, error) {
 
 	cert, err = s.Sign(signReq)
 	if err != nil {
-		return CertificateGroup{}, err
+		return CertificateGroupBody{}, err
 	}
 
 	// This follows the Baseline Requirements for the Issuance and
@@ -77,7 +75,7 @@ func GenerateCertificate(c cli.Config) (CertificateGroup, error) {
 		log.Warning(generator.CSRNoHostMessage)
 	}
 
-	return CertificateGroup{
+	return CertificateGroupBody{
 		CertificateRequest: csrBytes,
 		Certificate:        cert,
 		Key:                key,

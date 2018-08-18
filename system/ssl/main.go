@@ -1,66 +1,131 @@
 package ssl
 
 import (
-	// "github.com/ironstar-io/tokaido/constants"
+	"github.com/ironstar-io/tokaido/constants"
 	"github.com/ironstar-io/tokaido/system/fs"
 
-	// "log"
 	"path/filepath"
 
 	"github.com/cloudflare/cfssl/cli"
+	"github.com/cloudflare/cfssl/config"
 )
 
-// CertificateGroup ...
-type CertificateGroup struct {
+// CertificateGroupBody ...
+type CertificateGroupBody struct {
 	CertificateRequest []byte
 	Certificate        []byte
 	Key                []byte
 }
 
+// CertificateGroupPath ...
+type CertificateGroupPath struct {
+	CertificateRequest string
+	Certificate        string
+	Key                string
+}
+
+// GetCertificateGroupPath ...
+func GetCertificateGroupPath(certPath, filename string) CertificateGroupPath {
+	return CertificateGroupPath{
+		CertificateRequest: filepath.Join(certPath, filename+".csr"),
+		Certificate:        filepath.Join(certPath, filename+".pem"),
+		Key:                filepath.Join(certPath, filename+"-key.pem"),
+	}
+}
+
 // Configure ...
-func Configure(certPath string) {
+func Configure(certPath string) error {
 
-	FindOrCreateCA(certPath)
+	if err := FindOrCreateCA(certPath); err != nil {
+		return err
+	}
 
-	FindOrCreateClientCert(certPath)
-	// err = GenerateCerts(c, k, h)
-	// if err != nil {
-	// 	log.Fatal("Error: Unable to create https certs.")
-	// }
-	// }
+	if err := FindOrCreateClientCert(certPath); err != nil {
+		return err
+	}
 
-	// ConfigureTrustedCerts(c)
+	ConfigureTrustedCerts(filepath.Join(certPath, "proxy_ca.pem"))
+
+	return nil
 }
 
 // FindOrCreateClientCert ...
-func FindOrCreateClientCert(certPath string) {
-	// r := filepath.Join(certPath, "proxy_ca.csr")
-	c := filepath.Join(certPath, "proxy_ca.pem")
-	k := filepath.Join(certPath, "proxy_ca-key.pem")
-	cc, _ := GenerateCertificate(cli.Config{CAFile: c, CAKeyFile: k})
+func FindOrCreateClientCert(certPath string) error {
+	ca := GetCertificateGroupPath(certPath, constants.CAFilename)
+	cp := GetCertificateGroupPath(certPath, constants.ClientCertFilename)
+	if CheckCertsExist(cp) == true {
+		return nil
+	}
 
-	r2 := filepath.Join(certPath, "tokaido.csr")
-	c2 := filepath.Join(certPath, "tokaido.pem")
-	k2 := filepath.Join(certPath, "tokaido-key.pem")
+	cc, err := GenerateCertificate(cli.Config{
+		CAFile:    ca.Certificate,
+		CAKeyFile: ca.Key,
+		Profile:   constants.SigningProfileName,
+		CFG:       buildCFG(),
+	})
+	if err != nil {
+		return err
+	}
 
-	fs.TouchByteArray(r2, cc.CertificateRequest)
-	fs.TouchByteArray(c2, cc.Certificate)
-	fs.TouchByteArray(k2, cc.Key)
+	fs.TouchByteArray(cp.CertificateRequest, cc.CertificateRequest)
+	fs.TouchByteArray(cp.Certificate, cc.Certificate)
+	fs.TouchByteArray(cp.Key, cc.Key)
+
+	return nil
 }
 
 // FindOrCreateCA ...
-func FindOrCreateCA(certPath string) CertificateGroup {
-	r := filepath.Join(certPath, "proxy_ca.csr")
-	c := filepath.Join(certPath, "proxy_ca.pem")
-	k := filepath.Join(certPath, "proxy_ca-key.pem")
+func FindOrCreateCA(certPath string) error {
+	cp := GetCertificateGroupPath(certPath, constants.CAFilename)
+	if CheckCertsExist(cp) == true {
+		return nil
+	}
 
-	ca, _ := GenerateCA(cli.Config{})
+	ca, err := GenerateCA(cli.Config{})
+	if err != nil {
+		return err
+	}
 
-	fs.TouchByteArray(r, ca.CertificateRequest)
-	fs.TouchByteArray(c, ca.Certificate)
-	fs.TouchByteArray(k, ca.Key)
+	fs.TouchByteArray(cp.CertificateRequest, ca.CertificateRequest)
+	fs.TouchByteArray(cp.Certificate, ca.Certificate)
+	fs.TouchByteArray(cp.Key, ca.Key)
 
-	return ca
+	return nil
+}
+
+func buildCFG() *config.Config {
+	u := []string{"signing", "key encipherment", "server auth", "client auth"}
+	return &config.Config{
+		Signing: &config.Signing{
+			Default: &config.SigningProfile{
+				Expiry:       10 * constants.OneYear,
+				ExpiryString: constants.TenYearExpiryString,
+				Usage:        u,
+			},
+			Profiles: map[string]*config.SigningProfile{constants.SigningProfileName: {
+				Expiry:       10 * constants.OneYear,
+				ExpiryString: constants.TenYearExpiryString,
+				Usage:        u,
+			}},
+		},
+	}
+}
+
+// CheckCertsExist ...
+func CheckCertsExist(paths CertificateGroupPath) bool {
+	if fs.CheckExists(paths.CertificateRequest) == false {
+		return false
+	}
+
+	if fs.CheckExists(paths.Certificate) == false {
+		return false
+	}
+
+	if fs.CheckExists(paths.Key) == false {
+		return false
+	}
+
+	return true
 }
 
 // RemoveTrustedCert ...
