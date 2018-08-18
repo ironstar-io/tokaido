@@ -69,6 +69,7 @@ func Init() {
 	console.SpinPersist(wo, "🚅", "Tokaido started your containers")
 
 	if c.System.Syncsvc.Enabled && c.System.Proxy.Enabled {
+		console.Println("\n🔐  Setting up HTTPS for your local development environment", "")
 		proxy.Setup()
 	}
 }
