@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"github.com/ironstar-io/tokaido/system/fs"
+	"github.com/ironstar-io/tokaido/conf"
 
 	"os/exec"
 	"strings"
@@ -12,7 +12,7 @@ func CommandSubstitution(name string, args ...string) string {
 	DebugCmd(name + " " + strings.Join(args, " "))
 
 	cmd := exec.Command(name, args...)
-	cmd.Dir = fs.WorkDir()
+	cmd.Dir = conf.GetConfig().Tokaido.Project.Path
 	stdoutStderr, _ := cmd.CombinedOutput()
 
 	DebugOutput(stdoutStderr)
@@ -25,7 +25,7 @@ func CommandSubSplitOutput(name string, args ...string) (string, error) {
 	DebugCmd(name + " " + strings.Join(args, " "))
 
 	cmd := exec.Command(name, args...)
-	cmd.Dir = fs.WorkDir()
+	cmd.Dir = conf.GetConfig().Tokaido.Project.Path
 	stdoutStderr, err := cmd.CombinedOutput()
 	if err != nil {
 		DebugErrOutput(err)

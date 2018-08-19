@@ -3,15 +3,11 @@ package xdebug
 import (
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/services/docker"
-	"github.com/ironstar-io/tokaido/system/fs"
 
 	"log"
-	"path/filepath"
 
 	"gopkg.in/yaml.v2"
 )
-
-var tokComposePath = filepath.Join(fs.WorkDir(), "/docker-compose.tok.yml")
 
 // Configure - Amend docker-compose.tok.yml to be compatible with xdebug
 func Configure() {

@@ -1,50 +1,57 @@
 package fs
 
 import (
+	"github.com/ironstar-io/tokaido/constants"
+
+	// "fmt"
+	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
+	// "strings"
 )
 
 // ProjectRoot - Find the root directory path for the project
 func ProjectRoot() string {
-
-	dir, err := os.Getwd()
+	wd, err := os.Getwd()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	return dir
+	if IsProjectRoot(wd) == true {
+		return wd
+	}
+
+	return ScanUp(wd)
 }
 
-func CheckDir(path string) string {
+// IsProjectRoot ...
+func IsProjectRoot(path string) bool {
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	for _, file := range files {
-		fmt.Println(file.Name())
+	for _, f := range files {
+		if f.Name() == constants.GitDirectory || f.Name() == constants.DockerComposeTokFile {
+			return true
+		}
 	}
 
-	files, err := ioutil.ReadDir(".")
-	if err != nil {
-		log.Fatal(err)
+	return false
+}
+
+// ScanUp ...
+func ScanUp(path string) string {
+	if path == "/" {
+		log.Fatal("Could not find the root directory of your project. Are you running Tokaido from the right context? Exiting...")
 	}
 
-	for _, file := range files {
-		fmt.Println(file.Name())
+	sd := filepath.Dir(path)
+
+	if IsProjectRoot(sd) == true {
+		return sd
 	}
 
-	dirname, err := os.Getwd()
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Printf("Current directory: %v\n", dirname)
-	dir, err := os.Open(filepath.Join(dirname, "../../../../../../"))
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Printf("%v\n", dir.Name())
+	return ScanUp(sd)
 }

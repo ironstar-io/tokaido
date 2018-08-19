@@ -22,7 +22,6 @@ import (
 
 var sshPriv = filepath.Join(fs.HomeDir(), "/.ssh/tok_ssh.key")
 var sshPub = filepath.Join(fs.HomeDir(), "/.ssh/tok_ssh.pub")
-var tokDir = filepath.Join(fs.WorkDir(), "/.tok")
 
 // CheckKey ...
 func CheckKey() {
@@ -60,10 +59,12 @@ func GenerateKeys() {
 }
 
 func copyPub() {
-	fs.Mkdir(tokDir)
-	fs.Mkdir(filepath.Join(tokDir, "/local"))
+	td := filepath.Join(conf.GetConfig().Tokaido.Project.Path, "/.tok")
 
-	fs.Copy(sshPub, filepath.Join(tokDir, "/local/ssh_key.pub"))
+	fs.Mkdir(td)
+	fs.Mkdir(filepath.Join(td, "/local"))
+
+	fs.Copy(sshPub, filepath.Join(td, "/local/ssh_key.pub"))
 }
 
 func generateAndCopyPub() {

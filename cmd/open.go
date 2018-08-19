@@ -1,15 +1,9 @@
 package cmd
 
 import (
-	// "github.com/ironstar-io/tokaido/services/docker"
+	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/system"
 	"github.com/ironstar-io/tokaido/utils"
-
-	"fmt"
-	"io/ioutil"
-	"log"
-	"os"
-	"path/filepath"
 
 	"github.com/spf13/cobra"
 )
@@ -22,7 +16,7 @@ var OpenCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		utils.CheckCmdHard("docker-compose")
 
-		// docker.HardCheckTokCompose()
+		docker.HardCheckTokCompose()
 
 		system.OpenSite(args)
 	},

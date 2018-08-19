@@ -1,16 +1,15 @@
 package docker
 
 import (
-	"strings"
-
+	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/system/console"
-	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/utils"
 
 	"bufio"
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 // ComposeStdout - Convenience method for docker-compose shell commands
@@ -28,7 +27,7 @@ func ComposeResult(args ...string) string {
 }
 
 func composeArgs(args ...string) []string {
-	composeFile := []string{"-f", filepath.Join(fs.WorkDir(), "/docker-compose.tok.yml")}
+	composeFile := []string{"-f", filepath.Join(conf.GetConfig().Tokaido.Project.Path, "/docker-compose.tok.yml")}
 
 	return append(composeFile, args...)
 }

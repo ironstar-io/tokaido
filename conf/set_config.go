@@ -1,10 +1,10 @@
 package conf
 
 import (
+	"fmt"
 	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/system/hash"
-	"fmt"
 
 	"io/ioutil"
 	"log"
@@ -15,8 +15,6 @@ import (
 	"github.com/spf13/viper"
 	"gopkg.in/yaml.v2"
 )
-
-var configPath = filepath.Join(fs.WorkDir(), "/.tok/config.yml")
 
 // SetConfigValueByArgs ...
 func SetConfigValueByArgs(args []string) {
@@ -100,13 +98,15 @@ func getConfigPath() string {
 		return vc
 	}
 
-	var _, errf = os.Stat(configPath)
+	cp := filepath.Join(GetConfig().Tokaido.Project.Path, "/.tok/config.yml")
+
+	var _, errf = os.Stat(cp)
 	if os.IsNotExist(errf) {
 		console.Println(`🏯  Generating a new .tok/config.yml file`, "")
-		fs.TouchEmpty(configPath)
+		fs.TouchEmpty(cp)
 	}
 
-	return configPath
+	return cp
 }
 
 func argsToYaml(args []string) string {

@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"github.com/ironstar-io/tokaido/system/fs"
+	"github.com/ironstar-io/tokaido/conf"
 
 	"os/exec"
 	"strings"
@@ -12,7 +12,7 @@ func BashStringCmd(cmdStr string) string {
 	DebugCmd("bash -c " + cmdStr)
 
 	cmd := exec.Command("bash", "-c", cmdStr)
-	cmd.Dir = fs.WorkDir()
+	cmd.Dir = conf.GetConfig().Tokaido.Project.Path
 	stdoutStderr, _ := cmd.CombinedOutput()
 
 	DebugOutput(stdoutStderr)
@@ -25,7 +25,7 @@ func BashStringSplitOutput(cmdStr string) (string, error) {
 	DebugCmd("bash -c " + cmdStr)
 
 	cmd := exec.Command("bash", "-c", cmdStr)
-	cmd.Dir = fs.WorkDir()
+	cmd.Dir = conf.GetConfig().Tokaido.Project.Path
 	stdoutStderr, err := cmd.CombinedOutput()
 	if err != nil {
 		DebugErrOutput(err)

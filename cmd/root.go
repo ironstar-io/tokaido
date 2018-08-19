@@ -81,14 +81,16 @@ func initConfig() {
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 	viper.AutomaticEnv()
 
+	pr := fs.ProjectRoot()
+
 	viper.SetDefault("Tokaido.Customcompose", viper.GetBool("customCompose"))
 	viper.SetDefault("Tokaido.Debug", viper.GetBool("debug"))
 	viper.SetDefault("Tokaido.Force", viper.GetBool("force"))
 	viper.SetDefault("Tokaido.Betacontainers", false)
 	viper.SetDefault("Tokaido.Dependencychecks", true)
 	viper.SetDefault("Tokaido.Enableemoji", emojiDefaults())
-	viper.SetDefault("Tokaido.Project.Name", fs.Basename())
-	viper.SetDefault("Tokaido.Project.Path", fs.WorkDir())
+	viper.SetDefault("Tokaido.Project.Name", filepath.Base(pr))
+	viper.SetDefault("Tokaido.Project.Path", pr)
 	viper.SetDefault("System.Syncsvc.Enabled", true)
 	viper.SetDefault("System.Proxy.Enabled", true)
 
@@ -108,8 +110,8 @@ func initConfig() {
 		viper.SetConfigFile(configFile)
 	} else {
 		viper.SetConfigName("config")
-		viper.AddConfigPath(filepath.Join(fs.WorkDir(), ".tok", "local"))
-		viper.AddConfigPath(filepath.Join(fs.WorkDir(), ".tok"))
+		viper.AddConfigPath(filepath.Join(pr, ".tok", "local"))
+		viper.AddConfigPath(filepath.Join(pr, ".tok"))
 	}
 
 	viper.ReadInConfig()
@@ -130,7 +132,7 @@ func emojiDefaults() bool {
 }
 
 func createDotTok() {
-	d := filepath.Join(fs.WorkDir(), ".tok")
+	d := filepath.Join(fs.ProjectRoot(), ".tok")
 	if fs.CheckExists(d) == false {
 		err := os.MkdirAll(d, os.ModePerm)
 		if err != nil {
