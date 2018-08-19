@@ -5,13 +5,13 @@ import (
 
 	"errors"
 
-	"github.com/cloudflare/cfssl/api/generator"
-	"github.com/cloudflare/cfssl/cli"
-	"github.com/cloudflare/cfssl/cli/genkey"
-	"github.com/cloudflare/cfssl/cli/sign"
-	"github.com/cloudflare/cfssl/csr"
-	"github.com/cloudflare/cfssl/log"
-	"github.com/cloudflare/cfssl/signer"
+	"github.com/ironstar-io/tokaido/system/ssl/cfssl/api/generator"
+	"github.com/ironstar-io/tokaido/system/ssl/cfssl/cli"
+	"github.com/ironstar-io/tokaido/system/ssl/cfssl/cli/genkey"
+	"github.com/ironstar-io/tokaido/system/ssl/cfssl/cli/sign"
+	"github.com/ironstar-io/tokaido/system/ssl/cfssl/csr"
+	"github.com/ironstar-io/tokaido/system/ssl/cfssl/log"
+	"github.com/ironstar-io/tokaido/system/ssl/cfssl/signer"
 )
 
 // GenerateCertificate ...

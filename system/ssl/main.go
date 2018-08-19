@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/cloudflare/cfssl/cli"
-	"github.com/cloudflare/cfssl/config"
+	"github.com/ironstar-io/tokaido/system/ssl/cfssl/cli"
+	"github.com/ironstar-io/tokaido/system/ssl/cfssl/config"
 )
 
 // CertificateGroupBody ...

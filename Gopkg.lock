@@ -41,6 +41,33 @@
   revision = "7e0b2a2398989a5d220eebac5742d45422ba7de8"
 
 [[projects]]
+  name = "github.com/golang/protobuf"
+  packages = [
+    "proto",
+    "ptypes",
+    "ptypes/any",
+    "ptypes/duration",
+    "ptypes/timestamp"
+  ]
+  revision = "b4deda0973fb4c70b50d226b1af49f3da59f5265"
+  version = "v1.1.0"
+
+[[projects]]
+  name = "github.com/google/certificate-transparency-go"
+  packages = [
+    ".",
+    "asn1",
+    "client",
+    "client/configpb",
+    "jsonclient",
+    "tls",
+    "x509",
+    "x509/pkix"
+  ]
+  revision = "37a384cd035e722ea46e55029093e26687138edf"
+  version = "v1.0.20"
+
+[[projects]]
   branch = "master"
   name = "github.com/hashicorp/hcl"
   packages = [
@@ -251,10 +278,15 @@
   branch = "master"
   name = "golang.org/x/crypto"
   packages = [
+    "cryptobyte",
+    "cryptobyte/asn1",
     "curve25519",
     "ed25519",
     "ed25519/internal/edwards25519",
     "internal/chacha20",
+    "ocsp",
+    "pkcs12",
+    "pkcs12/internal/rc2",
     "poly1305",
     "ssh",
     "ssh/terminal"
@@ -265,6 +297,8 @@
   branch = "master"
   name = "golang.org/x/net"
   packages = [
+    "context",
+    "context/ctxhttp",
     "html",
     "html/atom",
     "html/charset"
@@ -317,6 +351,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "37e227241f92b0ea91d8a7fd366a66f32d55a2ab012e9298eec1bd115e44222a"
+  inputs-digest = "a895de8be2e4d8c77ab9676792bc2415deb9c45eed8b42dc8ebb5ae5c6c8ff18"
   solver-name = "gps-cdcl"
   solver-version = 1
