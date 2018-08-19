@@ -8,10 +8,19 @@ import (
 
 const localhost = "127.0.0.1"
 
-func confirmAmend() bool {
-	c := utils.ConfirmationPrompt("Would you like Tokaido to automatically update your hostsfile? You may be prompted for elevated access.", "n")
+func confirmAmend(hostname string) bool {
+	c := utils.ConfirmationPrompt("Would you like Tokaido to automatically update your hostsfile, adding the host '"+hostname+"'? You may be prompted for elevated access.", "y")
 	if c == false {
 		fmt.Println(`Your hostsfile can be amended manually in order to enable this feature. See https://tokaido.io/docs/config/#updating-your-hostsfile for more information.`)
+	}
+
+	return c
+}
+
+func confirmRemove(hostname string) bool {
+	c := utils.ConfirmationPrompt("Would you like Tokaido to automatically update your hostsfile, removing the host '"+hostname+"'? You may be prompted for elevated access.", "n")
+	if c == false {
+		fmt.Println(`Your hostsfile can be amended manually in order to remove this hostname. See https://tokaido.io/docs/config/#updating-your-hostsfile for more information.`)
 	}
 
 	return c
@@ -25,7 +34,7 @@ func AddEntry(hostname string) error {
 	}
 
 	if !hosts.Has(localhost, hostname) {
-		if confirmAmend() == false {
+		if confirmAmend(hostname) == false {
 			return nil
 		}
 
@@ -57,7 +66,7 @@ func RemoveEntry(hostname string) error {
 	}
 
 	if hosts.Has(localhost, hostname) {
-		if confirmAmend() == false {
+		if confirmRemove(hostname) == false {
 			return nil
 		}
 
