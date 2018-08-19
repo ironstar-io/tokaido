@@ -2,6 +2,15 @@
 
 
 [[projects]]
+  branch = "master"
+  name = "github.com/GeertJohan/go.rice"
+  packages = [
+    ".",
+    "embedded"
+  ]
+  revision = "c02ca9a983da5807ddf7d796784928f5be4afd09"
+
+[[projects]]
   name = "github.com/blang/semver"
   packages = ["."]
   revision = "2ee87856327ba09384cabd113bc6b5d174e9ec0f"
@@ -12,6 +21,12 @@
   name = "github.com/chzyer/readline"
   packages = ["."]
   revision = "2972be24d48e78746da79ba8e24e8b488c9880de"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/daaku/go.zipexe"
+  packages = ["."]
+  revision = "a5fe2436ffcb3236e175e5149162b41cd28bd27d"
 
 [[projects]]
   name = "github.com/davecgh/go-spew"
@@ -39,6 +54,12 @@
     "spin"
   ]
   revision = "7e0b2a2398989a5d220eebac5742d45422ba7de8"
+
+[[projects]]
+  name = "github.com/go-sql-driver/mysql"
+  packages = ["."]
+  revision = "d523deb1b23d913de5bdada721a6071e71283618"
+  version = "v1.4.0"
 
 [[projects]]
   name = "github.com/golang/protobuf"
@@ -91,6 +112,21 @@
   version = "v1.0"
 
 [[projects]]
+  name = "github.com/jmhodges/clock"
+  packages = ["."]
+  revision = "880ee4c335489bc78d01e4d0a254ae880734bc15"
+  version = "v1.1"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/jmoiron/sqlx"
+  packages = [
+    ".",
+    "reflectx"
+  ]
+  revision = "0dae4fefe7c0e190f7b5a78dac28a1c82cc8d849"
+
+[[projects]]
   name = "github.com/judwhite/go-svc"
   packages = ["svc"]
   revision = "63c12402f579f0bdf022653c821a1aa5d7544f01"
@@ -104,6 +140,33 @@
     "tabwriter"
   ]
   revision = "720a0952cc2ac777afc295d9861263e2a4cf96a1"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/kardianos/osext"
+  packages = ["."]
+  revision = "ae77be60afb1dcacde03767a8c37337fad28ac14"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/kisielk/sqlstruct"
+  packages = ["."]
+  revision = "648daed35d49dac24a4bff253b190a80da3ab6a5"
+
+[[projects]]
+  name = "github.com/kisom/goutils"
+  packages = ["assert"]
+  revision = "d6c5360a068641fc799295411f429be80115bcfc"
+  version = "v1.1.0"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/lib/pq"
+  packages = [
+    ".",
+    "oid"
+  ]
+  revision = "90697d60dd844d5ef6ff15135d0203f65d2f53b8"
 
 [[projects]]
   branch = "master"
@@ -154,6 +217,12 @@
   packages = ["."]
   revision = "9e777a8366cce605130a531d2cd6363d07ad7317"
   version = "v0.0.2"
+
+[[projects]]
+  name = "github.com/mattn/go-sqlite3"
+  packages = ["."]
+  revision = "25ecb14adfc7543176f7d85291ec7dba82c6f7e4"
+  version = "v1.9.0"
 
 [[projects]]
   branch = "master"
@@ -343,6 +412,12 @@
   version = "v0.3.0"
 
 [[projects]]
+  name = "google.golang.org/appengine"
+  packages = ["cloudsql"]
+  revision = "b1f26356af11148e710935ed1ac8a7f5702c7612"
+  version = "v1.1.0"
+
+[[projects]]
   name = "gopkg.in/yaml.v2"
   packages = ["."]
   revision = "5420a8b6744d3b0345ab293f6fcba19c978f1183"
@@ -351,6 +426,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "a895de8be2e4d8c77ab9676792bc2415deb9c45eed8b42dc8ebb5ae5c6c8ff18"
+  inputs-digest = "379440f8deb0c253cb494d570c6a557e0324afcd714d8d9a9b729f28208dae7a"
   solver-name = "gps-cdcl"
   solver-version = 1

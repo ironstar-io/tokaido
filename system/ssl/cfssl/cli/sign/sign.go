@@ -6,28 +6,41 @@ import (
 	"errors"
 	"io/ioutil"
 
+	"github.com/ironstar-io/tokaido/system/ssl/cfssl/certdb/dbconf"
+	certsql "github.com/ironstar-io/tokaido/system/ssl/cfssl/certdb/sql"
 	"github.com/ironstar-io/tokaido/system/ssl/cfssl/cli"
 	"github.com/ironstar-io/tokaido/system/ssl/cfssl/config"
 	"github.com/ironstar-io/tokaido/system/ssl/cfssl/log"
 	"github.com/ironstar-io/tokaido/system/ssl/cfssl/signer"
 	"github.com/ironstar-io/tokaido/system/ssl/cfssl/signer/universal"
+
+	"github.com/jmoiron/sqlx"
 )
 
 // Usage text of 'cfssl sign'
 var signerUsageText = `cfssl sign -- signs a client cert with a host name by a given CA and CA key
+
 Usage of sign:
         cfssl sign -ca cert -ca-key key [mutual-tls-cert cert] [mutual-tls-key key] [-config config] [-profile profile] [-hostname hostname] [-db-config db-config] CSR [SUBJECT]
         cfssl sign -remote remote_host [mutual-tls-cert cert] [mutual-tls-key key] [-config config] [-profile profile] [-label label] [-hostname hostname] CSR [SUBJECT]
+
 Arguments:
         CSR:        PEM file for certificate request, use '-' for reading PEM from stdin.
+
 Note: CSR can also be supplied via flag values; flag value will take precedence over the argument.
+
 SUBJECT is an optional file containing subject information to use for the certificate instead of the subject information in the CSR.
+
 Flags:
 `
 
-// SignerFromConfig takes the Config and creates the appropriate
+// Flags of 'cfssl sign'
+var signerFlags = []string{"hostname", "csr", "ca", "ca-key", "config", "profile", "label", "remote",
+	"mutual-tls-cert", "mutual-tls-key", "db-config"}
+
+// SignerFromConfigAndDB takes the Config and creates the appropriate
 // signer.Signer object with a specified db
-func SignerFromConfig(c cli.Config) (signer.Signer, error) {
+func SignerFromConfigAndDB(c cli.Config, db *sqlx.DB) (signer.Signer, error) {
 	// If there is a config, use its signing policy. Otherwise create a default policy.
 	var policy *config.Signing
 	if c.CFG != nil {
@@ -71,7 +84,25 @@ func SignerFromConfig(c cli.Config) (signer.Signer, error) {
 		return nil, err
 	}
 
+	if db != nil {
+		dbAccessor := certsql.NewAccessor(db)
+		s.SetDBAccessor(dbAccessor)
+	}
+
 	return s, nil
+}
+
+// SignerFromConfig takes the Config and creates the appropriate
+// signer.Signer object
+func SignerFromConfig(c cli.Config) (s signer.Signer, err error) {
+	var db *sqlx.DB
+	if c.DBConfigFile != "" {
+		db, err = dbconf.DBFromConfig(c.DBConfigFile)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return SignerFromConfigAndDB(c, db)
 }
 
 // signerMain is the main CLI of signer functionality.
@@ -145,3 +176,6 @@ func signerMain(args []string, c cli.Config) (err error) {
 	cli.PrintCert(nil, csr, cert)
 	return
 }
+
+// Command assembles the definition of Command 'sign'
+var Command = &cli.Command{UsageText: signerUsageText, Flags: signerFlags, Main: signerMain}

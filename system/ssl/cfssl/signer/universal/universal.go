@@ -5,6 +5,7 @@ import (
 	"crypto/x509"
 	"net/http"
 
+	"github.com/ironstar-io/tokaido/system/ssl/cfssl/certdb"
 	"github.com/ironstar-io/tokaido/system/ssl/cfssl/config"
 	cferr "github.com/ironstar-io/tokaido/system/ssl/cfssl/errors"
 	"github.com/ironstar-io/tokaido/system/ssl/cfssl/info"
@@ -62,13 +63,10 @@ func newLocalSigner(root Root, policy *config.Signing) (s signer.Signer, err err
 	// signers.
 	var shouldProvide bool
 
-	// localSignerList is defined in the
-	// universal_signers*.go files. These activate
-	// and deactivate signers based on build
-	// flags; for example,
-	// universal_signers_pkcs11.go contains a list
-	// of valid signers when PKCS #11 is turned
-	// on.
+	// localSignerList is a list of signers defined
+	// here or in the universal_signers*.go files.
+	// These activate and deactivate signers based
+	// on build flags.
 	for _, possibleSigner := range localSignerList {
 		s, shouldProvide, err = possibleSigner(&root, policy)
 		if shouldProvide {
@@ -184,6 +182,16 @@ func (s *Signer) Info(req info.Req) (resp *info.Resp, err error) {
 	}
 	return s.local.Info(req)
 
+}
+
+// SetDBAccessor sets the signer's cert db accessor.
+func (s *Signer) SetDBAccessor(dba certdb.Accessor) {
+	s.local.SetDBAccessor(dba)
+}
+
+// GetDBAccessor returns the signer's cert db accessor.
+func (s *Signer) GetDBAccessor() certdb.Accessor {
+	return s.local.GetDBAccessor()
 }
 
 // SetReqModifier sets the function to call to modify the HTTP request prior to sending it

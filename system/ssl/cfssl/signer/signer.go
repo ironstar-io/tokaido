@@ -1,3 +1,4 @@
+// Package signer implements certificate signature functionality for CFSSL.
 package signer
 
 import (
@@ -15,6 +16,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ironstar-io/tokaido/system/ssl/cfssl/certdb"
 	"github.com/ironstar-io/tokaido/system/ssl/cfssl/config"
 	"github.com/ironstar-io/tokaido/system/ssl/cfssl/csr"
 	cferr "github.com/ironstar-io/tokaido/system/ssl/cfssl/errors"
@@ -62,6 +64,12 @@ type SignRequest struct {
 	// for canonicalization) as the value of the notAfter field of the
 	// certificate.
 	NotAfter time.Time
+	// If ReturnPrecert is true a certificate with the CT poison extension
+	// will be returned from the Signer instead of attempting to retrieve
+	// SCTs and populate the tbsCert with them itself. This precert can then
+	// be passed to SignFromPrecert with the SCTs in order to create a
+	// valid certificate.
+	ReturnPrecert bool
 }
 
 // appendIf appends to a if s is not an empty string.
@@ -102,6 +110,8 @@ func SplitHosts(hostList string) []string {
 type Signer interface {
 	Info(info.Req) (*info.Resp, error)
 	Policy() *config.Signing
+	SetDBAccessor(certdb.Accessor)
+	GetDBAccessor() certdb.Accessor
 	SetPolicy(*config.Signing)
 	SigAlgo() x509.SignatureAlgorithm
 	Sign(req SignRequest) (cert []byte, err error)

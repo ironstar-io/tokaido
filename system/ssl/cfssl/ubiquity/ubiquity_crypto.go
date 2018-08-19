@@ -6,9 +6,8 @@ import (
 	"crypto/elliptic"
 	"crypto/rsa"
 	"crypto/x509"
-	"math"
-
 	"github.com/ironstar-io/tokaido/system/ssl/cfssl/helpers"
+	"math"
 )
 
 // HashUbiquity represents a score for how ubiquitous a given hash

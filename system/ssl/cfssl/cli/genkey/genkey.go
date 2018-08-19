@@ -10,6 +10,19 @@ import (
 	"github.com/ironstar-io/tokaido/system/ssl/cfssl/initca"
 )
 
+var genkeyUsageText = `cfssl genkey -- generate a new key and CSR
+
+Usage of genkey:
+        cfssl genkey CSRJSON
+
+Arguments:
+        CSRJSON:    JSON file containing the request, use '-' for reading JSON from stdin
+
+Flags:
+`
+
+var genkeyFlags = []string{"initca", "config"}
+
 func genkeyMain(args []string, c cli.Config) (err error) {
 	csrFile, args, err := cli.PopFirstArgument(args)
 	if err != nil {
@@ -64,3 +77,6 @@ func genkeyMain(args []string, c cli.Config) (err error) {
 func Validator(req *csr.CertificateRequest) error {
 	return nil
 }
+
+// Command assembles the definition of Command 'genkey'
+var Command = &cli.Command{UsageText: genkeyUsageText, Flags: genkeyFlags, Main: genkeyMain}

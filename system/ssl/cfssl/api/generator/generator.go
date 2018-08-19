@@ -1,3 +1,4 @@
+// Package generator implements the HTTP handlers for certificate generation.
 package generator
 
 import (
@@ -287,6 +288,20 @@ func (cg *CertGeneratorHandler) Handle(w http.ResponseWriter, r *http.Request) e
 			"certificate_request": reqSum,
 			"certificate":         certSum,
 		},
+	}
+
+	if req.Bundle {
+		if cg.bundler == nil {
+			return api.SendResponseWithMessage(w, result, NoBundlerMessage,
+				errors.New(errors.PolicyError, errors.InvalidRequest).ErrorCode)
+		}
+
+		bundle, err := cg.bundler.BundleFromPEMorDER(certBytes, nil, bundler.Optimal, "")
+		if err != nil {
+			return err
+		}
+
+		result["bundle"] = bundle
 	}
 
 	if len(req.Request.Hosts) == 0 {

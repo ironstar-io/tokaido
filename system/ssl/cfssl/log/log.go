@@ -9,6 +9,8 @@ import (
 	"fmt"
 	"log"
 	"os"
+
+	"github.com/ironstar-io/tokaido/conf"
 )
 
 // The following constants represent logging levels in increasing levels of seriousness.
@@ -86,11 +88,15 @@ func print(l int, msg string) {
 }
 
 func outputf(l int, format string, v []interface{}) {
-	print(l, fmt.Sprintf(format, v...))
+	if conf.GetConfig().Tokaido.Debug == true {
+		print(l, fmt.Sprintf(format, v...))
+	}
 }
 
 func output(l int, v []interface{}) {
-	print(l, fmt.Sprint(v...))
+	if conf.GetConfig().Tokaido.Debug == true {
+		print(l, fmt.Sprint(v...))
+	}
 }
 
 // Fatalf logs a formatted message at the "fatal" level and then exits. The

@@ -63,12 +63,34 @@ type Bundler struct {
 	RootPool         *x509.CertPool
 	IntermediatePool *x509.CertPool
 	KnownIssuers     map[string]bool
+	opts             options
+}
+
+type options struct {
+	keyUsages []x509.ExtKeyUsage
+}
+
+var defaultOptions = options{
+	keyUsages: []x509.ExtKeyUsage{
+		x509.ExtKeyUsageAny,
+	},
+}
+
+// An Option sets options such as allowed key usages, etc.
+type Option func(*options)
+
+// WithKeyUsages lets you set which Extended Key Usage values are acceptable. By
+// default x509.ExtKeyUsageAny will be used.
+func WithKeyUsages(usages ...x509.ExtKeyUsage) Option {
+	return func(o *options) {
+		o.keyUsages = usages
+	}
 }
 
 // NewBundler creates a new Bundler from the files passed in; these
 // files should contain a list of valid root certificates and a list
 // of valid intermediate certificates, respectively.
-func NewBundler(caBundleFile, intBundleFile string) (*Bundler, error) {
+func NewBundler(caBundleFile, intBundleFile string, opt ...Option) (*Bundler, error) {
 	var caBundle, intBundle []byte
 	var err error
 
@@ -103,14 +125,19 @@ func NewBundler(caBundleFile, intBundleFile string) (*Bundler, error) {
 		}
 	}
 
-	return NewBundlerFromPEM(caBundle, intBundle)
+	return NewBundlerFromPEM(caBundle, intBundle, opt...)
 
 }
 
 // NewBundlerFromPEM creates a new Bundler from PEM-encoded root certificates and
 // intermediate certificates.
 // If caBundlePEM is nil, the resulting Bundler can only do "Force" bundle.
-func NewBundlerFromPEM(caBundlePEM, intBundlePEM []byte) (*Bundler, error) {
+func NewBundlerFromPEM(caBundlePEM, intBundlePEM []byte, opt ...Option) (*Bundler, error) {
+	opts := defaultOptions
+	for _, o := range opt {
+		o(&opts)
+	}
+
 	log.Debug("parsing root certificates from PEM")
 	roots, err := helpers.ParseCertificatesPEM(caBundlePEM)
 	if err != nil {
@@ -128,6 +155,7 @@ func NewBundlerFromPEM(caBundlePEM, intBundlePEM []byte) (*Bundler, error) {
 	b := &Bundler{
 		KnownIssuers:     map[string]bool{},
 		IntermediatePool: x509.NewCertPool(),
+		opts:             opts,
 	}
 
 	log.Debug("building certificate pools")
@@ -159,13 +187,76 @@ func (b *Bundler) VerifyOptions() x509.VerifyOptions {
 	return x509.VerifyOptions{
 		Roots:         b.RootPool,
 		Intermediates: b.IntermediatePool,
-		KeyUsages: []x509.ExtKeyUsage{
-			x509.ExtKeyUsageServerAuth,
-			x509.ExtKeyUsageClientAuth,
-			x509.ExtKeyUsageMicrosoftServerGatedCrypto,
-			x509.ExtKeyUsageNetscapeServerGatedCrypto,
-		},
+		KeyUsages:     b.opts.keyUsages,
 	}
+}
+
+// BundleFromFile takes a set of files containing the PEM-encoded leaf certificate
+// (optionally along with some intermediate certs), the PEM-encoded private key
+// and returns the bundle built from that key and the certificate(s).
+func (b *Bundler) BundleFromFile(bundleFile, keyFile string, flavor BundleFlavor, password string) (*Bundle, error) {
+	log.Debug("Loading Certificate: ", bundleFile)
+	certsRaw, err := ioutil.ReadFile(bundleFile)
+	if err != nil {
+		return nil, errors.Wrap(errors.CertificateError, errors.ReadFailed, err)
+	}
+
+	var keyPEM []byte
+	// Load private key PEM only if a file is given
+	if keyFile != "" {
+		log.Debug("Loading private key: ", keyFile)
+		keyPEM, err = ioutil.ReadFile(keyFile)
+		if err != nil {
+			log.Debugf("failed to read private key: ", err)
+			return nil, errors.Wrap(errors.PrivateKeyError, errors.ReadFailed, err)
+		}
+		if len(keyPEM) == 0 {
+			log.Debug("key is empty")
+			return nil, errors.Wrap(errors.PrivateKeyError, errors.DecodeFailed, err)
+		}
+	}
+
+	return b.BundleFromPEMorDER(certsRaw, keyPEM, flavor, password)
+}
+
+// BundleFromPEMorDER builds a certificate bundle from the set of byte
+// slices containing the PEM or DER-encoded certificate(s), private key.
+func (b *Bundler) BundleFromPEMorDER(certsRaw, keyPEM []byte, flavor BundleFlavor, password string) (*Bundle, error) {
+	log.Debug("bundling from PEM files")
+	var key crypto.Signer
+	var err error
+	if len(keyPEM) != 0 {
+		key, err = helpers.ParsePrivateKeyPEM(keyPEM)
+		if err != nil {
+			log.Debugf("failed to parse private key: %v", err)
+			return nil, err
+		}
+	}
+
+	certs, err := helpers.ParseCertificatesPEM(certsRaw)
+	if err != nil {
+		// If PEM doesn't work try DER
+		var keyDER crypto.Signer
+		var errDER error
+		certs, keyDER, errDER = helpers.ParseCertificatesDER(certsRaw, password)
+		// Only use DER key if no key read from file
+		if key == nil && keyDER != nil {
+			key = keyDER
+		}
+		if errDER != nil {
+			log.Debugf("failed to parse certificates: %v", err)
+			// If neither parser works pass along PEM error
+			return nil, err
+		}
+
+	}
+	if len(certs) == 0 {
+		log.Debugf("no certificates found")
+		return nil, errors.New(errors.CertificateError, errors.DecodeFailed)
+	}
+
+	log.Debugf("bundle ready")
+	return b.Bundle(certs, key, flavor)
 }
 
 // BundleFromRemote fetches the certificate served by the server at
