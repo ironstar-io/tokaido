@@ -90,6 +90,7 @@ func initConfig() {
 	viper.SetDefault("Tokaido.Project.Name", fs.Basename())
 	viper.SetDefault("Tokaido.Project.Path", fs.WorkDir())
 	viper.SetDefault("System.Syncsvc.Enabled", true)
+	viper.SetDefault("System.Proxy.Enabled", true)
 
 	if runtime.GOOS == "linux" {
 		viper.SetDefault("System.Syncsvc.Systemdpath", filepath.Join(fs.HomeDir(), "/.config/systemd/user/"))

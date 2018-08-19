@@ -6,6 +6,7 @@ import (
 
 	"github.com/ironstar-io/tokaido/utils"
 
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -69,6 +70,42 @@ func LocalPort(containerName string, containerPort string) string {
 	containerStr := utils.StdoutCmd("docker-compose", "-f", filepath.Join(fs.WorkDir(), "/docker-compose.tok.yml"), "port", containerName, containerPort)
 
 	return strings.Split(containerStr, ":")[1]
+}
+
+// GetContainerName ...
+func GetContainerName(name string) (string, error) {
+	cs, err := utils.BashStringSplitOutput("docker-compose -f " + filepath.Join(fs.WorkDir(), "/docker-compose.tok.yml") + " ps " + name + " | grep " + name)
+	if err != nil {
+		return "", err
+	}
+
+	cn := strings.Split(cs, " ")[0]
+	if cn == "" {
+		return "", errors.New("Unable to find the container for " + name + ". Is it currently running?")
+	}
+
+	return cn, nil
+}
+
+// GetContainerIP ...
+func GetContainerIP(name string) (string, error) {
+	cn, err := GetContainerName(name)
+	if err != nil {
+		return "", err
+	}
+
+	ia, err := utils.BashStringSplitOutput(`docker inspect ` + cn + ` | grep "IPAddress\": \"1"`)
+	if err != nil {
+		return "", err
+	}
+
+	for _, s := range strings.Split(ia, `"`) {
+		if strings.Contains(s, "1") {
+			return s, nil
+		}
+	}
+
+	return "", errors.New("Unable to find the internal IP for container " + name + ". Is it currently running?")
 }
 
 // KillContainer - Kill an individual container

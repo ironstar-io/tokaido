@@ -7,12 +7,13 @@ import (
 	"github.com/ironstar-io/tokaido/services/unison/templates"
 	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/daemon"
+	"github.com/ironstar-io/tokaido/system/fs"
 
 	"bytes"
 	"fmt"
 	"html/template"
 	"log"
-	"os"
+	"path/filepath"
 )
 
 var bgSyncFailMsg = `
@@ -22,30 +23,40 @@ Tokaido will run, but your environment and local host will not be synchronised
 Use 'tok up' to repair, or 'tok sync' to sync manually
 		`
 
-type service struct {
-	ProjectName string
-	ProjectPath string
+// UnisonSvc ...
+type UnisonSvc struct {
+	SyncName    string
+	SyncDir     string
+	Filename    string
+	Filepath    string
+	Systemdpath string
 }
 
-func getServiceName() string {
-	return "tokaido-sync-" + conf.GetConfig().Tokaido.Project.Name + ".service"
-}
-
-func getServicePath() string {
-	return conf.GetConfig().System.Syncsvc.Systemdpath + getServiceName()
-}
-
-func createSyncFile() {
+// NewUnisonSvc - Return a new instance of `UnisonSvc`.
+func NewUnisonSvc(syncName, syncDir string) UnisonSvc {
 	c := conf.GetConfig()
 
-	s := service{
-		ProjectName: c.Tokaido.Project.Name,
-		ProjectPath: c.Tokaido.Project.Path,
+	s := UnisonSvc{
+		SyncName:    syncName,
+		SyncDir:     syncDir,
+		Filename:    getServiceFilename(syncName),
+		Filepath:    getServicePath(syncName),
+		Systemdpath: c.System.Syncsvc.Systemdpath,
 	}
 
-	serviceFilename := getServiceName()
+	return s
+}
 
-	tmpl := template.New(serviceFilename)
+func getServiceFilename(syncName string) string {
+	return "tokaido-sync-" + syncName + ".service"
+}
+
+func getServicePath(syncName string) string {
+	return conf.GetConfig().System.Syncsvc.Systemdpath + getServiceFilename(syncName)
+}
+
+func (s UnisonSvc) CreateSyncFile() {
+	tmpl := template.New(s.SyncName)
 	tmpl, err := tmpl.Parse(unisontmpl.SyncTemplateStr)
 
 	if err != nil {
@@ -59,64 +70,46 @@ func createSyncFile() {
 		return
 	}
 
-	writeSyncFile(tpl.String(), c.System.Syncsvc.Systemdpath, serviceFilename)
+	fs.TouchOrReplace(filepath.Join(s.Systemdpath, s.Filename), tpl.Bytes())
+
 	daemon.ReloadServices()
 }
 
-func writeSyncFile(body string, path string, filename string) {
-	mkdErr := os.MkdirAll(path, os.ModePerm)
-	if mkdErr != nil {
-		log.Fatal("Mkdir: ", mkdErr)
-	}
-
-	var file, err = os.Create(path + filename)
-	if err != nil {
-		log.Fatal("Create: ", err)
-	}
-
-	_, _ = file.WriteString(body)
-
-	defer file.Close()
-}
-
 // CreateSyncService Register a launchd or systemctl service for Unison active sync
-func CreateSyncService() {
-	fmt.Println()
-	console.Println("🔄  Creating a background process to sync your local repo into the Tokaido environment", "")
-
-	RegisterSyncService()
-	StartSyncService()
+func (s UnisonSvc) CreateSyncService() {
+	s.RegisterSyncService()
+	s.StartSyncService()
 }
 
 // RegisterSystemdService Register the unison sync service for systemd
-func RegisterSyncService() {
-	createSyncFile()
+func (s UnisonSvc) RegisterSyncService() {
+	s.CreateSyncFile()
 }
 
 // StartSystemdService Start the systemd service after it is created
-func StartSyncService() {
-	daemon.StartService(getServiceName())
+func (s UnisonSvc) StartSyncService() {
+	daemon.StartService(s.Filename)
 }
 
 // SyncServiceStatus ...
-func SyncServiceStatus() string {
-	return daemon.ServiceStatus(getServiceName())
+func (s UnisonSvc) SyncServiceStatus() string {
+	return daemon.ServiceStatus(s.Filename)
 }
 
 // StopSyncService ...
-func StopSyncService() {
-	daemon.StopService(getServiceName())
-	daemon.DeleteService(getServicePath())
+func (s UnisonSvc) StopSyncService() {
+	daemon.StopService(s.Filename)
+	daemon.DeleteService(s.Filepath)
 }
 
 // CheckSyncService a verbose sync status check used for tok status
-func CheckSyncService() {
+func (s UnisonSvc) CheckSyncService() {
 	if conf.GetConfig().System.Syncsvc.Enabled != true {
 		return
 	}
 
-	s := SyncServiceStatus()
-	if s == "running" {
+	c := s.SyncServiceStatus()
+	if c == "running" {
 		console.Println("✅  Background sync service is running", "√")
 		return
 	}

@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/services/unison"
 	"github.com/ironstar-io/tokaido/utils"
@@ -20,6 +21,6 @@ var StopCmd = &cobra.Command{
 
 		docker.Stop()
 
-		unison.StopSyncService()
+		unison.StopSyncService(conf.GetConfig().Tokaido.Project.Name)
 	},
 }

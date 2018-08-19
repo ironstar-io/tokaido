@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -21,13 +22,13 @@ type fileMasks struct {
 }
 
 func sitesDefault() string {
-	return conf.GetRootPath() + "/sites/default"
+	return filepath.Join(conf.GetRootPath(), "/sites/default")
 }
 func settingsPath() string {
-	return sitesDefault() + "/settings.php"
+	return filepath.Join(sitesDefault(), "/settings.php")
 }
 func settingsTokPath() string {
-	return sitesDefault() + "/settings.tok.php"
+	return filepath.Join(sitesDefault(), "/settings.tok.php")
 }
 
 // CheckSettings checks that Drupal is ready to run in the Tokaido environment

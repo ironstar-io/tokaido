@@ -1,7 +1,6 @@
 package unison
 
 import (
-	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/services/unison/templates"
 	"github.com/ironstar-io/tokaido/system/fs"
 
@@ -15,31 +14,30 @@ import (
 )
 
 type prf struct {
-	UnisonPort  string
-	ProjectPath string
+	UnisonPort string
+	SyncPath   string
 }
 
 // CreateOrUpdatePrf - Create or Update a `.prf` file in `~/.unison/`
-func CreateOrUpdatePrf() {
-	// detect if file exists
-	var _, err = os.Stat(getPrfPath())
+func CreateOrUpdatePrf(unisonPort, prfName, syncPath string) {
+	f := getPrfPath(prfName)
 
-	// create file if not exists
+	var _, err = os.Stat(f)
+
 	if os.IsNotExist(err) {
-		generatePrf()
+		generatePrf(unisonPort, syncPath, f)
 	} else {
-		updatePrf()
+		updatePrf(unisonPort, f)
 	}
 }
 
-func getPrfPath() string {
-	return filepath.Join(fs.HomeDir(), "/.unison/", conf.GetConfig().Tokaido.Project.Name+".prf")
+func getPrfPath(filename string) string {
+	return filepath.Join(fs.HomeDir(), "/.unison/", filename+".prf")
 }
 
 // generatePrf - Generate a `.prf` file for unison
-func generatePrf() {
-	config := conf.GetConfig()
-	s := prf{UnisonPort: LocalPort(), ProjectPath: config.Tokaido.Project.Path}
+func generatePrf(unisonPort, syncPath, prfPath string) {
+	s := prf{UnisonPort: unisonPort, SyncPath: syncPath}
 
 	tmpl := template.New("unison.prf")
 	tmpl, err := tmpl.Parse(unisontmpl.PRFTemplateStr)
@@ -55,7 +53,7 @@ func generatePrf() {
 		return
 	}
 
-	createPrf(tpl.Bytes(), getPrfPath())
+	createPrf(tpl.Bytes(), prfPath)
 }
 
 // createPrf - Write generated `.prf` file to `~/.unison/`
@@ -66,8 +64,8 @@ func createPrf(body []byte, path string) {
 }
 
 // updatePrf - Update a `.prf` file in `~/.unison/`
-func updatePrf() {
-	f, err := os.Open(getPrfPath())
+func updatePrf(unisonPort, prfPath string) {
+	f, err := os.Open(prfPath)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -80,11 +78,11 @@ func updatePrf() {
 	var buffer bytes.Buffer
 	for scanner.Scan() {
 		if strings.Contains(scanner.Text(), portLine) {
-			buffer.Write([]byte(portLine + LocalPort() + "\n"))
+			buffer.Write([]byte(portLine + unisonPort + "\n"))
 		} else {
 			buffer.Write([]byte(scanner.Text() + "\n"))
 		}
 	}
 
-	fs.Replace(getPrfPath(), buffer.Bytes())
+	fs.Replace(prfPath, buffer.Bytes())
 }

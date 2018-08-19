@@ -13,25 +13,29 @@ Use 'tok up' to repair, or 'tok sync' to sync manually
 		`
 
 // CreateSyncService Register a launchd or systemctl service for Unison active sync
-func CreateSyncService() {
-	goos.CreateSyncService()
+func CreateSyncService(syncName, syncDir string) {
+	s := goos.NewUnisonSvc(syncName, syncDir)
+	s.CreateSyncService()
 }
 
 // StopSyncService stop *and* remove the systemd sync service
-func StopSyncService() {
+func StopSyncService(syncName string) {
 	if conf.GetConfig().System.Syncsvc.Enabled != true {
 		return
 	}
 
-	goos.StopSyncService()
+	s := goos.NewUnisonSvc(syncName, "")
+	s.StopSyncService()
 }
 
 // SyncServiceStatus ...
-func SyncServiceStatus() string {
-	return goos.SyncServiceStatus()
+func SyncServiceStatus(syncName string) string {
+	s := goos.NewUnisonSvc(syncName, "")
+	return s.SyncServiceStatus()
 }
 
 // CheckSyncService a verbose sync status check used for tok status
-func CheckSyncService() {
-	goos.CheckSyncService()
+func CheckSyncService(syncName string) {
+	s := goos.NewUnisonSvc(syncName, "")
+	s.CheckSyncService()
 }

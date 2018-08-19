@@ -2,6 +2,7 @@ package system
 
 import (
 	"github.com/ironstar-io/tokaido/services/docker"
+	"github.com/ironstar-io/tokaido/services/proxy"
 	"github.com/ironstar-io/tokaido/system/goos"
 )
 
@@ -19,15 +20,27 @@ func OpenSite(args []string) {
 		for _, arg := range args {
 			if len(services[arg]) > 0 {
 				p = docker.LocalPort(arg, services[arg])
-				proto := "http://"
 				if arg == "haproxy" {
-					proto = "https://"
+					OpenHaproxySite()
+					return
 				}
-				goos.OpenSite(proto + "localhost:" + p)
+				goos.OpenSite("http://localhost:" + p)
+				return
 			}
 		}
-	} else {
-		p = docker.LocalPort("haproxy", "8443")
-		goos.OpenSite("https://localhost:" + p)
 	}
+
+	OpenHaproxySite()
+}
+
+// OpenHaproxySite ...
+func OpenHaproxySite() {
+	if proxy.CheckProxyUp() == true {
+		u := proxy.GetProxyURL()
+		goos.OpenSite(u)
+		return
+	}
+
+	p := docker.LocalPort("haproxy", "8443")
+	goos.OpenSite("https://localhost:" + p)
 }

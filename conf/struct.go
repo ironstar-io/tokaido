@@ -37,6 +37,9 @@ type Config struct {
 			Launchdpath string `yaml:"launchdpath,omitempty"`
 			Enabled     bool   `yaml:"enabled"`
 		} `yaml:"syncsvc,omitempty"`
+		Proxy struct {
+			Enabled bool `yaml:"enabled"`
+		} `yaml:"proxy,omitempty"`
 	} `yaml:"system,omitempty"`
 	Services Services `yaml:"services,omitempty"`
 }
