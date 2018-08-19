@@ -1,7 +1,6 @@
 package unison
 
 import (
-	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/utils"
 
 	"fmt"
@@ -11,9 +10,8 @@ import (
 var syncRunningErr = `There is already a sync service for this project running on your system. Exiting...`
 
 // Sync - Sync once without watching
-func Sync() {
-	pn := conf.GetConfig().Tokaido.Project.Name
-	s := SyncServiceStatus(pn)
+func Sync(syncName string) {
+	s := SyncServiceStatus(syncName)
 	if s == "running" {
 		fmt.Println(syncRunningErr)
 		return
@@ -23,13 +21,12 @@ func Sync() {
 		fmt.Println("Synchronizing your files between your local filesystem and the container. This may take some time.")
 	}
 
-	utils.CommandSubstitution("unison", pn, "-watch=false")
+	utils.CommandSubstitution("unison", syncName, "-watch=false")
 }
 
 // Watch ...
-func Watch() {
-	pn := conf.GetConfig().Tokaido.Project.Name
-	s := SyncServiceStatus(pn)
+func Watch(syncName string) {
+	s := SyncServiceStatus(syncName)
 	if s == "running" {
 		fmt.Println(syncRunningErr)
 		return
@@ -39,5 +36,5 @@ func Watch() {
 Please keep this command running in order to retain sync
 	`)
 
-	utils.StdoutStreamCmd("unison", pn)
+	utils.StdoutStreamCmd("unison", syncName)
 }

@@ -40,7 +40,7 @@ func Init() {
 	unison.CreateOrUpdatePrf(unison.LocalPort(), c.Tokaido.Project.Name, c.Tokaido.Project.Path)
 	s := unison.SyncServiceStatus(c.Tokaido.Project.Name)
 	if s == "stopped" {
-		unison.Sync()
+		unison.Sync(c.Tokaido.Project.Name)
 	}
 
 	if c.System.Syncsvc.Enabled {
