@@ -1,11 +1,11 @@
 package conf
 
 import (
-	"fmt"
 	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/system/hash"
 
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"

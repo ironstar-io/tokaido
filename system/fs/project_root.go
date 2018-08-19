@@ -3,12 +3,10 @@ package fs
 import (
 	"github.com/ironstar-io/tokaido/constants"
 
-	// "fmt"
 	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
-	// "strings"
 )
 
 // ProjectRoot - Find the root directory path for the project
