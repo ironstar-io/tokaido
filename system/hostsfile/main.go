@@ -18,7 +18,7 @@ func confirmAmend(hostname string) bool {
 }
 
 func confirmRemove(hostname string) bool {
-	c := utils.ConfirmationPrompt("Would you like Tokaido to automatically update your hostsfile, removing the host '"+hostname+"'? You may be prompted for elevated access.", "n")
+	c := utils.ConfirmationPrompt("Would you like Tokaido to automatically update your hostsfile, removing the host '"+hostname+"'? You may be prompted for elevated access.", "y")
 	if c == false {
 		fmt.Println(`Your hostsfile can be amended manually in order to remove this hostname. See https://tokaido.io/docs/config/#updating-your-hostsfile for more information.`)
 	}
