@@ -1,4 +1,4 @@
-## Unreleased
+## 1.0.0
 
 - Remove version and customcompose as persistent global flags
 - Audit of command short and long descriptions
