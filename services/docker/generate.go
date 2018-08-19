@@ -19,7 +19,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-var tokComposePath = filepath.Join(fs.WorkDir(), "/docker-compose.tok.yml")
+var tokComposePath = filepath.Join(conf.GetConfig().Tokaido.Project.Path, "/docker-compose.tok.yml")
 
 // HardCheckTokCompose ...
 func HardCheckTokCompose() {
