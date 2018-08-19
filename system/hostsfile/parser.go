@@ -125,7 +125,7 @@ func (h Hosts) Flush() error {
 // WriteElevated - Request a password then write the new hostsfile
 func (h *Hosts) WriteElevated() error {
 	if runtime.GOOS == "windows" {
-		return errors.New(`Unable to amend your hostsfile! Tokaido requires elevated permissions in order to be able to complete this task`)
+		return errors.New(`Unable to amend your hosts file! Tokaido requires elevated permissions in order to be able to complete this task`)
 	}
 
 	var s string
