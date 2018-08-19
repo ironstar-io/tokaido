@@ -13,4 +13,5 @@
 - Add dependency checks for Linux
 - MySQL max_allowed_packet is now set to 64MB by default. 
 - Fixed a bug with Compose file used 'cmd' instead of 'command' parameters. 
+- Add the Tokaido Proxy service and HTTPS certificate support
 
