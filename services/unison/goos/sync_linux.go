@@ -3,6 +3,8 @@
 package goos
 
 import (
+	"os"
+
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/services/unison/templates"
 	"github.com/ironstar-io/tokaido/system/console"
@@ -55,6 +57,7 @@ func getServicePath(syncName string) string {
 	return conf.GetConfig().System.Syncsvc.Systemdpath + getServiceFilename(syncName)
 }
 
+// CreateSyncFile creates the systemd path (if necessary) and file
 func (s UnisonSvc) CreateSyncFile() {
 	tmpl := template.New(s.SyncName)
 	tmpl, err := tmpl.Parse(unisontmpl.SyncTemplateStr)
@@ -70,6 +73,14 @@ func (s UnisonSvc) CreateSyncFile() {
 		return
 	}
 
+	// Create the systemd path if it doesn't not exist
+	if _, pErr := os.Stat(s.Systemdpath); os.IsNotExist(pErr) {
+		mErr := os.MkdirAll(s.Systemdpath, os.ModePerm)
+		if mErr != nil {
+			log.Fatal("There was an error creating the systemd path:", mErr)
+		}
+	}
+
 	fs.TouchOrReplace(filepath.Join(s.Systemdpath, s.Filename), tpl.Bytes())
 
 	daemon.ReloadServices()
@@ -81,12 +92,12 @@ func (s UnisonSvc) CreateSyncService() {
 	s.StartSyncService()
 }
 
-// RegisterSystemdService Register the unison sync service for systemd
+// RegisterSyncService Register the unison sync service for systemd
 func (s UnisonSvc) RegisterSyncService() {
 	s.CreateSyncFile()
 }
 
-// StartSystemdService Start the systemd service after it is created
+// StartSyncService Start the systemd service after it is created
 func (s UnisonSvc) StartSyncService() {
 	daemon.StartService(s.Filename)
 }
