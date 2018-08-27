@@ -1,6 +1,7 @@
 ## Unreleased
 
 - Tokaido can now be run from subdirectory inside a Git repo.
+- Bugfix (linux): Tok will now create the systemd path if it doesn't exist
 
 ## 1.0.0
 
