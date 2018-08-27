@@ -25,7 +25,6 @@ func Init() {
 	console.Println("\n🚀  Tokaido is starting up!", "")
 	system.CheckDependencies()
 	version.GetUnisonVersion()
-	git.CheckGitRepo()
 
 	// Create Tokaido configuration
 	conf.SetDrupalConfig()

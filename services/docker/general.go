@@ -1,9 +1,7 @@
 package docker
 
 import (
-	"github.com/ironstar-io/tokaido/system/fs"
-	"github.com/spf13/viper"
-
+	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/utils"
 
 	"errors"
@@ -13,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/olekukonko/tablewriter"
+	"github.com/spf13/viper"
 )
 
 var defaultContainers = map[string]string{
@@ -67,14 +66,14 @@ func PrintPorts(containers []string) {
 // LocalPort - Return the local port of a container
 func LocalPort(containerName string, containerPort string) string {
 	// Example return: "unison:32757"
-	containerStr := utils.StdoutCmd("docker-compose", "-f", filepath.Join(fs.WorkDir(), "/docker-compose.tok.yml"), "port", containerName, containerPort)
+	containerStr := utils.StdoutCmd("docker-compose", "-f", filepath.Join(conf.GetConfig().Tokaido.Project.Path, "/docker-compose.tok.yml"), "port", containerName, containerPort)
 
 	return strings.Split(containerStr, ":")[1]
 }
 
 // GetContainerName ...
 func GetContainerName(name string) (string, error) {
-	cs, err := utils.BashStringSplitOutput("docker-compose -f " + filepath.Join(fs.WorkDir(), "/docker-compose.tok.yml") + " ps " + name + " | grep " + name)
+	cs, err := utils.BashStringSplitOutput("docker-compose -f " + filepath.Join(conf.GetConfig().Tokaido.Project.Path, "/docker-compose.tok.yml") + " ps " + name + " | grep " + name)
 	if err != nil {
 		return "", err
 	}
@@ -110,10 +109,10 @@ func GetContainerIP(name string) (string, error) {
 
 // KillContainer - Kill an individual container
 func KillContainer(container string) {
-	utils.StdoutCmd("docker-compose", "-f", filepath.Join(fs.WorkDir(), "/docker-compose.tok.yml"), "kill", container)
+	utils.StdoutCmd("docker-compose", "-f", filepath.Join(conf.GetConfig().Tokaido.Project.Path, "/docker-compose.tok.yml"), "kill", container)
 }
 
 // UpContainer - Lift an individual container
 func UpContainer(container string) {
-	utils.StdoutCmd("docker-compose", "-f", filepath.Join(fs.WorkDir(), "/docker-compose.tok.yml"), "up", "-d", container)
+	utils.StdoutCmd("docker-compose", "-f", filepath.Join(conf.GetConfig().Tokaido.Project.Path, "/docker-compose.tok.yml"), "up", "-d", container)
 }

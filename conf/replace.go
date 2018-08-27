@@ -17,13 +17,11 @@ func drupalVars(path, version string) []byte {
 }
 
 func commandSubstitution(name string, args ...string) {
-
 	cmd := exec.Command(name, args...)
-	cmd.Dir = fs.WorkDir()
+	cmd.Dir = GetConfig().Tokaido.Project.Path
 	stdoutStderr, _ := cmd.CombinedOutput()
 
 	fmt.Println(strings.TrimSpace(string(stdoutStderr)))
-
 }
 
 // CreateOrReplaceDrupalConfig ...
@@ -33,6 +31,6 @@ func CreateOrReplaceDrupalConfig(path, version string) {
 	cf := viper.ConfigFileUsed()
 
 	if cf == "" {
-		fs.TouchByteArray(filepath.Join(fs.WorkDir(), "/.tok/config.yml"), drupalVars(path, version))
+		fs.TouchByteArray(filepath.Join(GetConfig().Tokaido.Project.Path, "/.tok/config.yml"), drupalVars(path, version))
 	}
 }

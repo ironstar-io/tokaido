@@ -19,11 +19,14 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-var tokComposePath = filepath.Join(fs.WorkDir(), "/docker-compose.tok.yml")
+// GetTokComposePath ...
+func GetTokComposePath() string {
+	return filepath.Join(conf.GetConfig().Tokaido.Project.Path, "/docker-compose.tok.yml")
+}
 
 // HardCheckTokCompose ...
 func HardCheckTokCompose() {
-	var _, err = os.Stat(tokComposePath)
+	var _, err = os.Stat(GetTokComposePath())
 
 	// create file if not exists
 	if os.IsNotExist(err) {
@@ -34,7 +37,7 @@ func HardCheckTokCompose() {
 
 // FindOrCreateTokCompose ...
 func FindOrCreateTokCompose() {
-	var _, errf = os.Stat(tokComposePath)
+	var _, errf = os.Stat(GetTokComposePath())
 
 	// create file if not exists
 	if os.IsNotExist(errf) {
@@ -54,12 +57,13 @@ func FindOrCreateTokCompose() {
 
 // CreateOrReplaceTokCompose ...
 func CreateOrReplaceTokCompose(tokComposeYml []byte) {
+	tc := GetTokComposePath()
 	if conf.GetConfig().Tokaido.Customcompose == false {
-		fs.TouchOrReplace(tokComposePath, append(dockertmpl.ModWarning[:], tokComposeYml[:]...))
+		fs.TouchOrReplace(tc, append(dockertmpl.ModWarning[:], tokComposeYml[:]...))
 		return
 	}
 
-	fs.TouchOrReplace(tokComposePath, tokComposeYml)
+	fs.TouchOrReplace(tc, tokComposeYml)
 }
 
 // MarshalledDefaults ...
@@ -198,7 +202,8 @@ func getDrupalSettings() []byte {
 
 // StripModWarning ...
 func StripModWarning() {
-	f, openErr := os.Open(tokComposePath)
+	tc := GetTokComposePath()
+	f, openErr := os.Open(tc)
 	if openErr != nil {
 		fmt.Println(openErr)
 		return
@@ -222,12 +227,12 @@ func StripModWarning() {
 	}
 
 	if warningPresent == true {
-		fs.Replace(tokComposePath, buffer.Bytes())
+		fs.Replace(tc, buffer.Bytes())
 	}
 }
 
 func customTokPath() string {
-	ct := filepath.Join(fs.WorkDir(), "/.tok")
+	ct := filepath.Join(conf.GetConfig().Tokaido.Project.Path, "/.tok")
 
 	if fs.CheckExists(ct+".yml") == true {
 		return filepath.Join(ct, "compose.tok.yml")

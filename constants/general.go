@@ -4,6 +4,12 @@ import (
 	"time"
 )
 
+// GitDirectory ...
+const GitDirectory = ".git"
+
+// DockerComposeTokFile ...
+const DockerComposeTokFile = "docker-compose.tok.yml"
+
 // HTTPProtocol ...
 const HTTPProtocol = "http://"
 

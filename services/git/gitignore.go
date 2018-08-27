@@ -27,7 +27,7 @@ func IgnoreDefaults() {
 
 // AppendGitignore ...
 func AppendGitignore(ignoreList []string) {
-	gi := filepath.Join(fs.WorkDir(), "/.gitignore")
+	gi := filepath.Join(conf.GetConfig().Tokaido.Project.Path, "/.gitignore")
 	if fs.CheckExists(gi) == false {
 		fs.TouchEmpty(gi)
 	}

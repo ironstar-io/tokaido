@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/ironstar-io/tokaido/system/console"
-	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/manifoldco/promptui"
 
 	"io"
@@ -17,10 +16,10 @@ import (
 
 // GetRootPath ...
 func GetRootPath() string {
-	wd := fs.WorkDir()
-	c := GetConfig().Drupal.Path
-	if c != "" {
-		return filepath.Join(wd, c)
+	c := GetConfig()
+	dp := c.Drupal.Path
+	if dp != "" {
+		return filepath.Join(c.Tokaido.Project.Path, dp)
 	}
 
 	log.Fatalf("Drupal path setting is missing.")
@@ -40,12 +39,12 @@ func SetDrupalConfig() {
 }
 
 func detectDrupalSettings() (string, string) {
-	wd := fs.WorkDir()
+	pr := GetConfig().Tokaido.Project.Path
 	var dp string
 	var dv string
 	d7 := filepath.Join("includes", "bootstrap.inc")
 	d8 := filepath.Join("core", "lib", "Drupal.php")
-	err := filepath.Walk(wd, func(path string, info os.FileInfo, err error) error {
+	err := filepath.Walk(pr, func(path string, info os.FileInfo, err error) error {
 		if info.IsDir() {
 			return nil
 		}
@@ -61,7 +60,7 @@ func detectDrupalSettings() (string, string) {
 				// Strip the Drupal component from the full path
 				dp = strings.Replace(path, d7, "", -1)
 				// Strip the work dir from the remainder
-				dp = strings.Replace(dp, wd, "", -1)
+				dp = strings.Replace(dp, pr, "", -1)
 				// Strip slashes
 				dp = strings.Replace(dp, "/", "", -1)
 				dv = "7"
@@ -73,7 +72,7 @@ func detectDrupalSettings() (string, string) {
 			// Strip the Drupal component from the full path
 			dp = strings.Replace(path, d8, "", -1)
 			// Strip the work dir from the remainder
-			dp = strings.Replace(dp, wd, "", -1)
+			dp = strings.Replace(dp, pr, "", -1)
 			// Strip slashes
 			dp = strings.Replace(dp, "/", "", -1)
 			dv = "8"

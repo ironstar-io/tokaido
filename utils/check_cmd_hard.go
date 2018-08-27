@@ -7,7 +7,7 @@ import (
 )
 
 var packageMap = map[string]string{
-	"docker-compose": `no docker-compose??`,
+	"docker-compose": `'docker-compose' was not found on your PATH, it is required in order to be able to run Tokaido.`,
 }
 
 // CheckCmdHard - Root executable

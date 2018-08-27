@@ -3,7 +3,7 @@
 package utils
 
 import (
-	"github.com/ironstar-io/tokaido/system/fs"
+	"github.com/ironstar-io/tokaido/conf"
 
 	"fmt"
 	"log"
@@ -19,7 +19,7 @@ func PowershellCmd(args ...string) string {
 	DebugCmd(psc + " " + strings.Join(args, " "))
 
 	cmd := exec.Command(psc, args...)
-	cmd.Dir = fs.WorkDir()
+	cmd.Dir = conf.GetConfig().Tokaido.Project.Path
 	stdoutStderr, err := cmd.CombinedOutput()
 	if err != nil {
 		fmt.Printf("Tokaido encountered a fatal error and had to stop at command '%s %s'\n%s", psc, strings.Join(args, " "), stdoutStderr)
