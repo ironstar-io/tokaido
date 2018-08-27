@@ -1,3 +1,7 @@
+## Unreleased
+
+- Tokaido can now be run from subdirectory inside a Git repo.
+
 ## 1.0.0
 
 - Remove version and customcompose as persistent global flags
