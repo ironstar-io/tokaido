@@ -2,6 +2,7 @@
 
 - Tokaido can now be run from subdirectory inside a Git repo.
 - Bugfix (linux): Tok will now create the systemd path if it doesn't exist
+- Bugfix: Set the base_url for Drupal7 sites to the proxy (tokaido.local) URL, so assets load properly
 
 ## 1.0.0
 

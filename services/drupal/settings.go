@@ -172,7 +172,7 @@ func createSettingsTok() {
 	dv := conf.GetConfig().Drupal.Majorversion
 	var settingsTokBody []byte
 	if dv == "7" {
-		settingsTokBody = drupaltmpl.SettingsD7Tok
+		settingsTokBody = drupaltmpl.SettingsD7Tok(conf.GetConfig().Tokaido.Project.Name)
 	} else if dv == "8" {
 		settingsTokBody = drupaltmpl.SettingsD8Tok
 	} else {
