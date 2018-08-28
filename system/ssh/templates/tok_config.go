@@ -5,6 +5,7 @@ var TokConfTmplStr = `Host {{.ProjectName}}.tok
     Port {{.DrushPort}}
     User tok
     IdentityFile ~/.ssh/tok_ssh.key
+    IdentitiesOnly yes
     ForwardAgent yes
     StrictHostKeyChecking no
     UserKnownHostsFile /dev/null
