@@ -69,12 +69,13 @@ func LocalPort(containerName string, containerPort string) string {
 	// Example return: "unison:32757"
 	cs := utils.StdoutCmd("docker-compose", "-f", filepath.Join(conf.GetConfig().Tokaido.Project.Path, "/docker-compose.tok.yml"), "port", containerName, containerPort)
 
-	if cs == "" {
+	p := strings.Split(cs, ":")
+	if len(p) <= 1 {
 		log.Fatal("The required container '" + containerName + "' is not running. Check the status of your containers with `tok ps` and retry `tok up`.  Exiting...")
 		return ""
 	}
 
-	return strings.Split(cs, ":")[1]
+	return p[1]
 }
 
 // GetContainerName ...
