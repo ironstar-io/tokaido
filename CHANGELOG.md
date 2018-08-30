@@ -1,8 +1,12 @@
-## Unreleased
+## 1.1.0 
 
 - Tokaido can now be run from subdirectory inside a Git repo.
 - Bugfix (linux): Tok will now create the systemd path if it doesn't exist
 - Bugfix: Set the base_url for Drupal7 sites to the proxy (tokaido.local) URL, so assets load properly
+- Moved xdebug to it's own image. When not enabled, Tokaido will be nearly twice as fast
+- Prevent an unhandled exception when a container has not started
+- Temporary workaround for installing the unison-fsmonitor utility via pip, while homebrew is broken (#29)ssss
+- SSH agent now uses identity file only, fixing a bug where the user has more than 5 keys in ssh agent
 
 ## 1.0.0
 
