@@ -42,6 +42,11 @@ func LocalPort(containerName string, containerPort string) string {
 	// Example return: "unison:32757"
 	cs := utils.StdoutCmd("docker-compose", "-f", getComposePath(), "port", containerName, containerPort)
 
+	if cs == "" {
+		log.Fatal("The required proxy container '" + containerName + "' is not running. Perhaps retry `tok up`?  Exiting...")
+		return ""
+	}
+
 	return strings.Split(cs, ":")[1]
 }
 

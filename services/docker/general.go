@@ -6,6 +6,7 @@ import (
 
 	"errors"
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -66,9 +67,14 @@ func PrintPorts(containers []string) {
 // LocalPort - Return the local port of a container
 func LocalPort(containerName string, containerPort string) string {
 	// Example return: "unison:32757"
-	containerStr := utils.StdoutCmd("docker-compose", "-f", filepath.Join(conf.GetConfig().Tokaido.Project.Path, "/docker-compose.tok.yml"), "port", containerName, containerPort)
+	cs := utils.StdoutCmd("docker-compose", "-f", filepath.Join(conf.GetConfig().Tokaido.Project.Path, "/docker-compose.tok.yml"), "port", containerName, containerPort)
 
-	return strings.Split(containerStr, ":")[1]
+	if cs == "" {
+		log.Fatal("The required container '" + containerName + "' is not running. Check the status of your containers with `tok ps` and retry `tok up`.  Exiting...")
+		return ""
+	}
+
+	return strings.Split(cs, ":")[1]
 }
 
 // GetContainerName ...
