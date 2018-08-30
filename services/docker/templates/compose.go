@@ -90,6 +90,13 @@ func EnableMemcache(version string) []byte {
     image: memcached:` + version)
 }
 
+// EnableXdebug ...
+func EnableXdebug(version string) []byte {
+	return []byte(`services:
+  fpm:
+    image: tokaido/fpm-xdebug:` + version)
+}
+
 // WindowsAjustments ...
 func WindowsAjustments() []byte {
 	return []byte(`services:
