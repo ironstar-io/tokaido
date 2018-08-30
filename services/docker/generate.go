@@ -160,6 +160,19 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 		}
 	}
 
+	if conf.GetConfig().System.Xdebug.Enabled {
+		var v string
+		if conf.GetConfig().Tokaido.Betacontainers {
+			v = "edge"
+		} else {
+			v = "latest"
+		}
+		errSolr := yaml.Unmarshal(dockertmpl.EnableXdebug(v), &tokStruct)
+		if errSolr != nil {
+			log.Fatalf("Error enabling Xdebug in Compose file: %v", err)
+		}
+	}
+
 	if runtime.GOOS == "windows" {
 		errOs := yaml.Unmarshal(dockertmpl.WindowsAjustments(), &tokStruct)
 		if errOs != nil {
