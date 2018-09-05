@@ -4,6 +4,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"strings"
 )
 
 func getExistingCompose() []byte {
@@ -23,8 +24,11 @@ func getExistingCompose() []byte {
 }
 
 func projectInCompose(networks []string, projectName string) bool {
+	// Periods being replaced in recent versions of Docker for network names
+	n := strings.Replace(projectName, ".", "", -1) + "_default"
+
 	for _, v := range networks {
-		if v == projectName+"_default" {
+		if v == n {
 			return true
 		}
 	}
@@ -42,7 +46,7 @@ func buildNetworks(networks []string) []byte {
 			continue
 		}
 
-		n = n + `  ` + v + `:
+		n = n + `  ` + strings.Replace(v, ".", "", -1) + `:
     external: true
 `
 	}

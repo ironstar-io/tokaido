@@ -28,7 +28,7 @@ func regenerateGateway(networkUp bool, xdebugPort string) {
 	}
 
 	pn := conf.GetConfig().Tokaido.Project.Name
-	networkGateway := docker.GetGateway(pn + "_default")
+	networkGateway := docker.GetGateway(pn)
 
 	tokStruct := docker.UnmarshalledDefaults()
 

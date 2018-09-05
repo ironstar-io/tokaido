@@ -6,6 +6,7 @@ import (
 	"github.com/ironstar-io/tokaido/system/version"
 
 	"log"
+	"strings"
 
 	"gopkg.in/yaml.v2"
 )
@@ -15,6 +16,7 @@ func GenerateProxyDockerCompose() {
 	dc := DockerCompose{}
 	uv := version.GetUnisonVersion()
 	pn := conf.GetConfig().Tokaido.Project.Name
+	nn := strings.Replace(pn, ".", "", -1) + "_default"
 
 	var err error
 	err = yaml.Unmarshal(ComposeDefaults(), &dc)
@@ -29,12 +31,12 @@ func GenerateProxyDockerCompose() {
 			log.Fatalf("Error setting Compose file: %v", err)
 		}
 
-		if projectInCompose(dc.Services.Proxy.Networks, pn) == true {
+		if projectInCompose(dc.Services.Proxy.Networks, nn) == true {
 			return
 		}
 	}
 
-	dc.Services.Proxy.Networks = append(dc.Services.Proxy.Networks, pn+"_default")
+	dc.Services.Proxy.Networks = append(dc.Services.Proxy.Networks, nn)
 
 	n := buildNetworks(dc.Services.Proxy.Networks)
 
