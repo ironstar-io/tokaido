@@ -89,7 +89,7 @@ func initConfig() {
 	viper.SetDefault("Tokaido.Betacontainers", false)
 	viper.SetDefault("Tokaido.Dependencychecks", true)
 	viper.SetDefault("Tokaido.Enableemoji", emojiDefaults())
-	viper.SetDefault("Tokaido.Project.Name", filepath.Base(pr))
+	viper.SetDefault("Tokaido.Project.Name", strings.Replace(filepath.Base(pr), ".", "", -1))
 	viper.SetDefault("Tokaido.Project.Path", pr)
 	viper.SetDefault("System.Syncsvc.Enabled", true)
 	viper.SetDefault("System.Proxy.Enabled", true)
