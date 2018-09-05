@@ -6,6 +6,7 @@ import (
 	"github.com/ironstar-io/tokaido/system/version"
 
 	"log"
+	"strings"
 
 	"gopkg.in/yaml.v2"
 )
@@ -15,6 +16,7 @@ func RemoveProjectFromDockerCompose() {
 	dc := DockerCompose{}
 	uv := version.GetUnisonVersion()
 	pn := conf.GetConfig().Tokaido.Project.Name
+	nn := strings.Replace(pn, ".", "", -1) + "_default"
 
 	var err error
 	err = yaml.Unmarshal(ComposeDefaults(), &dc)
@@ -32,7 +34,7 @@ func RemoveProjectFromDockerCompose() {
 
 	// Find and remove the project network
 	for i, v := range dc.Services.Proxy.Networks {
-		if v == pn+"_default" {
+		if v == nn {
 			dc.Services.Proxy.Networks = append(dc.Services.Proxy.Networks[:i], dc.Services.Proxy.Networks[i+1:]...)
 			break
 		}
