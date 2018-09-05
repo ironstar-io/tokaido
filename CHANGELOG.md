@@ -1,6 +1,6 @@
 ## 1.1.1
 
-- Bugfix: Dots in project names won't cause docker-compose networks to fail (#36)
+- Bugfix: Dots in project names won't cause docker-compose networks to fail (#34)
 
 ## 1.1.0 
 

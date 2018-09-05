@@ -42,7 +42,7 @@ func IsProjectRoot(path string) bool {
 // ScanUp ...
 func ScanUp(path string) string {
 	if path == "/" {
-		log.Fatal("Could not find the root directory of your project. Are you running Tokaido from the right context? Exiting...")
+		log.Fatal("Tokaido needs to be run from inside a Git repository, but could not find one. Exiting...")
 	}
 
 	sd := filepath.Dir(path)
