@@ -1,3 +1,7 @@
+## 1.1.2
+
+- Bugfix: Fixed a bug where the proxy network configuration was duplicated with each `tok up` run
+
 ## 1.1.1
 
 - Bugfix: Dots in project names won't cause docker-compose networks to fail (#34)
