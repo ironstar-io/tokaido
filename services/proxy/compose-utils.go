@@ -26,10 +26,12 @@ func getExistingCompose() []byte {
 }
 
 func projectInCompose(networks []string, projectName string) bool {
-	utils.DebugString("[proxy] searching to determine if the network '" + projectName + "' is already configured")
+	// Periods being replaced in recent versions of Docker for network names
+	n := strings.Replace(projectName, ".", "", -1)
+	utils.DebugString("[proxy] searching to determine if the network '" + n + "' is already configured")
 
 	for _, v := range networks {
-		if v == projectName {
+		if v == n {
 			return true
 		}
 	}
