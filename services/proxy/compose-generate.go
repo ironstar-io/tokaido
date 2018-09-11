@@ -4,6 +4,7 @@ import (
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/system/version"
+	"github.com/ironstar-io/tokaido/utils"
 
 	"log"
 	"strings"
@@ -32,6 +33,7 @@ func GenerateProxyDockerCompose() {
 		}
 
 		if projectInCompose(dc.Services.Proxy.Networks, nn) == true {
+			utils.DebugString("[proxy] existing network configuration found, not adding it again")
 			return
 		}
 	}
