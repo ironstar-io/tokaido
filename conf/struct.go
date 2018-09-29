@@ -133,6 +133,8 @@ type Services struct {
 		User        string            `yaml:"user,omitempty"`
 		Command     string            `yaml:"command,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`
+		Volumesfrom []string          `yaml:"volumes_from,omitempty"`
+		Volumes     []string          `yaml:"volumes,omitempty"`
 	} `yaml:"mysql,omitempty"`
 	Drush struct {
 		Image       string            `yaml:"image,omitempty"`

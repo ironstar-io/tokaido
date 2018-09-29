@@ -75,6 +75,14 @@ func MarshalledDefaults() []byte {
 		log.Fatalf("error: %v", err)
 	}
 
+	// Append the volume setting on to the docker-compose setting directly
+	mysqlVolName := "tok_" + conf.GetConfig().Tokaido.Project.Name + "_mysql_database"
+	composeVolumeYml := []byte(`volumes:
+  ` + mysqlVolName + `:
+    external: true`)
+
+	tokComposeYml = append(tokComposeYml[:], composeVolumeYml[:]...)
+
 	return tokComposeYml
 }
 
@@ -96,6 +104,18 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 	errUnison := yaml.Unmarshal(dockertmpl.SetUnisonVersion(unisonVersion), &tokStruct)
 	if errUnison != nil {
 		log.Fatalf("Error setting Unison version: %v", err)
+	}
+
+	// Create mysql volume declaration and attachment
+	mysqlVolName := "tok_" + conf.GetConfig().Tokaido.Project.Name + "_mysql_database"
+	errDbDec := yaml.Unmarshal(dockertmpl.MysqlVolumeDeclare(mysqlVolName), &tokStruct)
+	if errDbDec != nil {
+		log.Fatalf("Error declaring persistent MySQL volume: %v", err)
+	}
+
+	errDbAtt := yaml.Unmarshal(dockertmpl.MysqlVolumeAttach(mysqlVolName), &tokStruct)
+	if errDbAtt != nil {
+		log.Fatalf("Error attaching persistent MySQL volume: %v", err)
 	}
 
 	if conf.GetConfig().Services.Solr.Enabled {
