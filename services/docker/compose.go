@@ -37,7 +37,7 @@ func CreateDatabaseVolume() {
 	n := "tok_" + conf.GetConfig().Tokaido.Project.Name + "_mysql_database"
 	o := utils.BashStringCmd(`docker volume ls | grep ` + n)
 	if o == n {
-		utils.DebugString("existing database volume found, not creating a new one")
+		utils.DebugString("Existing database volume found, not creating a new one")
 		return
 	}
 
