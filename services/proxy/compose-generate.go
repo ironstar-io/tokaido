@@ -2,6 +2,7 @@ package proxy
 
 import (
 	"github.com/ironstar-io/tokaido/conf"
+	"github.com/ironstar-io/tokaido/constants"
 	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/system/version"
 	"github.com/ironstar-io/tokaido/utils"
@@ -32,6 +33,16 @@ func GenerateProxyDockerCompose() {
 			log.Fatalf("Error setting Compose file: %v", err)
 		}
 
+		err = yaml.Unmarshal(SetUnisonVersion(uv), &dc)
+		if err != nil {
+			log.Fatalf("Error setting Unison version: %v", err)
+		}
+
+		err = yaml.Unmarshal(SetYamanoteVersion(constants.YamanoteVersion), &dc)
+		if err != nil {
+			log.Fatalf("Error setting Unison version: %v", err)
+		}
+
 		if projectInCompose(dc.Services.Proxy.Networks, nn) == true {
 			utils.DebugString("[proxy] existing network configuration found, not adding it again")
 			return
@@ -41,11 +52,6 @@ func GenerateProxyDockerCompose() {
 	dc.Services.Proxy.Networks = append(dc.Services.Proxy.Networks, nn)
 
 	n := buildNetworks(dc.Services.Proxy.Networks)
-
-	err = yaml.Unmarshal(SetUnisonVersion(uv), &dc)
-	if err != nil {
-		log.Fatalf("Error setting Unison version: %v", err)
-	}
 
 	cy, err := yaml.Marshal(&dc)
 	if err != nil {
