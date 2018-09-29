@@ -170,11 +170,15 @@ func appendTokSettingsRef() {
 
 func createSettingsTok() {
 	dv := conf.GetConfig().Drupal.Majorversion
+	salt, err := GenerateRandomHashSalt()
+	if err != nil {
+		log.Fatalf("Could not create Drupal hash salt %v", err)
+	}
 	var settingsTokBody []byte
 	if dv == "7" {
-		settingsTokBody = drupaltmpl.SettingsD7Tok(conf.GetConfig().Tokaido.Project.Name)
+		settingsTokBody = drupaltmpl.SettingsD7Tok(salt, conf.GetConfig().Tokaido.Project.Name)
 	} else if dv == "8" {
-		settingsTokBody = drupaltmpl.SettingsD8Tok
+		settingsTokBody = drupaltmpl.SettingsD8Tok(salt)
 	} else {
 		log.Fatalf("Could not add Tokaido settings file")
 	}

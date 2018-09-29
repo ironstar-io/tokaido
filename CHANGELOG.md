@@ -2,6 +2,10 @@
 
 - Tokaido now uses a globally-resolvable *.local.tokaido.io domain. Manipulation of your local hosts file is no longer necessary. Thanks @garrettw! 
 - Version-locked Yamamnote to 1.0.0
+- settings.tok.php no longer includes a ?> php closing tag
+- settings.tok.php now includes a random Drupal hash salt
+- settings.tok.php now includes a fixed path for default's sites files
+- settings.tok.php now includes memcache settings for Drupal 8 sites
 
 ## 1.1.2
 
