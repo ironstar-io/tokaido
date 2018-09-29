@@ -8,7 +8,7 @@ import (
 
 // ConfigureTrustedCerts ...
 func ConfigureTrustedCerts(certificate string) {
-	fmt.Println("The generated SSL certificates can be manually added to your keychain for easy HTTPS development. See https://tokaido.io/docs/config/#adding-a-trusted-certificate for more information.")
+	fmt.Println("    The generated SSL certificates can be manually added to your keychain for easy HTTPS development. \n    See https://tokaido.io/docs/config/#adding-a-trusted-certificate for more information.")
 }
 
 // AddTrustedCertToKeychain ...
@@ -18,7 +18,7 @@ func AddTrustedCertToKeychain(certificate string) {
 
 // RemoveTrustedCertFromKeychain ...
 func RemoveTrustedCertFromKeychain(certificate string) {
-	fmt.Println("The generated SSL certificates need to be manually removed from your keychain if they were added during `tok up`. See https://tokaido.io/docs/config/#adding-a-trusted-certificate for more information.")
+	fmt.Println("    The generated SSL certificates need to be manually removed from your keychain if they were added during `tok up`. \n    See https://tokaido.io/docs/config/#adding-a-trusted-certificate for more information.")
 	return
 }
 

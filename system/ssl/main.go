@@ -1,8 +1,13 @@
 package ssl
 
 import (
+	"os"
+	"path"
+	"strings"
+
 	"github.com/ironstar-io/tokaido/constants"
 	"github.com/ironstar-io/tokaido/system/fs"
+	"github.com/ironstar-io/tokaido/utils"
 
 	"fmt"
 	"path/filepath"
@@ -76,9 +81,51 @@ func FindOrCreateClientCert(certPath string) error {
 	return nil
 }
 
+// Remove all files from a dir
+func emptyDir(dir string) error {
+	d, err := os.Open(dir)
+	if err != nil {
+		return err
+	}
+	defer d.Close()
+	names, err := d.Readdirnames(-1)
+	if err != nil {
+		return err
+	}
+	for _, name := range names {
+		err = os.RemoveAll(filepath.Join(dir, name))
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// check if the certificate that exists is the older 'tokaido.local' style,
+// and if so delete it
+func removeOldCert(cp CertificateGroupPath) (err error) {
+	cert := utils.CommandSubstitution("openssl", "x509", "-noout", "-subject", "-in", cp.Certificate)
+	cn := strings.Split(cert, "CN = ")
+	if len(cn) > 1 {
+		if cn[1] == "tokaido.local" {
+			utils.DebugString("Removing old certificate file for tokaido.local.")
+			err = emptyDir(path.Dir(cp.Certificate))
+		}
+	}
+
+	return
+}
+
 // FindOrCreateCA ...
-func FindOrCreateCA(certPath string) error {
+func FindOrCreateCA(certPath string) (err error) {
 	cp := GetCertificateGroupPath(certPath, constants.CAFilename)
+
+	// Remove previous-generation tokaido.local certificates
+	err = removeOldCert(cp)
+	if err != nil {
+		return err
+	}
+
 	if CheckCertsExist(cp) == true {
 		return nil
 	}

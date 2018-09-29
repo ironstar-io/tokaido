@@ -1,10 +1,10 @@
 package constants
 
 // CommonName ...
-const CommonName = "tokaido.local"
+const CommonName = "local.tokaido.io"
 
 // TopLevelHost ...
-const TopLevelHost = "tokaido.local"
+const TopLevelHost = "local.tokaido.io"
 
 // WildcardHost ...
 const WildcardHost = "*." + TopLevelHost

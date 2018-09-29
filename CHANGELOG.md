@@ -1,3 +1,8 @@
+## 1.2.0
+
+- Tokaido now uses a globally-resolvable *.local.tokaido.io domain. Manipulation of your local hosts file is no longer necessary. Thanks @garrettw! 
+- Version-locked Yamamnote to 1.0.0
+
 ## 1.1.2
 
 - Bugfix: Fixed a bug where the proxy network configuration was duplicated with each `tok up` run
