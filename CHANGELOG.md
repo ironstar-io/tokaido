@@ -6,6 +6,9 @@
 - settings.tok.php now includes a random Drupal hash salt
 - settings.tok.php now includes a fixed path for default's sites files
 - settings.tok.php now includes memcache settings for Drupal 8 sites
+- Tokaido will warn Linux users if their max_user_watches setting is probably too low
+
+
 
 ## 1.1.2
 
