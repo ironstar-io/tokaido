@@ -63,3 +63,10 @@ func SetUnisonVersion(version string) []byte {
   unison:
     image: tokaido/unison:` + version)
 }
+
+// SetYamanoteVersion ...
+func SetYamanoteVersion(version string) []byte {
+	return []byte(`services:
+  yamanote:
+    image: tokaido/yamanote:` + version)
+}

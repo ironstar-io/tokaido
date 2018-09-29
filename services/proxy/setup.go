@@ -23,18 +23,11 @@ func Setup() {
 	DockerComposeUp()
 
 	ConfigureUnison()
-	ConfigureProjectHostsfile()
 
 	ConfigureYamanote()
 
 	ConfigureProjectNginx()
 	RestartContainer(proxy)
-}
-
-// ConfigureProjectHostsfile ...
-func ConfigureProjectHostsfile() {
-	pn := conf.GetConfig().Tokaido.Project.Name
-	ConfigureHostsfile(pn + "." + constants.ProxyDomain)
 }
 
 // ConfigureProjectNginx ...

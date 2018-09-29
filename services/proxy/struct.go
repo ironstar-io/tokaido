@@ -65,7 +65,7 @@ services:
     networks:
       - proxy
   yamanote:
-    image: tokaido/yamanote:latest
+    image: tokaido/yamanote:1.0.0
     ports:
       - "3203:8443"
     volumes_from:

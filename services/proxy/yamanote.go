@@ -15,8 +15,6 @@ import (
 
 // ConfigureYamanote ...
 func ConfigureYamanote() {
-	ConfigureHostsfile(constants.ProxyDomain)
-
 	ConfigureYamanoteNginx()
 
 	CreateOrAppendGatsbyEnvFile()

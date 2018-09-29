@@ -4,4 +4,7 @@ package constants
 const ProxyPort = "5154"
 
 // ProxyDomain ...
-const ProxyDomain = "tokaido.local"
+const ProxyDomain = "local.tokaido.io"
+
+// YamanoteVersion ...
+const YamanoteVersion = "1.0.0"
