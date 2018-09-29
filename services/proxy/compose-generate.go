@@ -45,6 +45,16 @@ func GenerateProxyDockerCompose() {
 
 		if projectInCompose(dc.Services.Proxy.Networks, nn) == true {
 			utils.DebugString("[proxy] existing network configuration found, not adding it again")
+
+			// Write the updated config to file and then move on
+			n := buildNetworks(dc.Services.Proxy.Networks)
+			cy, err := yaml.Marshal(&dc)
+			if err != nil {
+				log.Fatalf("Error: %v", err)
+			}
+			b := append(cy, n...)
+			fs.Replace(getComposePath(), b)
+
 			return
 		}
 	}
