@@ -105,12 +105,9 @@ func emptyDir(dir string) error {
 // and if so delete it
 func removeOldCert(cp CertificateGroupPath) (err error) {
 	cert := utils.CommandSubstitution("openssl", "x509", "-noout", "-subject", "-in", cp.Certificate)
-	cn := strings.Split(cert, "CN = ")
-	if len(cn) > 1 {
-		if cn[1] == "tokaido.local" {
-			utils.DebugString("Removing old certificate file for tokaido.local.")
-			err = emptyDir(path.Dir(cp.Certificate))
-		}
+	if strings.Contains(cert, "tokaido.local") {
+		utils.DebugString("Removing old certificate file for tokaido.local.")
+		err = emptyDir(path.Dir(cp.Certificate))
 	}
 
 	return
