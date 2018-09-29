@@ -44,4 +44,6 @@ func CheckDependencies() {
 	if f {
 		log.Fatalf("Unable to proceed. One or more dependency checks failed")
 	}
+
+	CheckMaxUserWatches()
 }
