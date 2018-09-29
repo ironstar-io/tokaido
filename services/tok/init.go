@@ -31,6 +31,7 @@ func Init() {
 	drupal.CheckSettings()
 	docker.FindOrCreateTokCompose()
 	ssh.GenerateKeys()
+	docker.CreateDatabaseVolume()
 
 	git.IgnoreDefaults()
 

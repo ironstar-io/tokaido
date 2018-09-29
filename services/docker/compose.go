@@ -32,6 +32,18 @@ func composeArgs(args ...string) []string {
 	return append(composeFile, args...)
 }
 
+// CreateDatabaseVolume will create a database volume if it doesn't already exist
+func CreateDatabaseVolume() {
+	n := "tok_" + conf.GetConfig().Tokaido.Project.Name + "_mysql_database"
+	o := utils.BashStringCmd(`docker volume ls | grep ` + n)
+	if o == n {
+		utils.DebugString("existing database volume found, not creating a new one")
+		return
+	}
+
+	utils.StdoutCmd("docker", "volume", "create", n)
+}
+
 // Up - Lift all containers in the compose file
 func Up() {
 	ComposeStdout("up", "-d")

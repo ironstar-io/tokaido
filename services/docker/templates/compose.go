@@ -104,6 +104,23 @@ func WindowsAjustments() []byte {
     image: onnimonni/unison:2.48.4`)
 }
 
+// MysqlVolumeDeclare ...
+func MysqlVolumeDeclare(name string) []byte {
+	return []byte(`volumes:
+  ` + name + `:
+    external: true
+`)
+}
+
+// MysqlVolumeAttach ...
+func MysqlVolumeAttach(name string) []byte {
+	return []byte(`services:
+  mysql:
+    volumes:
+      - ` + name + `:/var/lib/mysql
+`)
+}
+
 // ModWarning - Displayed at the top of `docker-compose.tok.yml`
 var ModWarning = []byte(`
 # WARNING: THIS FILE IS MANAGED DIRECTLY BY TOKAIDO.
@@ -174,14 +191,16 @@ services:
     image: mysql:5.7
     volumes_from:
       - syslog
+    volumes: 
+      - waiting
     ports:
       - "3306"
-    command: --max_allowed_packet=67108864
+    command: --max_allowed_packet=67108864 --ignore-db-dir=lost+found
     environment:
       MYSQL_DATABASE: tokaido
       MYSQL_USER: tokaido
       MYSQL_PASSWORD: tokaido
-      MYSQL_ROOT_PASSWORD: tokaido
+      MYSQL_ROOT_PASSWORD: tokaido    
   drush:
     image: tokaido/drush-heavy:latest
     hostname: 'tokaido'
