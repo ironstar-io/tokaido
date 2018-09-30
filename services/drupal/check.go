@@ -48,14 +48,19 @@ func CheckContainer() {
 	fmt.Println(`
 Tokaido is running but it looks like your Drupal site isn't installed.
 
-You can install Drupal by using the web interface at https://project-name:port_number. Note that your database credentials should be:
+You can install Drupal by using the web interface at 
+https://` + conf.GetConfig().Tokaido.Project.Name + `.local.tokaido.io:5154. 
+
+Note that your database credentials are:
 
 Hostname: mysql
 Username: tokaido
 Password: tokaido
 Database name: tokaido
 
-It might be easier to use Drush to install your site, which you can do by connecting to SSH with 'tok ssh' and running 'drush site-install'`)
+It might be easier to use Drush to install your site, which you can do by 
+connecting to SSH with 'ssh ` + conf.GetConfig().Tokaido.Project.Name + `.tok' and 
+running 'drush site-install'`)
 	os.Exit(1)
 }
 

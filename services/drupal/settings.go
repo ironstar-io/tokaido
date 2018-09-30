@@ -170,11 +170,15 @@ func appendTokSettingsRef() {
 
 func createSettingsTok() {
 	dv := conf.GetConfig().Drupal.Majorversion
+	salt, err := GenerateRandomHashSalt()
+	if err != nil {
+		log.Fatalf("Could not create Drupal hash salt %v", err)
+	}
 	var settingsTokBody []byte
 	if dv == "7" {
-		settingsTokBody = drupaltmpl.SettingsD7Tok(conf.GetConfig().Tokaido.Project.Name)
+		settingsTokBody = drupaltmpl.SettingsD7Tok(salt, conf.GetConfig().Tokaido.Project.Name)
 	} else if dv == "8" {
-		settingsTokBody = drupaltmpl.SettingsD8Tok
+		settingsTokBody = drupaltmpl.SettingsD8Tok(salt)
 	} else {
 		log.Fatalf("Could not add Tokaido settings file")
 	}
@@ -186,7 +190,8 @@ func allowBuildSettings() bool {
 	confirmation := utils.ConfirmationPrompt(`
 Tokaido can automatically add database connection settings to your Drupal site.  
 
-If you prefer to make these changes yourself, choose no and we'll show you the database connection settings you'll need.
+If you prefer to make these changes yourself, choose no and we'll show you 
+the database connection settings you'll need.
 
 Let Tokaido automatically configure your database connection settings?`, "y")
 
@@ -200,7 +205,7 @@ Username: tokaido
 Password: tokaido
 Database name: tokaido
 
-Please see the Tokaido environments guide at https://docs.tokaido.io/environments
+Please see the Tokaido documentation at https://tokaido.io/docs/
 for more information on setting up your Tokaido environment.
 
 		`)
@@ -212,7 +217,8 @@ for more information on setting up your Tokaido environment.
 func permissionErrMsg(errString string) {
 	fmt.Printf(`
 %s
-Please make sure that you manually configure your Drupal site to use the following database connection details:
+Please make sure that you manually configure your Drupal site to use the 
+following database connection details:
 
 Hostname: mysql
 Username: tokaido

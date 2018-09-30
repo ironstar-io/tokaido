@@ -33,7 +33,7 @@ var StatusCmd = &cobra.Command{
 		console.Println(`
 🍜  Checks have passed successfully
 		`, "")
-		console.Println(`🌎  Run 'tok open' to open the environment at 'https://localhost:`+docker.LocalPort("haproxy", "8443")+`' in your default browser
+		console.Println(`🌎  Run 'tok open' to open the environment in your default browser
 		`, "")
 	},
 }
