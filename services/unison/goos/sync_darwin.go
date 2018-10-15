@@ -4,6 +4,7 @@ package goos
 
 import (
 	"bytes"
+	"errors"
 	"log"
 	"os/user"
 	"path/filepath"
@@ -109,16 +110,17 @@ func (s UnisonSvc) SyncServiceStatus() string {
 }
 
 // CheckSyncService a verbose sync status check used for tok status
-func (s UnisonSvc) CheckSyncService() {
+func (s UnisonSvc) CheckSyncService() error {
 	if conf.GetConfig().System.Syncsvc.Enabled != true {
-		return
+		return nil
 	}
 
 	c := s.SyncServiceStatus()
 	if c == "running" {
 		console.Println("✅  Background sync service is running", "√")
-		return
+		return nil
 	}
 
 	console.Println(bgSyncFailMsg, "")
+	return errors.New(bgSyncFailMsg)
 }

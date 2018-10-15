@@ -1,15 +1,15 @@
 package docker
 
 import (
+	"bufio"
+	"errors"
+	"fmt"
+	"path/filepath"
+	"strings"
+
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/utils"
-
-	"bufio"
-	"fmt"
-	"os"
-	"path/filepath"
-	"strings"
 )
 
 // ComposeStdout - Convenience method for docker-compose shell commands
@@ -87,7 +87,7 @@ func Exec(args []string) {
 }
 
 // StatusCheck ...
-func StatusCheck() {
+func StatusCheck() error {
 	rawStatus := ComposeResult("ps")
 
 	unavailableContainers := false
@@ -113,9 +113,12 @@ View the status of your containers with 'tok ps'
 
 You can try to fix this by running 'tok up', or by running 'tok repair'.
 	`)
-		os.Exit(1)
+
+		return errors.New("Tokaido containers are not running correctly")
 	}
 
-	console.Println(`
-✅  All containers are running`, "√")
+	fmt.Println()
+	console.Println(`✅  All containers are running`, "√")
+
+	return nil
 }

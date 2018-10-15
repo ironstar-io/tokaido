@@ -3,19 +3,19 @@
 package goos
 
 import (
+	"bytes"
+	"errors"
+	"fmt"
+	"html/template"
+	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/services/unison/templates"
 	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/daemon"
 	"github.com/ironstar-io/tokaido/system/fs"
-
-	"bytes"
-	"fmt"
-	"html/template"
-	"log"
-	"path/filepath"
 )
 
 var bgSyncFailMsg = `
@@ -114,16 +114,17 @@ func (s UnisonSvc) StopSyncService() {
 }
 
 // CheckSyncService a verbose sync status check used for tok status
-func (s UnisonSvc) CheckSyncService() {
+func (s UnisonSvc) CheckSyncService() error {
 	if conf.GetConfig().System.Syncsvc.Enabled != true {
-		return
+		return nil
 	}
 
 	c := s.SyncServiceStatus()
 	if c == "running" {
 		console.Println("✅  Background sync service is running", "√")
-		return
+		return nil
 	}
 
 	fmt.Println(bgSyncFailMsg)
+	return errors.New(bgSyncFailMsg)
 }

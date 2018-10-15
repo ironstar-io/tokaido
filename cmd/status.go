@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/services/drupal"
@@ -8,7 +10,6 @@ import (
 	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/ssh"
 	"github.com/ironstar-io/tokaido/utils"
-
 	"github.com/spf13/cobra"
 )
 
@@ -22,18 +23,24 @@ var StatusCmd = &cobra.Command{
 
 		docker.HardCheckTokCompose()
 
-		docker.StatusCheck()
+		err := docker.StatusCheck()
 
-		ssh.CheckKey()
+		err = ssh.CheckKey()
 
-		unison.CheckSyncService(conf.GetConfig().Tokaido.Project.Name)
+		err = unison.CheckSyncService(conf.GetConfig().Tokaido.Project.Name)
 
-		drupal.CheckContainer()
+		err = drupal.CheckContainer()
 
-		console.Println(`
-🍜  Checks have passed successfully
-		`, "")
-		console.Println(`🌎  Run 'tok open' to open the environment in your default browser
-		`, "")
+		if err == nil {
+			fmt.Println()
+			console.Println(`🍜  Checks have passed successfully`, "")
+			fmt.Println()
+			console.Println(`🌎  Run 'tok open' to open the environment in your default browser`, "")
+			fmt.Println()
+		} else {
+			fmt.Println()
+			console.Println("🙅  Some checks failed! Have you tried re-running `tok up`?", "")
+			fmt.Println()
+		}
 	},
 }

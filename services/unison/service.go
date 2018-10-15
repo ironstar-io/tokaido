@@ -38,9 +38,9 @@ func SyncServiceStatus(syncName string) string {
 }
 
 // CheckSyncService a verbose sync status check used for tok status
-func CheckSyncService(syncName string) {
+func CheckSyncService(syncName string) error {
 	s := goos.NewUnisonSvc(syncName, "")
-	s.CheckSyncService()
+	return s.CheckSyncService()
 }
 
 // BackgroundServiceWarning - Check if the background sync service is running and warn if not
