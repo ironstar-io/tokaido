@@ -4,10 +4,6 @@ import (
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/services/tok"
 	"github.com/ironstar-io/tokaido/utils"
-	"github.com/ironstar-io/tokaido/constants"
-
-	"log"
-
 	"github.com/spf13/cobra"
 )
 
@@ -18,9 +14,7 @@ var UpCmd = &cobra.Command{
 	Long:  "Start a Tokaido local development environment",
 	Run: func(cmd *cobra.Command, args []string) {
 		utils.CheckCmdHard("docker-compose")
-		if conf.GetConfig().Tokaido.Project.Name == constants.ProjectRootNotFound {
-			log.Fatal(constants.ProjectNotFoundError)
-		}
+		conf.ValidProjectRoot()
 
 		tok.Init()
 		tok.InitMessage()
