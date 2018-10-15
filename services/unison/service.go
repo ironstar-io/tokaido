@@ -1,8 +1,11 @@
 package unison
 
 import (
+	"fmt"
+
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/services/unison/goos"
+	"github.com/ironstar-io/tokaido/system/console"
 )
 
 var bgSyncFailMsg = `
@@ -38,4 +41,18 @@ func SyncServiceStatus(syncName string) string {
 func CheckSyncService(syncName string) {
 	s := goos.NewUnisonSvc(syncName, "")
 	s.CheckSyncService()
+}
+
+// BackgroundServiceWarning - Check if the background sync service is running and warn if not
+func BackgroundServiceWarning(syncName string) {
+	if conf.GetConfig().System.Syncsvc.Enabled != true {
+		return
+	}
+
+	s := goos.NewUnisonSvc(syncName, "")
+	if s.SyncServiceStatus() != "running" {
+		fmt.Println()
+		console.Println("⚠️  The background sync service is not running. Manually sync with `tok watch` or try running `tok up` again", "")
+		fmt.Println()
+	}
 }
