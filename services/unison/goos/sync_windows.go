@@ -45,5 +45,5 @@ func (s UnisonSvc) StopSyncService() {
 
 // CheckSyncService - Unused placeholder
 func (s UnisonSvc) CheckSyncService() error {
-	return
+	return nil
 }
