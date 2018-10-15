@@ -1,13 +1,13 @@
 package goos
 
 import (
-	"github.com/ironstar-io/tokaido/system/fs"
-	"github.com/ironstar-io/tokaido/utils"
-
 	"fmt"
 	"log"
 	"os/exec"
 	"path/filepath"
+
+	"github.com/ironstar-io/tokaido/system/fs"
+	"github.com/ironstar-io/tokaido/utils"
 )
 
 // CheckDependencies - Root executable
@@ -35,50 +35,66 @@ func CheckBrew() *string {
 func CheckDockersync() {
 	_, err := exec.LookPath("unison-fsmonitor")
 	if err != nil {
-		_, perr := exec.LookPath("pip")
-		if perr == nil {
-			fmt.Println("    The dependency 'unison-fsmonitor' is missing. Tokaido will attempt to install it with pip")
-
-			ut := filepath.Join(fs.WorkDir(), "unox.tar.gz")
-			td := filepath.Join(fs.WorkDir(), "unox-0.2.0")
-			_, cerr := utils.CommandSubSplitOutput("curl", "-o", ut, "https://codeload.github.com/hnsl/unox/tar.gz/0.2.0")
-			if cerr != nil {
-				fmt.Println(cerr)
+		fmt.Println("    The dependency 'unison-fsmonitor' is missing. Tokaido will install it with Homebrew")
+		err = stdUnisonInstall()
+		if err != nil {
+			fmt.Println(err)
+			err = altUnisonInstall()
+			if err != nil {
+				fmt.Println(err)
 				fsmonitorFatal()
 			}
-			_, gerr := utils.BashStringSplitOutput("gunzip -c " + ut + " | tar xopf -")
-			if gerr != nil {
-				fmt.Println(gerr)
-				fsmonitorFatal()
-			}
-			_, uerr := utils.CommandSubSplitOutput("pip", "install", td)
-			if gerr != nil {
-				fmt.Println(uerr)
-				fsmonitorFatal()
-			}
-
-			fs.Remove(ut)
-			fs.RemoveAll(td)
-
-			fmt.Println("  √  unison-fsmonitor")
-
-			return
 		}
 
-		fsmonitorFatal()
+		fmt.Println("  √  unison-fsmonitor")
 	}
 
-	// Temporarily disabled automated install through brew due to an issue with the install process
-	// Outlined in this issue: https://github.com/ironstar-io/tokaido/issues/22
-
-	// if err != nil {
-	// 	fmt.Println("    unison-fsmonitor is missing. Tokaido will install it with Homebrew")
-	// 	utils.StdoutCmd("brew", "tap", "eugenmayer/dockersync")
-	// 	utils.StdoutCmd("brew", "install", "eugenmayer/dockersync/unox")
-	// 	fmt.Println("  √  unison-fsmonitor")
-	// }
-
 	return
+}
+
+func stdUnisonInstall() error {
+	_, err := utils.CommandSubSplitOutput("brew", "tap", "eugenmayer/dockersync")
+	if err != nil {
+		return err
+	}
+
+	_, err = utils.CommandSubSplitOutput("brew", "install", "eugenmayer/dockersync/unox")
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func altUnisonInstall() error {
+	_, err := exec.LookPath("pip")
+	if err == nil {
+		fmt.Println("    The dependency 'unison-fsmonitor' was unable to be installed with brew. Tokaido will attempt to install it with pip")
+
+		ut := filepath.Join(fs.WorkDir(), "unox.tar.gz")
+		td := filepath.Join(fs.WorkDir(), "unox-0.2.0")
+		_, err = utils.CommandSubSplitOutput("curl", "-o", ut, "https://codeload.github.com/hnsl/unox/tar.gz/0.2.0")
+		if err != nil {
+			return err
+		}
+		_, err = utils.BashStringSplitOutput("gunzip -c " + ut + " | tar xopf -")
+		if err != nil {
+			return err
+		}
+		_, err = utils.CommandSubSplitOutput("pip", "install", td)
+		if err != nil {
+			return err
+		}
+
+		fs.Remove(ut)
+		fs.RemoveAll(td)
+
+		fmt.Println("  √  unison-fsmonitor")
+
+		return nil
+	}
+
+	return err
 }
 
 func fsmonitorFatal() {
