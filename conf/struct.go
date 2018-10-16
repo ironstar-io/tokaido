@@ -22,8 +22,11 @@ type Config struct {
 		} `yaml:"project"`
 	} `yaml:"tokaido"`
 	Drupal struct {
-		Path         string `yaml:"path,omitempty"`
-		Majorversion string `yaml:"majorversion,omitempty"`
+		Path              string `yaml:"path,omitempty"`
+		Majorversion      string `yaml:"majorversion,omitempty"`
+		FilePublicPath    string `yaml:"filepublicpath,omitempty"`
+		FilePrivatePath   string `yaml:"fileprivatepath,omitempty"`
+		FileTemporaryPath string `yaml:"filetemporarypath,omitempty"`
 	} `yaml:"drupal,omitempty"`
 	Nginx struct {
 		Workerconnections  string `yaml:"workerconnections,omitempty"`
