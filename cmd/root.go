@@ -1,18 +1,17 @@
 package cmd
 
 import (
-	"log"
-
-	"github.com/ironstar-io/tokaido/conf"
-	"github.com/ironstar-io/tokaido/system/fs"
-	"github.com/ironstar-io/tokaido/system/version"
-
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"runtime"
 	"strings"
 
+	"github.com/ironstar-io/tokaido/conf"
+	"github.com/ironstar-io/tokaido/constants"
+	"github.com/ironstar-io/tokaido/system/fs"
+	"github.com/ironstar-io/tokaido/system/version"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -91,6 +90,9 @@ func initConfig() {
 	viper.SetDefault("Tokaido.Enableemoji", emojiDefaults())
 	viper.SetDefault("Tokaido.Project.Name", strings.Replace(filepath.Base(pr), ".", "", -1))
 	viper.SetDefault("Tokaido.Project.Path", pr)
+	viper.SetDefault("Drupal.FilePublicPath", "")
+	viper.SetDefault("Drupal.FilePrivatePath", constants.DefaultDrupalPrivatePath)
+	viper.SetDefault("Drupal.FileTemporaryPath", constants.DefaultDrupalTemporaryPath)
 	viper.SetDefault("System.Syncsvc.Enabled", true)
 	viper.SetDefault("System.Proxy.Enabled", true)
 
