@@ -115,9 +115,9 @@ func (s *Settings) generateD7Paths() string {
 func (s *Settings) generateD8Paths() string {
 	var ps string
 
-	ps = ps + "$settings['file_private_path'] = '/tokaido/" + s.FilePrivatePath + "';"
+	ps = ps + "$settings['file_private_path'] = '/tokaido" + s.FilePrivatePath + "';"
 	if s.FilePublicPath != "" {
-		ps = ps + "\n$settings['file_public_path'] = '/tokaido/" + s.FilePublicPath + "';"
+		ps = ps + "\n$settings['file_public_path'] = '/tokaido" + s.FilePublicPath + "';"
 	}
 	ps = ps + "\n$settings['file_temporary_path'] = '" + s.FileTemporaryPath + "';"
 
