@@ -103,9 +103,9 @@ if (\Drupal::hasService('cache.backend.memcache')) {
 func (s *Settings) generateD7Paths() string {
 	var ps string
 
-	ps = ps + "$conf['file_private_path'] = '" + s.FilePrivatePath + "';"
+	ps = ps + "$conf['file_private_path'] = '/tokaido/" + s.FilePrivatePath + "';"
 	if s.FilePublicPath != "" {
-		ps = ps + "\n$conf['file_public_path'] = '" + s.FilePublicPath + "';"
+		ps = ps + "\n$conf['file_public_path'] = '/tokaido/" + s.FilePublicPath + "';"
 	}
 	ps = ps + "\n$conf['file_temporary_path'] = '" + s.FileTemporaryPath + "';"
 
@@ -115,9 +115,9 @@ func (s *Settings) generateD7Paths() string {
 func (s *Settings) generateD8Paths() string {
 	var ps string
 
-	ps = ps + "$settings['file_private_path'] = '" + s.FilePrivatePath + "';"
+	ps = ps + "$settings['file_private_path'] = '/tokaido/" + s.FilePrivatePath + "';"
 	if s.FilePublicPath != "" {
-		ps = ps + "\n$settings['file_public_path'] = '" + s.FilePublicPath + "';"
+		ps = ps + "\n$settings['file_public_path'] = '/tokaido/" + s.FilePublicPath + "';"
 	}
 	ps = ps + "\n$settings['file_temporary_path'] = '" + s.FileTemporaryPath + "';"
 
