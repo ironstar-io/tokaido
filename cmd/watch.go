@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/ironstar-io/tokaido/conf"
+	"github.com/ironstar-io/tokaido/initialize"
 	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/services/unison"
 	"github.com/ironstar-io/tokaido/utils"
@@ -14,6 +15,7 @@ var WatchCmd = &cobra.Command{
 	Short: "Maintain a foreground sync service using Unison",
 	Long:  "Watch your files for changes and sync them to your Tokaido environment, until you exit.",
 	Run: func(cmd *cobra.Command, args []string) {
+		initialize.TokConfig()
 		utils.CheckCmdHard("docker-compose")
 
 		docker.HardCheckTokCompose()

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/ironstar-io/tokaido/conf"
+	"github.com/ironstar-io/tokaido/initialize"
 	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/services/drupal"
 	"github.com/ironstar-io/tokaido/services/unison"
@@ -19,6 +20,7 @@ var StatusCmd = &cobra.Command{
 	Short: "Have Tokaido perform a self-test",
 	Long:  "Checks the status of your Tokaido environment",
 	Run: func(cmd *cobra.Command, args []string) {
+		initialize.TokConfig()
 		utils.CheckCmdHard("docker-compose")
 
 		docker.HardCheckTokCompose()
