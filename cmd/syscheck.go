@@ -1,11 +1,11 @@
 package cmd
 
 import (
+	"github.com/ironstar-io/tokaido/initialize"
 	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/services/drupal"
 	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/utils"
-
 	"github.com/spf13/cobra"
 )
 
@@ -15,6 +15,7 @@ var SyscheckCmd = &cobra.Command{
 	Short: "Test if your local system is ready to run Tokaido",
 	Long:  "Test if your local system is ready to run Tokaido",
 	Run: func(cmd *cobra.Command, args []string) {
+		initialize.TokConfig()
 		utils.CheckCmdHard("docker-compose")
 
 		docker.HardCheckTokCompose()
