@@ -2,16 +2,15 @@ package conf
 
 import (
 	"fmt"
-
-	"github.com/ironstar-io/tokaido/system/console"
-	"github.com/manifoldco/promptui"
-
 	"io"
 	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/ironstar-io/tokaido/system/console"
+	"github.com/manifoldco/promptui"
 )
 
 // GetRootPath ...
@@ -27,7 +26,12 @@ func GetRootPath() string {
 }
 
 // SetDrupalConfig if there is no config already applied
-func SetDrupalConfig() {
+func SetDrupalConfig(drupalType string) {
+	if drupalType == "DEFAULT" {
+		CreateOrReplaceDrupalConfig("/web", "8")
+		return
+	}
+
 	p := GetConfig().Drupal.Path
 	v := GetConfig().Drupal.Majorversion
 

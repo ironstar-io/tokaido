@@ -52,7 +52,7 @@ func New(args []string) {
 
 	// Create Tokaido configuration
 	// TODO: Allow application of Drupal defaults
-	conf.SetDrupalConfig()
+	conf.SetDrupalConfig("DEFAULT")
 	drupal.CheckSettings()
 	docker.FindOrCreateTokCompose()
 	ssh.GenerateKeys()
@@ -63,35 +63,39 @@ func New(args []string) {
 	// Run Unison for syncing
 	unison.DockerUp()
 	unison.CreateOrUpdatePrf(unison.LocalPort(), c.Tokaido.Project.Name, c.Tokaido.Project.Path)
-	s := unison.SyncServiceStatus(c.Tokaido.Project.Name)
-	if s == "stopped" {
-		unison.Sync(c.Tokaido.Project.Name)
-	}
 
-	if c.System.Syncsvc.Enabled {
-		fmt.Println()
-		console.Println(`🔄  Creating a background process to sync your local repo into the Tokaido environment`, "")
-
-		unison.CreateSyncService(c.Tokaido.Project.Name, c.Tokaido.Project.Path)
-	}
+	unison.Sync(c.Tokaido.Project.Name)
 
 	drush.DockerUp()
+	// TODO: Race condition here, need to wait for container to be ready
 
 	// Perform post-launch configuration
 	drupal.ConfigureSSH()
 	xdebug.Configure()
+
+	cs := console.SpinStart("Composer is generating a new Drupal project. This might take some time..")
 
 	// TODO: Move composer setup block to drush package
 	a := ssh.ConnectCommand([]string{"mkdir", "/tmp/composer"})
 	fmt.Println(a)
 	x := ssh.ConnectCommand([]string{"composer", "create-project", "ironstar-io/d8-template:0.3", "/tmp/composer", "--stability", "dev", "--no-interaction"})
 	fmt.Println(x)
-	y := ssh.ConnectCommand([]string{"cp", "-R", "/tmp/composer", "/tokaido/site"})
+	y := ssh.ConnectCommand([]string{"cp", "-R", "/tmp/composer/*", "/tokaido/site"})
 	fmt.Println(y)
 
-	fmt.Println("OK")
+	console.SpinPersist(cs, "🎼", "Composer completed generation of a new Drupal project")
 
-	return
+	unison.Sync(c.Tokaido.Project.Name)
+
+	console.Println(`🔄  Creating a background process to sync your local repo into the Tokaido environment`, "")
+
+	unison.CreateSyncService(c.Tokaido.Project.Name, c.Tokaido.Project.Path)
+
+	conf.SetDrupalConfig("CUSTOM")
+	drupal.CheckSettings()
+	docker.FindOrCreateTokCompose()
+	ssh.GenerateKeys()
+	docker.CreateDatabaseVolume()
 
 	// Fire up the Docker environment
 	if docker.ImageExists("tokaido/drush-heavy:latest") == false {
@@ -105,16 +109,24 @@ func New(args []string) {
 
 	docker.Up()
 
-	// // Perform post-launch configuration
-	// drupal.ConfigureSSH()
-	// xdebug.Configure()
-
 	console.SpinPersist(wo, "🚅", "Tokaido started your containers")
 
 	if c.System.Syncsvc.Enabled && c.System.Proxy.Enabled {
 		console.Println("\n🔐  Setting up HTTPS for your local development environment", "")
 		proxy.Setup()
 	}
+
+	// Memcache, Mailhog, and Adminer should be included in this install.
+	// - run `tok exec cd /tokaido/site/web && drush site-install -y`
+
+	//Enable some Drupal modules:
+	// - `tok exec drush en swiftmailer password_policy password_policy_character_types password_policy_characters password_policy_username memcache health_check`
+
+	git.AddAll()
+	git.Commit("Initial Tokaido Configuration")
+
+	// Finish success message
+	// `tok open`
 }
 
 // NewSuccessMessage ...
