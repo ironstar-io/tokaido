@@ -1,6 +1,8 @@
 package tok
 
 import (
+	"fmt"
+
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/services/drupal"
@@ -13,8 +15,6 @@ import (
 	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/ssh"
 	"github.com/ironstar-io/tokaido/system/version"
-
-	"fmt"
 )
 
 // Init - The core run sheet of `tok up`
@@ -27,7 +27,7 @@ func Init() {
 	version.GetUnisonVersion()
 
 	// Create Tokaido configuration
-	conf.SetDrupalConfig()
+	conf.SetDrupalConfig("CUSTOM")
 	drupal.CheckSettings()
 	docker.FindOrCreateTokCompose()
 	ssh.GenerateKeys()
