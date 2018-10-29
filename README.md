@@ -2,7 +2,6 @@
 
 [![CircleCI](https://circleci.com/gh/ironstar-io/tokaido.svg?style=shield)](https://circleci.com/gh/ironstar-io/tokaido)
 [![GitHub stars](https://img.shields.io/github/stars/ironstar-io/tokaido.svg)](https://github.com/ironstar-io/tokaido/stargazers)
-[![GitHub issues](https://img.shields.io/github/issues/ironstar-io/tokaido.svg)](https://github.com/ironstar-io/tokaido/issues)
 [![GitHub license](https://img.shields.io/badge/license-BSD-blue.svg)](https://github.com/ironstar-io/tokaido)
 
 Tokaido is a command line utility which makes it easier than ever before to 
