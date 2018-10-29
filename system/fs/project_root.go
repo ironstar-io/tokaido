@@ -41,14 +41,14 @@ func IsProjectRoot(path string) bool {
 
 // ScanUp ...
 func ScanUp(path string) string {
-	if path == "/" {
-		log.Fatal("Tokaido needs to be run from inside a Git repository, but could not find one. Exiting...")
-	}
-
 	sd := filepath.Dir(path)
 
 	if IsProjectRoot(sd) == true {
 		return sd
+	}
+
+	if path == "/" {
+		return constants.ProjectRootNotFound
 	}
 
 	return ScanUp(sd)

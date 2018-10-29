@@ -1,22 +1,22 @@
 package ssh
 
 import (
-	"github.com/ironstar-io/tokaido/conf"
-	"github.com/ironstar-io/tokaido/services/docker"
-	"github.com/ironstar-io/tokaido/system/console"
-	"github.com/ironstar-io/tokaido/system/fs"
-	"github.com/ironstar-io/tokaido/utils"
-
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/pem"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
 
+	"github.com/ironstar-io/tokaido/conf"
+	"github.com/ironstar-io/tokaido/services/docker"
+	"github.com/ironstar-io/tokaido/system/console"
+	"github.com/ironstar-io/tokaido/system/fs"
+	"github.com/ironstar-io/tokaido/utils"
 	"golang.org/x/crypto/ssh"
 )
 
@@ -24,14 +24,14 @@ var sshPriv = filepath.Join(fs.HomeDir(), "/.ssh/tok_ssh.key")
 var sshPub = filepath.Join(fs.HomeDir(), "/.ssh/tok_ssh.pub")
 
 // CheckKey ...
-func CheckKey() {
+func CheckKey() error {
 	localPort := docker.LocalPort("drush", "22")
 	cmdStr := `ssh ` + conf.GetConfig().Tokaido.Project.Name + `.tok -q -p ` + localPort + ` -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -C "echo 1" | echo $?`
 
 	keyResult := utils.BashStringCmd(cmdStr)
 	if keyResult == "0" {
 		console.Println("✅  SSH access is configured", "√")
-		return
+		return nil
 	}
 
 	console.Println(`😓  SSH access not configured
@@ -41,7 +41,8 @@ Make sure you have an SSH public key uploaded in './.tok/local/ssh_key.pub'.
 
 You should be able to run 'tok repair' to attempt to fix this automatically
 	`, "×")
-	os.Exit(1)
+
+	return errors.New("SSH access is not configured")
 }
 
 // GenerateKeys ...

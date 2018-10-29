@@ -1,12 +1,8 @@
 package drupal
 
 import (
-	"github.com/ironstar-io/tokaido/conf"
-	"github.com/ironstar-io/tokaido/services/docker"
-	"github.com/ironstar-io/tokaido/system/console"
-	"github.com/ironstar-io/tokaido/utils"
-
 	"bufio"
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -14,6 +10,10 @@ import (
 	"strings"
 
 	"github.com/blang/semver"
+	"github.com/ironstar-io/tokaido/conf"
+	"github.com/ironstar-io/tokaido/services/docker"
+	"github.com/ironstar-io/tokaido/system/console"
+	"github.com/ironstar-io/tokaido/utils"
 )
 
 var rgx = regexp.MustCompile("'(.*?)'")
@@ -34,13 +34,13 @@ func CheckLocal() {
 }
 
 // CheckContainer ...
-func CheckContainer() {
+func CheckContainer() error {
 	haproxyPort := docker.LocalPort("haproxy", "8443")
 
 	drupalStatus := utils.BashStringCmd(`curl -sko /dev/null -I -w"%{http_code}" https://localhost:` + haproxyPort + ` | grep 200`)
 	if drupalStatus == "200" {
 		console.Println("✅  Drupal is listening on HTTPS", "√")
-		return
+		return nil
 	}
 
 	console.Println(`😓  A Drupal site is not installed or is not working
@@ -48,8 +48,8 @@ func CheckContainer() {
 	fmt.Println(`
 Tokaido is running but it looks like your Drupal site isn't installed.
 
-You can install Drupal by using the web interface at 
-https://` + conf.GetConfig().Tokaido.Project.Name + `.local.tokaido.io:5154. 
+You can install Drupal by using the web interface at
+https://` + conf.GetConfig().Tokaido.Project.Name + `.local.tokaido.io:5154.
 
 Note that your database credentials are:
 
@@ -58,10 +58,11 @@ Username: tokaido
 Password: tokaido
 Database name: tokaido
 
-It might be easier to use Drush to install your site, which you can do by 
-connecting to SSH with 'ssh ` + conf.GetConfig().Tokaido.Project.Name + `.tok' and 
+It might be easier to use Drush to install your site, which you can do by
+connecting to SSH with 'ssh ` + conf.GetConfig().Tokaido.Project.Name + `.tok' and
 running 'drush site-install'`)
-	os.Exit(1)
+
+	return errors.New("Drupal site is not installed")
 }
 
 // checkDrupalVersion ...

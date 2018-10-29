@@ -23,6 +23,19 @@
   revision = "2972be24d48e78746da79ba8e24e8b488c9880de"
 
 [[projects]]
+  name = "github.com/cloudflare/cfssl"
+  packages = [
+    "certdb",
+    "crypto/pkcs7",
+    "errors",
+    "helpers",
+    "helpers/derhelpers",
+    "log"
+  ]
+  revision = "27b05afbb5132883b0942e87e3dd53d194aaa2f5"
+  version = "1.3.0"
+
+[[projects]]
   branch = "master"
   name = "github.com/daaku/go.zipexe"
   packages = ["."]
@@ -426,6 +439,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "379440f8deb0c253cb494d570c6a557e0324afcd714d8d9a9b729f28208dae7a"
+  inputs-digest = "5afbafd5a64a8bf0222b5cbda9b25af22247c5be4c6472d8a67d4563fa8e69fb"
   solver-name = "gps-cdcl"
   solver-version = 1

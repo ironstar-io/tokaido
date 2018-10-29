@@ -1,14 +1,12 @@
 package cmd
 
 import (
-	"reflect"
-
-	"github.com/ironstar-io/tokaido/conf"
-
 	"fmt"
 	"log"
+	"reflect"
 	"regexp"
 
+	"github.com/ironstar-io/tokaido/conf"
 	"github.com/sanity-io/litter"
 	"github.com/spf13/cobra"
 )
@@ -19,6 +17,8 @@ var ConfigGetCmd = &cobra.Command{
 	Short: "Get a config property value",
 	Long:  "Get a config property value. Eg. `tok config-get drupal path`. See https://tokaido.io/docs/config for a full list of available options",
 	Run: func(cmd *cobra.Command, args []string) {
+		conf.ValidProjectRoot()
+
 		c, err := conf.GetConfigValueByArgs(args)
 		if err != nil {
 			log.Fatal(err)
