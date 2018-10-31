@@ -42,7 +42,7 @@ func buildProjectFrame(projectName string) {
 }
 
 func composerCreateProject() {
-	cs := console.SpinStart("Composer is generating a new Drupal project. This might take some time")
+	cs := console.SpinStart("Using composer to generate the new Drupal project files. This might take some time")
 
 	ssh.ConnectCommand([]string{"mkdir", "/tmp/composer"})
 	ssh.ConnectCommand([]string{"composer", "create-project", "ironstar-io/d8-template:0.3", "/tmp/composer", "--stability", "dev", "--no-interaction"})
@@ -105,8 +105,9 @@ func New(args []string) {
 	conf.SetDrupalConfig("DEFAULT")
 	drupal.CheckSettings()
 	docker.FindOrCreateTokCompose()
-	ssh.GenerateKeys()
 	docker.CreateDatabaseVolume()
+	ssh.GenerateKeys()
+	// TODO: Add PHP/Drupal gitignore defaults
 	git.IgnoreDefaults()
 
 	// Lift the unison container and sync
@@ -130,10 +131,6 @@ func New(args []string) {
 	// Wait until all processes complete
 	wg.Wait()
 
-	// Create Tokaido configuration for drupal post composer install
-	drupal.CheckSettings()
-	docker.CreateDatabaseVolume()
-
 	// TODO: Memcache, Mailhog, and Adminer should be included in this install.
 
 	// Fire up the full Tokaido environment
@@ -141,6 +138,9 @@ func New(args []string) {
 	wo := console.SpinStart("Tokaido is starting your containers")
 	docker.Up()
 	console.SpinPersist(wo, "🚅", "Tokaido started your containers")
+
+	// Create Tokaido configuration for drupal post composer install
+	drupal.CheckSettings()
 
 	// Batch proxy setup and drush site-install
 	wg.Add(2)
