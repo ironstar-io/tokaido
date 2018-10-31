@@ -49,6 +49,13 @@ func Up() {
 	ComposeStdout("up", "-d")
 }
 
+// UpMulti - Lift a specific list of containers
+func UpMulti(args []string) {
+	c := append([]string{"up", "-d"}, args...)
+
+	ComposeStdout(c...)
+}
+
 // Stop - Stop all containers in the compose file
 func Stop() {
 	fmt.Println()
