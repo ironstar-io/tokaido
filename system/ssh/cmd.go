@@ -22,5 +22,7 @@ func ConnectCommand(args []string) string {
 		log.Fatal(err)
 	}
 
+	utils.DebugString(r)
+
 	return r
 }
