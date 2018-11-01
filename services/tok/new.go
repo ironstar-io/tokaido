@@ -103,7 +103,7 @@ func New(args []string) {
 
 	// Create Tokaido configuration
 	conf.SetDrupalConfig("DEFAULT")
-	drupal.CheckSettings()
+	drupal.CheckSettings() // Might not be needed here? Need to suppress warning message
 	docker.FindOrCreateTokCompose()
 	docker.CreateDatabaseVolume()
 	ssh.GenerateKeys()
@@ -121,15 +121,17 @@ func New(args []string) {
 	xdebug.Configure()
 
 	// Batch composer create project and create sync service
-	wg.Add(3)
+	wg.Add(2)
 	// `composer create-project` inside the drush container
 	go composerCreateProject()
-	// Create a unison sync service
-	go createSyncService(c)
 	// Pull all required docker images
 	go dockerPullImages()
 	// Wait until all processes complete
 	wg.Wait()
+
+	// Sync service is async and causes a race condition due to the large number of files changed.
+	// Must manually sync until stable
+	unison.Sync(c.Tokaido.Project.Name)
 
 	// TODO: Memcache, Mailhog, and Adminer should be included in this install.
 
@@ -141,11 +143,14 @@ func New(args []string) {
 
 	// Create Tokaido configuration for drupal post composer install
 	drupal.CheckSettings()
+	unison.Sync(c.Tokaido.Project.Name)
 
 	// Batch proxy setup and drush site-install
-	wg.Add(2)
+	wg.Add(3)
 	// Setup HTTPS proxy service. Retain if statement to preserve Tokaido level enable/disable defaults
 	go setupProxy(c)
+	// Create a unison sync service
+	go createSyncService(c)
 	// Drush site install, add additional packages
 	go drushSiteInstall()
 	wg.Wait()
