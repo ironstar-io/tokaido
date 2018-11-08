@@ -34,6 +34,7 @@ func NewGitignore() {
 docker-compose.tok.yml
 .tok/local
 private/default/*
+vendor
 ` + p + `/sites/*/settings.tok.php
 ` + p + `/sites/*/files/*
 
