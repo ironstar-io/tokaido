@@ -48,19 +48,15 @@ func composerCreateProject() {
 
 	wg.Done()
 }
-func createSyncService(c *conf.Config) {
-	console.Println(`🔄  Creating a background process to sync your local repo into the Tokaido environment`, "")
-	unison.CreateSyncService(c.Tokaido.Project.Name, c.Tokaido.Project.Path)
 
-	wg.Done()
-}
 func dockerPullImages() {
 	docker.PullImages()
 
 	wg.Done()
 }
 
-func setupProxy(c *conf.Config) {
+func setupProxy() {
+	c := conf.GetConfig()
 	if c.System.Syncsvc.Enabled && c.System.Proxy.Enabled {
 		console.Println("\n🔐  Setting up HTTPS for your local development environment", "")
 		proxy.Setup()
@@ -142,12 +138,13 @@ func New(args []string) {
 	unison.Sync(c.Tokaido.Project.Name)
 
 	// Create a unison sync service
-	createSyncService(c)
+	console.Println(`🔄  Creating a background process to sync your local repo into the Tokaido environment`, "")
+	unison.CreateSyncService(c.Tokaido.Project.Name, c.Tokaido.Project.Path)
 
 	// Batch proxy setup and drush site-install
 	wg.Add(2)
 	// Setup HTTPS proxy service. Retain if statement to preserve Tokaido level enable/disable defaults
-	go setupProxy(c)
+	go setupProxy()
 	// Drush site install, add additional packages
 	go drushSiteInstall()
 	wg.Wait()
