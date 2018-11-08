@@ -158,6 +158,8 @@ services:
   varnish:
     user: "1004"
     image: tokaido/varnish:latest
+    ports:
+      - "8081"
     depends_on:
       - nginx
     volumes_from:

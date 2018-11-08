@@ -22,6 +22,7 @@ var defaultContainers = map[string]string{
 	"mysql":   "3306",
 	"nginx":   "8082",
 	"unison":  "5000",
+	"varnish": "8081",
 }
 
 var optionalContainers = map[string]string{
