@@ -2,8 +2,6 @@
 
 package goos
 
-import ()
-
 type UnisonSvc struct {
 	SyncName string
 	SyncDir  string
@@ -46,6 +44,6 @@ func (s UnisonSvc) StopSyncService() {
 }
 
 // CheckSyncService - Unused placeholder
-func (s UnisonSvc) CheckSyncService() {
-	return
+func (s UnisonSvc) CheckSyncService() error {
+	return nil
 }
