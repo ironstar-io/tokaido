@@ -14,6 +14,7 @@ func OpenSite(args []string) {
 		"adminer": "8080",
 		"mailhog": "8025",
 		"nginx":   "8082",
+		"varnish": "8081",
 	}
 
 	if len(args) >= 1 {
@@ -21,7 +22,7 @@ func OpenSite(args []string) {
 			if len(services[arg]) > 0 {
 				p = docker.LocalPort(arg, services[arg])
 				if arg == "haproxy" {
-					OpenHaproxySite()
+					goos.OpenSite("https://localhost:" + p)
 					return
 				}
 				goos.OpenSite("http://localhost:" + p)

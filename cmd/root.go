@@ -36,6 +36,7 @@ func init() {
 	rootCmd.AddCommand(OpenCmd)
 	rootCmd.AddCommand(PortsCmd)
 	rootCmd.AddCommand(PsCmd)
+	rootCmd.AddCommand(PurgeCmd)
 	rootCmd.AddCommand(StatusCmd)
 	rootCmd.AddCommand(StopCmd)
 	rootCmd.AddCommand(SyncCmd)
