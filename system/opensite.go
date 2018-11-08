@@ -15,6 +15,7 @@ func OpenSite(args []string) {
 		"mailhog": "8025",
 		"nginx":   "8082",
 		"varnish": "8081",
+		"solr":    "8983",
 	}
 
 	if len(args) >= 1 {

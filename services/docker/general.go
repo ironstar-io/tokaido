@@ -34,6 +34,7 @@ var optionalContainers = map[string]string{
 
 // PrintPorts - Print a port map of all containers, or a single container
 func PrintPorts(containers []string) {
+	// Return all containers if no specific container was provided
 	if len(containers) == 0 {
 		data := make([][]string, len(defaultContainers))
 
@@ -56,13 +57,17 @@ func PrintPorts(containers []string) {
 		return
 	}
 
+	// Return a single container
 	target := containers[0]
-	if defaultContainers[target] == "" {
+	if len(defaultContainers[target]) > 0 {
+		fmt.Println(LocalPort(target, defaultContainers[target]))
+	} else if len(optionalContainers[target]) > 0 {
+		fmt.Println(LocalPort(target, optionalContainers[target]))
+	} else {
 		fmt.Println("There aren't any containers matching the name '" + target + "'")
-		return
 	}
 
-	fmt.Println(LocalPort(target, defaultContainers[target]))
+	return
 }
 
 // LocalPort - Return the local port of a container
