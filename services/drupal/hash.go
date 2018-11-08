@@ -5,8 +5,18 @@ import (
 	"encoding/base64"
 	"fmt"
 	"io"
+	"log"
 	"strings"
 )
+
+// Hash is run from the command line and prints out a valid Drupal hash salt
+func Hash() {
+	res, err := GenerateRandomHashSalt()
+	if err != nil {
+		log.Fatalf("Error generating hash salt: %v", err)
+	}
+	fmt.Println("Drupal Hash Salt: ", res)
+}
 
 // generateRandomBytes returns securely generated random bytes.
 // It will return an error if the system's secure random

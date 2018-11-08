@@ -32,6 +32,7 @@ func init() {
 	rootCmd.AddCommand(ConfigSetCmd)
 	rootCmd.AddCommand(DestroyCmd)
 	rootCmd.AddCommand(ExecCmd)
+	rootCmd.AddCommand(HashCmd)
 	rootCmd.AddCommand(LogsCmd)
 	rootCmd.AddCommand(OpenCmd)
 	rootCmd.AddCommand(PortsCmd)
