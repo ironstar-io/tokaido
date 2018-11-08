@@ -34,7 +34,7 @@ func settingsTokPath() string {
 // CheckSettings checks that Drupal is ready to run in the Tokaido environment
 func CheckSettings() {
 	if fs.CheckExists(settingsPath()) == false {
-		fmt.Printf(`
+		fmt.Println(`
 Could not find a file located at "` + settingsPath() + `", database connection may not work!"
 		`)
 		return

@@ -126,7 +126,7 @@ func ComposerCacheVolumeAttach() []byte {
 	return []byte(`services:
   drush:
     volumes:
-      - tok_composer_cache:~/cache
+      - tok_composer_cache:$HOME/.composer/cache
 `)
 }
 

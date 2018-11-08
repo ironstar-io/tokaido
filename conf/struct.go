@@ -170,6 +170,7 @@ type Services struct {
 		Workingdir  string            `yaml:"working_dir,omitempty"`
 		Volumesfrom []string          `yaml:"volumes_from,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`
+		Volumes     []string          `yaml:"volumes,omitempty"`
 	} `yaml:"drush,omitempty"`
 	Solr struct {
 		Enabled     bool              `yaml:"enabled,omitempty"`

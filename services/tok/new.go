@@ -42,13 +42,9 @@ func buildProjectFrame(projectName string) {
 }
 
 func composerCreateProject() {
-	cs := console.SpinStart("Using composer to generate the new Drupal project files. This might take some time")
-
 	ssh.ConnectCommand([]string{"mkdir", "/tmp/composer"})
 	ssh.ConnectCommand([]string{"composer", "create-project", "ironstar-io/d8-template:0.3", "/tmp/composer", "--stability", "dev", "--no-interaction"})
 	ssh.ConnectCommand([]string{"cp", "-R", "/tmp/composer/*", "/tokaido/site"})
-
-	console.SpinPersist(cs, "🎼", "Composer completed generation of a new Drupal project")
 
 	wg.Done()
 }
@@ -103,13 +99,10 @@ func New(args []string) {
 
 	// Create Tokaido configuration
 	conf.SetDrupalConfig("DEFAULT")
-	drupal.CheckSettings() // Might not be needed here? Need to suppress warning message
 	docker.FindOrCreateTokCompose()
 	docker.CreateDatabaseVolume()
 	docker.CreateComposerCacheVolume()
 	ssh.GenerateKeys()
-	// TODO: Add PHP/Drupal gitignore defaults
-	git.IgnoreDefaults()
 
 	// Lift the unison container and sync
 	unison.DockerUp()
@@ -121,6 +114,7 @@ func New(args []string) {
 	drupal.ConfigureSSH()
 	xdebug.Configure()
 
+	cs := console.SpinStart("Using composer to generate the new Drupal project files. This might take some time")
 	// Batch composer create project and create sync service
 	wg.Add(2)
 	// `composer create-project` inside the drush container
@@ -129,6 +123,7 @@ func New(args []string) {
 	go dockerPullImages()
 	// Wait until all processes complete
 	wg.Wait()
+	console.SpinPersist(cs, "🎼", "Composer completed generation of a new Drupal project")
 
 	// Sync service is async and causes a race condition due to the large number of files changed.
 	// Must manually sync until stable
@@ -156,6 +151,8 @@ func New(args []string) {
 	go drushSiteInstall()
 	wg.Wait()
 
+	// Generate a new .gitignore file
+	git.NewGitignore()
 	// Git stage all applicable files and commit
 	git.AddAll()
 	git.Commit("Initial Tokaido Configuration")
