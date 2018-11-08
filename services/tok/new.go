@@ -141,12 +141,13 @@ func New(args []string) {
 	drupal.CheckSettings("FORCE")
 	unison.Sync(c.Tokaido.Project.Name)
 
+	// Create a unison sync service
+	createSyncService(c)
+
 	// Batch proxy setup and drush site-install
-	wg.Add(3)
+	wg.Add(2)
 	// Setup HTTPS proxy service. Retain if statement to preserve Tokaido level enable/disable defaults
 	go setupProxy(c)
-	// Create a unison sync service
-	go createSyncService(c)
 	// Drush site install, add additional packages
 	go drushSiteInstall()
 	wg.Wait()
