@@ -138,7 +138,7 @@ func New(args []string) {
 	console.SpinPersist(wo, "🚅", "Tokaido started your containers")
 
 	// Create Tokaido configuration for drupal post composer install
-	drupal.CheckSettings()
+	drupal.CheckSettings("FORCE")
 	unison.Sync(c.Tokaido.Project.Name)
 
 	// Batch proxy setup and drush site-install

@@ -28,7 +28,7 @@ func Init() {
 
 	// Create Tokaido configuration
 	conf.SetDrupalConfig("CUSTOM")
-	drupal.CheckSettings()
+	drupal.CheckSettings("ASK")
 	docker.FindOrCreateTokCompose()
 	ssh.GenerateKeys()
 	docker.CreateDatabaseVolume()

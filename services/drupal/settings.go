@@ -32,7 +32,7 @@ func settingsTokPath() string {
 }
 
 // CheckSettings checks that Drupal is ready to run in the Tokaido environment
-func CheckSettings() {
+func CheckSettings(checks string) {
 	if fs.CheckExists(settingsPath()) == false {
 		fmt.Println(`
 Could not find a file located at "` + settingsPath() + `", database connection may not work!"
@@ -44,8 +44,10 @@ Could not find a file located at "` + settingsPath() + `", database connection m
 	tokSettingsExists := fs.CheckExists(settingsTokPath())
 
 	if tokSettingsReferenced == false || tokSettingsExists == false {
-		if allowBuildSettings() == false {
-			return
+		if checks != "FORCE" {
+			if allowBuildSettings() == false {
+				return
+			}
 		}
 	} else {
 		return
