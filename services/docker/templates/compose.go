@@ -104,8 +104,8 @@ func WindowsAjustments() []byte {
     image: onnimonni/unison:2.48.4`)
 }
 
-// MysqlVolumeDeclare ...
-func MysqlVolumeDeclare(name string) []byte {
+// ExternalVolumeDeclare ...
+func ExternalVolumeDeclare(name string) []byte {
 	return []byte(`volumes:
   ` + name + `:
     external: true
@@ -118,6 +118,15 @@ func MysqlVolumeAttach(name string) []byte {
   mysql:
     volumes:
       - ` + name + `:/var/lib/mysql
+`)
+}
+
+// ComposerCacheVolumeAttach ...
+func ComposerCacheVolumeAttach() []byte {
+	return []byte(`services:
+  drush:
+    volumes:
+      - tok_composer_cache:~/cache
 `)
 }
 
@@ -193,7 +202,7 @@ services:
     image: mysql:5.7
     volumes_from:
       - syslog
-    volumes: 
+    volumes:
       - waiting
     ports:
       - "3306"
@@ -202,7 +211,7 @@ services:
       MYSQL_DATABASE: tokaido
       MYSQL_USER: tokaido
       MYSQL_PASSWORD: tokaido
-      MYSQL_ROOT_PASSWORD: tokaido    
+      MYSQL_ROOT_PASSWORD: tokaido
   drush:
     image: tokaido/drush-heavy:latest
     hostname: 'tokaido'

@@ -17,7 +17,7 @@ func ConnectCommand(args []string) string {
 	cs := strings.Join(args, " ")
 	pn := conf.GetConfig().Tokaido.Project.Name + ".tok"
 
-	r, err := utils.CommandSubSplitOutput("ssh", []string{"-q", "-o UserKnownHostsFile=/dev/null", "-o StrictHostKeyChecking no", pn, "-C", cs}...)
+	r, err := utils.CommandSubSplitOutput("ssh", []string{"-q", "-o UserKnownHostsFile=/dev/null", "-o StrictHostKeyChecking=no", pn, "-C", cs}...)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -1,12 +1,6 @@
 package docker
 
 import (
-	"github.com/ironstar-io/tokaido/conf"
-	"github.com/ironstar-io/tokaido/services/docker/templates"
-	"github.com/ironstar-io/tokaido/system/console"
-	"github.com/ironstar-io/tokaido/system/fs"
-	"github.com/ironstar-io/tokaido/system/version"
-
 	"bufio"
 	"bytes"
 	"fmt"
@@ -16,6 +10,11 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/ironstar-io/tokaido/conf"
+	"github.com/ironstar-io/tokaido/services/docker/templates"
+	"github.com/ironstar-io/tokaido/system/console"
+	"github.com/ironstar-io/tokaido/system/fs"
+	"github.com/ironstar-io/tokaido/system/version"
 	"gopkg.in/yaml.v2"
 )
 
@@ -79,6 +78,8 @@ func MarshalledDefaults() []byte {
 	mysqlVolName := "tok_" + conf.GetConfig().Tokaido.Project.Name + "_mysql_database"
 	composeVolumeYml := []byte(`volumes:
   ` + mysqlVolName + `:
+    external: true
+  tok_composer_cache:
     external: true`)
 
 	tokComposeYml = append(tokComposeYml[:], composeVolumeYml[:]...)
@@ -108,7 +109,7 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 
 	// Create mysql volume declaration and attachment
 	mysqlVolName := "tok_" + conf.GetConfig().Tokaido.Project.Name + "_mysql_database"
-	errDbDec := yaml.Unmarshal(dockertmpl.MysqlVolumeDeclare(mysqlVolName), &tokStruct)
+	errDbDec := yaml.Unmarshal(dockertmpl.ExternalVolumeDeclare(mysqlVolName), &tokStruct)
 	if errDbDec != nil {
 		log.Fatalf("Error declaring persistent MySQL volume: %v", err)
 	}
@@ -116,6 +117,11 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 	errDbAtt := yaml.Unmarshal(dockertmpl.MysqlVolumeAttach(mysqlVolName), &tokStruct)
 	if errDbAtt != nil {
 		log.Fatalf("Error attaching persistent MySQL volume: %v", err)
+	}
+
+	errCoAtt := yaml.Unmarshal(dockertmpl.ComposerCacheVolumeAttach(), &tokStruct)
+	if errCoAtt != nil {
+		log.Fatalf("Error attaching persistent Composer cache volume: %v", err)
 	}
 
 	if conf.GetConfig().Services.Solr.Enabled {

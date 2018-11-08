@@ -106,6 +106,7 @@ func New(args []string) {
 	drupal.CheckSettings() // Might not be needed here? Need to suppress warning message
 	docker.FindOrCreateTokCompose()
 	docker.CreateDatabaseVolume()
+	docker.CreateComposerCacheVolume()
 	ssh.GenerateKeys()
 	// TODO: Add PHP/Drupal gitignore defaults
 	git.IgnoreDefaults()
