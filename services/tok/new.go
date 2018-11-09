@@ -43,7 +43,7 @@ func buildProjectFrame(projectName string) {
 
 func composerCreateProject() {
 	ssh.ConnectCommand([]string{"mkdir", "/tmp/composer"})
-	ssh.ConnectCommand([]string{"composer", "create-project", "ironstar-io/d8-template:0.3", "/tmp/composer", "--stability", "dev", "--no-interaction"})
+	ssh.StreamConnectCommand([]string{"composer", "create-project", "ironstar-io/d8-template:0.3", "/tmp/composer", "--stability", "dev", "--no-interaction"})
 	ssh.ConnectCommand([]string{"cp", "-R", "/tmp/composer/*", "/tokaido/site"})
 
 	wg.Done()
@@ -61,14 +61,10 @@ func setupProxy() {
 		console.Println("\n🔐  Setting up HTTPS for your local development environment", "")
 		proxy.Setup()
 	}
-
-	wg.Done()
 }
 func drushSiteInstall() {
-	ssh.ConnectCommand([]string{"cd", "/tokaido/site/web", "&&", "drush site-install", "-y"})
-	ssh.ConnectCommand([]string{"drush", "en", "swiftmailer", "password_policy", "password_policy_character_types", "password_policy_characters", "password_policy_username", "memcache", "health_check"})
-
-	wg.Done()
+	ssh.StreamConnectCommand([]string{"cd", "/tokaido/site/web", "&&", "drush site-install", "-y"})
+	ssh.StreamConnectCommand([]string{"drush", "en", "swiftmailer", "password_policy", "password_policy_character_types", "password_policy_characters", "password_policy_username", "memcache", "health_check"})
 }
 
 func deduceProjectName(args []string) string {
@@ -110,7 +106,7 @@ func New(args []string) {
 	drupal.ConfigureSSH()
 	xdebug.Configure()
 
-	cs := console.SpinStart("Using composer to generate the new Drupal project files. This might take some time")
+	console.Println("🎼  Using composer to generate the new Drupal project files. This might take some time", "")
 	// Batch composer create project and create sync service
 	wg.Add(2)
 	// `composer create-project` inside the drush container
@@ -119,7 +115,6 @@ func New(args []string) {
 	go dockerPullImages()
 	// Wait until all processes complete
 	wg.Wait()
-	console.SpinPersist(cs, "🎼", "Composer completed generation of a new Drupal project")
 
 	// Sync service is async and causes a race condition due to the large number of files changed.
 	// Must manually sync until stable
@@ -141,13 +136,10 @@ func New(args []string) {
 	console.Println(`🔄  Creating a background process to sync your local repo into the Tokaido environment`, "")
 	unison.CreateSyncService(c.Tokaido.Project.Name, c.Tokaido.Project.Path)
 
-	// Batch proxy setup and drush site-install
-	wg.Add(2)
 	// Setup HTTPS proxy service. Retain if statement to preserve Tokaido level enable/disable defaults
-	go setupProxy()
+	setupProxy()
 	// Drush site install, add additional packages
-	go drushSiteInstall()
-	wg.Wait()
+	drushSiteInstall()
 
 	// Generate a new .gitignore file
 	git.NewGitignore()
