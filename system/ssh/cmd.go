@@ -26,3 +26,15 @@ func ConnectCommand(args []string) string {
 
 	return r
 }
+
+// StreamConnectCommand - Aliases `ssh <project-name> -C command` and streams std channels
+func StreamConnectCommand(args []string) {
+	if len(args) == 0 {
+		log.Fatal("At least one argument must be supplied to use this command")
+	}
+
+	cs := strings.Join(args, " ")
+	pn := conf.GetConfig().Tokaido.Project.Name + ".tok"
+
+	utils.StreamOSCmd("ssh", []string{"-q", "-o UserKnownHostsFile=/dev/null", "-o StrictHostKeyChecking=no", pn, "-C", cs}...)
+}
