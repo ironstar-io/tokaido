@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"sync"
 
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/constants"
@@ -23,8 +22,6 @@ import (
 	"github.com/ironstar-io/tokaido/system/ssh"
 	"github.com/ironstar-io/tokaido/system/version"
 )
-
-var wg = sync.WaitGroup{}
 
 func buildProjectFrame(projectName string) {
 	if fs.CheckExists(projectName) == true {
@@ -45,14 +42,6 @@ func composerCreateProject() {
 	ssh.ConnectCommand([]string{"mkdir", "/tmp/composer"})
 	ssh.StreamConnectCommand([]string{"composer", "create-project", "ironstar-io/d8-template:0.3", "/tmp/composer", "--stability", "dev", "--no-interaction"})
 	ssh.ConnectCommand([]string{"cp", "-R", "/tmp/composer/*", "/tokaido/site"})
-
-	wg.Done()
-}
-
-func dockerPullImages() {
-	docker.PullImages()
-
-	wg.Done()
 }
 
 func setupProxy() {
@@ -63,7 +52,7 @@ func setupProxy() {
 	}
 }
 func drushSiteInstall() {
-	ssh.StreamConnectCommand([]string{"cd", "/tokaido/site/web", "&&", "drush site-install", "-y"})
+	ssh.StreamConnectCommand([]string{"drush", "site-install", "-y"})
 	ssh.StreamConnectCommand([]string{"drush", "en", "swiftmailer", "password_policy", "password_policy_character_types", "password_policy_characters", "password_policy_username", "memcache", "health_check"})
 }
 
@@ -107,14 +96,11 @@ func New(args []string) {
 	xdebug.Configure()
 
 	console.Println("🎼  Using composer to generate the new Drupal project files. This might take some time", "")
-	// Batch composer create project and create sync service
-	wg.Add(2)
+
 	// `composer create-project` inside the drush container
-	go composerCreateProject()
+	composerCreateProject()
 	// Pull all required docker images
-	go dockerPullImages()
-	// Wait until all processes complete
-	wg.Wait()
+	docker.PullImages()
 
 	// Sync service is async and causes a race condition due to the large number of files changed.
 	// Must manually sync until stable
