@@ -10,7 +10,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/spf13/viper"
 	"gopkg.in/yaml.v2"
@@ -119,7 +118,7 @@ func argsToYaml(args []string) string {
 		y = y + calcWhitespace(i) + mapEdgeKeys(a) + ":"
 	}
 
-	return strings.ToLower(y)
+	return y
 }
 
 func calcWhitespace(i int) string {

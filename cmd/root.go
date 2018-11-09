@@ -28,6 +28,7 @@ var rootCmd = cobra.Command{
 func init() {
 	cobra.OnInitialize(initConfig)
 
+	rootCmd.AddCommand(ConfigCmd)
 	rootCmd.AddCommand(ConfigGetCmd)
 	rootCmd.AddCommand(ConfigSetCmd)
 	rootCmd.AddCommand(DestroyCmd)
@@ -38,6 +39,7 @@ func init() {
 	rootCmd.AddCommand(PortsCmd)
 	rootCmd.AddCommand(PsCmd)
 	rootCmd.AddCommand(PurgeCmd)
+	rootCmd.AddCommand(RebuildCmd)
 	rootCmd.AddCommand(StatusCmd)
 	rootCmd.AddCommand(StopCmd)
 	rootCmd.AddCommand(SyncCmd)
@@ -93,6 +95,7 @@ func initConfig() {
 	viper.SetDefault("Tokaido.Enableemoji", emojiDefaults())
 	viper.SetDefault("Tokaido.Project.Name", strings.Replace(filepath.Base(pr), ".", "", -1))
 	viper.SetDefault("Tokaido.Project.Path", pr)
+
 	viper.SetDefault("System.Syncsvc.Enabled", true)
 	viper.SetDefault("System.Proxy.Enabled", true)
 
