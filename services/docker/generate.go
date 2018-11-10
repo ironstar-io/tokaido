@@ -47,6 +47,7 @@ func FindOrCreateTokCompose() {
 	}
 
 	if conf.GetConfig().Tokaido.Customcompose == true {
+		console.Println(`	You've chosen to use a custom Compose file. Tokaido will not update your docker-compose.tok.yml file`, "")
 		StripModWarning()
 		return
 	}
