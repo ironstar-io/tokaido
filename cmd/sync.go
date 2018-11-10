@@ -15,7 +15,7 @@ var SyncCmd = &cobra.Command{
 	Short: "Perform a one-time sync of your Tokaido environment and local host",
 	Long:  "Perform a one-time sync of your Tokaido environment and local host",
 	Run: func(cmd *cobra.Command, args []string) {
-		initialize.TokConfig()
+		initialize.TokConfig("sync")
 		utils.CheckCmdHard("docker-compose")
 
 		docker.HardCheckTokCompose()

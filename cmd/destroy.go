@@ -14,7 +14,7 @@ var DestroyCmd = &cobra.Command{
 	Short: "Stop and destroy all containers",
 	Long:  "Destroy your Tokaido environment - this will also delete your Tokaido database.",
 	Run: func(cmd *cobra.Command, args []string) {
-		initialize.TokConfig()
+		initialize.TokConfig("destroy")
 		utils.CheckCmdHard("docker-compose")
 
 		docker.HardCheckTokCompose()

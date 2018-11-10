@@ -16,7 +16,7 @@ var OpenCmd = &cobra.Command{
 	Short: "Open the site in your default browser",
 	Long:  "Opens your default browser pointing to the Tokaido HTTPS port",
 	Run: func(cmd *cobra.Command, args []string) {
-		initialize.TokConfig()
+		initialize.TokConfig("open")
 		utils.CheckCmdHard("docker-compose")
 
 		docker.HardCheckTokCompose()

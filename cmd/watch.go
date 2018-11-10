@@ -15,7 +15,7 @@ var WatchCmd = &cobra.Command{
 	Short: "Maintain a foreground sync service using Unison",
 	Long:  "Watch your files for changes and sync them to your Tokaido environment, until you exit.",
 	Run: func(cmd *cobra.Command, args []string) {
-		initialize.TokConfig()
+		initialize.TokConfig("watch")
 		utils.CheckCmdHard("docker-compose")
 
 		docker.HardCheckTokCompose()

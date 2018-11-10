@@ -35,7 +35,7 @@ func buildProjectFrame(projectName string) {
 	}
 
 	git.Init()
-	initialize.TokConfig()
+	initialize.TokConfig("new")
 }
 
 func composerCreateProject() {
@@ -96,7 +96,6 @@ func New(args []string) {
 	xdebug.Configure()
 
 	console.Println("🎼  Using composer to generate the new Drupal project files. This might take some time", "")
-
 	// `composer create-project` inside the drush container
 	composerCreateProject()
 	// Pull all required docker images
@@ -105,8 +104,6 @@ func New(args []string) {
 	// Sync service is async and causes a race condition due to the large number of files changed.
 	// Must manually sync until stable
 	unison.Sync(c.Tokaido.Project.Name)
-
-	// TODO: Memcache, Mailhog, and Adminer should be included in this install.
 
 	// Fire up the full Tokaido environment
 	fmt.Println()
@@ -124,10 +121,9 @@ func New(args []string) {
 
 	// Setup HTTPS proxy service. Retain if statement to preserve Tokaido level enable/disable defaults
 	setupProxy()
+
 	// Drush site install, add additional packages
-
 	console.Println(`💧  Running drush site-install for your new project`, "")
-
 	drushSiteInstall()
 
 	// Generate a new .gitignore file

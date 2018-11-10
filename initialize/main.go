@@ -15,7 +15,7 @@ import (
 )
 
 // TokConfig - loads the config from a file if specified, otherwise from the environment
-func TokConfig() {
+func TokConfig(command string) {
 	createDotTok()
 
 	viper.SetEnvPrefix("TOK")
@@ -44,7 +44,12 @@ func TokConfig() {
 	if runtime.GOOS == "darwin" {
 		viper.SetDefault("System.Syncsvc.Launchdpath", filepath.Join(fs.HomeDir(), "/Library/LaunchAgents/"))
 	}
+	// TODO: Memcache, Mailhog, and Adminer should be included in this install.
 
+	if command == "new" {
+		viper.SetDefault("Services.Adminer.Enabled", true)
+		viper.SetDefault("Services.Mailhog.Enabled", true)
+	}
 	viper.SetDefault("Services.Memcache.Enabled", true)
 	viper.SetDefault("Services.Solr.Enabled", false)
 

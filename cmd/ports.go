@@ -15,7 +15,7 @@ var PortsCmd = &cobra.Command{
 	Short: "Display Docker port bindings",
 	Long:  "Display all or a single local port binding for a Docker container",
 	Run: func(cmd *cobra.Command, args []string) {
-		initialize.TokConfig()
+		initialize.TokConfig("ports")
 		utils.CheckCmdHard("docker-compose")
 
 		docker.HardCheckTokCompose()

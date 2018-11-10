@@ -20,7 +20,7 @@ var StatusCmd = &cobra.Command{
 	Short: "Have Tokaido perform a self-test",
 	Long:  "Checks the status of your Tokaido environment",
 	Run: func(cmd *cobra.Command, args []string) {
-		initialize.TokConfig()
+		initialize.TokConfig("status")
 		utils.CheckCmdHard("docker-compose")
 
 		docker.HardCheckTokCompose()

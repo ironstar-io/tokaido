@@ -12,7 +12,7 @@ var ConfigSetCmd = &cobra.Command{
 	Short: "Set a config property value",
 	Long:  "Set a config property value. Eg. `tok config-set services solr enabled true`. See https://tokaido.io/docs/config for a full list of available options",
 	Run: func(cmd *cobra.Command, args []string) {
-		initialize.TokConfig()
+		initialize.TokConfig("config-get")
 		conf.ValidProjectRoot()
 
 		conf.SetConfigValueByArgs(args)

@@ -15,7 +15,7 @@ var PsCmd = &cobra.Command{
 	Short: "Show Tokaido containers and status",
 	Long:  "Alias for running `docker-compose ps`",
 	Run: func(cmd *cobra.Command, args []string) {
-		initialize.TokConfig()
+		initialize.TokConfig("ps")
 		utils.CheckCmdHard("docker-compose")
 
 		unison.BackgroundServiceWarning(conf.GetConfig().Tokaido.Project.Name)

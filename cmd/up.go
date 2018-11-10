@@ -14,7 +14,7 @@ var UpCmd = &cobra.Command{
 	Short: "Start a Tokaido local development environment",
 	Long:  "Start a Tokaido local development environment",
 	Run: func(cmd *cobra.Command, args []string) {
-		initialize.TokConfig()
+		initialize.TokConfig("up")
 		utils.CheckCmdHard("docker-compose")
 		conf.ValidProjectRoot()
 

@@ -15,7 +15,7 @@ var LogsCmd = &cobra.Command{
 	Short: "Output container logs to the console",
 	Long:  "Output container logs to the console for all or a single container. Example: tok logs fpm",
 	Run: func(cmd *cobra.Command, args []string) {
-		initialize.TokConfig()
+		initialize.TokConfig("logs")
 		utils.CheckCmdHard("docker-compose")
 
 		docker.HardCheckTokCompose()
