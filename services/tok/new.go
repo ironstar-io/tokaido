@@ -125,6 +125,9 @@ func New(args []string) {
 	// Setup HTTPS proxy service. Retain if statement to preserve Tokaido level enable/disable defaults
 	setupProxy()
 	// Drush site install, add additional packages
+
+	console.Println(`💧  Running drush site-install for your new project`, "")
+
 	drushSiteInstall()
 
 	// Generate a new .gitignore file
