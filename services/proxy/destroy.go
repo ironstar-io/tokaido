@@ -1,20 +1,24 @@
 package proxy
 
 import (
+	"fmt"
+	"path/filepath"
+
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/constants"
 	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/system/hostsfile"
-
-	"fmt"
-	"path/filepath"
 )
+
+const proxyNetworkName = "proxy_proxy_1"
 
 // DestroyProject ...
 func DestroyProject() {
 	if fs.CheckExists(getComposePath()) == true {
 		RemoveProjectFromDockerCompose()
 	}
+
+	RemoveNetwork()
 
 	RemoveNginxConf()
 	RemoveFromHostsfile()
@@ -23,6 +27,17 @@ func DestroyProject() {
 
 	RestartContainer("yamanote")
 	RestartContainer("proxy")
+}
+
+// RemoveNetwork ...
+func RemoveNetwork() {
+	n := conf.GetConfig().Tokaido.Project.Name + "_default"
+
+	err := DisconnectNetworkEndpoint(n, proxyNetworkName)
+	if err != nil {
+		fmt.Println("There was an issue disconnecting the docker network from the proxy containers. These can be removed manually with the command `docker network disconnect " + n + " " + proxyNetworkName + "`")
+		fmt.Println(err)
+	}
 }
 
 // RemoveFromHostsfile ...

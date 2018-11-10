@@ -1,12 +1,6 @@
 package docker
 
 import (
-	"github.com/ironstar-io/tokaido/conf"
-	"github.com/ironstar-io/tokaido/services/docker/templates"
-	"github.com/ironstar-io/tokaido/system/console"
-	"github.com/ironstar-io/tokaido/system/fs"
-	"github.com/ironstar-io/tokaido/system/version"
-
 	"bufio"
 	"bytes"
 	"fmt"
@@ -16,6 +10,11 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/ironstar-io/tokaido/conf"
+	"github.com/ironstar-io/tokaido/services/docker/templates"
+	"github.com/ironstar-io/tokaido/system/console"
+	"github.com/ironstar-io/tokaido/system/fs"
+	"github.com/ironstar-io/tokaido/system/version"
 	"gopkg.in/yaml.v2"
 )
 
@@ -79,6 +78,8 @@ func MarshalledDefaults() []byte {
 	mysqlVolName := "tok_" + conf.GetConfig().Tokaido.Project.Name + "_mysql_database"
 	composeVolumeYml := []byte(`volumes:
   ` + mysqlVolName + `:
+    external: true
+  tok_composer_cache:
     external: true`)
 
 	tokComposeYml = append(tokComposeYml[:], composeVolumeYml[:]...)
@@ -96,26 +97,31 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 		log.Fatalf("Error setting Compose file defaults: %v", err)
 	}
 
-	errDrupal := yaml.Unmarshal(getDrupalSettings(), &tokStruct)
-	if errDrupal != nil {
+	err = yaml.Unmarshal(getDrupalSettings(), &tokStruct)
+	if err != nil {
 		log.Fatalf("Error adding Drupal settings to Compose file: %v", err)
 	}
 
-	errUnison := yaml.Unmarshal(dockertmpl.SetUnisonVersion(unisonVersion), &tokStruct)
-	if errUnison != nil {
+	err = yaml.Unmarshal(dockertmpl.SetUnisonVersion(unisonVersion), &tokStruct)
+	if err != nil {
 		log.Fatalf("Error setting Unison version: %v", err)
 	}
 
 	// Create mysql volume declaration and attachment
 	mysqlVolName := "tok_" + conf.GetConfig().Tokaido.Project.Name + "_mysql_database"
-	errDbDec := yaml.Unmarshal(dockertmpl.MysqlVolumeDeclare(mysqlVolName), &tokStruct)
-	if errDbDec != nil {
+	err = yaml.Unmarshal(dockertmpl.ExternalVolumeDeclare(mysqlVolName), &tokStruct)
+	if err != nil {
 		log.Fatalf("Error declaring persistent MySQL volume: %v", err)
 	}
 
-	errDbAtt := yaml.Unmarshal(dockertmpl.MysqlVolumeAttach(mysqlVolName), &tokStruct)
-	if errDbAtt != nil {
+	err = yaml.Unmarshal(dockertmpl.MysqlVolumeAttach(mysqlVolName), &tokStruct)
+	if err != nil {
 		log.Fatalf("Error attaching persistent MySQL volume: %v", err)
+	}
+
+	err = yaml.Unmarshal(dockertmpl.ComposerCacheVolumeAttach(), &tokStruct)
+	if err != nil {
+		log.Fatalf("Error attaching persistent Composer cache volume: %v", err)
 	}
 
 	if conf.GetConfig().Services.Solr.Enabled {
@@ -125,8 +131,8 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 		} else {
 			v = "6.6"
 		}
-		errSolr := yaml.Unmarshal(dockertmpl.EnableSolr(v), &tokStruct)
-		if errSolr != nil {
+		err = yaml.Unmarshal(dockertmpl.EnableSolr(v), &tokStruct)
+		if err != nil {
 			log.Fatalf("Error enabling Solr in Compose file: %v", err)
 		}
 	}
@@ -138,24 +144,24 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 		} else {
 			v = "4.0.11"
 		}
-		errRedis := yaml.Unmarshal(dockertmpl.EnableRedis(v), &tokStruct)
-		if errRedis != nil {
+		err = yaml.Unmarshal(dockertmpl.EnableRedis(v), &tokStruct)
+		if err != nil {
 			log.Fatalf("Error enabling Redis in Compose file: %v", err)
 		}
 	}
 
 	if conf.GetConfig().Services.Mailhog.Enabled {
 		v := "v1.0.0"
-		errMailhog := yaml.Unmarshal(dockertmpl.EnableMailhog(v), &tokStruct)
-		if errMailhog != nil {
+		err = yaml.Unmarshal(dockertmpl.EnableMailhog(v), &tokStruct)
+		if err != nil {
 			log.Fatalf("Error enabling Mailhog in Compose file: %v", err)
 		}
 	}
 
 	if conf.GetConfig().Services.Adminer.Enabled {
 		v := "4-standalone"
-		errAdminer := yaml.Unmarshal(dockertmpl.EnableAdminer(v), &tokStruct)
-		if errAdminer != nil {
+		err = yaml.Unmarshal(dockertmpl.EnableAdminer(v), &tokStruct)
+		if err != nil {
 			log.Fatalf("Error enabling Adminer in Compose file: %v", err)
 		}
 	}
@@ -167,15 +173,15 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 		} else {
 			v = "1.5-alpine"
 		}
-		errMemcache := yaml.Unmarshal(dockertmpl.EnableMemcache(v), &tokStruct)
-		if errMemcache != nil {
+		err = yaml.Unmarshal(dockertmpl.EnableMemcache(v), &tokStruct)
+		if err != nil {
 			log.Fatalf("Error enabling Memcache in Compose file: %v", err)
 		}
 	}
 
 	if conf.GetConfig().Tokaido.Betacontainers {
-		errEdge := yaml.Unmarshal(dockertmpl.EdgeContainers(), &tokStruct)
-		if errEdge != nil {
+		err = yaml.Unmarshal(dockertmpl.EdgeContainers(), &tokStruct)
+		if err != nil {
 			log.Fatalf("Error enabling edge containers in Compose file: %v", err)
 		}
 	}
@@ -187,21 +193,21 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 		} else {
 			v = "latest"
 		}
-		errSolr := yaml.Unmarshal(dockertmpl.EnableXdebug(v), &tokStruct)
-		if errSolr != nil {
+		err = yaml.Unmarshal(dockertmpl.EnableXdebug(v), &tokStruct)
+		if err != nil {
 			log.Fatalf("Error enabling Xdebug in Compose file: %v", err)
 		}
 	}
 
 	if runtime.GOOS == "windows" {
-		errOs := yaml.Unmarshal(dockertmpl.WindowsAjustments(), &tokStruct)
-		if errOs != nil {
+		err = yaml.Unmarshal(dockertmpl.WindowsAjustments(), &tokStruct)
+		if err != nil {
 			log.Fatalf("Error enabling Windows containers in Compose file: %v", err)
 		}
 	}
 
-	errCt := yaml.Unmarshal(getCustomTok(), &tokStruct)
-	if errCt != nil {
+	err = yaml.Unmarshal(getCustomTok(), &tokStruct)
+	if err != nil {
 		log.Fatalf("Error enabling custom Compose config: %v", err)
 	}
 

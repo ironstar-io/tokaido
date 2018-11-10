@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/ironstar-io/tokaido/conf"
+	"github.com/ironstar-io/tokaido/initialize"
 	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/services/unison"
 	"github.com/ironstar-io/tokaido/utils"
@@ -14,6 +15,7 @@ var PsCmd = &cobra.Command{
 	Short: "Show Tokaido containers and status",
 	Long:  "Alias for running `docker-compose ps`",
 	Run: func(cmd *cobra.Command, args []string) {
+		initialize.TokConfig("ps")
 		utils.CheckCmdHard("docker-compose")
 
 		unison.BackgroundServiceWarning(conf.GetConfig().Tokaido.Project.Name)

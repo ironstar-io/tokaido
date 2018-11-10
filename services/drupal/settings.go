@@ -1,12 +1,6 @@
 package drupal
 
 import (
-	"github.com/ironstar-io/tokaido/conf"
-	"github.com/ironstar-io/tokaido/services/drupal/templates"
-	"github.com/ironstar-io/tokaido/system"
-	"github.com/ironstar-io/tokaido/system/fs"
-	"github.com/ironstar-io/tokaido/utils"
-
 	"bufio"
 	"bytes"
 	"fmt"
@@ -14,6 +8,12 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/ironstar-io/tokaido/conf"
+	"github.com/ironstar-io/tokaido/services/drupal/templates"
+	"github.com/ironstar-io/tokaido/system"
+	"github.com/ironstar-io/tokaido/system/fs"
+	"github.com/ironstar-io/tokaido/utils"
 )
 
 type fileMasks struct {
@@ -32,9 +32,9 @@ func settingsTokPath() string {
 }
 
 // CheckSettings checks that Drupal is ready to run in the Tokaido environment
-func CheckSettings() {
+func CheckSettings(checks string) {
 	if fs.CheckExists(settingsPath()) == false {
-		fmt.Printf(`
+		fmt.Println(`
 Could not find a file located at "` + settingsPath() + `", database connection may not work!"
 		`)
 		return
@@ -44,8 +44,10 @@ Could not find a file located at "` + settingsPath() + `", database connection m
 	tokSettingsExists := fs.CheckExists(settingsTokPath())
 
 	if tokSettingsReferenced == false || tokSettingsExists == false {
-		if allowBuildSettings() == false {
-			return
+		if checks != "FORCE" {
+			if allowBuildSettings() == false {
+				return
+			}
 		}
 	} else {
 		return
@@ -169,16 +171,27 @@ func appendTokSettingsRef() {
 }
 
 func createSettingsTok() {
-	dv := conf.GetConfig().Drupal.Majorversion
+	c := conf.GetConfig()
+	dv := c.Drupal.Majorversion
+
 	salt, err := GenerateRandomHashSalt()
 	if err != nil {
 		log.Fatalf("Could not create Drupal hash salt %v", err)
 	}
+
+	dt := drupaltmpl.Settings{
+		HashSalt:          salt,
+		ProjectName:       c.Tokaido.Project.Name,
+		FilePublicPath:    c.Drupal.FilePublicPath,
+		FilePrivatePath:   c.Drupal.FilePrivatePath,
+		FileTemporaryPath: c.Drupal.FileTemporaryPath,
+	}
+
 	var settingsTokBody []byte
 	if dv == "7" {
-		settingsTokBody = drupaltmpl.SettingsD7Tok(salt, conf.GetConfig().Tokaido.Project.Name)
+		settingsTokBody = dt.SettingsD7Tok()
 	} else if dv == "8" {
-		settingsTokBody = drupaltmpl.SettingsD8Tok(salt)
+		settingsTokBody = dt.SettingsD8Tok()
 	} else {
 		log.Fatalf("Could not add Tokaido settings file")
 	}
@@ -188,9 +201,9 @@ func createSettingsTok() {
 
 func allowBuildSettings() bool {
 	confirmation := utils.ConfirmationPrompt(`
-Tokaido can automatically add database connection settings to your Drupal site.  
+Tokaido can automatically add database connection settings to your Drupal site.
 
-If you prefer to make these changes yourself, choose no and we'll show you 
+If you prefer to make these changes yourself, choose no and we'll show you
 the database connection settings you'll need.
 
 Let Tokaido automatically configure your database connection settings?`, "y")
@@ -217,7 +230,7 @@ for more information on setting up your Tokaido environment.
 func permissionErrMsg(errString string) {
 	fmt.Printf(`
 %s
-Please make sure that you manually configure your Drupal site to use the 
+Please make sure that you manually configure your Drupal site to use the
 following database connection details:
 
 Hostname: mysql
