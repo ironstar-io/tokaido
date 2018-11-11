@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/ironstar-io/tokaido/initialize"
 	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/services/tok"
 	"github.com/ironstar-io/tokaido/utils"
@@ -13,9 +14,13 @@ var RebuildCmd = &cobra.Command{
 	Short: "Rebuilds your Tokaido environment",
 	Long:  "Rebuilds your Tokaido environmnet",
 	Run: func(cmd *cobra.Command, args []string) {
+		initialize.TokConfig("stop")
 		utils.CheckCmdHard("docker-compose")
+
 		docker.Stop()
+
 		tok.Init()
+
 		tok.InitMessage()
 
 	},
