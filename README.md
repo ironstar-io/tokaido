@@ -8,7 +8,9 @@ Tokaido is a Drupal environment launcher that _just works_.
 It creates Drupal environments in seconds and requires no manual configuration 
 for your Drupal site to work out-of-the-box. 
 
-[Click here to watch our demo video](https://www.youtube.com/watch?v=pxktV9zQUhM&lc=z23nhfs54myvifnwn04t1aokg1km2r2d2ts4lrdilt4xrk0h00410)
+[Click here to watch our full demo video](https://www.youtube.com/watch?v=pxktV9zQUhM&lc=z23nhfs54myvifnwn04t1aokg1km2r2d2ts4lrdilt4xrk0h00410) or just check out the latest quick-demo below.
+
+[![Tokaido 1.3.0 Quickdemo](https://i.imgur.com/CLAW9If.png)](https://www.youtube.com/watch?v=nEb20jM31_8)
 
 ## Installation
 
