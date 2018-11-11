@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
 
@@ -13,6 +14,7 @@ import (
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/system/console"
+	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/utils"
 )
 
@@ -22,7 +24,7 @@ var checkFailMsg = "\n⚠️  There were some problems detected during the syste
 
 // CheckLocal ...
 func CheckLocal() {
-	if _, err := os.Stat(conf.CoreDrupalFile()); os.IsNotExist(err) {
+	if fs.CheckExists(conf.CoreDrupalFile()) {
 		fmt.Println("  ×  A Drupal installation was not found")
 		console.Printf(checkFailMsg, "")
 		return
@@ -67,7 +69,7 @@ running 'drush site-install'`)
 
 // checkDrupalVersion ...
 func checkDrupalVersion() {
-	drupalVersion := getDrupalVersion()
+	drupalVersion := GetDrupalVersion()
 	if drupalVersion == "" {
 		fmt.Printf("  ×  Tokaido was unable to determine the Drupal version, it should be %s\n", validDrupalRange)
 		console.Printf(checkFailMsg, "")
@@ -85,8 +87,8 @@ func checkDrupalVersion() {
 	}
 }
 
-// getDrupalVersion ...
-func getDrupalVersion() string {
+// GetDrupalVersion ...
+func GetDrupalVersion() string {
 	drupalVersionString := versionStr()
 	if drupalVersionString == "" {
 		return ""
@@ -99,17 +101,13 @@ func getDrupalVersion() string {
 
 // versionStr ...
 func versionStr() string {
-	fmt.Println("Core drupal file is " + conf.CoreDrupalFile())
-	f, err := os.Open(conf.CoreDrupalFile())
+	f, err := os.Open(filepath.Join(conf.GetConfig().Tokaido.Project.Path, conf.CoreDrupalFile()))
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer f.Close()
 
-	// Splits on newlines by default.
 	scanner := bufio.NewScanner(f)
-
-	// https://golang.org/pkg/bufio/#Scanner.Scan
 	for scanner.Scan() {
 		if strings.Contains(scanner.Text(), "const VERSION = '") {
 			return scanner.Text()
