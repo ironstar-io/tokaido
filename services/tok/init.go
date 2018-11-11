@@ -32,6 +32,7 @@ func Init() {
 	docker.FindOrCreateTokCompose()
 	ssh.GenerateKeys()
 	docker.CreateDatabaseVolume()
+
 	docker.CreateComposerCacheVolume()
 
 	git.IgnoreDefaults()
