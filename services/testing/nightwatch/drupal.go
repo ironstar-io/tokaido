@@ -2,6 +2,8 @@ package nightwatch
 
 import (
 	"errors"
+	"fmt"
+	"path/filepath"
 	"regexp"
 
 	"github.com/blang/semver"
@@ -15,7 +17,7 @@ var validDrupalRange = ">=8.6.x"
 
 // CheckLocalDrupal ...
 func CheckLocalDrupal() error {
-	if fs.CheckExists(conf.CoreDrupalFile()) {
+	if fs.CheckExists(filepath.Join(conf.GetConfig().Tokaido.Project.Path, conf.CoreDrupalFile())) == false {
 		return errors.New("A valid Drupal installation was not found. Exiting...")
 	}
 
