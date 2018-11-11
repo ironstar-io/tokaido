@@ -42,6 +42,16 @@ func regenerateGateway(networkUp bool, xdebugPort string) {
 		log.Fatalf("error: %v", err)
 	}
 
+	// Append the volume setting on to the docker-compose setting directly
+	mysqlVolName := "tok_" + conf.GetConfig().Tokaido.Project.Name + "_mysql_database"
+	composeVolumeYml := []byte(`volumes:
+  ` + mysqlVolName + `:
+    external: true
+  tok_composer_cache:
+    external: true`)
+
+	tokComposeYml = append(tokComposeYml[:], composeVolumeYml[:]...)
+
 	docker.CreateOrReplaceTokCompose(tokComposeYml)
 
 	docker.KillContainer("fpm")

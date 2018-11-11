@@ -8,17 +8,20 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// DestroyCmd - `tok destroy`
-var DestroyCmd = &cobra.Command{
-	Use:   "destroy",
-	Short: "Stop and destroy all containers",
-	Long:  "Destroy your Tokaido environment - this will also delete your Tokaido database.",
+// RebuildCmd - `tok rebuild`
+var RebuildCmd = &cobra.Command{
+	Use:   "rebuild",
+	Short: "Rebuilds your Tokaido environment",
+	Long:  "Rebuilds your Tokaido environmnet",
 	Run: func(cmd *cobra.Command, args []string) {
-		initialize.TokConfig("destroy")
+		initialize.TokConfig("stop")
 		utils.CheckCmdHard("docker-compose")
 
-		docker.HardCheckTokCompose()
+		docker.Stop()
 
-		tok.Destroy()
+		tok.Init()
+
+		tok.InitMessage()
+
 	},
 }

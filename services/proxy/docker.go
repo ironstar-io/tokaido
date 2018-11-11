@@ -1,12 +1,12 @@
 package proxy
 
 import (
-	"github.com/ironstar-io/tokaido/utils"
-
 	"errors"
 	"log"
 	"path/filepath"
 	"strings"
+
+	"github.com/ironstar-io/tokaido/utils"
 )
 
 // DockerComposeUp - Lift all containers in the proxy compose file in detached mode
@@ -85,6 +85,16 @@ func GetContainerIP(name string) (string, error) {
 	}
 
 	return "", errors.New("Unable to find the internal IP for container " + name + ". Is it currently running?")
+}
+
+// DisconnectNetworkEndpoint ...
+func DisconnectNetworkEndpoint(network, endpoint string) error {
+	_, err := utils.BashStringSplitOutput(`docker network disconnect -f ` + network + ` ` + endpoint)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // UnisonPort - Return the local port for unison
