@@ -45,12 +45,6 @@ func yarnTestNightwatch() {
 	utils.StreamOSCmdContext(d, "yarn", "test:nightwatch")
 }
 
-func upgradePHPUnit() {
-	// TODO: Check that a compatible version of phpunit is being used
-	// TODO: Check that user is OK with upgrading their version of phpunit before commencing.
-	// ssh.StreamConnectCommand([]string{"cd", "/tokaido/site;", "composer", "run-script", "drupal-phpunit-upgrade"})
-}
-
 func checkCompatibility() error {
 	goos.CheckDependencies()
 	return nil
@@ -60,7 +54,7 @@ func checkCompatibility() error {
 func RunDrupalTests() error {
 	err := CheckLocalDrupal()
 	if err != nil {
-		console.Println("⚠️    "+err.Error(), "")
+		console.Println("⚠️  "+err.Error(), "")
 		log.Fatalf("Local Drupal checks failed. Unable to continue.")
 	}
 
@@ -69,7 +63,7 @@ func RunDrupalTests() error {
 		return err
 	}
 
-	upgradePHPUnit()
+	checkPHPUnit()
 	yarnInstall()
 
 	configureEnvFile()

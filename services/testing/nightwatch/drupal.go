@@ -2,7 +2,6 @@ package nightwatch
 
 import (
 	"errors"
-	"fmt"
 	"path/filepath"
 	"regexp"
 
