@@ -2,7 +2,6 @@ package nightwatch
 
 import (
 	"fmt"
-	"log"
 	"path/filepath"
 
 	"github.com/ironstar-io/tokaido/conf"
@@ -54,8 +53,8 @@ func checkCompatibility() error {
 func RunDrupalTests() error {
 	err := CheckLocalDrupal()
 	if err != nil {
-		console.Println("⚠️  "+err.Error(), "")
-		log.Fatalf("Local Drupal checks failed. Unable to continue.")
+		console.Println("⚠️   "+err.Error(), "")
+		return err
 	}
 
 	err = checkCompatibility()
