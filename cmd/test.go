@@ -27,7 +27,7 @@ var TestCmd = &cobra.Command{
 
 		err := docker.StatusCheck()
 		if err != nil {
-			log.Fatalf("Tokaido containers must be running in order to start automated tests. Exiting...")
+			log.Fatalf("Tokaido containers must be running in order to start automated tests. Have you run `tok up`?")
 		}
 
 		nightwatch.RunDrupalTests()
