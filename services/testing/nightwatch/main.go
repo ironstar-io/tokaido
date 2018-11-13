@@ -5,22 +5,27 @@ import (
 	"path/filepath"
 
 	"github.com/ironstar-io/tokaido/conf"
+	"github.com/ironstar-io/tokaido/services/docker"
+	"github.com/ironstar-io/tokaido/services/proxy"
 	"github.com/ironstar-io/tokaido/services/testing/nightwatch/goos"
 	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/utils"
 )
 
-func updateEnvFile() {
+func calcSiteURL() string {
+	if proxy.CheckProxyUp() == true {
+		return proxy.GetProxyURL()
+	}
 
+	return "https://localhost:" + docker.LocalPort("haproxy", "8443")
 }
 
 // Copy and amend .env file if it doesn't already exist
 func configureEnvFile() {
 	env := filepath.Join(conf.CoreDrupal8Path(), ".env")
 	if fs.CheckExists(env) == false {
-		fs.Copy(env+".example", env)
-		updateEnvFile()
+		generateEnvFile(env, calcSiteURL())
 	}
 }
 
@@ -30,7 +35,7 @@ func yarnInstall() error {
 	_, err := utils.CommandSubSplitOutputContext(d, "yarn", "check", "--verify-tree")
 	if err != nil {
 		fmt.Println()
-		console.Println("🧶   Nightwatch dependencies missing! Attempting to install with yarn", "")
+		console.Println("🧶   Nightwatch dependencies haven't been installed yet. Attempting to install with yarn", "")
 		utils.StreamOSCmdContext(d, "yarn", "install")
 	}
 
