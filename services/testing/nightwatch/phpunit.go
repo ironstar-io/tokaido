@@ -13,6 +13,13 @@ import (
 var validPHPUnitRange = ">=6.x.x"
 var phpUnit = "phpunit/phpunit"
 
+func removePHPUnit() {
+	ssh.StreamConnectCommand([]string{"cd", "/tokaido/site;", "composer", "remove", "--dev", phpUnit})
+}
+func requirePHPUnit() {
+	ssh.StreamConnectCommand([]string{"cd", "/tokaido/site;", "composer", "require", "--dev", phpUnit, "^7"})
+}
+
 func upgradePHPUnit(currentVersion string) {
 	console.Println("🐘  Tokaido detected you're running version "+currentVersion+" of PHPUnit, which isn't compatible with Drupal Nightwatch.\n", "")
 	confirmUpdate := utils.ConfirmationPrompt("Would you like us to attempt to update it for you automatically with composer?", "y")
@@ -21,7 +28,8 @@ func upgradePHPUnit(currentVersion string) {
 		return
 	}
 
-	ssh.StreamConnectCommand([]string{"cd", "/tokaido/site;", "composer", "update", phpUnit})
+	removePHPUnit()
+	requirePHPUnit()
 }
 
 func installPHPUnit() {
@@ -32,8 +40,7 @@ func installPHPUnit() {
 		return
 	}
 
-	// TODO: Check that user is OK with installing phpunit before commencing.
-	ssh.StreamConnectCommand([]string{"cd", "/tokaido/site;", "composer", "install", phpUnit})
+	requirePHPUnit()
 }
 
 func checkPHPUnit() {

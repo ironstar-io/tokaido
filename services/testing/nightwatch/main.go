@@ -30,7 +30,7 @@ func yarnInstall() error {
 	_, err := utils.CommandSubSplitOutputContext(d, "yarn", "check", "--verify-tree")
 	if err != nil {
 		fmt.Println()
-		console.Println("🧶  Nightwatch dependencies missing! Attempting to install with yarn", "")
+		console.Println("🧶   Nightwatch dependencies missing! Attempting to install with yarn", "")
 		utils.StreamOSCmdContext(d, "yarn", "install")
 	}
 
