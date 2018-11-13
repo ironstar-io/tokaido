@@ -1,6 +1,8 @@
 package xdebug
 
 import (
+	"runtime"
+
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/services/docker"
 
@@ -27,8 +29,15 @@ func regenerateGateway(networkUp bool, xdebugPort string) {
 		docker.Up()
 	}
 
-	pn := conf.GetConfig().Tokaido.Project.Name
-	networkGateway := docker.GetGateway(pn)
+	var networkGateway string
+	if runtime.GOOS == "darwin" {
+		// MacOS uses a different address for the remote host
+		networkGateway = "host.docker.internal"
+	} else {
+		// Use the docker gateway IP for the host address
+		pn := conf.GetConfig().Tokaido.Project.Name
+		networkGateway = docker.GetGateway(pn)
+	}
 
 	tokStruct := docker.UnmarshalledDefaults()
 
