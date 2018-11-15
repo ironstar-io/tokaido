@@ -79,7 +79,7 @@ need for you to manually manage config files.
 | Reset Varnish cache              | `tok purge`          | -                                     | -             |
 | Open site in browser             | `tok open`           | -                                     | -             |
 | Open services in browser         | `tok open {service}` | -                                     | -             |
-| Generate a Drupal hash satl      | `tok hash`           | -                                     | -             |
+| Generate a Drupal hash salt      | `tok hash`           | -                                     | -             |
 
 \* Docker4Drupal is controlled by a Docker Compose file and requires an indepth
 understanding of Docker and Docker Compose in order to make changes. 
