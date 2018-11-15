@@ -38,6 +38,7 @@ func init() {
 	rootCmd.AddCommand(SyncCmd)
 	rootCmd.AddCommand(SyscheckCmd)
 	rootCmd.AddCommand(TestCmd)
+	rootCmd.AddCommand(TestNightwatchCmd)
 	rootCmd.AddCommand(UpCmd)
 	rootCmd.AddCommand(VersionCmd)
 	rootCmd.AddCommand(WatchCmd)
