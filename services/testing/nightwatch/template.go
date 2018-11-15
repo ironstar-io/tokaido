@@ -52,7 +52,7 @@ DRUPAL_TEST_CHROMEDRIVER_AUTOSTART=true
 
 # A list of arguments to pass to Chrome, separated by spaces
 # e.g. '--disable-gpu --headless --no-sandbox'.
-#DRUPAL_TEST_WEBDRIVER_CHROME_ARGS=
+DRUPAL_TEST_WEBDRIVER_CHROME_ARGS="--disable-gpu --headless --no-sandbox"
 
 ##############
 # Nightwatch #
