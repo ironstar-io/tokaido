@@ -17,7 +17,7 @@ func DockerUp() {
 func GetAdminSignOnPath() string {
 	u := ssh.ConnectCommand([]string{"drush", "uli"})
 	if u == "" {
-		log.Fatal("Unable to generate a single use admin URL with `drush uri`. Exiting...")
+		log.Fatal("Unable to generate a single use admin URL with `drush uli`. Exiting...")
 	}
 
 	s := strings.Split(u, "http://default")
@@ -25,7 +25,7 @@ func GetAdminSignOnPath() string {
 		log.Fatal("Unable to parse the resulting path from the `drush uli` command. Exiting...")
 	}
 
-	return s[1]
+	return strings.Replace(s[1], "%0A", "", -1)
 }
 
 // LocalPort - Return the local port for drush
