@@ -6,6 +6,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var profileFlag string
+
 // NewCmd - `tok new {project}`
 var NewCmd = &cobra.Command{
 	Use:   "new",
@@ -14,6 +16,6 @@ var NewCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		utils.CheckCmdHard("docker-compose")
 
-		tok.New(args)
+		tok.New(args, profileFlag)
 	},
 }
