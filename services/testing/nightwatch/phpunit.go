@@ -6,19 +6,11 @@ import (
 	"github.com/blang/semver"
 	"github.com/ironstar-io/tokaido/services/composer"
 	"github.com/ironstar-io/tokaido/system/console"
-	"github.com/ironstar-io/tokaido/system/ssh"
 	"github.com/ironstar-io/tokaido/utils"
 )
 
 var validPHPUnitRange = ">=6.x.x"
 var phpUnit = "phpunit/phpunit"
-
-func removePHPUnit() {
-	ssh.StreamConnectCommand([]string{"cd", "/tokaido/site;", "composer", "remove", "--dev", phpUnit})
-}
-func requirePHPUnit() {
-	ssh.StreamConnectCommand([]string{"cd", "/tokaido/site;", "composer", "require", "--dev", phpUnit, "^7"})
-}
 
 func upgradePHPUnit(currentVersion string) {
 	console.Println("🐘  Tokaido detected you're running version "+currentVersion+" of PHPUnit, which isn't compatible with Drupal Nightwatch.\n", "")
@@ -28,8 +20,8 @@ func upgradePHPUnit(currentVersion string) {
 		return
 	}
 
-	removePHPUnit()
-	requirePHPUnit()
+	composer.RemovePackage([]string{"--dev", phpUnit})
+	composer.RequirePackage([]string{"--dev", phpUnit, "^7"})
 }
 
 func installPHPUnit() {
@@ -40,7 +32,7 @@ func installPHPUnit() {
 		return
 	}
 
-	requirePHPUnit()
+	composer.RequirePackage([]string{"--dev", phpUnit, "^7"})
 }
 
 func checkPHPUnit() {

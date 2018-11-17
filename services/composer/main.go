@@ -26,3 +26,15 @@ func FindPackageVersion(packageName string) (string, error) {
 
 	return "", errors.New("Unable to find requested package version: " + packageName)
 }
+
+// RequirePackage ...
+func RequirePackage(args []string) {
+	c := append([]string{"cd", "/tokaido/site;", "composer", "require"}, args...)
+	ssh.StreamConnectCommand(c)
+}
+
+// RemovePackage ...
+func RemovePackage(args []string) {
+	c := append([]string{"cd", "/tokaido/site;", "composer", "remove"}, args...)
+	ssh.StreamConnectCommand(c)
+}
