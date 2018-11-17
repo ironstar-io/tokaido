@@ -12,11 +12,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// TestPhpcsCmd - `tok test:phpcs`
-var TestPhpcsCmd = &cobra.Command{
-	Use:   "test:phpcs",
-	Short: "Run PHPCodeSniffer linting",
-	Long:  "Run the PHPCodeSniffer linter",
+// TestPhpcbfCmd - `tok test:phpcbf`
+var TestPhpcbfCmd = &cobra.Command{
+	Use:   "test:phpcbf",
+	Short: "Run PHPCodeSniffer linting and attempt to fix automatically",
+	Long:  "Run the PHPCodeSniffer linter and attempt to fix automatically",
 	Run: func(cmd *cobra.Command, args []string) {
 		initialize.TokConfig("test")
 		utils.CheckCmdHard("docker-compose")
@@ -31,6 +31,6 @@ var TestPhpcsCmd = &cobra.Command{
 		}
 
 		phpcs.CheckReqs()
-		phpcs.RunLinter()
+		phpcs.RunLinterFix()
 	},
 }

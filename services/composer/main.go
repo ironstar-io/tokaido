@@ -10,7 +10,7 @@ import (
 
 // FindPackageVersion - Find the version of an installed package
 func FindPackageVersion(packageName string) (string, error) {
-	d := ssh.ConnectCommand([]string{"cd", "/tokaido/site;", "composer", "show", packageName})
+	d := ssh.ConnectCommandOutput([]string{"cd", "/tokaido/site;", "composer", "show", packageName})
 	if d == "" {
 		return "", errors.New("Unable to find requested package: " + packageName)
 	}
@@ -27,13 +27,19 @@ func FindPackageVersion(packageName string) (string, error) {
 	return "", errors.New("Unable to find requested package version: " + packageName)
 }
 
-// RequirePackage ...
+// GlobalRequirePackage - `composer global require x...`
+func GlobalRequirePackage(args []string) {
+	c := append([]string{"composer", "global", "require"}, args...)
+	ssh.StreamConnectCommand(c)
+}
+
+// RequirePackage - `cd /tokaido/site; composer require x...`
 func RequirePackage(args []string) {
 	c := append([]string{"cd", "/tokaido/site;", "composer", "require"}, args...)
 	ssh.StreamConnectCommand(c)
 }
 
-// RemovePackage ...
+// RemovePackage - `cd /tokaido/site; composer remove x...`
 func RemovePackage(args []string) {
 	c := append([]string{"cd", "/tokaido/site;", "composer", "remove"}, args...)
 	ssh.StreamConnectCommand(c)
