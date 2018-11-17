@@ -44,7 +44,6 @@ func TokConfig(command string) {
 	if runtime.GOOS == "darwin" {
 		viper.SetDefault("System.Syncsvc.Launchdpath", filepath.Join(fs.HomeDir(), "/Library/LaunchAgents/"))
 	}
-	// TODO: Memcache, Mailhog, and Adminer should be included in this install.
 
 	if command == "new" {
 		viper.SetDefault("Services.Adminer.Enabled", true)
@@ -54,14 +53,9 @@ func TokConfig(command string) {
 	viper.SetDefault("Services.Solr.Enabled", false)
 
 	viper.SetConfigType("yaml")
-
-	// if configFile, _ := rootCmd.Flags().GetString("config"); configFile != "" {
-	// 	viper.SetConfigFile(configFile)
-	// } else {
 	viper.SetConfigName("config")
 	viper.AddConfigPath(filepath.Join(pr, ".tok", "local"))
 	viper.AddConfigPath(filepath.Join(pr, ".tok"))
-	// }
 
 	viper.ReadInConfig()
 

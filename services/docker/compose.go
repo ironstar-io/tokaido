@@ -135,8 +135,5 @@ You can try to fix this by running 'tok up', or by running 'tok repair'.
 		return errors.New("Tokaido containers are not running correctly")
 	}
 
-	fmt.Println()
-	console.Println(`✅  All containers are running`, "√")
-
 	return nil
 }

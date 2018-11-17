@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/initialize"
 	"github.com/ironstar-io/tokaido/services/docker"
@@ -25,7 +23,6 @@ var ExecCmd = &cobra.Command{
 
 		unison.BackgroundServiceWarning(conf.GetConfig().Tokaido.Project.Name)
 
-		r := ssh.ConnectCommand(args)
-		fmt.Println(r)
+		ssh.StreamConnectCommand(args)
 	},
 }

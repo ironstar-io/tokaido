@@ -159,7 +159,15 @@ func CoreDrupalFile() string {
 	}
 
 	return path
+}
 
+// CoreDrupal8Path - Return the core Drupal 8 path for the users' installation
+func CoreDrupal8Path() string {
+	c := GetConfig()
+	tp := c.Tokaido.Project.Path
+	rp := c.Drupal.Path
+
+	return filepath.Join(tp, rp, "core")
 }
 
 // GetRootDir - Return the drupal root folder name without workdir
