@@ -2,12 +2,13 @@ package system
 
 import (
 	"github.com/ironstar-io/tokaido/services/docker"
+	"github.com/ironstar-io/tokaido/services/drush"
 	"github.com/ironstar-io/tokaido/services/proxy"
 	"github.com/ironstar-io/tokaido/system/goos"
 )
 
 // OpenSite - Linux Root executable
-func OpenSite(args []string) {
+func OpenSite(args []string, admin bool) {
 	var p string
 	services := map[string]string{
 		"haproxy": "8443",
@@ -32,17 +33,22 @@ func OpenSite(args []string) {
 		}
 	}
 
-	OpenHaproxySite()
+	OpenHaproxySite(admin)
 }
 
 // OpenHaproxySite ...
-func OpenHaproxySite() {
+func OpenHaproxySite(admin bool) {
+	var path string
+	if admin == true {
+		path = drush.GetAdminSignOnPath()
+	}
+
 	if proxy.CheckProxyUp() == true {
 		u := proxy.GetProxyURL()
-		goos.OpenSite(u)
+		goos.OpenSite(u + path)
 		return
 	}
 
-	p := docker.LocalPort("haproxy", "8443")
-	goos.OpenSite("https://localhost:" + p)
+	port := docker.LocalPort("haproxy", "8443")
+	goos.OpenSite("https://localhost:" + port + path)
 }

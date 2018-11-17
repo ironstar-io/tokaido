@@ -10,6 +10,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var adminFlag bool
+
 // OpenCmd - `tok open`
 var OpenCmd = &cobra.Command{
 	Use:   "open",
@@ -23,6 +25,6 @@ var OpenCmd = &cobra.Command{
 
 		unison.BackgroundServiceWarning(conf.GetConfig().Tokaido.Project.Name)
 
-		system.OpenSite(args)
+		system.OpenSite(args, adminFlag)
 	},
 }
