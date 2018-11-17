@@ -32,9 +32,9 @@ func TokConfig(command string) {
 	viper.SetDefault("Tokaido.Enableemoji", emojiDefaults())
 	viper.SetDefault("Tokaido.Project.Name", strings.Replace(filepath.Base(pr), ".", "", -1))
 	viper.SetDefault("Tokaido.Project.Path", pr)
-	viper.SetDefault("Drupal.FilePublicPath", "")
-	viper.SetDefault("Drupal.FilePrivatePath", constants.DefaultDrupalPrivatePath)
-	viper.SetDefault("Drupal.FileTemporaryPath", constants.DefaultDrupalTemporaryPath)
+	viper.SetDefault("Drupal.Filepublicpath", "")
+	viper.SetDefault("Drupal.Fileprivatepath", constants.DefaultDrupalPrivatePath)
+	viper.SetDefault("Drupal.Filetemporarypath", constants.DefaultDrupalTemporaryPath)
 	viper.SetDefault("System.Syncsvc.Enabled", true)
 	viper.SetDefault("System.Proxy.Enabled", true)
 

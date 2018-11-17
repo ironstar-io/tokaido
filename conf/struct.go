@@ -24,9 +24,9 @@ type Config struct {
 	Drupal struct {
 		Path              string `yaml:"path,omitempty"`
 		Majorversion      string `yaml:"majorversion,omitempty"`
-		FilePublicPath    string `yaml:"filepublicpath,omitempty"`
-		FilePrivatePath   string `yaml:"fileprivatepath,omitempty"`
-		FileTemporaryPath string `yaml:"filetemporarypath,omitempty"`
+		Filepublicpath    string `yaml:"filepublicpath,omitempty"`
+		Fileprivatepath   string `yaml:"fileprivatepath,omitempty"`
+		Filetemporarypath string `yaml:"filetemporarypath,omitempty"`
 	} `yaml:"drupal,omitempty"`
 	Nginx struct {
 		Workerconnections  string `yaml:"workerconnections,omitempty"`

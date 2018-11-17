@@ -182,9 +182,9 @@ func createSettingsTok() {
 	dt := drupaltmpl.Settings{
 		HashSalt:          salt,
 		ProjectName:       c.Tokaido.Project.Name,
-		FilePublicPath:    c.Drupal.FilePublicPath,
-		FilePrivatePath:   c.Drupal.FilePrivatePath,
-		FileTemporaryPath: c.Drupal.FileTemporaryPath,
+		FilePublicPath:    c.Drupal.Filepublicpath,
+		FilePrivatePath:   c.Drupal.Fileprivatepath,
+		FileTemporaryPath: c.Drupal.Filetemporarypath,
 	}
 
 	var settingsTokBody []byte
