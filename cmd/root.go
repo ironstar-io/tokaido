@@ -59,6 +59,8 @@ func RootCmd() *cobra.Command {
 	rootCmd.PersistentFlags().BoolP("debug", "d", false, "Enable debug mode, command output is printed to the console")
 
 	OpenCmd.PersistentFlags().BoolVarP(&adminFlag, "admin", "", false, "Create a one-time admin login URL and open")
+	
+	NewCmd.PersistentFlags().StringVarP(&profileFlag, "profile", "p", "", "Specify the Drupal install profile. Supported values are 'standard', 'minimal', and 'demo_umami")
 
 	return &rootCmd
 }

@@ -23,6 +23,8 @@ import (
 	"github.com/ironstar-io/tokaido/system/version"
 )
 
+var profileFlag string
+
 func buildProjectFrame(projectName string) {
 	if fs.CheckExists(projectName) == true {
 		log.Fatal("The project '" + projectName + "' already exists in this directory. Exiting...")
@@ -51,9 +53,20 @@ func setupProxy() {
 		proxy.Setup()
 	}
 }
-func drushSiteInstall() {
-	ssh.StreamConnectCommand([]string{"drush", "site-install", "-y"})
-	ssh.StreamConnectCommand([]string{"drush", "en", "swiftmailer", "password_policy", "password_policy_character_types", "password_policy_characters", "password_policy_username", "memcache", "health_check"})
+func drushSiteInstall(profile string) {
+	switch profile {
+		case "": 
+			profile = "standard"
+			fallthrough		
+		case
+			"standard",
+			"minimal",
+			"demo_umami":
+			ssh.StreamConnectCommand([]string{"drush", "site-install", profile, "-y"})
+			ssh.StreamConnectCommand([]string{"drush", "en", "swiftmailer", "password_policy", "password_policy_character_types", "password_policy_characters", "password_policy_username", "memcache", "health_check"})		
+			return
+		}
+		log.Fatalf("Error: The install profile specified was not supported. Possible values are 'standard', 'minimal', and 'umami'")
 }
 
 func deduceProjectName(args []string) string {
@@ -65,7 +78,7 @@ func deduceProjectName(args []string) string {
 }
 
 // New - The core run sheet of `tok new {project}`
-func New(args []string) {
+func New(args []string, profile string) {	
 	// Project frame
 	pn := deduceProjectName(args)
 	buildProjectFrame(pn)
@@ -124,7 +137,7 @@ func New(args []string) {
 
 	// Drush site install, add additional packages
 	console.Println(`💧  Running drush site-install for your new project`, "")
-	drushSiteInstall()
+	drushSiteInstall(profile)
 
 	// Generate a new .gitignore file
 	git.NewGitignore()
