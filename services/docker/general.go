@@ -1,9 +1,6 @@
 package docker
 
 import (
-	"github.com/ironstar-io/tokaido/conf"
-	"github.com/ironstar-io/tokaido/utils"
-
 	"errors"
 	"fmt"
 	"log"
@@ -11,6 +8,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/ironstar-io/tokaido/conf"
+	"github.com/ironstar-io/tokaido/utils"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/viper"
 )

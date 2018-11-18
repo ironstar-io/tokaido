@@ -79,7 +79,7 @@ need for you to manually manage config files.
 | Reset Varnish cache              | `tok purge`          | -                                     | -             |
 | Open site in browser             | `tok open`           | -                                     | -             |
 | Open services in browser         | `tok open {service}` | -                                     | -             |
-| Generate a Drupal hash satl      | `tok hash`           | -                                     | -             |
+| Generate a Drupal hash salt      | `tok hash`           | -                                     | -             |
 
 \* Docker4Drupal is controlled by a Docker Compose file and requires an indepth
 understanding of Docker and Docker Compose in order to make changes. 
@@ -88,7 +88,7 @@ understanding of Docker and Docker Compose in order to make changes.
 easier, but we still think Tokaido has it beat in this department. 
 
 \+\+ Lando's 'ssh' environment is really just a docker-compose exec command, 
-which is helpful for running 
+which is helpful for running commands but is not a full-featured dev environment
 
 \*\* Nearly every Drupal project we've tested works with Tokaido without any 
 special config. When testing Lando and Docker4Drupal, even the most basic Drupal

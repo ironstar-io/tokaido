@@ -10,12 +10,14 @@ import (
 	"github.com/spf13/viper"
 )
 
+// ConfigRoot ...
 type ConfigRoot struct {
 	Name        string
 	Description string
 	Detail      string
 }
 
+// ConfigGenericString ...
 type ConfigGenericString struct {
 	Name    string
 	Default string
@@ -85,7 +87,7 @@ func MainMenu() {
 		Inactive: `   {{ .Name | cyan }} {{ if ne .Name "Exit" }} - {{ .Description }} {{ end }}`,
 		Selected: "{{ .Name | blue | cyan }}",
 		Details: `
-{{ if ne .Name "Exit" }}--------- 
+{{ if ne .Name "Exit" }}---------
 {{ .Detail | faint  }}
 {{ end }}`,
 	}
@@ -176,7 +178,7 @@ func TokaidoMenu() {
 		Inactive: `   {{ .Name | cyan }} {{ if ne .Type "menu" }} {{ if eq .Current .Default }} Using default value [{{ .Default | cyan }}] {{ else }} Using custom value [{{ .Current | green }}] {{ end }} {{ end }}`,
 		Selected: "{{ .Name | blue }}",
 		Details: `
-{{ if ne .Type "menu" }}--------- 
+{{ if ne .Type "menu" }}---------
 {{ .Detail }}
 
 Default Setting: [{{ .Default | cyan }}]
@@ -271,7 +273,7 @@ func DrupalMenu() {
 		Inactive: `   {{ .Name | cyan }} {{ if ne .Type "menu" }} Current setting: [{{ .Current | green }}] {{ end }}`,
 		Selected: "{{ .Name | blue }}",
 		Details: `
-{{ if ne .Type "menu" }}--------- 
+{{ if ne .Type "menu" }}---------
 {{ .Detail }}
 
 Current Setting: [{{ .Current | green }}]
@@ -390,7 +392,7 @@ func NginxMenu() {
 		Inactive: `   {{ .Name | cyan }} {{ if ne .Type "menu" }} {{if or (eq .Current .Default) (eq .Current "") }} Using default value [{{ .Default | cyan }}] {{ else }} Using custom value [{{ .Current | green }}] {{ end }} {{ end }}`,
 		Selected: "{{ .Name | blue }}",
 		Details: `
-{{ if ne .Type "menu" }}--------- 
+{{ if ne .Type "menu" }}---------
 {{ .Detail }}
 
 {{ if eq .Current "" }}Current Setting: Use Default Value {{ else }}Current Setting: [{{ .Current | green }}] {{ end }}
@@ -554,7 +556,7 @@ func FpmMenu() {
 		Inactive: `   {{ .Name | cyan }} {{ if ne .Type "menu" }} {{if or (eq .Current .Default) (eq .Current "") }} Using default value [{{ .Default | cyan }}] {{ else }} Using custom value [{{ .Current | green }}] {{ end }} {{ end }}`,
 		Selected: "{{ .Name | blue }}",
 		Details: `
-{{ if ne .Type "menu" }}--------- 
+{{ if ne .Type "menu" }}---------
 {{ .Detail }}
 
 {{ if eq .Current "" }}Current Setting: Use Default Value {{ else }}Current Setting: [{{ .Current | green }}] {{ end }}
@@ -716,7 +718,7 @@ func ServicesMenu() {
 		Inactive: `   {{ .Name | cyan }} {{ if ne .Type "menu" }} {{ if eq .Current .Default }} Using default value [{{ .Default | cyan }}] {{ else }} Using custom value [{{ .Current | green }}] {{ end }} {{ end }}`,
 		Selected: "{{ .Name | blue }}",
 		Details: `
-{{ if ne .Type "menu" }}--------- 
+{{ if ne .Type "menu" }}---------
 {{ .Detail }}
 
 Default Setting: [{{ .Default | cyan }}]
