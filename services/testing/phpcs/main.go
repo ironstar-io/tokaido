@@ -59,10 +59,14 @@ func CheckReqs() {
 
 // RunLinter - Run the PHPCodeSniffer linter (phpcs)
 func RunLinter() {
+	console.Println("⛑  Starting phpcs linting. This can take some time depending on your phpcs.xml.dist configuration.", "")
+
 	ssh.StreamConnectCommand([]string{"/tokaido/site/vendor/bin/phpcs", "/tokaido/site/" + conf.GetConfig().Drupal.Path})
 }
 
 // RunLinterFix - Run the PHPCodeSniffer linter and attempt to fix automatically (phpcbf)
 func RunLinterFix() {
+	console.Println("⛑  Starting phpcbf linting and automated fixes. This can take some time depending on your phpcs.xml.dist configuration.", "")
+
 	ssh.StreamConnectCommand([]string{"/tokaido/site/vendor/bin/phpcbf", "/tokaido/site/" + conf.GetConfig().Drupal.Path})
 }

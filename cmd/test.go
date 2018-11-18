@@ -7,7 +7,6 @@ import (
 	"github.com/ironstar-io/tokaido/initialize"
 	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/services/testing/nightwatch"
-	"github.com/ironstar-io/tokaido/services/testing/phpcs"
 	"github.com/ironstar-io/tokaido/services/unison"
 	"github.com/ironstar-io/tokaido/utils"
 	"github.com/spf13/cobra"
@@ -31,7 +30,7 @@ var TestCmd = &cobra.Command{
 			log.Fatalf("Tokaido containers must be running in order to start automated tests. Have you run `tok up`?")
 		}
 
-		phpcs.RunLinter()
+		// phpcs.RunLinter()
 		nightwatch.RunDrupalTests()
 	},
 }
