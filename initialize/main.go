@@ -35,7 +35,7 @@ func TokConfig(command string) {
 	viper.SetDefault("Tokaido.Project.Path", pr)
 	viper.SetDefault("Drupal.Path", dr)
 	viper.SetDefault("Drupal.Majorversion", dv)
-	viper.SetDefault("Drupal.Filepublicpath", "/site/"+dr+constants.DefaultDrupalPublicPath)
+	viper.SetDefault("Drupal.Filepublicpath", "/tokaido/site/"+dr+constants.DefaultDrupalPublicPath)
 	viper.SetDefault("Drupal.Fileprivatepath", constants.DefaultDrupalPrivatePath)
 	viper.SetDefault("Drupal.Filetemporarypath", constants.DefaultDrupalTemporaryPath)
 	viper.SetDefault("System.Syncsvc.Enabled", true)
