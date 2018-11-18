@@ -23,6 +23,7 @@ func TokConfig(command string) {
 	viper.AutomaticEnv()
 
 	pr := fs.ProjectRoot()
+	dr, dv := conf.DetectDrupalSettings(pr)
 
 	viper.SetDefault("Tokaido.Customcompose", viper.GetBool("customCompose"))
 	viper.SetDefault("Tokaido.Debug", viper.GetBool("debug"))
@@ -32,7 +33,9 @@ func TokConfig(command string) {
 	viper.SetDefault("Tokaido.Enableemoji", emojiDefaults())
 	viper.SetDefault("Tokaido.Project.Name", strings.Replace(filepath.Base(pr), ".", "", -1))
 	viper.SetDefault("Tokaido.Project.Path", pr)
-	viper.SetDefault("Drupal.Filepublicpath", "")
+	viper.SetDefault("Drupal.Path", dr)
+	viper.SetDefault("Drupal.Majorversion", dv)
+	viper.SetDefault("Drupal.Filepublicpath", "/site/"+dr+constants.DefaultDrupalPublicPath)
 	viper.SetDefault("Drupal.Fileprivatepath", constants.DefaultDrupalPrivatePath)
 	viper.SetDefault("Drupal.Filetemporarypath", constants.DefaultDrupalTemporaryPath)
 	viper.SetDefault("System.Syncsvc.Enabled", true)

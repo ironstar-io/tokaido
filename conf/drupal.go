@@ -36,19 +36,19 @@ func SetDrupalConfig(drupalType string) {
 	v := GetConfig().Drupal.Majorversion
 
 	if (p == "") || (v == "") {
-		p, v = detectDrupalSettings()
+		p, v = DetectDrupalSettings(GetConfig().Tokaido.Project.Path)
 	}
 
 	CreateOrReplaceDrupalConfig(p, v)
 }
 
-func detectDrupalSettings() (string, string) {
-	pr := GetConfig().Tokaido.Project.Path
+// DetectDrupalSettings - Return drupal root and version
+func DetectDrupalSettings(projectRoot string) (string, string) {
 	var dp string
 	var dv string
 	d7 := filepath.Join("includes", "bootstrap.inc")
 	d8 := filepath.Join("core", "lib", "Drupal.php")
-	err := filepath.Walk(pr, func(path string, info os.FileInfo, err error) error {
+	err := filepath.Walk(projectRoot, func(path string, info os.FileInfo, err error) error {
 		if info.IsDir() {
 			return nil
 		}
@@ -64,7 +64,7 @@ func detectDrupalSettings() (string, string) {
 				// Strip the Drupal component from the full path
 				dp = strings.Replace(path, d7, "", -1)
 				// Strip the work dir from the remainder
-				dp = strings.Replace(dp, pr, "", -1)
+				dp = strings.Replace(dp, projectRoot, "", -1)
 				// Strip slashes
 				dp = strings.Replace(dp, "/", "", -1)
 				dv = "7"
@@ -76,7 +76,7 @@ func detectDrupalSettings() (string, string) {
 			// Strip the Drupal component from the full path
 			dp = strings.Replace(path, d8, "", -1)
 			// Strip the work dir from the remainder
-			dp = strings.Replace(dp, pr, "", -1)
+			dp = strings.Replace(dp, projectRoot, "", -1)
 			// Strip slashes
 			dp = strings.Replace(dp, "/", "", -1)
 			dv = "8"

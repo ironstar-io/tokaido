@@ -49,8 +49,6 @@ Could not find a file located at "` + settingsPath() + `", database connection m
 				return
 			}
 		}
-	} else {
-		return
 	}
 
 	defaultMasks, err := processFilePerimissions()
@@ -63,9 +61,7 @@ Could not find a file located at "` + settingsPath() + `", database connection m
 		appendTokSettingsRef()
 	}
 
-	if tokSettingsExists == false {
-		createSettingsTok()
-	}
+	replaceSettingsTok()
 
 	restoreFilePerimissions(defaultMasks)
 }
@@ -170,7 +166,7 @@ func appendTokSettingsRef() {
 	fs.Replace(settingsPath(), buffer.Bytes())
 }
 
-func createSettingsTok() {
+func replaceSettingsTok() {
 	c := conf.GetConfig()
 	dv := c.Drupal.Majorversion
 
@@ -179,6 +175,7 @@ func createSettingsTok() {
 		log.Fatalf("Could not create Drupal hash salt %v", err)
 	}
 
+	fmt.Println("qwefqwfe: %+v", c)
 	dt := drupaltmpl.Settings{
 		HashSalt:          salt,
 		ProjectName:       c.Tokaido.Project.Name,
@@ -196,7 +193,7 @@ func createSettingsTok() {
 		log.Fatalf("Could not add Tokaido settings file")
 	}
 
-	fs.TouchByteArray(settingsTokPath(), settingsTokBody)
+	fs.TouchOrReplace(settingsTokPath(), settingsTokBody)
 }
 
 func allowBuildSettings() bool {
