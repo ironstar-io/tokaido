@@ -21,7 +21,6 @@ import (
 	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/system/ssh"
 	"github.com/ironstar-io/tokaido/system/version"
-	"github.com/ironstar-io/tokaido/utils"
 )
 
 var profileFlag string
@@ -154,9 +153,7 @@ func New(args []string, profile string) {
 
 	// Open the main site at `https://<project-name>.local.tokaido.io:5154`
 	system.OpenHaproxySite(false)
-
-	// Move into the directory
-	utils.StdoutCmd("cd", c.Tokaido.Project.Name)
+	
 }
 
 // NewSuccessMessage ...
