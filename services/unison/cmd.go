@@ -1,10 +1,10 @@
 package unison
 
 import (
-	"github.com/ironstar-io/tokaido/utils"
-
 	"fmt"
 	"runtime"
+
+	"github.com/ironstar-io/tokaido/utils"
 )
 
 var syncRunningErr = `There is already a sync service for this project running on your system. Exiting...`
@@ -21,7 +21,7 @@ func Sync(syncName string) {
 		fmt.Println("Synchronizing your files between your local filesystem and the container. This may take some time.")
 	}
 
-	utils.CommandSubstitution("unison", syncName, "-watch=false")
+	utils.StdoutStreamCmdDebug("unison", syncName, "-watch=false")
 }
 
 // Watch ...

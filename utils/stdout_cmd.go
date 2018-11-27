@@ -1,13 +1,13 @@
 package utils
 
 import (
-	"github.com/ironstar-io/tokaido/conf"
-
 	"fmt"
 	"log"
 	"os"
 	"os/exec"
 	"strings"
+
+	"github.com/ironstar-io/tokaido/conf"
 )
 
 // StdoutCmd - Execute a command on the users' OS
@@ -34,5 +34,20 @@ func StdoutStreamCmd(name string, args ...string) {
 	cmd := exec.Command(name, args...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
+	cmd.Run()
+}
+
+// StdoutStreamCmdDebug - Execute a command on the users' OS and stream stdout for debug only
+func StdoutStreamCmdDebug(name string, args ...string) {
+	DebugCmd(name + " " + strings.Join(args, " "))
+
+	cmd := exec.Command(name, args...)
+	cmd.Dir = conf.GetConfig().Tokaido.Project.Path
+
+	if conf.GetConfig().Tokaido.Debug == true {
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+	}
+
 	cmd.Run()
 }
