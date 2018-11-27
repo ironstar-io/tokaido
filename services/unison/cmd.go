@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"runtime"
 
+	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/utils"
 )
 
@@ -21,6 +22,8 @@ func Sync(syncName string) {
 		fmt.Println("Synchronizing your files between your local filesystem and the container. This may take some time.")
 	}
 
+	fmt.Println()
+	console.Println("⚡  Syncing files between your system and the Tokaido environment", "")
 	utils.StdoutStreamCmdDebug("unison", syncName, "-watch=false")
 }
 
