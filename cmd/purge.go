@@ -2,8 +2,10 @@ package cmd
 
 import (
 	"github.com/ironstar-io/tokaido/conf"
+	"github.com/ironstar-io/tokaido/initialize"
 	"github.com/ironstar-io/tokaido/services/drupal"
 	"github.com/ironstar-io/tokaido/services/unison"
+	"github.com/ironstar-io/tokaido/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -13,7 +15,8 @@ var PurgeCmd = &cobra.Command{
 	Short: "Purge Varnish and Drupal cache",
 	Long:  "Purge will purge the Varnish cache and run a drush cache-rebuild operation",
 	Run: func(cmd *cobra.Command, args []string) {
-		conf.ValidProjectRoot()
+		initialize.TokConfig("ports")
+		utils.CheckCmdHard("docker-compose")
 
 		unison.BackgroundServiceWarning(conf.GetConfig().Tokaido.Project.Name)
 
