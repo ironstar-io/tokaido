@@ -33,6 +33,11 @@ func (s UnisonSvc) StartSyncService() {
 	return
 }
 
+// UnloadSyncService Remove the unison sync service
+func (s UnisonSvc) UnloadSyncService() {
+	return
+}
+
 // SyncServiceStatus - While there is no service functionality for Windows, this will always return "stopped"
 func (s UnisonSvc) SyncServiceStatus() string {
 	return "stopped"

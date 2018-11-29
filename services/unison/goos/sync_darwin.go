@@ -94,6 +94,11 @@ func (s UnisonSvc) RegisterSyncService() {
 	daemon.LoadService(s.Filepath)
 }
 
+// UnloadSyncService Remove the unison sync service from launchd
+func (s UnisonSvc) UnloadSyncService() {
+	daemon.UnloadService(s.Filepath)
+}
+
 // StartSyncService Start the launchd service after it is created
 func (s UnisonSvc) StartSyncService() {
 	daemon.StartService(s.Filename)

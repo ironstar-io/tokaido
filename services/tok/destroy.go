@@ -25,7 +25,7 @@ func Destroy() {
 
 	docker.Down()
 
-	unison.StopSyncService(conf.GetConfig().Tokaido.Project.Name)
+	unison.UnloadSyncService(conf.GetConfig().Tokaido.Project.Name)
 
 	proxy.DockerComposeUp()
 }

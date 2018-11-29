@@ -102,6 +102,11 @@ func (s UnisonSvc) StartSyncService() {
 	daemon.StartService(s.Filename)
 }
 
+// UnloadSyncService Remove the unison sync service
+func (s UnisonSvc) UnloadSyncService() {
+	return
+}
+
 // SyncServiceStatus ...
 func (s UnisonSvc) SyncServiceStatus() string {
 	return daemon.ServiceStatus(s.Filename)
