@@ -21,7 +21,7 @@ func CreateSyncService(syncName, syncDir string) {
 	s.CreateSyncService()
 }
 
-// StopSyncService stop *and* remove the systemd sync service
+// StopSyncService stop systemd sync service
 func StopSyncService(syncName string) {
 	if conf.GetConfig().System.Syncsvc.Enabled != true {
 		return
@@ -29,6 +29,16 @@ func StopSyncService(syncName string) {
 
 	s := goos.NewUnisonSvc(syncName, "")
 	s.StopSyncService()
+}
+
+// UnloadSyncService will uninstall the sync service
+func UnloadSyncService(syncName string) {
+	if conf.GetConfig().System.Syncsvc.Enabled != true {
+		return
+	}
+
+	s := goos.NewUnisonSvc(syncName, "")
+	s.UnloadSyncService()
 }
 
 // SyncServiceStatus ...
