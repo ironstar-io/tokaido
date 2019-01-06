@@ -23,9 +23,6 @@ func DestroyProject() {
 	RemoveNginxConf()
 	RemoveFromHostsfile()
 
-	DetachFromGatsbyEnvFile()
-
-	RestartContainer("yamanote")
 	RestartContainer("proxy")
 }
 

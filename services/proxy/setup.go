@@ -24,8 +24,6 @@ func Setup() {
 
 	ConfigureUnison()
 
-	ConfigureYamanote()
-
 	ConfigureProjectNginx()
 	RestartContainer(proxy)
 }
