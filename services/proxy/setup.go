@@ -1,6 +1,8 @@
 package proxy
 
 import (
+	"log"
+
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/constants"
 	"github.com/ironstar-io/tokaido/services/docker"
@@ -9,6 +11,8 @@ import (
 
 	"fmt"
 	"path/filepath"
+
+	"github.com/mitchellh/go-homedir"
 )
 
 const proxy = "proxy"
@@ -24,9 +28,10 @@ func Setup() {
 
 	ConfigureUnison()
 
-	ConfigureYamanote()
-
 	ConfigureProjectNginx()
+
+	removeLegacyYamanoteSetup()
+
 	RestartContainer(proxy)
 }
 
@@ -52,4 +57,29 @@ func ConfigureProjectNginx() {
 
 	np := filepath.Join(getProxyClientConfdDir(), pn+".conf")
 	fs.Replace(np, nc)
+}
+
+// Yamanote left a 'local.tokaido.io' nginx config file. This needs to be
+// remove with the removal of Yamanote in 1.5.0, otherwise the proxy service
+// won't start for existing Tokaido users.
+func removeLegacyYamanoteSetup() {
+	h, err := homedir.Dir()
+	if err != nil {
+		log.Fatalf("Unable to resolve home directory: %v", err)
+	}
+
+	// Remove the yamanote config from when we used DNS auto-resolving "local.tokaido.io"
+	p := h + "/.tok/proxy/client/conf.d/local.tokaido.io.conf"
+
+	if fs.CheckExists(p) {
+		fs.Remove(p)
+	}
+
+	// Remove yamanote config from < 1.2.0, when we used /etc/hosts entries
+	p = h + "/.tok/proxy/client/conf.d/tokaido.local.conf"
+
+	if fs.CheckExists(p) {
+		fs.Remove(p)
+	}
+
 }

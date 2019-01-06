@@ -92,6 +92,8 @@ func MarshalledDefaults() []byte {
 func UnmarshalledDefaults() conf.ComposeDotTok {
 	tokStruct := conf.ComposeDotTok{}
 	unisonVersion := version.GetUnisonVersion()
+	xdebugImageVersion := conf.GetConfig().Tokaido.Stability
+	phpVersion := conf.GetConfig().Tokaido.Phpversion
 
 	err := yaml.Unmarshal(dockertmpl.ComposeTokDefaults, &tokStruct)
 	if err != nil {
@@ -168,15 +170,13 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 	}
 
 	// Set our stability version
-	err = yaml.Unmarshal(dockertmpl.StabilityLevel(conf.GetConfig().Tokaido.Stability), &tokStruct)
+	err = yaml.Unmarshal(dockertmpl.StabilityLevel(phpVersion, conf.GetConfig().Tokaido.Stability), &tokStruct)
 	if err != nil {
 		log.Fatalf("Error updating stability version for containers in Compose file: %v", err)
 	}
 
 	if conf.GetConfig().System.Xdebug.Enabled {
-		v := conf.GetConfig().Tokaido.Stability
-
-		err = yaml.Unmarshal(dockertmpl.EnableXdebug(v), &tokStruct)
+		err = yaml.Unmarshal(dockertmpl.EnableXdebug(phpVersion, xdebugImageVersion), &tokStruct)
 		if err != nil {
 			log.Fatalf("Error enabling Xdebug in Compose file: %v", err)
 		}

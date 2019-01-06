@@ -143,6 +143,13 @@ func TokaidoMenu() {
 			Detail:  "Choose between 'edge', 'stable', or 'experimental'. Edge, the default, runs images that are considered to be stable but are being tested for up to one month before being promoted to production (stable).\nLearn more at docs.tokaido.io.",
 		},
 		{
+			Name:    "PHP Version",
+			Default: "7.1",
+			Type:    "value",
+			Current: GetConfig().Tokaido.Phpversion,
+			Detail:  "Use the latest version of PHP 7.1 or 7.2 when this version of Tokaido was compiled",
+		},
+		{
 			Name:    "Use Emojis",
 			Type:    "value",
 			Default: "true",
@@ -191,7 +198,7 @@ Current Setting: [{{ .Current | green }}]
 		Label:     "Main Menu » Tokaido Configuration",
 		Items:     menu,
 		Templates: templates,
-		Size:      6,
+		Size:      7,
 	}
 
 	i, _, err := prompt.Run()
@@ -213,6 +220,8 @@ Current Setting: [{{ .Current | green }}]
 	case 1:
 		TokaidoStabilityMenu()
 	case 2:
+		TokaidoPhpversionMenu()
+	case 3:
 		if GetConfig().Tokaido.Enableemoji == true {
 			SetConfigValueByArgs([]string{"tokaido", "enableemoji", "false"})
 		} else {
@@ -220,7 +229,7 @@ Current Setting: [{{ .Current | green }}]
 		}
 		viper.ReadInConfig()
 		TokaidoMenu()
-	case 3:
+	case 4:
 		if GetConfig().Tokaido.Dependencychecks == true {
 			SetConfigValueByArgs([]string{"tokaido", "dependencychecks", "false"})
 		} else {
@@ -228,9 +237,9 @@ Current Setting: [{{ .Current | green }}]
 		}
 		viper.ReadInConfig()
 		TokaidoMenu()
-	case 4:
-		MainMenu()
 	case 5:
+		MainMenu()
+	case 6:
 		fmt.Println("Please note that if you have made config changes, you need to run `tok rebuild`")
 		os.Exit(0)
 	}
@@ -302,6 +311,67 @@ func TokaidoStabilityMenu() {
 		viper.ReadInConfig()
 		TokaidoMenu()
 	case 3:
+		TokaidoMenu()
+	}
+}
+
+// TokaidoPhpversionMenu is exposes Tokaido-level config settings
+func TokaidoPhpversionMenu() {
+	menu := []ConfigGenericString{
+		{
+			Name:   "PHP 7.1",
+			Type:   "value",
+			Detail: "Enable the latest PHP 7.1 release at the time that this version of Tokaido was created",
+		},
+		{
+			Name:   "PHP 7.2",
+			Type:   "value",
+			Detail: "Enable the latest PHP 7.2 release at the time that this version of Tokaido was created",
+		},
+		{
+			Name:   "« Tokaido Config",
+			Type:   "menu",
+			Detail: "Go back to the Main Menu",
+		},
+	}
+
+	templates := &promptui.SelectTemplates{
+		Label:    "{{ . }}?",
+		Active:   `🤔 {{ .Name | cyan }}`,
+		Inactive: `   {{ .Name | cyan }}`,
+		Selected: "{{ .Name | blue }}",
+		Details: `
+{{ if ne .Type "menu" }}---------
+{{ .Detail }}
+
+{{ end }}
+`,
+	}
+
+	prompt := promptui.Select{
+		Label:     "Main Menu » Tokaido Configuration » Stability Release Set",
+		Items:     menu,
+		Templates: templates,
+		Size:      4,
+	}
+
+	i, _, err := prompt.Run()
+
+	if err != nil {
+		fmt.Printf("Prompt failed %v\n", err)
+		return
+	}
+
+	switch i {
+	case 0:
+		SetConfigValueByArgs([]string{"tokaido", "phpversion", "7.1"})
+		viper.ReadInConfig()
+		TokaidoMenu()
+	case 1:
+		SetConfigValueByArgs([]string{"tokaido", "phpversion", "7.2"})
+		viper.ReadInConfig()
+		TokaidoMenu()
+	case 2:
 		TokaidoMenu()
 	}
 }
