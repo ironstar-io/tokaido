@@ -27,7 +27,7 @@ func TokConfig(command string) {
 	viper.SetDefault("Tokaido.Customcompose", viper.GetBool("customCompose"))
 	viper.SetDefault("Tokaido.Debug", viper.GetBool("debug"))
 	viper.SetDefault("Tokaido.Force", viper.GetBool("force"))
-	viper.SetDefault("Tokaido.Betacontainers", false)
+	viper.SetDefault("Tokaido.Stability", "edge")
 	viper.SetDefault("Tokaido.Dependencychecks", true)
 	viper.SetDefault("Tokaido.Enableemoji", emojiDefaults())
 	viper.SetDefault("Tokaido.Project.Name", strings.Replace(filepath.Base(pr), ".", "", -1))
