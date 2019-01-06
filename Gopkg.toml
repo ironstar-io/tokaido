@@ -22,3 +22,7 @@
 [[constraint]]
   name = "github.com/blang/semver"
   version = "3.5.1"
+
+[[constraint]]
+  name = "github.com/mitchellh/go-homedir"
+  version = "v1.0.0"
