@@ -14,7 +14,7 @@ type Config struct {
 		Debug            bool   `yaml:"debug,omitempty"`
 		Config           string `yaml:"config,omitempty"`
 		Enableemoji      bool   `yaml:"enableemoji"`
-		Betacontainers   bool   `yaml:"betacontainers"`
+		Stability        string `yaml:"stability"`
 		Dependencychecks bool   `yaml:"dependencychecks"`
 		Project          struct {
 			Name string `yaml:"name"`
