@@ -30,6 +30,7 @@ func TokConfig(command string) {
 	viper.SetDefault("Tokaido.Stability", "edge")
 	viper.SetDefault("Tokaido.Dependencychecks", true)
 	viper.SetDefault("Tokaido.Enableemoji", emojiDefaults())
+	viper.SetDefault("Tokaido.Phpversion", "7.1")
 	viper.SetDefault("Tokaido.Project.Name", strings.Replace(filepath.Base(pr), ".", "", -1))
 	viper.SetDefault("Tokaido.Project.Path", pr)
 	viper.SetDefault("Drupal.FilePublicPath", "")

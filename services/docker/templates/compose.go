@@ -1,5 +1,21 @@
 package dockertmpl
 
+import "log"
+
+func calcPhpVersionString(version string) string {
+	var v string
+	switch version {
+	case "7.1":
+		v = "71"
+	case "7.2":
+		v = "72"
+	default:
+		log.Fatalf("PHP version %s is not supported. Must use '7.1' or '7.2'", version)
+	}
+
+	return v
+}
+
 // DrupalSettings ...
 func DrupalSettings(drupalRoot string, projectName string) []byte {
 	return []byte(`services:
@@ -19,7 +35,9 @@ func DrupalSettings(drupalRoot string, projectName string) []byte {
 }
 
 // StabilityLevel ...
-func StabilityLevel(stability string) []byte {
+func StabilityLevel(phpVersion, stability string) []byte {
+	v := calcPhpVersionString(phpVersion)
+
 	return []byte(`services:
   syslog:
     image: tokaido/syslog:` + stability + `
@@ -30,9 +48,9 @@ func StabilityLevel(stability string) []byte {
   nginx:
     image: tokaido/nginx:` + stability + `
   fpm:
-    image: tokaido/php71-fpm:` + stability + `
+    image: tokaido/php` + v + `-fpm:` + stability + `
   drush:
-    image: tokaido/admin71-heavy:` + stability + ``)
+    image: tokaido/admin` + v + `-heavy:` + stability + ``)
 }
 
 // EnableSolr ...
@@ -91,10 +109,11 @@ func EnableMemcache(version string) []byte {
 }
 
 // EnableXdebug ...
-func EnableXdebug(version string) []byte {
+func EnableXdebug(phpVersion, xdebugImageVersion string) []byte {
+	v := calcPhpVersionString(phpVersion)
 	return []byte(`services:
   fpm:
-    image: tokaido/php71-fpm-xdebug:` + version)
+    image: tokaido/php` + v + `-fpm-xdebug:` + xdebugImageVersion)
 }
 
 // WindowsAjustments ...

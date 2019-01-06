@@ -16,6 +16,7 @@ type Config struct {
 		Enableemoji      bool   `yaml:"enableemoji"`
 		Stability        string `yaml:"stability"`
 		Dependencychecks bool   `yaml:"dependencychecks"`
+		Phpversion       string `yaml:"phpversion"`
 		Project          struct {
 			Name string `yaml:"name"`
 			Path string `yaml:"path,omitempty"`
