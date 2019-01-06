@@ -21,17 +21,6 @@ type DockerCompose struct {
 			Volumes     []string `yaml:"volumes"`
 			Networks    []string `yaml:"networks"`
 		} `yaml:"unison"`
-		Yamanote struct {
-			Hostname    string   `yaml:"hostname,omitempty"`
-			Entrypoint  []string `yaml:"entrypoint,omitempty"`
-			User        string   `yaml:"user,omitempty"`
-			Cmd         string   `yaml:"cmd,omitempty"`
-			Dependson   []string `yaml:"depends_on,omitempty"`
-			Image       string   `yaml:"image"`
-			Ports       []string `yaml:"ports"`
-			Volumesfrom []string `yaml:"volumes_from"`
-			Networks    []string `yaml:"networks"`
-		} `yaml:"yamanote"`
 		Proxy struct {
 			Hostname    string   `yaml:"hostname,omitempty"`
 			Entrypoint  []string `yaml:"entrypoint,omitempty"`
@@ -63,15 +52,7 @@ services:
     volumes:
       - /tokaido/proxy/config/client
     networks:
-      - proxy
-  yamanote:
-    image: tokaido/yamanote:1.0.0
-    ports:
-      - "3203:8443"
-    volumes_from:
-      - unison
-    networks:
-      - proxy
+      - proxy  
   proxy:
     image: tokaido/proxy:latest
     ports:

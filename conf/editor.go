@@ -136,11 +136,25 @@ func TokaidoMenu() {
 			Detail:  "If true, Tokaido will no longer update the docker-compose.tok.yml file.\nUse this if you want complete control over your Docker environment,\nbut please note that this will stop Tokaido from being able to add\nnew features and most Tokaido config settings will stop having any effect.",
 		},
 		{
-			Name:    "Use Beta Containers",
+			Name:    "Stability Release Set",
+			Default: "edge",
+			Type:    "value",
+			Current: GetConfig().Tokaido.Stability,
+			Detail:  "Choose between 'edge', 'stable', or 'experimental'. Edge, the default, runs images that are considered to be stable but are being tested for up to one month before being promoted to production (stable).\nLearn more at docs.tokaido.io.",
+		},
+		{
+			Name:    "PHP Version",
+			Default: "7.1",
+			Type:    "value",
+			Current: GetConfig().Tokaido.Phpversion,
+			Detail:  "Use the latest version of PHP 7.1 or 7.2 when this version of Tokaido was compiled",
+		},
+		{
+			Name:    "PHP XDebug Support",
 			Default: "false",
 			Type:    "value",
-			Current: strconv.FormatBool(GetConfig().Tokaido.Betacontainers),
-			Detail:  "If true, Tokaido will use the 'edge' release stream.\nThese are our non-production container streams that enable you to test new\nfeatures and updates. Tokaido 'edge' releases bcome 'stable' releases\nafter 30 days.",
+			Current: strconv.FormatBool(GetConfig().Tokaido.Xdebug),
+			Detail:  "Set to 'true' to enable Xdebug support in the FPM and Admin containers",
 		},
 		{
 			Name:    "Use Emojis",
@@ -191,7 +205,7 @@ Current Setting: [{{ .Current | green }}]
 		Label:     "Main Menu » Tokaido Configuration",
 		Items:     menu,
 		Templates: templates,
-		Size:      6,
+		Size:      8,
 	}
 
 	i, _, err := prompt.Run()
@@ -211,14 +225,18 @@ Current Setting: [{{ .Current | green }}]
 		viper.ReadInConfig()
 		TokaidoMenu()
 	case 1:
-		if GetConfig().Tokaido.Betacontainers == true {
-			SetConfigValueByArgs([]string{"tokaido", "betacontainers", "false"})
+		TokaidoStabilityMenu()
+	case 2:
+		TokaidoPhpversionMenu()
+	case 3:
+		if GetConfig().Tokaido.Xdebug == true {
+			SetConfigValueByArgs([]string{"tokaido", "xdebug", "false"})
 		} else {
-			SetConfigValueByArgs([]string{"tokaido", "betacontainers", "true"})
+			SetConfigValueByArgs([]string{"tokaido", "xdebug", "true"})
 		}
 		viper.ReadInConfig()
 		TokaidoMenu()
-	case 2:
+	case 4:
 		if GetConfig().Tokaido.Enableemoji == true {
 			SetConfigValueByArgs([]string{"tokaido", "enableemoji", "false"})
 		} else {
@@ -226,7 +244,7 @@ Current Setting: [{{ .Current | green }}]
 		}
 		viper.ReadInConfig()
 		TokaidoMenu()
-	case 3:
+	case 5:
 		if GetConfig().Tokaido.Dependencychecks == true {
 			SetConfigValueByArgs([]string{"tokaido", "dependencychecks", "false"})
 		} else {
@@ -234,11 +252,142 @@ Current Setting: [{{ .Current | green }}]
 		}
 		viper.ReadInConfig()
 		TokaidoMenu()
-	case 4:
+	case 6:
 		MainMenu()
-	case 5:
+	case 7:
 		fmt.Println("Please note that if you have made config changes, you need to run `tok rebuild`")
 		os.Exit(0)
+	}
+}
+
+// TokaidoStabilityMenu is exposes Tokaido-level config settings
+func TokaidoStabilityMenu() {
+	menu := []ConfigGenericString{
+		{
+			Name:   "Use Stable Releases",
+			Type:   "value",
+			Detail: "Use only the stable Tokaido images. These are production-ready. It's recommended to use the 'edge' version so you can catch errors before going into production on Tokaido-based hosting platforms like Ironstar.",
+		},
+		{
+			Name:   "Use Edge Releases",
+			Type:   "value",
+			Detail: "Use the Edge Tokaido releases, which is recommended. These are considred to be stable, and will be used for one month until being made 'stable' and deployed to production.",
+		},
+		{
+			Name:   "Use Experimental Releases",
+			Type:   "value",
+			Detail: "Use the Experimental images. These are under active development, and are useful for testing new features before we release them to the wider public.",
+		},
+		{
+			Name:   "« Tokaido Config",
+			Type:   "menu",
+			Detail: "Go back to the Main Menu",
+		},
+	}
+
+	templates := &promptui.SelectTemplates{
+		Label:    "{{ . }}?",
+		Active:   `🤔 {{ .Name | cyan }}`,
+		Inactive: `   {{ .Name | cyan }}`,
+		Selected: "{{ .Name | blue }}",
+		Details: `
+{{ if ne .Type "menu" }}---------
+{{ .Detail }}
+
+{{ end }}
+`,
+	}
+
+	prompt := promptui.Select{
+		Label:     "Main Menu » Tokaido Configuration » Stability Release Set",
+		Items:     menu,
+		Templates: templates,
+		Size:      4,
+	}
+
+	i, _, err := prompt.Run()
+
+	if err != nil {
+		fmt.Printf("Prompt failed %v\n", err)
+		return
+	}
+
+	switch i {
+	case 0:
+		SetConfigValueByArgs([]string{"tokaido", "stability", "stable"})
+		viper.ReadInConfig()
+		TokaidoMenu()
+	case 1:
+		SetConfigValueByArgs([]string{"tokaido", "stability", "edge"})
+		viper.ReadInConfig()
+		TokaidoMenu()
+	case 2:
+		SetConfigValueByArgs([]string{"tokaido", "stability", "experimental"})
+		viper.ReadInConfig()
+		TokaidoMenu()
+	case 3:
+		TokaidoMenu()
+	}
+}
+
+// TokaidoPhpversionMenu is exposes Tokaido-level config settings
+func TokaidoPhpversionMenu() {
+	menu := []ConfigGenericString{
+		{
+			Name:   "PHP 7.1",
+			Type:   "value",
+			Detail: "Enable the latest PHP 7.1 release at the time that this version of Tokaido was created",
+		},
+		{
+			Name:   "PHP 7.2",
+			Type:   "value",
+			Detail: "Enable the latest PHP 7.2 release at the time that this version of Tokaido was created",
+		},
+		{
+			Name:   "« Tokaido Config",
+			Type:   "menu",
+			Detail: "Go back to the Main Menu",
+		},
+	}
+
+	templates := &promptui.SelectTemplates{
+		Label:    "{{ . }}?",
+		Active:   `🤔 {{ .Name | cyan }}`,
+		Inactive: `   {{ .Name | cyan }}`,
+		Selected: "{{ .Name | blue }}",
+		Details: `
+{{ if ne .Type "menu" }}---------
+{{ .Detail }}
+
+{{ end }}
+`,
+	}
+
+	prompt := promptui.Select{
+		Label:     "Main Menu » Tokaido Configuration » Stability Release Set",
+		Items:     menu,
+		Templates: templates,
+		Size:      4,
+	}
+
+	i, _, err := prompt.Run()
+
+	if err != nil {
+		fmt.Printf("Prompt failed %v\n", err)
+		return
+	}
+
+	switch i {
+	case 0:
+		SetConfigValueByArgs([]string{"tokaido", "phpversion", "7.1"})
+		viper.ReadInConfig()
+		TokaidoMenu()
+	case 1:
+		SetConfigValueByArgs([]string{"tokaido", "phpversion", "7.2"})
+		viper.ReadInConfig()
+		TokaidoMenu()
+	case 2:
+		TokaidoMenu()
 	}
 }
 

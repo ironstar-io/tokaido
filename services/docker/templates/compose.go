@@ -1,5 +1,21 @@
 package dockertmpl
 
+import "log"
+
+func calcPhpVersionString(version string) string {
+	var v string
+	switch version {
+	case "7.1":
+		v = "71"
+	case "7.2":
+		v = "72"
+	default:
+		log.Fatalf("PHP version %s is not supported. Must use '7.1' or '7.2'", version)
+	}
+
+	return v
+}
+
 // DrupalSettings ...
 func DrupalSettings(drupalRoot string, projectName string) []byte {
 	return []byte(`services:
@@ -18,21 +34,23 @@ func DrupalSettings(drupalRoot string, projectName string) []byte {
         DRUPAL_ROOT: ` + drupalRoot)
 }
 
-// EdgeContainers ...
-func EdgeContainers() []byte {
+// StabilityLevel ...
+func StabilityLevel(phpVersion, stability string) []byte {
+	v := calcPhpVersionString(phpVersion)
+
 	return []byte(`services:
   syslog:
-    image: tokaido/syslog:edge
+    image: tokaido/syslog:` + stability + `
   haproxy:
-    image: tokaido/haproxy:edge
+    image: tokaido/haproxy:` + stability + `
   varnish:
-    image: tokaido/varnish:edge
+    image: tokaido/varnish:` + stability + `
   nginx:
-    image: tokaido/nginx:edge
+    image: tokaido/nginx:` + stability + `
   fpm:
-    image: tokaido/fpm:edge
+    image: tokaido/php` + v + `-fpm:` + stability + `
   drush:
-    image: tokaido/drush-heavy:edge`)
+    image: tokaido/admin` + v + `-heavy:` + stability + ``)
 }
 
 // EnableSolr ...
@@ -91,10 +109,13 @@ func EnableMemcache(version string) []byte {
 }
 
 // EnableXdebug ...
-func EnableXdebug(version string) []byte {
+func EnableXdebug(phpVersion, xdebugImageVersion string) []byte {
+	v := calcPhpVersionString(phpVersion)
 	return []byte(`services:
   fpm:
-    image: tokaido/fpm-xdebug:` + version)
+    image: tokaido/php` + v + `-fpm-xdebug:` + xdebugImageVersion + `
+  drush:
+    image: tokaido/admin` + v + `-heavy-xdebug:` + xdebugImageVersion)
 }
 
 // WindowsAjustments ...
@@ -152,12 +173,12 @@ services:
     volumes:
       - /tokaido/site
   syslog:
-    image: tokaido/syslog:latest
+    image: tokaido/syslog:stable
     volumes:
       - /tokaido/logs
   haproxy:
     user: "1005"
-    image: tokaido/haproxy:latest
+    image: tokaido/haproxy:stable
     ports:
       - "8080"
       - "8443"
@@ -166,7 +187,7 @@ services:
       - nginx
   varnish:
     user: "1004"
-    image: tokaido/varnish:latest
+    image: tokaido/varnish:stable
     ports:
       - "8081"
     depends_on:
@@ -175,7 +196,7 @@ services:
       - syslog
   nginx:
     user: "1002"
-    image: tokaido/nginx:latest
+    image: tokaido/nginx:stable
     volumes_from:
       - unison
       - syslog
@@ -187,7 +208,7 @@ services:
       DRUPAL_ROOT: docroot
   fpm:
     user: "1001"
-    image: tokaido/fpm:latest
+    image: tokaido/php71-fpm:stable
     working_dir: /tokaido/site/
     volumes_from:
       - unison
@@ -213,7 +234,7 @@ services:
       MYSQL_PASSWORD: tokaido
       MYSQL_ROOT_PASSWORD: tokaido
   drush:
-    image: tokaido/drush-heavy:latest
+    image: tokaido/admin71-heavy:stable
     hostname: 'tokaido'
     ports:
       - "22"
@@ -226,7 +247,7 @@ services:
       APP_ENV: local
       PROJECT_NAME: tokaido
   kishu:
-    image: tokaido/kishu:latest
+    image: tokaido/kishu:stable
     volumes_from:
       - unison
     environment:
