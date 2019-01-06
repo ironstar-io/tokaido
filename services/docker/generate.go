@@ -175,7 +175,7 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 		log.Fatalf("Error updating stability version for containers in Compose file: %v", err)
 	}
 
-	if conf.GetConfig().System.Xdebug.Enabled {
+	if conf.GetConfig().Tokaido.Xdebug {
 		err = yaml.Unmarshal(dockertmpl.EnableXdebug(phpVersion, xdebugImageVersion), &tokStruct)
 		if err != nil {
 			log.Fatalf("Error enabling Xdebug in Compose file: %v", err)

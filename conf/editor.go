@@ -150,6 +150,13 @@ func TokaidoMenu() {
 			Detail:  "Use the latest version of PHP 7.1 or 7.2 when this version of Tokaido was compiled",
 		},
 		{
+			Name:    "PHP XDebug Support",
+			Default: "false",
+			Type:    "value",
+			Current: strconv.FormatBool(GetConfig().Tokaido.Xdebug),
+			Detail:  "Set to 'true' to enable Xdebug support in the FPM and Admin containers",
+		},
+		{
 			Name:    "Use Emojis",
 			Type:    "value",
 			Default: "true",
@@ -198,7 +205,7 @@ Current Setting: [{{ .Current | green }}]
 		Label:     "Main Menu » Tokaido Configuration",
 		Items:     menu,
 		Templates: templates,
-		Size:      7,
+		Size:      8,
 	}
 
 	i, _, err := prompt.Run()
@@ -222,6 +229,14 @@ Current Setting: [{{ .Current | green }}]
 	case 2:
 		TokaidoPhpversionMenu()
 	case 3:
+		if GetConfig().Tokaido.Xdebug == true {
+			SetConfigValueByArgs([]string{"tokaido", "xdebug", "false"})
+		} else {
+			SetConfigValueByArgs([]string{"tokaido", "xdebug", "true"})
+		}
+		viper.ReadInConfig()
+		TokaidoMenu()
+	case 4:
 		if GetConfig().Tokaido.Enableemoji == true {
 			SetConfigValueByArgs([]string{"tokaido", "enableemoji", "false"})
 		} else {
@@ -229,7 +244,7 @@ Current Setting: [{{ .Current | green }}]
 		}
 		viper.ReadInConfig()
 		TokaidoMenu()
-	case 4:
+	case 5:
 		if GetConfig().Tokaido.Dependencychecks == true {
 			SetConfigValueByArgs([]string{"tokaido", "dependencychecks", "false"})
 		} else {
@@ -237,9 +252,9 @@ Current Setting: [{{ .Current | green }}]
 		}
 		viper.ReadInConfig()
 		TokaidoMenu()
-	case 5:
-		MainMenu()
 	case 6:
+		MainMenu()
+	case 7:
 		fmt.Println("Please note that if you have made config changes, you need to run `tok rebuild`")
 		os.Exit(0)
 	}
