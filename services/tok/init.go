@@ -53,7 +53,7 @@ func Init() {
 	}
 
 	// Fire up the Docker environment
-	if docker.ImageExists("tokaido/drush-heavy:latest") == false {
+	if docker.ImageExists("tokaido/unison:2.51.2") == false && docker.ImageExists("tokaido/unison:2.48.4") == false {
 		console.Println(`🚡  First time running Tokaido? There's a few images to download, this might take some time.`, "")
 		fmt.Println()
 	}
