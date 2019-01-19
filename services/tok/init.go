@@ -25,6 +25,7 @@ func Init() {
 	console.Println("\n🚀  Tokaido is starting up!", "")
 	system.CheckDependencies()
 	version.GetUnisonVersion()
+	version.Check()
 
 	// Create Tokaido configuration
 	conf.SetDrupalConfig("CUSTOM")
