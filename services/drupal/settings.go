@@ -10,7 +10,7 @@ import (
 	"strings"
 
 	"github.com/ironstar-io/tokaido/conf"
-	"github.com/ironstar-io/tokaido/services/drupal/templates"
+	drupaltmpl "github.com/ironstar-io/tokaido/services/drupal/templates"
 	"github.com/ironstar-io/tokaido/system"
 	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/utils"
@@ -175,7 +175,6 @@ func replaceSettingsTok() {
 		log.Fatalf("Could not create Drupal hash salt %v", err)
 	}
 
-	fmt.Println("qwefqwfe: %+v", c)
 	dt := drupaltmpl.Settings{
 		HashSalt:          salt,
 		ProjectName:       c.Tokaido.Project.Name,
