@@ -9,13 +9,15 @@ package conf
 // and that they are able to be properly parsed by the `tok config-x` commands
 type Config struct {
 	Tokaido struct {
-		Force            bool   `yaml:"force,omitempty"`
+		Config           string `yaml:"config,omitempty"`
 		Customcompose    bool   `yaml:"customcompose"`
 		Debug            bool   `yaml:"debug,omitempty"`
-		Config           string `yaml:"config,omitempty"`
-		Enableemoji      bool   `yaml:"enableemoji"`
-		Betacontainers   bool   `yaml:"betacontainers"`
 		Dependencychecks bool   `yaml:"dependencychecks"`
+		Enableemoji      bool   `yaml:"enableemoji"`
+		Force            bool   `yaml:"force,omitempty"`
+		Phpversion       string `yaml:"phpversion"`
+		Stability        string `yaml:"stability"`
+		Xdebug           bool   `yaml:"xdebug"`
 		Project          struct {
 			Name string `yaml:"name"`
 			Path string `yaml:"path,omitempty"`

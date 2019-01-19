@@ -13,7 +13,7 @@ import (
 
 // Destroy ...
 func Destroy() {
-	confirmDestroy := utils.ConfirmationPrompt(`🔥  This will also destroy the database inside your Tokaido environment. Are you sure?`, "n")
+	confirmDestroy := utils.ConfirmationPrompt(`🔥  This will shut down your Tokaido environment for this project. Are you sure?`, "n")
 	if confirmDestroy == false {
 		console.Println(`🍵  Exiting without change`, "")
 		return
@@ -25,7 +25,7 @@ func Destroy() {
 
 	docker.Down()
 
-	unison.StopSyncService(conf.GetConfig().Tokaido.Project.Name)
+	unison.UnloadSyncService(conf.GetConfig().Tokaido.Project.Name)
 
 	proxy.DockerComposeUp()
 }

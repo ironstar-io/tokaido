@@ -92,6 +92,8 @@ func MarshalledDefaults() []byte {
 func UnmarshalledDefaults() conf.ComposeDotTok {
 	tokStruct := conf.ComposeDotTok{}
 	unisonVersion := version.GetUnisonVersion()
+	xdebugImageVersion := conf.GetConfig().Tokaido.Stability
+	phpVersion := conf.GetConfig().Tokaido.Phpversion
 
 	err := yaml.Unmarshal(dockertmpl.ComposeTokDefaults, &tokStruct)
 	if err != nil {
@@ -126,12 +128,8 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 	}
 
 	if conf.GetConfig().Services.Solr.Enabled {
-		var v string
-		if conf.GetConfig().Tokaido.Betacontainers {
-			v = "edge"
-		} else {
-			v = "6.6"
-		}
+		v := "6.6" // Solr only supports 6.6 right now, no need to decide between stable/edge/experimental versions
+
 		err = yaml.Unmarshal(dockertmpl.EnableSolr(v), &tokStruct)
 		if err != nil {
 			log.Fatalf("Error enabling Solr in Compose file: %v", err)
@@ -139,12 +137,7 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 	}
 
 	if conf.GetConfig().Services.Redis.Enabled {
-		var v string
-		if conf.GetConfig().Tokaido.Betacontainers {
-			v = "edge"
-		} else {
-			v = "4.0.11"
-		}
+		v := "4.0.12"
 		err = yaml.Unmarshal(dockertmpl.EnableRedis(v), &tokStruct)
 		if err != nil {
 			log.Fatalf("Error enabling Redis in Compose file: %v", err)
@@ -168,33 +161,22 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 	}
 
 	if conf.GetConfig().Services.Memcache.Enabled {
-		var v string
-		if conf.GetConfig().Tokaido.Betacontainers {
-			v = "1.5-alpine" // Temporary, there is currently no edge memcache container
-		} else {
-			v = "1.5-alpine"
-		}
+		v := "1.5-alpine"
+
 		err = yaml.Unmarshal(dockertmpl.EnableMemcache(v), &tokStruct)
 		if err != nil {
 			log.Fatalf("Error enabling Memcache in Compose file: %v", err)
 		}
 	}
 
-	if conf.GetConfig().Tokaido.Betacontainers {
-		err = yaml.Unmarshal(dockertmpl.EdgeContainers(), &tokStruct)
-		if err != nil {
-			log.Fatalf("Error enabling edge containers in Compose file: %v", err)
-		}
+	// Set our stability version
+	err = yaml.Unmarshal(dockertmpl.StabilityLevel(phpVersion, conf.GetConfig().Tokaido.Stability), &tokStruct)
+	if err != nil {
+		log.Fatalf("Error updating stability version for containers in Compose file: %v", err)
 	}
 
-	if conf.GetConfig().System.Xdebug.Enabled {
-		var v string
-		if conf.GetConfig().Tokaido.Betacontainers {
-			v = "edge"
-		} else {
-			v = "latest"
-		}
-		err = yaml.Unmarshal(dockertmpl.EnableXdebug(v), &tokStruct)
+	if conf.GetConfig().Tokaido.Xdebug {
+		err = yaml.Unmarshal(dockertmpl.EnableXdebug(phpVersion, xdebugImageVersion), &tokStruct)
 		if err != nil {
 			log.Fatalf("Error enabling Xdebug in Compose file: %v", err)
 		}

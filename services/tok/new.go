@@ -66,7 +66,7 @@ func drushSiteInstall(profile string) {
 			ssh.StreamConnectCommand([]string{"drush", "en", "swiftmailer", "password_policy", "password_policy_character_types", "password_policy_characters", "password_policy_username", "memcache", "health_check"})		
 			return
 		}
-		log.Fatalf("Error: The install profile specified was not supported. Possible values are 'standard', 'minimal', and 'umami'")
+		log.Fatalf("Error: The install profile specified was not supported. Possible values are 'standard', 'minimal', and 'demo_umami'")
 }
 
 func deduceProjectName(args []string) string {
@@ -153,6 +153,7 @@ func New(args []string, profile string) {
 
 	// Open the main site at `https://<project-name>.local.tokaido.io:5154`
 	system.OpenHaproxySite(false)
+	
 }
 
 // NewSuccessMessage ...
