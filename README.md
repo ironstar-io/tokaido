@@ -14,7 +14,7 @@ for your Drupal site to work out-of-the-box.
 
 ## Installation
 
-Installation instructions are available on the [Tokaido website](https://tokaido.io/docs/getting-started/)
+Installation instructions are available on the [Tokaido website](https://docs.tokaido.io/tokaido/get-tokaido)
 
 ## Features
 
