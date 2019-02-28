@@ -118,13 +118,6 @@ func EnableXdebug(phpVersion, xdebugImageVersion string) []byte {
     image: tokaido/admin` + v + `-heavy-xdebug:` + xdebugImageVersion)
 }
 
-// WindowsAjustments ...
-func WindowsAjustments() []byte {
-	return []byte(`services:
-  unison:
-    image: onnimonni/unison:2.48.4`)
-}
-
 // ExternalVolumeDeclare ...
 func ExternalVolumeDeclare(name string) []byte {
 	return []byte(`volumes:

@@ -69,10 +69,6 @@ func TokConfig(command string) {
 }
 
 func emojiDefaults() bool {
-	if runtime.GOOS == "windows" {
-		return false
-	}
-
 	return true
 }
 
