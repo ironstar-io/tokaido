@@ -13,7 +13,6 @@ import (
 	dockertmpl "github.com/ironstar-io/tokaido/services/docker/templates"
 	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/fs"
-	"github.com/ironstar-io/tokaido/system/version"
 	yaml "gopkg.in/yaml.v2"
 )
 
@@ -76,7 +75,10 @@ func MarshalledDefaults() []byte {
 
 	// Append the volume setting on to the docker-compose setting directly
 	mysqlVolName := "tok_" + conf.GetConfig().Tokaido.Project.Name + "_mysql_database"
+	siteVolName := "tok_" + conf.GetConfig().Tokaido.Project.Name + "_tokaido_site"
 	composeVolumeYml := []byte(`volumes:
+  ` + siteVolName + `:
+    external: true
   ` + mysqlVolName + `:
     external: true
   tok_composer_cache:
@@ -90,7 +92,6 @@ func MarshalledDefaults() []byte {
 // UnmarshalledDefaults ...
 func UnmarshalledDefaults() conf.ComposeDotTok {
 	tokStruct := conf.ComposeDotTok{}
-	unisonVersion := version.GetUnisonVersion()
 	xdebugImageVersion := conf.GetConfig().Tokaido.Stability
 	phpVersion := conf.GetConfig().Tokaido.Phpversion
 
@@ -102,11 +103,6 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 	err = yaml.Unmarshal(getDrupalSettings(), &tokStruct)
 	if err != nil {
 		log.Fatalf("Error adding Drupal settings to Compose file: %v", err)
-	}
-
-	err = yaml.Unmarshal(dockertmpl.SetUnisonVersion(unisonVersion), &tokStruct)
-	if err != nil {
-		log.Fatalf("Error setting Unison version: %v", err)
 	}
 
 	// Create mysql volume declaration and attachment
@@ -121,9 +117,16 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 		log.Fatalf("Error attaching persistent MySQL volume: %v", err)
 	}
 
-	err = yaml.Unmarshal(dockertmpl.ComposerCacheVolumeAttach(), &tokStruct)
+	// Configure Fusion Sync volumes
+	siteVolName := "tok_" + conf.GetConfig().Tokaido.Project.Name + "_tokaido_site"
+	err = yaml.Unmarshal(dockertmpl.ExternalVolumeDeclare(siteVolName), &tokStruct)
 	if err != nil {
-		log.Fatalf("Error attaching persistent Composer cache volume: %v", err)
+		log.Fatalf("Error declaring persistent /tokaido/site volume: %v", err)
+	}
+
+	err = yaml.Unmarshal(dockertmpl.TokaidoSiteVolumeAttach(conf.GetConfig().Tokaido.Project.Path, siteVolName), &tokStruct)
+	if err != nil {
+		log.Fatalf("Error attaching persistent /tokaido/site volume: %v", err)
 	}
 
 	if conf.GetConfig().Services.Solr.Enabled {

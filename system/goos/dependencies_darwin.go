@@ -11,10 +11,10 @@ import (
 // CheckDependencies - Root executable
 func CheckDependencies() {
 	CheckBrew()
-	CheckPip()
-	CheckAndBrewInstall("unison")
-	CheckAndBrewInstall("unison-fsmonitor")
-	CheckDockersync()
+	// CheckPip()
+	// CheckAndBrewInstall("unison")
+	// CheckAndBrewInstall("unison-fsmonitor")
+	// CheckDockersync()
 }
 
 // CheckBrew ...
@@ -74,9 +74,9 @@ func unisonInstall() error {
 
 func fsmonitorFatal() {
 	log.Fatal(`
-Tokaido is unable to install the required dependency 'unison-fsmonitor' for you automatically. 
+Tokaido is unable to install the required dependency 'unison-fsmonitor' for you automatically.
 
-This dependency is required for Tokaido's background sync functionality. 
+This dependency is required for Tokaido's background sync functionality.
 
 You can try to manually install this dependency with the following commands:
 

@@ -49,6 +49,12 @@ func CreateDatabaseVolume() {
 	CreateVolume(n)
 }
 
+// CreateSiteVolume will create a Site volume if it doesn't already exist
+func CreateSiteVolume() {
+	n := "tok_" + conf.GetConfig().Tokaido.Project.Name + "_tokaido_site"
+	CreateVolume(n)
+}
+
 // CreateComposerCacheVolume will create a composer cache volume if it doesn't already exist
 func CreateComposerCacheVolume() {
 	n := "tok_composer_cache"
@@ -57,7 +63,7 @@ func CreateComposerCacheVolume() {
 
 // Up - Lift all containers in the compose file
 func Up() {
-	ComposeStdout("up", "-d")
+	ComposeStdout("up", "--remove-orphans", "-d")
 }
 
 // UpMulti - Lift a specific list of containers

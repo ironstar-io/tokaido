@@ -3,11 +3,9 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/initialize"
 	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/services/drupal"
-	"github.com/ironstar-io/tokaido/services/unison"
 	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/ssh"
 	"github.com/ironstar-io/tokaido/utils"
@@ -32,8 +30,6 @@ var StatusCmd = &cobra.Command{
 		}
 
 		err = ssh.CheckKey()
-
-		err = unison.CheckSyncService(conf.GetConfig().Tokaido.Project.Name)
 
 		err = drupal.CheckContainer()
 
