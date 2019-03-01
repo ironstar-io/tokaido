@@ -96,13 +96,3 @@ func DisconnectNetworkEndpoint(network, endpoint string) error {
 
 	return nil
 }
-
-// UnisonPort - Return the local port for unison
-func UnisonPort() string {
-	p := LocalPort("unison", "5000")
-	if p == "" {
-		log.Fatal("Unison container doesn't appear to be running!")
-	}
-
-	return p
-}
