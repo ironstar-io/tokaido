@@ -33,22 +33,16 @@ func OpenSite(args []string, admin bool) {
 		}
 	}
 
-	OpenHaproxySite(admin)
+	OpenTokaidoProxy(admin)
 }
 
-// OpenHaproxySite ...
-func OpenHaproxySite(admin bool) {
+// OpenTokaidoProxy ...
+func OpenTokaidoProxy(admin bool) {
 	var path string
 	if admin == true {
 		path = drush.GetAdminSignOnPath()
 	}
 
-	if proxy.CheckProxyUp() == true {
-		u := proxy.GetProxyURL()
-		goos.OpenSite(u + path)
-		return
-	}
-
-	port := docker.LocalPort("haproxy", "8443")
-	goos.OpenSite("https://localhost:" + port + path)
+	u := proxy.GetProxyURL()
+	goos.OpenSite(u + path)
 }
