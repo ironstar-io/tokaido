@@ -82,21 +82,20 @@ func New(args []string, profile string) {
 	pn := deduceProjectName(args)
 	buildProjectFrame(pn)
 
-	// System readiness checks
-	system.CheckDependencies()
-
 	console.Println("🍚  Creating a brand new Drupal 8 site with Tokaido!", "")
 
 	// Create Tokaido configuration
 	conf.SetDrupalConfig("DEFAULT")
 	docker.FindOrCreateTokCompose()
 	docker.CreateDatabaseVolume()
+	docker.CreateSiteVolume()
 	docker.CreateComposerCacheVolume()
 	ssh.GenerateKeys()
 
 	// Initial directory sync
+	siteVolName := "tok_" + conf.GetConfig().Tokaido.Project.Name + "_tokaido_site"
 	wo := console.SpinStart("Performing an initial sync...")
-	utils.StdoutStreamCmdDebug("docker", "run", "-e", "AUTO_SYNC=false", "-v", conf.GetConfig().Tokaido.Project.Path+":/tokaido/host-volume", "tokaido/sync:stable")
+	utils.StdoutStreamCmdDebug("docker", "run", "-e", "AUTO_SYNC=false", "-v", conf.GetConfig().Tokaido.Project.Path+":/tokaido/host-volume", "-v", siteVolName+":/tokaido/site", "tokaido/sync:stable")
 	console.SpinPersist(wo, "🚛", "Initial sync completed")
 
 	// Lift drush container and configure

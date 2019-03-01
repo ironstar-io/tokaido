@@ -38,34 +38,9 @@ func Init() {
 
 	// Fusion Sync WIP
 	wo := console.SpinStart("Performing an initial sync. This might take a few minutes")
-
-	utils.StdoutStreamCmdDebug("docker", "run", "-e", "AUTO_SYNC=false", "-v", conf.GetConfig().Tokaido.Project.Path+":/tokaido/host-volume", "tokaido/sync:stable")
-
+	siteVolName := "tok_" + conf.GetConfig().Tokaido.Project.Name + "_tokaido_site"
+	utils.StdoutStreamCmdDebug("docker", "run", "-e", "AUTO_SYNC=false", "-v", conf.GetConfig().Tokaido.Project.Path+":/tokaido/host-volume", "-v", siteVolName+":/tokaido/site", "tokaido/sync:stable")
 	console.SpinPersist(wo, "🚛", "Initial sync completed")
-
-	// Run Unison for syncing
-	// unison.DockerUp()
-	// unison.CreateOrUpdatePrf(unison.LocalPort(), c.Tokaido.Project.Name, c.Tokaido.Project.Path)
-	// s := unison.SyncServiceStatus(c.Tokaido.Project.Name)
-	// if s == "stopped" {
-	// 	unison.Sync(c.Tokaido.Project.Name)
-	// }
-
-	// if c.System.Syncsvc.Enabled {
-	// 	fmt.Println()
-	// 	console.Println(`🔄  Creating a background process to sync your local repo into the Tokaido environment`, "")
-
-	// 	unison.CreateSyncService(c.Tokaido.Project.Name, c.Tokaido.Project.Path)
-	// }
-
-	// Fire up the Docker environment
-	// if docker.ImageExists("tokaido/unison:2.51.2") == false && docker.ImageExists("tokaido/unison:2.48.4") == false {
-	// 	console.Println(`🚡  First time running Tokaido? There's a few images to download, this might take some time.`, "")
-	// 	fmt.Println()
-	// }
-
-	// fmt.Println()
-
 	wo = console.SpinStart("Tokaido is starting your containers")
 
 	docker.Up()
