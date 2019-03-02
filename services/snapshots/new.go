@@ -2,8 +2,11 @@ package snapshots
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
+	"regexp"
+	"strings"
 	"time"
 
 	"github.com/ironstar-io/tokaido/conf"
@@ -12,10 +15,24 @@ import (
 )
 
 // New preforms a DB Snapshot and saves it to .tok/local/snapshots
-func New(name string) {
+func New(args []string) {
+	var name string
+
 	fmt.Println()
 	wo := console.SpinStart("Backing up your Tokaido database")
 
+	if len(args) == 0 {
+		name = "tokaido"
+	} else {
+		reg, err := regexp.Compile("[^a-zA-Z0-9\\-]+")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		name = strings.Join(args, "-")
+		name = "tokaido_" + reg.ReplaceAllString(name, "")
+
+	}
 	filename, _ := createSnapshot(name)
 
 	err := waitForSync(filename)
@@ -40,10 +57,8 @@ func preSnapshotChecks() (err error) {
 }
 
 func createSnapshot(name string) (filename string, err error) {
-	if name == "" {
-		now := time.Now().UTC().Format("2006-01-02T15:04:05-0700")
-		filename = "tokaido-" + now + ".sql.gz"
-	}
+	now := time.Now().UTC().Format("2006-01-02T15:04:05-0700")
+	filename = name + "_" + now + ".sql.gz"
 
 	args := []string{
 		"mysqldump",
