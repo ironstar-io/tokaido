@@ -55,17 +55,34 @@ var SnapshotListCmd = &cobra.Command{
 	},
 }
 
-// SnapshotCleanupCmd - `tok snapshot cleanup`
-var SnapshotCleanupCmd = &cobra.Command{
-	Use:   "cleanup",
+// SnapshotDeleteCmd - `tok snapshot cleanup`
+var SnapshotDeleteCmd = &cobra.Command{
+	Use:   "delete [id]",
 	Short: "Deletes all tokaido snapshots from the .tok/local/snapshots directory",
 	Long:  "Creates a new database snapshot and saves it to .tok/local/snapshots with the current UTC date",
+	Args:  cobra.MaximumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		initialize.TokConfig("tokaido")
 		utils.CheckCmdHard("docker-compose")
 
 		docker.HardCheckTokCompose()
 
-		snapshots.Cleanup()
+		snapshots.Delete(args)
+	},
+}
+
+// SnapshotRestoreCmd - `tok snapshot cleanup`
+var SnapshotRestoreCmd = &cobra.Command{
+	Use:   "restore [id]",
+	Short: "Restores the specified snapshot id, or provides a list to choose from",
+	Long:  "Restores the specified snapshot id, or provides a list to choose from",
+	Args:  cobra.MaximumNArgs(1),
+	Run: func(cmd *cobra.Command, args []string) {
+		initialize.TokConfig("tokaido")
+		utils.CheckCmdHard("docker-compose")
+
+		docker.HardCheckTokCompose()
+
+		snapshots.Restore(args)
 	},
 }

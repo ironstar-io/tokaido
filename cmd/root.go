@@ -47,8 +47,9 @@ func init() {
 	rootCmd.AddCommand(WatchCmd)
 
 	SnapshotCmd.AddCommand(SnapshotNewCmd)
-	SnapshotCmd.AddCommand(SnapshotCleanupCmd)
+	SnapshotCmd.AddCommand(SnapshotDeleteCmd)
 	SnapshotCmd.AddCommand(SnapshotListCmd)
+	SnapshotCmd.AddCommand(SnapshotRestoreCmd)
 }
 
 // Execute - Root executable
