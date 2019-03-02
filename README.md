@@ -14,7 +14,7 @@ for your Drupal site to work out-of-the-box.
 
 ## Installation
 
-Installation instructions are available on the [Tokaido website](https://tokaido.io/docs/getting-started/)
+Installation instructions are available on the [Tokaido website](https://docs.tokaido.io/tokaido/get-tokaido)
 
 ## Features
 
@@ -104,8 +104,7 @@ With Tokaido, we've tried to make it easy to get up and going with most Drupal
 projects, but there are still some cases where Tokaido is improving:
 
 - Multisite and Domain Access sites. These will work, but you'll need to manually set up your database. For domains, anything at *.local.tokaido.io will resolve to your local host. 
-- PHP 5.6 and 7.2. Right now, Tokaido works with PHP 7.1 only. We have no plans to add support for PHP 5.6, but 7.2 support is coming soon.
-- Xdebug works but is experimental. Please help us test it !
+- PHP 5.6. Tokaido works with PHP 7.1 and 7.2 only. We have no plans to add support for PHP 5.6
 
 ## Talk to us! 
 

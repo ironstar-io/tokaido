@@ -21,8 +21,7 @@ func Init() {
 
 	// System readiness checks
 	console.Println("\n🚀  Tokaido is starting up!", "")
-	// system.CheckDependencies()
-	// version.GetUnisonVersion()
+	version.Check()
 
 	// Create Tokaido configuration
 	conf.SetDrupalConfig("CUSTOM")
