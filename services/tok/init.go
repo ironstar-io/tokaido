@@ -13,6 +13,7 @@ import (
 	"github.com/ironstar-io/tokaido/services/xdebug"
 	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/ssh"
+	"github.com/ironstar-io/tokaido/system/version"
 	"github.com/ironstar-io/tokaido/utils"
 )
 
@@ -66,7 +67,7 @@ func Init() {
 	err = docker.StatusCheck()
 	if err == nil {
 		fmt.Println()
-		console.Println(`✅  All containers are running`, "√")
+		console.Println(`🙂  All containers are running`, "√")
 	}
 
 	err = ssh.CheckKey()
