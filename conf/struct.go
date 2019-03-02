@@ -18,6 +18,7 @@ type Config struct {
 		Phpversion       string `yaml:"phpversion"`
 		Stability        string `yaml:"stability"`
 		Xdebug           bool   `yaml:"xdebug"`
+		Xdebugport       string `yaml:"xdebugport"`
 		Project          struct {
 			Name string `yaml:"name"`
 			Path string `yaml:"path,omitempty"`

@@ -8,12 +8,12 @@ import (
 
 	"log"
 
-	"gopkg.in/yaml.v2"
+	yaml "gopkg.in/yaml.v2"
 )
 
 // Configure - Amend docker-compose.tok.yml to be compatible with xdebug
 func Configure() {
-	xdebugPort := conf.GetConfig().System.Xdebug.Port
+	xdebugPort := conf.GetConfig().Tokaido.Xdebugport
 	if xdebugPort != "" {
 		networkUp := docker.CheckNetworkUp()
 
@@ -53,7 +53,10 @@ func regenerateGateway(networkUp bool, xdebugPort string) {
 
 	// Append the volume setting on to the docker-compose setting directly
 	mysqlVolName := "tok_" + conf.GetConfig().Tokaido.Project.Name + "_mysql_database"
+	siteVolName := "tok_" + conf.GetConfig().Tokaido.Project.Name + "_tokaido_site"
 	composeVolumeYml := []byte(`volumes:
+  ` + siteVolName + `:
+    external: true
   ` + mysqlVolName + `:
     external: true
   tok_composer_cache:
