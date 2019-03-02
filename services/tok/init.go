@@ -22,8 +22,8 @@ func Init() {
 	c := conf.GetConfig()
 
 	// System readiness checks
-	console.Println("\n🚀  Tokaido is starting up!", "")
 	version.Check()
+	console.Println("\n🚀  Tokaido is starting up!", "")
 
 	// Create Tokaido configuration
 	conf.SetDrupalConfig("CUSTOM")

@@ -26,7 +26,7 @@ var StatusCmd = &cobra.Command{
 		err := docker.StatusCheck()
 		if err == nil {
 			fmt.Println()
-			console.Println(`✅  All containers are running`, "√")
+			console.Println(`🙂  All containers are running`, "√")
 		}
 
 		err = ssh.CheckKey()
@@ -41,7 +41,7 @@ var StatusCmd = &cobra.Command{
 			fmt.Println()
 		} else {
 			fmt.Println()
-			console.Println("🙅  Some checks failed! Have you tried re-running `tok up`?", "")
+			console.Println("🙅  Some checks failed! You might be able to fix this by running `tok rebuild`", "")
 			fmt.Println()
 		}
 	},

@@ -45,8 +45,7 @@ func CheckContainer() error {
 		return nil
 	}
 
-	console.Println(`😦  Drupal site is not installed or is not working
-	`, "×")
+	console.Println(`😦  Drupal site is not installed or is not working`, "×")
 	fmt.Println(`
 Tokaido is running but it looks like your Drupal site isn't ready.
 
