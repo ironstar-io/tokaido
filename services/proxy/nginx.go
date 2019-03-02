@@ -16,8 +16,17 @@ func GenerateNginxConf(domain, proxyPassDomain string) []byte {
   ssl_certificate           /tokaido/proxy/config/client/tls/tokaido.pem;
   ssl_certificate_key       /tokaido/proxy/config/client/tls/tokaido-key.pem;
 
+  error_page 502 /tokaido-errors/502.html;
+  error_page 503 /tokaido-errors/503.html;
+  error_page 504 /tokaido-errors/504.html;
+
+  location ^~ /tokaido-errors/ {
+    root /tokaido/proxy/config/nginx/errors/;
+  }
+
   location / {
     proxy_pass ` + proxyPassDomain + `;
+    proxy_intercept_errors on;
   }
 }
 `)

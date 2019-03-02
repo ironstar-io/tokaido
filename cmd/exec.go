@@ -1,10 +1,8 @@
 package cmd
 
 import (
-	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/initialize"
 	"github.com/ironstar-io/tokaido/services/docker"
-	"github.com/ironstar-io/tokaido/services/unison"
 	"github.com/ironstar-io/tokaido/system/ssh"
 	"github.com/ironstar-io/tokaido/utils"
 	"github.com/spf13/cobra"
@@ -20,8 +18,6 @@ var ExecCmd = &cobra.Command{
 		utils.CheckCmdHard("docker-compose")
 
 		docker.HardCheckTokCompose()
-
-		unison.BackgroundServiceWarning(conf.GetConfig().Tokaido.Project.Name)
 
 		ssh.StreamConnectCommand(args)
 	},

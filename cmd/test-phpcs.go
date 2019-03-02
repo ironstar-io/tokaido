@@ -3,11 +3,9 @@ package cmd
 import (
 	"log"
 
-	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/initialize"
 	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/services/testing/phpcs"
-	"github.com/ironstar-io/tokaido/services/unison"
 	"github.com/ironstar-io/tokaido/utils"
 	"github.com/spf13/cobra"
 )
@@ -22,8 +20,6 @@ var TestPhpcsCmd = &cobra.Command{
 		utils.CheckCmdHard("docker-compose")
 
 		docker.HardCheckTokCompose()
-
-		unison.BackgroundServiceWarning(conf.GetConfig().Tokaido.Project.Name)
 
 		err := docker.StatusCheck()
 		if err != nil {

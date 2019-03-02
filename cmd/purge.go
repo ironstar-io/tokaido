@@ -1,10 +1,8 @@
 package cmd
 
 import (
-	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/initialize"
 	"github.com/ironstar-io/tokaido/services/drupal"
-	"github.com/ironstar-io/tokaido/services/unison"
 	"github.com/ironstar-io/tokaido/utils"
 	"github.com/spf13/cobra"
 )
@@ -17,8 +15,6 @@ var PurgeCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		initialize.TokConfig("ports")
 		utils.CheckCmdHard("docker-compose")
-
-		unison.BackgroundServiceWarning(conf.GetConfig().Tokaido.Project.Name)
 
 		drupal.Purge()
 	},
