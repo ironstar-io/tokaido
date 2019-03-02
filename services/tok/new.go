@@ -144,7 +144,7 @@ func New(args []string, profile string) {
 	goos.InitMessage()
 
 	// Open the main site at `https://<project-name>.local.tokaido.io:5154`
-	system.OpenHaproxySite(false)
+	system.OpenTokaidoProxy(false)
 
 }
 
