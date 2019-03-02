@@ -40,6 +40,21 @@ var SnapshotNewCmd = &cobra.Command{
 	},
 }
 
+// SnapshotListCmd - `tok snapshot list`
+var SnapshotListCmd = &cobra.Command{
+	Use:   "list",
+	Short: "Lists all snapshots with their current ID",
+	Long:  "Lists all snapshots with their current ID",
+	Run: func(cmd *cobra.Command, args []string) {
+		initialize.TokConfig("tokaido")
+		utils.CheckCmdHard("docker-compose")
+
+		docker.HardCheckTokCompose()
+
+		snapshots.List()
+	},
+}
+
 // SnapshotCleanupCmd - `tok snapshot cleanup`
 var SnapshotCleanupCmd = &cobra.Command{
 	Use:   "cleanup",

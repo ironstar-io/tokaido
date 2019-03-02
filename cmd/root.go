@@ -48,6 +48,7 @@ func init() {
 
 	SnapshotCmd.AddCommand(SnapshotNewCmd)
 	SnapshotCmd.AddCommand(SnapshotCleanupCmd)
+	SnapshotCmd.AddCommand(SnapshotListCmd)
 }
 
 // Execute - Root executable
