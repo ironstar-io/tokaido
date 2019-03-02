@@ -8,6 +8,7 @@ import (
 	"github.com/ironstar-io/tokaido/services/drupal"
 	"github.com/ironstar-io/tokaido/services/git"
 	"github.com/ironstar-io/tokaido/services/proxy"
+	"github.com/ironstar-io/tokaido/services/snapshots"
 	"github.com/ironstar-io/tokaido/services/tok/goos"
 	"github.com/ironstar-io/tokaido/services/xdebug"
 	"github.com/ironstar-io/tokaido/system/console"
@@ -31,6 +32,12 @@ func Init() {
 	ssh.GenerateKeys()
 	docker.CreateDatabaseVolume()
 	docker.CreateSiteVolume()
+	err := snapshots.Init()
+	if err != nil {
+		fmt.Println()
+		console.Println("🙅  Tokaido encountered an unexpected error preparing the database snapshot service", "")
+		panic(err)
+	}
 
 	docker.CreateComposerCacheVolume()
 
@@ -57,7 +64,7 @@ func Init() {
 		console.SpinPersist(wo, "🔐", "Successfully configured HTTPS")
 	}
 
-	err := docker.StatusCheck()
+	err = docker.StatusCheck()
 	if err == nil {
 		fmt.Println()
 		console.Println(`✅  All containers are running`, "√")
