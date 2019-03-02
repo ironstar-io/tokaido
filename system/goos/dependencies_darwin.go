@@ -53,12 +53,12 @@ func CheckDockersync() {
 }
 
 func unisonInstall() error {
-	_, err := utils.CommandSubSplitOutput("brew", "tap", "ironstar-io/tap")
+	_, err := utils.CommandSubSplitOutput("brew", "tap", "eugenmayer/dockersync")
 	if err != nil {
 		return err
 	}
 
-	_, err = utils.CommandSubSplitOutput("brew", "install", "ironstar-io/tap/unison-fsmonitor")
+	_, err = utils.CommandSubSplitOutput("brew", "install", "eugenmayer/dockersync/unox")
 	if err != nil {
 		return err
 	}
@@ -77,12 +77,10 @@ Tokaido is unable to install the required dependency 'unison-fsmonitor' for you 
 
 This dependency is required for Tokaido's background sync functionality. 
 
-You can manually download the unison-fsmonitor Python script with the following commands:
+You can try to manually install this dependency with the following commands:
 
-curl https://github.com/ironstar-io/unison-fsmonitor/releases/download/0.0.1/unison-fsmonitor.py -o unison-fsmonitor 
-chmod +x unison-fsmonitor
-sudo cp unison-fsmonitor /usr/local/bin/unison-fsmonitor
-pip install watchdog
+brew tap eugenmayer/dockersync
+brew install eugenmayer/dockersync/unox
 
 Exiting...
 	`)

@@ -161,7 +161,7 @@ func TokaidoMenu() {
 			Type:    "value",
 			Default: "true",
 			Current: strconv.FormatBool(GetConfig().Tokaido.Enableemoji),
-			Detail:  "You might have noticed we like to use emoji icons. Cool, huh? 😎\nSome systems like Windows can't display emojis in the terminal, so set this to false to stop Tokaido from being so cool.",
+			Detail:  "You might have noticed we like to use emoji icons. Cool, huh? 😎\nBut some terminal empulators can't display emojis, so set this to false to stop Tokaido from being so cool.",
 		},
 		{
 			Name:    "Depencendy Checks",

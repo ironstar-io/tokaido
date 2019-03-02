@@ -7,15 +7,14 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"runtime"
 	"strings"
 
 	"github.com/ironstar-io/tokaido/conf"
-	"github.com/ironstar-io/tokaido/services/docker/templates"
+	dockertmpl "github.com/ironstar-io/tokaido/services/docker/templates"
 	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/system/version"
-	"gopkg.in/yaml.v2"
+	yaml "gopkg.in/yaml.v2"
 )
 
 // GetTokComposePath ...
@@ -179,13 +178,6 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 		err = yaml.Unmarshal(dockertmpl.EnableXdebug(phpVersion, xdebugImageVersion), &tokStruct)
 		if err != nil {
 			log.Fatalf("Error enabling Xdebug in Compose file: %v", err)
-		}
-	}
-
-	if runtime.GOOS == "windows" {
-		err = yaml.Unmarshal(dockertmpl.WindowsAjustments(), &tokStruct)
-		if err != nil {
-			log.Fatalf("Error enabling Windows containers in Compose file: %v", err)
 		}
 	}
 

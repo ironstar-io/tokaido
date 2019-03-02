@@ -7,12 +7,10 @@ import (
 	"github.com/ironstar-io/tokaido/utils"
 
 	"bufio"
-	"errors"
 	"fmt"
 	"net"
 	"os"
 	"path/filepath"
-	"runtime"
 	"strings"
 )
 
@@ -124,10 +122,6 @@ func (h Hosts) Flush() error {
 
 // WriteElevated - Request a password then write the new hostsfile
 func (h *Hosts) WriteElevated() error {
-	if runtime.GOOS == "windows" {
-		return errors.New(`Unable to amend your hosts file! Tokaido requires elevated permissions in order to be able to complete this task`)
-	}
-
 	var s string
 	for _, line := range h.Lines {
 		s = s + line.Raw + "\n"
