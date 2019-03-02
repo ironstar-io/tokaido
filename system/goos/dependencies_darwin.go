@@ -23,7 +23,6 @@ func CheckBrew() *string {
 	if err != nil {
 		log.Fatal("    Homebrew is missing. You can get it from https://brew.sh")
 	}
-	fmt.Println("  √  brew")
 
 	return nil
 }
@@ -34,7 +33,7 @@ func CheckPip() {
 	if err != nil {
 		log.Fatal("    Python Pip isn't installed. You can install with 'sudo easy_install pip'")
 	}
-	fmt.Println("  √  pip")
+
 }
 
 // CheckDockersync - Root executable
