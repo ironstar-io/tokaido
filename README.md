@@ -3,10 +3,9 @@
 [![CircleCI](https://circleci.com/gh/ironstar-io/tokaido.svg?style=shield)](https://circleci.com/gh/ironstar-io/tokaido)
 [![GitHub license](https://img.shields.io/badge/license-BSD-blue.svg)](https://github.com/ironstar-io/tokaido)
 
-Tokaido is a Drupal environment launcher that _just works_.
+Tokaido is a Drupal environment manager for MacOS that _just works_.
 
-It creates Drupal environments in seconds and requires no manual configuration
-for your Drupal site to work out-of-the-box.
+It creates Drupal environments in seconds and requires no manual configuration for your Drupal site to work out-of-the-box.
 
 [Click here to watch our full demo video](https://www.youtube.com/watch?v=pxktV9zQUhM&lc=z23nhfs54myvifnwn04t1aokg1km2r2d2ts4lrdilt4xrk0h00410) or just check out the latest quick-demo below.
 
@@ -19,7 +18,7 @@ Installation instructions are available on the [Tokaido website](https://docs.to
 ## Features
 
 - Drupal 7 and 8 Support.
-- Runs on MacOS and Linux
+- Runs on MacOS.
 - Easy to use! Just type `tok up` for a zero-configuration environment.
 - Fast! Most environments are ready in less than 30 seconds.
 - Highly configurable with an easy to use config editor (`tok config`)
