@@ -26,6 +26,13 @@ func ComposeResult(args ...string) string {
 	return utils.CommandSubstitution("docker-compose", composeParams...)
 }
 
+// ComposeExitCode - Convenience method for docker-compose shell commands returning just the bash exit code
+func ComposeExitCode(args ...string) int {
+	composeParams := composeArgs(args...)
+
+	return utils.CommandSubstitutionExitCode("docker-compose", composeParams...)
+}
+
 func composeArgs(args ...string) []string {
 	composeFile := []string{"-f", filepath.Join(conf.GetConfig().Tokaido.Project.Path, "/docker-compose.tok.yml")}
 
@@ -108,6 +115,19 @@ func Ps() {
 func Exec(args []string) {
 	cm := append([]string{"exec", "-T"}, args...)
 	fmt.Println(ComposeResult(cm...))
+}
+
+// ExecWithExitCode - Execute a command inside the admin container and return an error if it failed to run
+func ExecWithExitCode(args []string) (err error) {
+	cm := append([]string{"exec", "-T"}, args...)
+	result := ComposeExitCode(cm...)
+
+	if result != 0 {
+		return errors.New("Command '%s' returned an unknown error response")
+	}
+
+	return nil
+
 }
 
 // StatusCheck ...

@@ -10,13 +10,22 @@ import (
 	"time"
 
 	"github.com/ironstar-io/tokaido/conf"
+	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/system/console"
+	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/system/ssh"
 )
 
 // New preforms a DB Snapshot and saves it to .tok/local/snapshots
 func New(args []string) {
 	var name string
+
+	// Check that this Tokaido environment is running
+	err := docker.StatusCheck()
+	if err != nil {
+		console.Println("\n😦  Your Tokaido environment appears to be offline. Please run `tok up` to start it.", "")
+		return
+	}
 
 	fmt.Println()
 	wo := console.SpinStart("Backing up your Tokaido database")
@@ -34,8 +43,9 @@ func New(args []string) {
 
 	}
 	filename, _ := createSnapshot(name)
+	filepath := filepath.Join(conf.GetConfig().Tokaido.Project.Path, "/.tok/local/snapshots/", filename)
 
-	err := waitForSync(filename)
+	err = fs.WaitForSync(filepath, 180)
 	if err != nil {
 		console.Println("\n🙅‍  Your backup failed to sync from the Tokaido environment to your local disk", "")
 		panic(err)
