@@ -47,6 +47,24 @@ So what makes Tokaido faster and more efficient?
 - Tokaido's inbuilt proxy enables verified SSL connections to your environment: https://local.tokaido.io:5154
 - Built-in Varnish caching enables production-like testing of your code
 
+## The Tokaido CLI
+Tokaido also ships with an incredibly powerful CLI that helps to eliminate the need for you to manually manage config files:
+
+|                               | Tokaido CLI Command  |
+|-------------------------------|----------------------|
+| Start new projects            | `tok new`            |
+| Launch an environment         | `tok up`             |
+| Edit configuration            | `tok config`         |
+| Connect Drupal to database    | `tok up`             |
+| Self-checks                   | `tok status`         |
+| SSH into environment          | `ssh project.tok`    |
+| Run commands in environment   | `tok exec "command"` |
+| Reset Varnish cache           | `tok purge`          |
+| Open site in browser          | `tok open`           |
+| Open services in browser      | `tok open {service}` |
+| Generate a Drupal hash salt   | `tok hash`           |
+| Manage database snapshots     | `tok snapshot`       |
+
 ## How does Tokaido compare?
 
 |                                    | Tokaido          | Docker4Drupal   | Lando           | DDev            |
@@ -75,24 +93,6 @@ but is not a full-featured dev environment
 \*\* Nearly every Drupal project we've tested works with Tokaido without any
 special config. When testing Lando and Docker4Drupal, even the most basic Drupal
 minimal installation required special config to get going.
-
-## The Tokaido CLI
-Tokaido also ships with an incredibly powerful CLI that helps to eliminate the need for you to manually manage config files:
-
-|                               | Tokaido CLI Command  |
-|-------------------------------|----------------------|
-| Start new projects            | `tok new`            |
-| Launch an environment         | `tok up`             |
-| Edit configuration            | `tok config`         |
-| Connect Drupal to database    | `tok up`             |
-| Self-checks                   | `tok status`         |
-| SSH into environment          | `ssh project.tok`    |
-| Run commands in environment   | `tok exec "command"` |
-| Reset Varnish cache           | `tok purge`          |
-| Open site in browser          | `tok open`           |
-| Open services in browser      | `tok open {service}` |
-| Generate a Drupal hash salt   | `tok hash`           |
-| Manage database snapshots     | `tok snapshot`       |
 
 ## Talk to us!
 
