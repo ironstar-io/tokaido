@@ -12,7 +12,7 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/mitchellh/go-homedir"
+	homedir "github.com/mitchellh/go-homedir"
 )
 
 const proxy = "proxy"
@@ -25,8 +25,6 @@ func Setup() {
 
 	GenerateProxyDockerCompose()
 	DockerComposeUp()
-
-	ConfigureUnison()
 
 	ConfigureProjectNginx()
 

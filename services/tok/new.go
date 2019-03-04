@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/constants"
@@ -14,13 +15,12 @@ import (
 	"github.com/ironstar-io/tokaido/services/git"
 	"github.com/ironstar-io/tokaido/services/proxy"
 	"github.com/ironstar-io/tokaido/services/tok/goos"
-	"github.com/ironstar-io/tokaido/services/unison"
 	"github.com/ironstar-io/tokaido/services/xdebug"
 	"github.com/ironstar-io/tokaido/system"
 	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/system/ssh"
-	"github.com/ironstar-io/tokaido/system/version"
+	"github.com/ironstar-io/tokaido/utils"
 )
 
 var profileFlag string
@@ -42,31 +42,31 @@ func buildProjectFrame(projectName string) {
 
 func composerCreateProject() {
 	ssh.ConnectCommand([]string{"mkdir", "/tmp/composer"})
-	ssh.StreamConnectCommand([]string{"composer", "create-project", "ironstar-io/d8-template:0.3", "/tmp/composer", "--stability", "dev", "--no-interaction"})
+	ssh.StreamConnectCommand([]string{"composer", "create-project", "ironstar-io/d8-template:0.4", "/tmp/composer", "--stability", "dev", "--no-interaction"})
 	ssh.ConnectCommand([]string{"cp", "-R", "/tmp/composer/*", "/tokaido/site"})
 }
 
 func setupProxy() {
 	c := conf.GetConfig()
 	if c.System.Syncsvc.Enabled && c.System.Proxy.Enabled {
-		console.Println("\n🔐  Setting up HTTPS for your local development environment", "")
+		console.Println("🔐  Setting up HTTPS for your local development environment", "")
 		proxy.Setup()
 	}
 }
 func drushSiteInstall(profile string) {
 	switch profile {
-		case "": 
-			profile = "standard"
-			fallthrough		
-		case
-			"standard",
-			"minimal",
-			"demo_umami":
-			ssh.StreamConnectCommand([]string{"drush", "site-install", profile, "-y"})
-			ssh.StreamConnectCommand([]string{"drush", "en", "swiftmailer", "password_policy", "password_policy_character_types", "password_policy_characters", "password_policy_username", "memcache", "health_check"})		
-			return
-		}
-		log.Fatalf("Error: The install profile specified was not supported. Possible values are 'standard', 'minimal', and 'demo_umami'")
+	case "":
+		profile = "standard"
+		fallthrough
+	case
+		"standard",
+		"minimal",
+		"demo_umami":
+		ssh.StreamConnectCommand([]string{"drush", "site-install", profile, "-y"})
+		ssh.StreamConnectCommand([]string{"drush", "en", "swiftmailer", "password_policy", "password_policy_character_types", "password_policy_characters", "password_policy_username", "memcache", "health_check"})
+		return
+	}
+	log.Fatalf("Error: The install profile specified was not supported. Possible values are 'standard', 'minimal', and 'demo_umami'")
 }
 
 func deduceProjectName(args []string) string {
@@ -78,35 +78,34 @@ func deduceProjectName(args []string) string {
 }
 
 // New - The core run sheet of `tok new {project}`
-func New(args []string, profile string) {	
+func New(args []string, profile string) {
 	// Project frame
 	pn := deduceProjectName(args)
 	buildProjectFrame(pn)
 
-	// System readiness checks
-	system.CheckDependencies()
-	version.GetUnisonVersion()
-
-	console.Println("🍚  Creating a brand new Drupal 8 site with Tokaido!", "")
-
-	c := conf.GetConfig()
+	console.Println("\n🍚  Creating a brand new Drupal 8 site with Tokaido!", "")
 
 	// Create Tokaido configuration
 	conf.SetDrupalConfig("DEFAULT")
 	docker.FindOrCreateTokCompose()
 	docker.CreateDatabaseVolume()
+	docker.CreateSiteVolume()
 	docker.CreateComposerCacheVolume()
 	ssh.GenerateKeys()
 
-	// Lift the unison container and sync
-	unison.DockerUp()
-	unison.CreateOrUpdatePrf(unison.LocalPort(), c.Tokaido.Project.Name, c.Tokaido.Project.Path)
-	unison.Sync(c.Tokaido.Project.Name)
+	// Initial directory sync
+	siteVolName := "tok_" + conf.GetConfig().Tokaido.Project.Name + "_tokaido_site"
+	wo := console.SpinStart("Performing an initial sync...")
+	utils.StdoutStreamCmdDebug("docker", "run", "-e", "AUTO_SYNC=false", "-v", conf.GetConfig().Tokaido.Project.Path+":/tokaido/host-volume", "-v", siteVolName+":/tokaido/site", "tokaido/sync:stable")
+	console.SpinPersist(wo, "🚛", "Initial sync completed")
 
 	// Lift drush container and configure
 	drush.DockerUp()
 	drupal.ConfigureSSH()
 	xdebug.Configure()
+
+	// Lift background sync container
+	docker.UpMulti([]string{"sync"})
 
 	console.Println("🎼  Using composer to generate the new Drupal project files. This might take some time", "")
 	// `composer create-project` inside the drush container
@@ -114,26 +113,39 @@ func New(args []string, profile string) {
 	// Pull all required docker images
 	docker.PullImages()
 
-	// Sync service is async and causes a race condition due to the large number of files changed.
-	// Must manually sync until stable
-	unison.Sync(c.Tokaido.Project.Name)
+	wo = console.SpinStart("Waiting for sync to complete. This might take a few minutes...")
+	filepath := drupal.SettingsPath()
+	err := fs.WaitForSync(filepath, 180)
+	if err != nil {
+		console.Println("\n🙅‍  Your new Drupal site failed to sync from the Tokaido environment to your local disk", "")
+		panic(err)
+	}
+	console.SpinPersist(wo, "🚋", "Secondary sync completed successfully")
 
 	// Fire up the full Tokaido environment
 	fmt.Println()
-	wo := console.SpinStart("Tokaido is starting your containers")
+	wo = console.SpinStart("Tokaido is starting your containers")
 	docker.Up()
 	console.SpinPersist(wo, "🚅", "Tokaido started your containers")
 
 	// Create Tokaido configuration for drupal post composer install
 	drupal.CheckSettings("FORCE")
-	unison.Sync(c.Tokaido.Project.Name)
-
-	// Create a unison sync service
-	console.Println(`🔄  Creating a background process to sync your local repo into the Tokaido environment`, "")
-	unison.CreateSyncService(c.Tokaido.Project.Name, c.Tokaido.Project.Path)
 
 	// Setup HTTPS proxy service. Retain if statement to preserve Tokaido level enable/disable defaults
 	setupProxy()
+
+	wo = console.SpinStart("Waiting for settings.tok.php to sync. This might take a few minutes...")
+	filepath = drupal.SettingsTokPath()
+	err = fs.WaitForSync(filepath, 120)
+	if err != nil {
+		console.Println("\n🙅‍  Your new Drupal site failed to sync from the Tokaido environment to your local disk", "")
+		panic(err)
+	}
+
+	// Induce a final wait for the sync process to complete
+	time.Sleep(120 * time.Second)
+
+	console.SpinPersist(wo, "🚋", "Final sync completed successfully")
 
 	// Drush site install, add additional packages
 	console.Println(`💧  Running drush site-install for your new project`, "")
@@ -152,8 +164,8 @@ func New(args []string, profile string) {
 	goos.InitMessage()
 
 	// Open the main site at `https://<project-name>.local.tokaido.io:5154`
-	system.OpenHaproxySite(false)
-	
+	system.OpenTokaidoProxy(false)
+
 }
 
 // NewSuccessMessage ...

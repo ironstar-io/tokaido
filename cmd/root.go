@@ -33,6 +33,7 @@ func init() {
 	rootCmd.AddCommand(PsCmd)
 	rootCmd.AddCommand(PurgeCmd)
 	rootCmd.AddCommand(RebuildCmd)
+	rootCmd.AddCommand(SnapshotCmd)
 	rootCmd.AddCommand(StatusCmd)
 	rootCmd.AddCommand(StopCmd)
 	rootCmd.AddCommand(SyncCmd)
@@ -44,6 +45,11 @@ func init() {
 	rootCmd.AddCommand(UpCmd)
 	rootCmd.AddCommand(VersionCmd)
 	rootCmd.AddCommand(WatchCmd)
+
+	SnapshotCmd.AddCommand(SnapshotNewCmd)
+	SnapshotCmd.AddCommand(SnapshotDeleteCmd)
+	SnapshotCmd.AddCommand(SnapshotListCmd)
+	SnapshotCmd.AddCommand(SnapshotRestoreCmd)
 }
 
 // Execute - Root executable
@@ -63,6 +69,7 @@ func RootCmd() *cobra.Command {
 	OpenCmd.PersistentFlags().BoolVarP(&adminFlag, "admin", "", false, "Create a one-time admin login URL and open")
 
 	NewCmd.PersistentFlags().StringVarP(&profileFlag, "profile", "p", "", "Specify the Drupal install profile. Supported values are 'standard', 'minimal', and 'demo_umami")
+	SnapshotNewCmd.PersistentFlags().StringVarP(&nameFlag, "name", "n", "", "Specify a name to be added to the snapshot name. If not specified, Tokaido will only use the current UTC date and time")
 
 	return &rootCmd
 }

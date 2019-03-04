@@ -10,7 +10,7 @@ import (
 	"strings"
 
 	"github.com/ironstar-io/tokaido/conf"
-	"github.com/ironstar-io/tokaido/services/drupal/templates"
+	drupaltmpl "github.com/ironstar-io/tokaido/services/drupal/templates"
 	"github.com/ironstar-io/tokaido/system"
 	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/utils"
@@ -24,24 +24,28 @@ type fileMasks struct {
 func sitesDefault() string {
 	return filepath.Join(conf.GetRootPath(), "/sites/default")
 }
-func settingsPath() string {
+
+// SettingsPath returns the full system path to the Drupal settings file
+func SettingsPath() string {
 	return filepath.Join(sitesDefault(), "/settings.php")
 }
-func settingsTokPath() string {
+
+// SettingsTokPath returns the full system path to the Tokaido settings file
+func SettingsTokPath() string {
 	return filepath.Join(sitesDefault(), "/settings.tok.php")
 }
 
 // CheckSettings checks that Drupal is ready to run in the Tokaido environment
 func CheckSettings(checks string) {
-	if fs.CheckExists(settingsPath()) == false {
+	if fs.CheckExists(SettingsPath()) == false {
 		fmt.Println(`
-Could not find a file located at "` + settingsPath() + `", database connection may not work!"
+Could not find a file located at "` + SettingsPath() + `", database connection may not work!"
 		`)
 		return
 	}
 
-	tokSettingsReferenced := fs.Contains(settingsPath(), "/settings.tok.php")
-	tokSettingsExists := fs.CheckExists(settingsTokPath())
+	tokSettingsReferenced := fs.Contains(SettingsPath(), "/settings.tok.php")
+	tokSettingsExists := fs.CheckExists(SettingsTokPath())
 
 	if tokSettingsReferenced == false || tokSettingsExists == false {
 		if checks != "FORCE" {
@@ -71,14 +75,14 @@ Could not find a file located at "` + settingsPath() + `", database connection m
 }
 
 func checkSettingsExist() {
-	_, settingPathErr := os.Stat(settingsPath())
+	_, settingPathErr := os.Stat(SettingsPath())
 	if settingPathErr != nil {
 		permissionErrMsg(settingPathErr.Error())
 		return
 	}
 	if os.IsNotExist(settingPathErr) {
 		fmt.Printf(`
-Could not find a Drupal settings file located at "` + settingsPath() + `", database connection may not work!"
+Could not find a Drupal settings file located at "` + SettingsPath() + `", database connection may not work!"
 	`)
 
 		return
@@ -92,7 +96,7 @@ func processFilePerimissions() (fileMasks, error) {
 		return emptyStruct, err
 	}
 
-	docrootSettingsMask, err := system.GetPermissionsMask(settingsPath())
+	docrootSettingsMask, err := system.GetPermissionsMask(SettingsPath())
 	if err != nil {
 		return emptyStruct, err
 	}
@@ -109,7 +113,7 @@ func processFilePerimissions() (fileMasks, error) {
 			return emptyStruct, err
 		}
 
-		if err := os.Chmod(settingsPath(), 0660); err != nil {
+		if err := os.Chmod(SettingsPath(), 0660); err != nil {
 			return emptyStruct, err
 		}
 	}
@@ -124,7 +128,7 @@ func restoreFilePerimissions(defaultMasks fileMasks) {
 		return
 	}
 
-	settingsChmodErr := os.Chmod(settingsPath(), defaultMasks.DocrootSettings)
+	settingsChmodErr := os.Chmod(SettingsPath(), defaultMasks.DocrootSettings)
 	if settingsChmodErr != nil {
 		fmt.Println(settingsChmodErr)
 		return
@@ -132,7 +136,7 @@ func restoreFilePerimissions(defaultMasks fileMasks) {
 }
 
 func appendTokSettingsRef() {
-	f, openErr := os.Open(settingsPath())
+	f, openErr := os.Open(SettingsPath())
 	if openErr != nil {
 		fmt.Println(openErr)
 		return
@@ -167,7 +171,7 @@ func appendTokSettingsRef() {
 		buffer.Write(settingsBody)
 	}
 
-	fs.Replace(settingsPath(), buffer.Bytes())
+	fs.Replace(SettingsPath(), buffer.Bytes())
 }
 
 func createSettingsTok() {
@@ -196,7 +200,7 @@ func createSettingsTok() {
 		log.Fatalf("Could not add Tokaido settings file")
 	}
 
-	fs.TouchByteArray(settingsTokPath(), settingsTokBody)
+	fs.TouchByteArray(SettingsTokPath(), settingsTokBody)
 }
 
 func allowBuildSettings() bool {

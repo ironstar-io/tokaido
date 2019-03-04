@@ -3,11 +3,9 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/initialize"
 	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/services/drupal"
-	"github.com/ironstar-io/tokaido/services/unison"
 	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/ssh"
 	"github.com/ironstar-io/tokaido/utils"
@@ -28,12 +26,10 @@ var StatusCmd = &cobra.Command{
 		err := docker.StatusCheck()
 		if err == nil {
 			fmt.Println()
-			console.Println(`✅  All containers are running`, "√")
+			console.Println(`🙂  All containers are running`, "√")
 		}
 
 		err = ssh.CheckKey()
-
-		err = unison.CheckSyncService(conf.GetConfig().Tokaido.Project.Name)
 
 		err = drupal.CheckContainer()
 
@@ -45,7 +41,7 @@ var StatusCmd = &cobra.Command{
 			fmt.Println()
 		} else {
 			fmt.Println()
-			console.Println("🙅  Some checks failed! Have you tried re-running `tok up`?", "")
+			console.Println("🙅  Some checks failed! You might be able to fix this by running `tok rebuild`", "")
 			fmt.Println()
 		}
 	},

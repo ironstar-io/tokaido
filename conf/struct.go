@@ -18,6 +18,7 @@ type Config struct {
 		Phpversion       string `yaml:"phpversion"`
 		Stability        string `yaml:"stability"`
 		Xdebug           bool   `yaml:"xdebug"`
+		Xdebugport       string `yaml:"xdebugport"`
 		Project          struct {
 			Name string `yaml:"name"`
 			Path string `yaml:"path,omitempty"`
@@ -84,6 +85,19 @@ type Services struct {
 		Environment []string `yaml:"environment,omitempty"`
 		Volumes     []string `yaml:"volumes,omitempty"`
 	} `yaml:"unison,omitempty"`
+	Sync struct {
+		Image       string            `yaml:"image,omitempty"`
+		Hostname    string            `yaml:"hostname,omitempty"`
+		Ports       []string          `yaml:"ports,omitempty"`
+		Entrypoint  []string          `yaml:"entrypoint,omitempty"`
+		User        string            `yaml:"user,omitempty"`
+		Command     string            `yaml:"command,omitempty"`
+		Volumesfrom []string          `yaml:"volumes_from,omitempty"`
+		Dependson   []string          `yaml:"depends_on,omitempty"`
+		Environment map[string]string `yaml:"environment,omitempty"`
+		Volumes     []string          `yaml:"volumes,omitempty"`
+		Restart     string            `yaml:"restart,omitempty"`
+	} `yaml:"sync,omitempty"`
 	Syslog struct {
 		Image       string            `yaml:"image,omitempty"`
 		Hostname    string            `yaml:"hostname,omitempty"`
@@ -126,6 +140,7 @@ type Services struct {
 		User        string            `yaml:"user,omitempty"`
 		Command     string            `yaml:"command,omitempty"`
 		Volumesfrom []string          `yaml:"volumes_from,omitempty"`
+		Volumes     []string          `yaml:"volumes,omitempty"`
 		Dependson   []string          `yaml:"depends_on,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`
 	} `yaml:"nginx,omitempty"`
@@ -137,6 +152,7 @@ type Services struct {
 		User        string            `yaml:"user,omitempty"`
 		Command     string            `yaml:"command,omitempty"`
 		Volumesfrom []string          `yaml:"volumes_from,omitempty"`
+		Volumes     []string          `yaml:"volumes,omitempty"`
 		Workingdir  string            `yaml:"working_dir,omitempty"`
 		Dependson   []string          `yaml:"depends_on,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`
@@ -217,8 +233,8 @@ type Services struct {
 	Kishu struct {
 		Enabled     bool              `yaml:"enabled,omitempty"`
 		Image       string            `yaml:"image,omitempty"`
-		Volumesfrom []string          `yaml:"volumes_from"`
 		Environment map[string]string `yaml:"environment,omitempty"`
+		Volumes     []string          `yaml:"volumes,omitempty"`
 	} `yaml:"kishu,omitempty"`
 }
 

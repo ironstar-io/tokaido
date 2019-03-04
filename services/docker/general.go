@@ -128,3 +128,8 @@ func KillContainer(container string) {
 func UpContainer(container string) {
 	utils.StdoutCmd("docker-compose", "-f", filepath.Join(conf.GetConfig().Tokaido.Project.Path, "/docker-compose.tok.yml"), "up", "-d", container)
 }
+
+// DeleteVolume - Delete an external docker volume
+func DeleteVolume(name string) {
+	utils.StdoutCmd("docker", "volume", "rm", name)
+}

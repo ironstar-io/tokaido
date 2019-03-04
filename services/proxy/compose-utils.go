@@ -56,10 +56,3 @@ func buildNetworks(networks []string) []byte {
 
 	return []byte(n)
 }
-
-// SetUnisonVersion ...
-func SetUnisonVersion(version string) []byte {
-	return []byte(`services:
-  unison:
-    image: tokaido/unison:` + version)
-}

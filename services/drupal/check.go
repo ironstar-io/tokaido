@@ -40,20 +40,19 @@ func CheckContainer() error {
 	haproxyPort := docker.LocalPort("haproxy", "8443")
 
 	drupalStatus := utils.BashStringCmd(`curl -sko /dev/null -I -w"%{http_code}" https://localhost:` + haproxyPort + ` | grep 200`)
-	if drupalStatus == "200" {
-		console.Println("✅  Drupal is listening on HTTPS", "√")
+	if drupalStatus == "200" || drupalStatus == "302" || drupalStatus == "301" {
+		console.Println("😁  Drupal is ready on HTTPS", "√")
 		return nil
 	}
 
-	console.Println(`😓  A Drupal site is not installed or is not working
-	`, "×")
+	console.Println(`😦  Drupal site is not installed or is not working`, "×")
 	fmt.Println(`
-Tokaido is running but it looks like your Drupal site isn't installed.
+Tokaido is running but it looks like your Drupal site isn't ready.
 
-You can install Drupal by using the web interface at
+You can visit your Drupal site by using the web at
 https://` + conf.GetConfig().Tokaido.Project.Name + `.local.tokaido.io:5154.
 
-Note that your database credentials are:
+Your database credentials are:
 
 Hostname: mysql
 Username: tokaido

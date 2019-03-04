@@ -39,6 +39,8 @@ func StabilityLevel(phpVersion, stability string) []byte {
 	v := calcPhpVersionString(phpVersion)
 
 	return []byte(`services:
+  sync:
+    image: tokaido/sync:` + stability + `
   syslog:
     image: tokaido/syslog:` + stability + `
   haproxy:
@@ -94,13 +96,6 @@ func EnableAdminer(version string) []byte {
       - "8080"`)
 }
 
-// SetUnisonVersion ...
-func SetUnisonVersion(version string) []byte {
-	return []byte(`services:
-  unison:
-    image: tokaido/unison:` + version)
-}
-
 // EnableMemcache ...
 func EnableMemcache(version string) []byte {
 	return []byte(`services:
@@ -118,18 +113,19 @@ func EnableXdebug(phpVersion, xdebugImageVersion string) []byte {
     image: tokaido/admin` + v + `-heavy-xdebug:` + xdebugImageVersion)
 }
 
-// WindowsAjustments ...
-func WindowsAjustments() []byte {
-	return []byte(`services:
-  unison:
-    image: onnimonni/unison:2.48.4`)
-}
-
 // ExternalVolumeDeclare ...
 func ExternalVolumeDeclare(name string) []byte {
 	return []byte(`volumes:
   ` + name + `:
     external: true
+`)
+}
+
+// InternalVolumeDeclare ...
+func InternalVolumeDeclare(name string) []byte {
+	return []byte(`volumes:
+  ` + name + `:
+    external: false
 `)
 }
 
@@ -142,12 +138,26 @@ func MysqlVolumeAttach(name string) []byte {
 `)
 }
 
-// ComposerCacheVolumeAttach ...
-func ComposerCacheVolumeAttach() []byte {
+// TokaidoSiteVolumeAttach ...
+func TokaidoSiteVolumeAttach(path, name string) []byte {
 	return []byte(`services:
+  sync:
+    volumes:
+      - ` + path + `:/tokaido/host-volume
+      - ` + name + `:/tokaido/site
   drush:
     volumes:
+      - ` + name + `:/tokaido/site
       - tok_composer_cache:/home/tok/.composer/cache
+  nginx:
+    volumes:
+      - ` + name + `:/tokaido/site
+  fpm:
+    volumes:
+      - ` + name + `:/tokaido/site
+  kishu:
+    volumes:
+      - ` + name + `:/tokaido/site
 `)
 }
 
@@ -162,16 +172,13 @@ var ModWarning = []byte(`
 var ComposeTokDefaults = []byte(`
 version: "2"
 services:
-  unison:
-    image: tokaido/unison:2.51.2
-    environment:
-      - UNISON_DIR=/tokaido/site
-      - UNISON_UID=1001
-      - UNISON_GID=1001
-    ports:
-      - "5000"
+  sync:
+    image: tokaido/sync:stable
     volumes:
-      - /tokaido/site
+      - waiting
+    environment:
+      AUTO_SYNC: "true"
+    restart: unless-stopped
   syslog:
     image: tokaido/syslog:stable
     volumes:
@@ -197,8 +204,9 @@ services:
   nginx:
     user: "1002"
     image: tokaido/nginx:stable
+    volumes:
+      - waiting
     volumes_from:
-      - unison
       - syslog
     depends_on:
       - fpm
@@ -210,8 +218,9 @@ services:
     user: "1001"
     image: tokaido/php71-fpm:stable
     working_dir: /tokaido/site/
+    volumes:
+      - waiting
     volumes_from:
-      - unison
       - syslog
     depends_on:
       - syslog
@@ -227,7 +236,7 @@ services:
       - waiting
     ports:
       - "3306"
-    command: --max_allowed_packet=67108864 --ignore-db-dir=lost+found
+    command: --max_allowed_packet=1073741824 --ignore-db-dir=lost+found
     environment:
       MYSQL_DATABASE: tokaido
       MYSQL_USER: tokaido
@@ -239,8 +248,9 @@ services:
     ports:
       - "22"
     working_dir: /tokaido/site
+    volumes:
+      - waiting
     volumes_from:
-      - unison
       - syslog
     environment:
       SSH_AUTH_SOCK: /ssh/auth/sock
@@ -248,8 +258,8 @@ services:
       PROJECT_NAME: tokaido
   kishu:
     image: tokaido/kishu:stable
-    volumes_from:
-      - unison
+    volumes:
+      - waiting
     environment:
       DRUPAL_ROOT: docroot
 `)

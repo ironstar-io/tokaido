@@ -157,11 +157,18 @@ func TokaidoMenu() {
 			Detail:  "Set to 'true' to enable Xdebug support in the FPM and Admin containers",
 		},
 		{
+			Name:    "PHP XDebug Port",
+			Default: "9000",
+			Type:    "value",
+			Current: GetConfig().Tokaido.Xdebugport,
+			Detail:  "Set to port number your IDE is listening for incoming Xdebug connections for this project",
+		},
+		{
 			Name:    "Use Emojis",
 			Type:    "value",
 			Default: "true",
 			Current: strconv.FormatBool(GetConfig().Tokaido.Enableemoji),
-			Detail:  "You might have noticed we like to use emoji icons. Cool, huh? 😎\nSome systems like Windows can't display emojis in the terminal, so set this to false to stop Tokaido from being so cool.",
+			Detail:  "You might have noticed we like to use emoji icons. Cool, huh? 😎\nBut some terminal emulators can't display emojis, so set this to false to stop Tokaido from being so cool.",
 		},
 		{
 			Name:    "Depencendy Checks",
@@ -205,7 +212,7 @@ Current Setting: [{{ .Current | green }}]
 		Label:     "Main Menu » Tokaido Configuration",
 		Items:     menu,
 		Templates: templates,
-		Size:      8,
+		Size:      10,
 	}
 
 	i, _, err := prompt.Run()
@@ -233,10 +240,18 @@ Current Setting: [{{ .Current | green }}]
 			SetConfigValueByArgs([]string{"tokaido", "xdebug", "false"})
 		} else {
 			SetConfigValueByArgs([]string{"tokaido", "xdebug", "true"})
+			if GetConfig().Tokaido.Xdebugport == "" {
+				SetConfigValueByArgs([]string{"tokaido", "xdebugport", "9000"})
+			}
 		}
 		viper.ReadInConfig()
 		TokaidoMenu()
 	case 4:
+		res := newStringValue("Specify the port that your IDE is listening on for xdebug connections from this project:")
+		SetConfigValueByArgs([]string{"tokaido", "xdebugport", res})
+		viper.ReadInConfig()
+		TokaidoMenu()
+	case 5:
 		if GetConfig().Tokaido.Enableemoji == true {
 			SetConfigValueByArgs([]string{"tokaido", "enableemoji", "false"})
 		} else {
@@ -244,7 +259,7 @@ Current Setting: [{{ .Current | green }}]
 		}
 		viper.ReadInConfig()
 		TokaidoMenu()
-	case 5:
+	case 6:
 		if GetConfig().Tokaido.Dependencychecks == true {
 			SetConfigValueByArgs([]string{"tokaido", "dependencychecks", "false"})
 		} else {
@@ -252,9 +267,9 @@ Current Setting: [{{ .Current | green }}]
 		}
 		viper.ReadInConfig()
 		TokaidoMenu()
-	case 6:
-		MainMenu()
 	case 7:
+		MainMenu()
+	case 8:
 		fmt.Println("Please note that if you have made config changes, you need to run `tok rebuild`")
 		os.Exit(0)
 	}

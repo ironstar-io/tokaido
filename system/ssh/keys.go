@@ -30,11 +30,11 @@ func CheckKey() error {
 
 	keyResult := utils.BashStringCmd(cmdStr)
 	if keyResult == "0" {
-		console.Println("✅  SSH access is configured", "√")
+		console.Println("😀  SSH access is configured", "√")
 		return nil
 	}
 
-	console.Println(`😓  SSH access not configured
+	console.Println(`😓  SSH access is not configured
 
 Tokaido is running but your SSH access to the Drush container looks broken.
 Make sure you have an SSH public key uploaded in './.tok/local/ssh_key.pub'.
