@@ -83,8 +83,10 @@ func FindOrCreateClientCert(certPath string) error {
 // check if the certificate that exists is the older 'tokaido.local' style,
 // and if so delete it
 func removeOldCert(cp CertificateGroupPath) (err error) {
+	utils.DebugString("Checking for presence of old-style 'tokaido.local' ssl certificate. A 'not found' error here is OK")
 	cert := utils.CommandSubstitution("openssl", "x509", "-noout", "-subject", "-in", cp.Certificate)
 	if strings.Contains(cert, "tokaido.local") {
+		utils.DebugString("Removing an old-style 'tokaido.local' ssl certificate.")
 		utils.DebugString("Removing old certificate file for tokaido.local.")
 		err = fs.EmptyDir(path.Dir(cp.Certificate))
 	}
