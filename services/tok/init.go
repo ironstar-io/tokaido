@@ -58,7 +58,7 @@ func Init() {
 
 	console.SpinPersist(wo, "🚅", "Tokaido containers were started")
 
-	if c.System.Syncsvc.Enabled && c.System.Proxy.Enabled {
+	if c.System.Proxy.Enabled {
 		wo = console.SpinStart("Setting up secure HTTPS access")
 		proxy.Setup()
 		console.SpinPersist(wo, "🔐", "Successfully configured HTTPS")
