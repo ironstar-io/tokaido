@@ -59,9 +59,9 @@ func Init() {
 	console.SpinPersist(wo, "🚅", "Tokaido containers were started")
 
 	if c.System.Proxy.Enabled {
-		wo = console.SpinStart("Setting up secure HTTPS access")
+		// This step can't be in a spinner because the spinner can't ask for user input during the SSL trust stage.
+		console.Println(`🔐  Setting up HTTPS access...`, "")
 		proxy.Setup()
-		console.SpinPersist(wo, "🔐", "Successfully configured HTTPS")
 	}
 
 	err = docker.StatusCheck()

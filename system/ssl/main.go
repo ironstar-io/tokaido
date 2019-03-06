@@ -105,6 +105,7 @@ func FindOrCreateCA(certPath string) (err error) {
 	}
 
 	if CheckCertsExist(cp) == true {
+		utils.DebugString("Found an existing SSL certificate")
 		return nil
 	}
 
