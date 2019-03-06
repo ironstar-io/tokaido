@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/golang:1.10-stretch
+      - image: circleci/golang:1.12-stretch
 
     working_directory: /go/src/github.com/ironstar-io/tokaido
 
@@ -27,7 +27,7 @@ jobs:
 
   release-edge:
     docker:
-      - image: circleci/golang:1.10-stretch
+      - image: circleci/golang:1.12-stretch
     environment:
       VERSION: edge            
     steps:
@@ -40,7 +40,7 @@ jobs:
 
   release-stable:
     docker:
-      - image: circleci/golang:1.10-stretch        
+      - image: circleci/golang:1.12-stretch
     steps:
       - attach_workspace:
           at: ./
