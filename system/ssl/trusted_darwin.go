@@ -12,7 +12,9 @@ import (
 
 // ConfigureTrustedCerts ...
 func ConfigureTrustedCerts(certificate string) {
+	utils.DebugString("Going to configure trusted SSL certificate. An error here is OK and indicates that the certificate is just not trusted yet")
 	if CertIsTrusted(certificate) == true {
+		utils.DebugString("SSL certificate is already trusted. Nothing to do.")
 		return
 	}
 
