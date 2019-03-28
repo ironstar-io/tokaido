@@ -20,7 +20,6 @@ var defaultContainers = map[string]string{
 	"haproxy": "8443",
 	"mysql":   "3306",
 	"nginx":   "8082",
-	"unison":  "5000",
 	"varnish": "8081",
 }
 

@@ -1,6 +1,10 @@
 package dockertmpl
 
-import "log"
+import (
+	"log"
+
+	"github.com/ironstar-io/tokaido/conf"
+)
 
 func calcPhpVersionString(version string) string {
 	var v string
@@ -38,9 +42,25 @@ func DrupalSettings(drupalRoot string, projectName string) []byte {
 func StabilityLevel(phpVersion, stability string) []byte {
 	v := calcPhpVersionString(phpVersion)
 
-	return []byte(`services:
+	if conf.GetConfig().Global.Syncservice == "fusion" {
+		return []byte(`services:
   sync:
     image: tokaido/sync:` + stability + `
+  syslog:
+    image: tokaido/syslog:` + stability + `
+  haproxy:
+    image: tokaido/haproxy:` + stability + `
+  varnish:
+    image: tokaido/varnish:` + stability + `
+  nginx:
+    image: tokaido/nginx:` + stability + `
+  fpm:
+    image: tokaido/php` + v + `-fpm:` + stability + `
+  drush:
+    image: tokaido/admin` + v + `-heavy:` + stability + ``)
+	}
+
+	return []byte(`services:
   syslog:
     image: tokaido/syslog:` + stability + `
   haproxy:
@@ -138,8 +158,8 @@ func MysqlVolumeAttach(name string) []byte {
 `)
 }
 
-// TokaidoSiteVolumeAttach ...
-func TokaidoSiteVolumeAttach(path, name string) []byte {
+// TokaidoFusionSiteVolumeAttach ...
+func TokaidoFusionSiteVolumeAttach(path, name string) []byte {
 	return []byte(`services:
   sync:
     volumes:
@@ -161,6 +181,25 @@ func TokaidoSiteVolumeAttach(path, name string) []byte {
 `)
 }
 
+// TokaidoDockerSiteVolumeAttach ...
+func TokaidoDockerSiteVolumeAttach(path string) []byte {
+	return []byte(`services:
+  drush:
+    volumes:
+      - ` + path + `:/tokaido/site
+      - tok_composer_cache:/home/tok/.composer/cache
+  nginx:
+    volumes:
+      - ` + path + `:/tokaido/site
+  fpm:
+    volumes:
+      - ` + path + `:/tokaido/site
+  kishu:
+    volumes:
+      - ` + path + `:/tokaido/site
+`)
+}
+
 // ModWarning - Displayed at the top of `docker-compose.tok.yml`
 var ModWarning = []byte(`
 # WARNING: THIS FILE IS MANAGED DIRECTLY BY TOKAIDO.
@@ -168,8 +207,8 @@ var ModWarning = []byte(`
 
 `)
 
-// ComposeTokDefaults - Template byte array for `docker-compose.tok.yml`
-var ComposeTokDefaults = []byte(`
+// ComposeTokDefaultsFusionSync - Template byte array for `docker-compose.tok.yml`
+var ComposeTokDefaultsFusionSync = []byte(`
 version: "2"
 services:
   sync:
@@ -179,6 +218,95 @@ services:
     environment:
       AUTO_SYNC: "true"
     restart: unless-stopped
+  syslog:
+    image: tokaido/syslog:stable
+    volumes:
+      - /tokaido/logs
+  haproxy:
+    user: "1005"
+    image: tokaido/haproxy:stable
+    ports:
+      - "8080"
+      - "8443"
+    depends_on:
+      - varnish
+      - nginx
+  varnish:
+    user: "1004"
+    image: tokaido/varnish:stable
+    ports:
+      - "8081"
+    depends_on:
+      - nginx
+    volumes_from:
+      - syslog
+  nginx:
+    user: "1002"
+    image: tokaido/nginx:stable
+    volumes:
+      - waiting
+    volumes_from:
+      - syslog
+    depends_on:
+      - fpm
+    ports:
+      - "8082"
+    environment:
+      DRUPAL_ROOT: docroot
+  fpm:
+    user: "1001"
+    image: tokaido/php71-fpm:stable
+    working_dir: /tokaido/site/
+    volumes:
+      - waiting
+    volumes_from:
+      - syslog
+    depends_on:
+      - syslog
+    ports:
+      - "9000"
+    environment:
+      PHP_DISPLAY_ERRORS: "yes"
+  mysql:
+    image: mysql:5.7
+    volumes_from:
+      - syslog
+    volumes:
+      - waiting
+    ports:
+      - "3306"
+    command: --max_allowed_packet=1073741824 --ignore-db-dir=lost+found
+    environment:
+      MYSQL_DATABASE: tokaido
+      MYSQL_USER: tokaido
+      MYSQL_PASSWORD: tokaido
+      MYSQL_ROOT_PASSWORD: tokaido
+  drush:
+    image: tokaido/admin71-heavy:stable
+    hostname: 'tokaido'
+    ports:
+      - "22"
+    working_dir: /tokaido/site
+    volumes:
+      - waiting
+    volumes_from:
+      - syslog
+    environment:
+      SSH_AUTH_SOCK: /ssh/auth/sock
+      APP_ENV: local
+      PROJECT_NAME: tokaido
+  kishu:
+    image: tokaido/kishu:stable
+    volumes:
+      - waiting
+    environment:
+      DRUPAL_ROOT: docroot
+`)
+
+// ComposeTokDefaultsDockerVolume - Template byte array for `docker-compose.tok.yml`
+var ComposeTokDefaultsDockerVolume = []byte(`
+version: "2"
+services:
   syslog:
     image: tokaido/syslog:stable
     volumes:
