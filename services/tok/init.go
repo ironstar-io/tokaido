@@ -43,20 +43,22 @@ func Init() {
 
 	git.IgnoreDefaults()
 
-	// Fusion Sync WIP
-	wo := console.SpinStart("Performing an initial sync. This might take a few minutes")
-	siteVolName := "tok_" + conf.GetConfig().Tokaido.Project.Name + "_tokaido_site"
-	utils.StdoutStreamCmdDebug("docker", "run", "-e", "AUTO_SYNC=false", "-v", conf.GetConfig().Tokaido.Project.Path+":/tokaido/host-volume", "-v", siteVolName+":/tokaido/site", "tokaido/sync:stable")
-	console.SpinPersist(wo, "🚛", "Initial sync completed")
-	wo = console.SpinStart("Tokaido is starting your containers")
+	if c.Global.Syncservice == "fusion" {
+		utils.DebugString("Using Fusion Sync Service")
+		wo := console.SpinStart("Performing an initial sync. This might take a few minutes")
+		siteVolName := "tok_" + conf.GetConfig().Tokaido.Project.Name + "_tokaido_site"
+		utils.StdoutStreamCmdDebug("docker", "run", "-e", "AUTO_SYNC=false", "-v", conf.GetConfig().Tokaido.Project.Path+":/tokaido/host-volume", "-v", siteVolName+":/tokaido/site", "tokaido/sync:stable")
+		console.SpinPersist(wo, "🚛", "Initial sync completed")
+	}
+
+	wo := console.SpinStart("Tokaido is starting your containers")
+	console.SpinPersist(wo, "🚅", "Tokaido containers were started")
 
 	docker.Up()
 
 	// Perform post-launch configuration
 	drupal.ConfigureSSH()
 	xdebug.Configure()
-
-	console.SpinPersist(wo, "🚅", "Tokaido containers were started")
 
 	if c.System.Proxy.Enabled {
 		// This step can't be in a spinner because the spinner can't ask for user input during the SSL trust stage.

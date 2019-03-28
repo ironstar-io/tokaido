@@ -8,6 +8,9 @@ package conf
 // This is to ensure they both conform to the golang convention
 // and that they are able to be properly parsed by the `tok config-x` commands
 type Config struct {
+	Global struct {
+		Syncservice string `yaml:"syncservice"`
+	} `yaml:"global"`
 	Tokaido struct {
 		Config           string `yaml:"config,omitempty"`
 		Customcompose    bool   `yaml:"customcompose"`
