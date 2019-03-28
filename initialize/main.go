@@ -5,23 +5,64 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"runtime"
 	"strings"
 
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/constants"
 	"github.com/ironstar-io/tokaido/system/fs"
+	"github.com/ironstar-io/tokaido/utils"
+	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
 )
 
 // TokConfig - loads the config from a file if specified, otherwise from the environment
 func TokConfig(command string) {
 	createDotTok()
+	createGlobalDotTok()
 
 	viper.SetEnvPrefix("TOK")
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 	viper.AutomaticEnv()
 
+	readProjectConfig(command)
+	readGlobalConfig()
+}
+
+func emojiDefaults() bool {
+	return true
+}
+
+func readGlobalConfig() {
+	h, err := homedir.Dir()
+	if err != nil {
+		log.Fatalln("Unable to resolve home directory so can't initialise Tokaido. Sorry!")
+	}
+
+	viper.SetDefault("Global.Syncservice", "fusion")
+
+	utils.DebugString("looking for global config")
+
+	// Check if the global config file exist, and read it in if it does
+	gc := filepath.Join(h, ".tok/config.yml")
+	_, err = os.Stat(gc)
+	if err == nil {
+		utils.DebugString("merging in global config file")
+		viper.SetConfigFile(gc)
+		err = viper.MergeInConfig()
+		if err != nil {
+			log.Fatalf("Unrecoverable error merging in global config file: %v", err)
+		}
+	}
+
+	// Check and error if trying to pass in invalid values
+	_, err = conf.PopulateConfig(new(conf.Config))
+	if err != nil {
+		log.Fatalln("Error parsing global configuration file\n", err)
+	}
+}
+
+func readProjectConfig(command string) {
+	utils.DebugString("reading project config")
 	pr := fs.ProjectRoot()
 
 	viper.SetDefault("Tokaido.Customcompose", viper.GetBool("customCompose"))
@@ -40,13 +81,6 @@ func TokConfig(command string) {
 	viper.SetDefault("System.Syncsvc.Enabled", true)
 	viper.SetDefault("System.Proxy.Enabled", true)
 
-	if runtime.GOOS == "linux" {
-		viper.SetDefault("System.Syncsvc.Systemdpath", filepath.Join(fs.HomeDir(), "/.config/systemd/user/"))
-	}
-	if runtime.GOOS == "darwin" {
-		viper.SetDefault("System.Syncsvc.Launchdpath", filepath.Join(fs.HomeDir(), "/Library/LaunchAgents/"))
-	}
-
 	if command == "new" {
 		viper.SetDefault("Services.Adminer.Enabled", true)
 		viper.SetDefault("Services.Mailhog.Enabled", true)
@@ -56,7 +90,6 @@ func TokConfig(command string) {
 
 	viper.SetConfigType("yaml")
 	viper.SetConfigName("config")
-	viper.AddConfigPath(filepath.Join(pr, ".tok", "local"))
 	viper.AddConfigPath(filepath.Join(pr, ".tok"))
 
 	viper.ReadInConfig()
@@ -68,16 +101,27 @@ func TokConfig(command string) {
 	}
 }
 
-func emojiDefaults() bool {
-	return true
-}
-
 func createDotTok() {
 	d := filepath.Join(fs.ProjectRoot(), ".tok")
 	if fs.CheckExists(d) == false {
 		err := os.MkdirAll(d, os.ModePerm)
 		if err != nil {
 			fmt.Println("There was an error creating the config directory:", err)
+		}
+	}
+}
+
+func createGlobalDotTok() {
+	h, err := homedir.Dir()
+	if err != nil {
+		log.Fatalln("Unable to resolve home directory, unable to initialise. Sorry!")
+	}
+
+	d := filepath.Join(h, ".tok")
+	if fs.CheckExists(d) == false {
+		err := os.MkdirAll(d, os.ModePerm)
+		if err != nil {
+			fmt.Println("There was an error creating the global config directory:", err)
 		}
 	}
 }
