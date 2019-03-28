@@ -13,6 +13,7 @@ import (
 	dockertmpl "github.com/ironstar-io/tokaido/services/docker/templates"
 	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/fs"
+	"github.com/ironstar-io/tokaido/utils"
 	yaml "gopkg.in/yaml.v2"
 )
 
@@ -95,12 +96,40 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 	xdebugImageVersion := conf.GetConfig().Tokaido.Stability
 	phpVersion := conf.GetConfig().Tokaido.Phpversion
 
-	err := yaml.Unmarshal(dockertmpl.ComposeTokDefaults, &tokStruct)
-	if err != nil {
-		log.Fatalf("Error setting Compose file defaults: %v", err)
+	if conf.GetConfig().Global.Syncservice == "docker" {
+		utils.DebugString("attaching repo to /tokaido/site folder using direct Docker mount")
+
+		err := yaml.Unmarshal(dockertmpl.ComposeTokDefaultsDockerVolume, &tokStruct)
+		if err != nil {
+			log.Fatalf("Error setting Compose file defaults: %v", err)
+		}
+
+		err = yaml.Unmarshal(dockertmpl.TokaidoDockerSiteVolumeAttach(conf.GetConfig().Tokaido.Project.Path), &tokStruct)
+		if err != nil {
+			log.Fatalf("Error attaching persistent /tokaido/site volume: %v", err)
+		}
+
+	} else {
+		utils.DebugString("attaching repo to /tokaido/site folder using Fusion sync")
+		err := yaml.Unmarshal(dockertmpl.ComposeTokDefaultsFusionSync, &tokStruct)
+		if err != nil {
+			log.Fatalf("Error setting Compose file defaults: %v", err)
+		}
+
+		// Configure Fusion Sync volumes
+		siteVolName := "tok_" + conf.GetConfig().Tokaido.Project.Name + "_tokaido_site"
+		err = yaml.Unmarshal(dockertmpl.ExternalVolumeDeclare(siteVolName), &tokStruct)
+		if err != nil {
+			log.Fatalf("Error declaring persistent /tokaido/site volume: %v", err)
+		}
+
+		err = yaml.Unmarshal(dockertmpl.TokaidoFusionSiteVolumeAttach(conf.GetConfig().Tokaido.Project.Path, siteVolName), &tokStruct)
+		if err != nil {
+			log.Fatalf("Error attaching persistent /tokaido/site volume: %v", err)
+		}
 	}
 
-	err = yaml.Unmarshal(getDrupalSettings(), &tokStruct)
+	err := yaml.Unmarshal(getDrupalSettings(), &tokStruct)
 	if err != nil {
 		log.Fatalf("Error adding Drupal settings to Compose file: %v", err)
 	}
@@ -115,18 +144,6 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 	err = yaml.Unmarshal(dockertmpl.MysqlVolumeAttach(mysqlVolName), &tokStruct)
 	if err != nil {
 		log.Fatalf("Error attaching persistent MySQL volume: %v", err)
-	}
-
-	// Configure Fusion Sync volumes
-	siteVolName := "tok_" + conf.GetConfig().Tokaido.Project.Name + "_tokaido_site"
-	err = yaml.Unmarshal(dockertmpl.ExternalVolumeDeclare(siteVolName), &tokStruct)
-	if err != nil {
-		log.Fatalf("Error declaring persistent /tokaido/site volume: %v", err)
-	}
-
-	err = yaml.Unmarshal(dockertmpl.TokaidoSiteVolumeAttach(conf.GetConfig().Tokaido.Project.Path, siteVolName), &tokStruct)
-	if err != nil {
-		log.Fatalf("Error attaching persistent /tokaido/site volume: %v", err)
 	}
 
 	if conf.GetConfig().Services.Solr.Enabled {
