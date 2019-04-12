@@ -1,11 +1,8 @@
 package cmd
 
 import (
-	"github.com/ironstar-io/tokaido/conf"
-	"github.com/ironstar-io/tokaido/initialize"
-	"github.com/ironstar-io/tokaido/services/docker"
-	"github.com/ironstar-io/tokaido/services/unison"
-	"github.com/ironstar-io/tokaido/utils"
+	"fmt"
+
 	"github.com/spf13/cobra"
 )
 
@@ -15,11 +12,14 @@ var WatchCmd = &cobra.Command{
 	Short: "Maintain a foreground sync service using Unison",
 	Long:  "Watch your files for changes and sync them to your Tokaido environment, until you exit.",
 	Run: func(cmd *cobra.Command, args []string) {
-		initialize.TokConfig("watch")
-		utils.CheckCmdHard("docker-compose")
+		fmt.Println(`
+🛠   This command was deprecated in Tokaido 1.6.0.
 
-		docker.HardCheckTokCompose()
+    Tokaido no longer relies on a background sync service, so you
+    should not need to use this command. If you are having problems
+    with sync please come visit us on the #Tokaido channel in the
+    official Drupal Slack.
+`)
 
-		unison.Watch(conf.GetConfig().Tokaido.Project.Name)
 	},
 }
