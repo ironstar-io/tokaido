@@ -1,7 +1,6 @@
 package tok
 
 import (
-	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/services/proxy"
 	"github.com/ironstar-io/tokaido/system/console"
@@ -23,9 +22,6 @@ func Destroy() {
 	fmt.Println()
 
 	docker.Down()
-	docker.DeleteVolume("tok_" + conf.GetConfig().Tokaido.Project.Name + "_tokaido_site")
-
-	// unison.UnloadSyncService(conf.GetConfig().Tokaido.Project.Name)
 
 	proxy.DockerComposeUp()
 }
