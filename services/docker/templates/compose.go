@@ -22,20 +22,34 @@ func calcPhpVersionString(version string) string {
 
 // DrupalSettings ...
 func DrupalSettings(drupalRoot string, projectName string) []byte {
-	return []byte(`services:
-  fpm:
-    environment:
-      DRUPAL_ROOT: ` + drupalRoot + `
-  nginx:
-    environment:
-      DRUPAL_ROOT: ` + drupalRoot + `
-  drush:
-    environment:
-      DRUPAL_ROOT: ` + drupalRoot + `
-      PROJECT_NAME: ` + projectName + `
-  kishu:
+	if conf.GetConfig().Global.Syncservice == "fusion" {
+		return []byte(`services:
+    fpm:
+      environment:
+        DRUPAL_ROOT: ` + drupalRoot + `
+    nginx:
+      environment:
+        DRUPAL_ROOT: ` + drupalRoot + `
+    drush:
+      environment:
+        DRUPAL_ROOT: ` + drupalRoot + `
+        PROJECT_NAME: ` + projectName + `
+    kishu:
       environment:
         DRUPAL_ROOT: ` + drupalRoot)
+	}
+	// Return without kishu for Docker Volume mounts
+	return []byte(`services:
+    fpm:
+      environment:
+        DRUPAL_ROOT: ` + drupalRoot + `
+    nginx:
+      environment:
+        DRUPAL_ROOT: ` + drupalRoot + `
+    drush:
+      environment:
+        DRUPAL_ROOT: ` + drupalRoot + `
+        PROJECT_NAME: ` + projectName)
 }
 
 // StabilityLevel ...
@@ -192,9 +206,6 @@ func TokaidoDockerSiteVolumeAttach(path string) []byte {
     volumes:
       - ` + path + `:/tokaido/site
   fpm:
-    volumes:
-      - ` + path + `:/tokaido/site
-  kishu:
     volumes:
       - ` + path + `:/tokaido/site
 `)
@@ -384,10 +395,4 @@ services:
       SSH_AUTH_SOCK: /ssh/auth/sock
       APP_ENV: local
       PROJECT_NAME: tokaido
-  kishu:
-    image: tokaido/kishu:stable
-    volumes:
-      - waiting
-    environment:
-      DRUPAL_ROOT: docroot
 `)

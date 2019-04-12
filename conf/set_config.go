@@ -11,8 +11,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/spf13/viper"
-	"gopkg.in/yaml.v2"
+	yaml "gopkg.in/yaml.v2"
 )
 
 // SetConfigValueByArgs ...
@@ -92,11 +91,6 @@ func unmarshalConfig(cp string) *Config {
 }
 
 func getConfigPath() string {
-	vc := viper.ConfigFileUsed()
-	if vc != "" {
-		return vc
-	}
-
 	cp := filepath.Join(GetConfig().Tokaido.Project.Path, "/.tok/config.yml")
 
 	var _, errf = os.Stat(cp)
