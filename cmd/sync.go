@@ -1,11 +1,8 @@
 package cmd
 
 import (
-	"github.com/ironstar-io/tokaido/conf"
-	"github.com/ironstar-io/tokaido/initialize"
-	"github.com/ironstar-io/tokaido/services/docker"
-	"github.com/ironstar-io/tokaido/services/unison"
-	"github.com/ironstar-io/tokaido/utils"
+	"fmt"
+
 	"github.com/spf13/cobra"
 )
 
@@ -15,11 +12,14 @@ var SyncCmd = &cobra.Command{
 	Short: "Perform a one-time sync of your Tokaido environment and local host",
 	Long:  "Perform a one-time sync of your Tokaido environment and local host",
 	Run: func(cmd *cobra.Command, args []string) {
-		initialize.TokConfig("sync")
-		utils.CheckCmdHard("docker-compose")
+		fmt.Println(`
+🛠   This command was deprecated in Tokaido 1.6.0.
 
-		docker.HardCheckTokCompose()
+    Tokaido no longer relies on a background sync service, so you
+    should not need to use this command. If you are having problems
+    with sync please come visit us on the #Tokaido channel in the
+    official Drupal Slack.
+`)
 
-		unison.Sync(conf.GetConfig().Tokaido.Project.Name)
 	},
 }
