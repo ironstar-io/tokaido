@@ -18,7 +18,7 @@ var UpCmd = &cobra.Command{
 		utils.CheckCmdHard("docker-compose")
 		conf.ValidProjectRoot()
 
-		tok.Init()
+		tok.Init(conf.GetConfig().Tokaido.Yes, true)
 		tok.InitMessage()
 	},
 }

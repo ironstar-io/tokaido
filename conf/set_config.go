@@ -41,6 +41,7 @@ func SetConfigValueByArgs(args []string) {
 	// Stop these values leaking into config
 	c.Tokaido.Debug = false
 	c.Tokaido.Force = false
+	c.Tokaido.Yes = false
 	c.Tokaido.Project.Path = ""
 	c.System.Syncsvc.Launchdpath = ""
 	c.System.Syncsvc.Systemdpath = ""

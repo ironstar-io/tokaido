@@ -22,7 +22,7 @@ var RebuildCmd = &cobra.Command{
 		docker.Stop()
 		unison.UnloadSyncService(conf.GetConfig().Tokaido.Project.Name)
 
-		tok.Init()
+		tok.Init(true, false)
 
 		tok.InitMessage()
 

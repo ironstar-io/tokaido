@@ -18,8 +18,12 @@ import (
 )
 
 // Init - The core run sheet of `tok up`
-func Init() {
+func Init(yes, statuscheck bool) {
 	c := conf.GetConfig()
+	cs := "ASK"
+	if yes {
+		cs = "FORCE"
+	}
 
 	// System readiness checks
 	version.Check()
@@ -27,7 +31,7 @@ func Init() {
 
 	// Create Tokaido configuration
 	conf.SetDrupalConfig("CUSTOM")
-	drupal.CheckSettings("ASK")
+	drupal.CheckSettings(cs)
 	docker.FindOrCreateTokCompose()
 	ssh.GenerateKeys()
 	docker.CreateDatabaseVolume()
@@ -72,18 +76,20 @@ func Init() {
 		console.Println(`🙂  All containers are running`, "√")
 	}
 
-	err = ssh.CheckKey()
+	if statuscheck {
+		err = ssh.CheckKey()
+		err = drupal.CheckContainer()
 
-	err = drupal.CheckContainer()
-
-	if err == nil {
-		console.Println(`🍜  Tokaido started up successfully`, "")
-	} else {
-		fmt.Println()
-		console.Println("🙅  Uh oh! It looks like Tokaido didn't start properly.", "")
-		console.Println("    Come find us in #tokaido on the Drupal Slack if you need some help", "")
-		fmt.Println()
+		if err == nil {
+			console.Println(`🍜  Tokaido started up successfully`, "")
+		} else {
+			fmt.Println()
+			console.Println("🙅  Uh oh! It looks like Tokaido didn't start properly.", "")
+			console.Println("    Come find us in #tokaido on the Drupal Slack if you need some help", "")
+			fmt.Println()
+		}
 	}
+
 }
 
 // InitMessage ...

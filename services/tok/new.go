@@ -10,15 +10,11 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/ironstar-io/tokaido/conf"
-	"github.com/ironstar-io/tokaido/constants"
 	"github.com/ironstar-io/tokaido/initialize"
 	"github.com/ironstar-io/tokaido/services/git"
-	"github.com/ironstar-io/tokaido/services/proxy"
 	"github.com/ironstar-io/tokaido/services/tok/goos"
 	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/fs"
-	"github.com/ironstar-io/tokaido/system/ssh"
 	"github.com/ironstar-io/tokaido/utils"
 	"github.com/manifoldco/promptui"
 	yaml "gopkg.in/yaml.v2"
@@ -31,66 +27,26 @@ type Templates struct {
 
 // Template ...
 type Template struct {
-	Description    string   `yaml:"description"`
-	DrupalVersion  int      `yaml:"drupal_version"`
-	Maintainer     string   `yaml:"maintainer"`
-	Name           string   `yaml:"name"`
-	PackageURL     string   `yaml:"package_url"`
-	PostUpCommands []string `yaml:"post_up_commands,omitempty"`
+	Description     string   `yaml:"description"`
+	DrupalVersion   int      `yaml:"drupal_version"`
+	Maintainer      string   `yaml:"maintainer"`
+	Name            string   `yaml:"name"`
+	PackageFilename string   `yaml:"package_filename"`
+	PostUpCommands  []string `yaml:"post_up_commands,omitempty"`
 }
 
-var profileFlag string
-
-func buildProjectFrame(projectName string) {
-	if fs.CheckExists(projectName) == true {
-		log.Fatal("The project '" + projectName + "' already exists in this directory. Exiting...")
+func buildProjectFrame(name string) {
+	if fs.CheckExists(name) == true {
+		log.Fatalf("\n\nThe directory '%s' already exists. Exiting...", name)
 	}
 
-	fs.Mkdir(projectName)
-	err := os.Chdir(projectName)
+	fs.Mkdir(name)
+	err := os.Chdir(name)
 	if err != nil {
 		panic(err)
 	}
 
 	git.Init()
-	initialize.TokConfig("new")
-}
-
-func composerCreateProject() {
-	ssh.ConnectCommand([]string{"mkdir", "/tmp/composer"})
-	ssh.StreamConnectCommand([]string{"composer", "create-project", "ironstar-io/d8-template:0.4", "/tmp/composer", "--stability", "dev", "--no-interaction"})
-	ssh.ConnectCommand([]string{"cp", "-R", "/tmp/composer/*", "/tokaido/site"})
-}
-
-func setupProxy() {
-	c := conf.GetConfig()
-	if c.System.Syncsvc.Enabled && c.System.Proxy.Enabled {
-		console.Println("🔐  Setting up HTTPS for your local development environment", "")
-		proxy.Setup()
-	}
-}
-func drushSiteInstall(profile string) {
-	switch profile {
-	case "":
-		profile = "standard"
-		fallthrough
-	case
-		"standard",
-		"minimal",
-		"demo_umami":
-		ssh.StreamConnectCommand([]string{"drush", "site-install", profile, "-y"})
-		ssh.StreamConnectCommand([]string{"drush", "en", "swiftmailer", "password_policy", "password_policy_character_types", "password_policy_characters", "password_policy_username", "memcache", "health_check"})
-		return
-	}
-	log.Fatalf("Error: The install profile specified was not supported. Possible values are 'standard', 'minimal', and 'demo_umami'")
-}
-
-func deduceProjectName(args []string) string {
-	if len(args) == 0 {
-		return constants.DefaultDrupalProjectName
-	}
-
-	return args[0]
 }
 
 func resolveProjectName(args []string) (name string) {
@@ -164,7 +120,7 @@ func chooseTemplate(tp *Templates) (template Template) {
 {{ .Description | faint  }}
 
 Maintainer: {{ .Maintainer | faint }}
-PackageURL: {{ .PackageURL | faint }}
+URL: https://downloads.tokaido.io/packages/{{ .PackageFilename | faint }}
 `,
 	}
 
@@ -200,13 +156,20 @@ func resolveTemplateName(requestTemplate string) (template Template) {
 	// If the user did specify a template name, see if that template is available
 	for _, t := range templates.Template {
 		if requestTemplate == t.Name {
-			utils.DebugString("[new] found matching template: [" + t.Name + "] at [" + t.PackageURL + "]")
+			utils.DebugString("[new] found matching template: [" + t.Name + "] at [" + t.PackageFilename + "]")
 			return t
 		}
 	}
 
-	fmt.Println("found no template")
+	log.Fatalf("Error: could not find a template to launch")
 	return
+}
+
+func unpackTemplate(template Template, name string) {
+	utils.CheckCmdHard("wget")
+	utils.StdoutStreamCmdDebug("wget", "https://downloads.tokaido.io/packages/"+template.PackageFilename)
+	utils.StdoutStreamCmdDebug("tar", "xzf", template.PackageFilename)
+	utils.StdoutStreamCmdDebug("rm", template.PackageFilename)
 }
 
 // New - The core run sheet of `tok new {project}`
@@ -218,10 +181,24 @@ func New(args []string, requestTemplate string) {
 	// Determine the template to be used to launch this project
 	template := resolveTemplateName(requestTemplate)
 
-	fmt.Printf("Launching new project [%s] with Drupal template [%s]", name, template.Name)
+	fmt.Printf("\n🍚  Launching new project [%s] with Drupal template [%s]\n", name, template.Name)
 
-	// pn := deduceProjectName(args)
-	// buildProjectFrame(pn)
+	buildProjectFrame(name)
+
+	// Download and untar the install package
+	wo := console.SpinStart("Downloading and unpacking template...")
+	unpackTemplate(template, name)
+	console.SpinPersist(wo, "🚛", "Unpacked the install template")
+
+	// Start the environment
+	initialize.TokConfig("up")
+	Init(true, false)
+	InitMessage()
+
+	wo = console.SpinStart("    Adding everything to a new Git reop...")
+	git.AddAll()
+	git.Commit("Initial Tokaido Configuration")
+	console.SpinPersist(wo, "🚛", "Added everything to a new Git reop")
 
 	// console.Println("\n🍚  Creating a brand new Drupal 8 site with Tokaido!", "")
 
@@ -269,7 +246,6 @@ func New(args []string, requestTemplate string) {
 	// console.SpinPersist(wo, "🚅", "Tokaido started your containers")
 
 	// // Create Tokaido configuration for drupal post composer install
-	// drupal.CheckSettings("FORCE")
 
 	// // Setup HTTPS proxy service. Retain if statement to preserve Tokaido level enable/disable defaults
 	// setupProxy()
