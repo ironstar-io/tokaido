@@ -67,9 +67,9 @@ func RootCmd() *cobra.Command {
 	rootCmd.PersistentFlags().BoolP("debug", "d", false, "Enable debug mode, command output is printed to the console")
 
 	OpenCmd.PersistentFlags().BoolVarP(&adminFlag, "admin", "", false, "Create a one-time admin login URL and open")
-
-	NewCmd.PersistentFlags().StringVarP(&profileFlag, "profile", "p", "", "Specify the Drupal install profile. Supported values are 'standard', 'minimal', and 'demo_umami")
 	SnapshotNewCmd.PersistentFlags().StringVarP(&nameFlag, "name", "n", "", "Specify a name to be added to the snapshot name. If not specified, Tokaido will only use the current UTC date and time")
+
+	NewCmd.PersistentFlags().StringVarP(&templateFlag, "template", "t", "", "Specify a template to use such as drupal8-standard. See templates at: https://github.com/ironstar-io/tokaido-drupal-package-builder")
 
 	return &rootCmd
 }
