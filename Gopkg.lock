@@ -172,14 +172,6 @@
   revision = "0dae4fefe7c0e190f7b5a78dac28a1c82cc8d849"
 
 [[projects]]
-  digest = "1:213ecd7cf2442d4c3fb297fdcb00c70be7aaed543b78c8b77a0ed5622940a6f1"
-  name = "github.com/judwhite/go-svc"
-  packages = ["svc"]
-  pruneopts = "UT"
-  revision = "63c12402f579f0bdf022653c821a1aa5d7544f01"
-  version = "v1.0.0"
-
-[[projects]]
   branch = "master"
   digest = "1:e51f40f0c19b39c1825eadd07d5c0a98a2ad5942b166d9fc4f54750ce9a04810"
   name = "github.com/juju/ansiterm"
@@ -224,6 +216,14 @@
   ]
   pruneopts = "UT"
   revision = "90697d60dd844d5ef6ff15135d0203f65d2f53b8"
+
+[[projects]]
+  digest = "1:ba852707958e39694e7f64328008287892adf9b1aed0174480e2f50e0c23e521"
+  name = "github.com/logrusorgru/aurora"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "21d75270181e0436fee7bd58b991c212cf309068"
+  version = "v2.0"
 
 [[projects]]
   branch = "master"
@@ -386,6 +386,14 @@
   version = "v1.0.0"
 
 [[projects]]
+  digest = "1:4a0ab26712dc866a15584f83a6004f447e692f69fdbcdfc61ea2f32836bd7065"
+  name = "github.com/ryanuber/columnize"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "9e6335e58db3b4cfe3c3c5c881f51ffbc1091b34"
+  version = "v2.1.1"
+
+[[projects]]
   digest = "1:3265b6b251e076aa31b46c3b58cf55670818be301024d29bc5de35f1ca9790c7"
   name = "github.com/sanity-io/litter"
   packages = ["."]
@@ -489,12 +497,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:f0542fa14fd5819a2f09b5bdb3f5225cf3598c726f633ef92492d62621d85557"
+  digest = "1:105645ed366a17f9ed1007059f0d3506e73e2098f2a1e793ffa92917d6461060"
   name = "golang.org/x/sys"
   packages = [
     "unix",
     "windows",
-    "windows/svc",
   ]
   pruneopts = "UT"
   revision = "7c87d13f8e835d2fb3a70a2912c811ed0c1d241b"
@@ -564,16 +571,17 @@
     "github.com/google/certificate-transparency-go/x509",
     "github.com/jmhodges/clock",
     "github.com/jmoiron/sqlx",
-    "github.com/judwhite/go-svc/svc",
     "github.com/kisielk/sqlstruct",
     "github.com/kisom/goutils/assert",
     "github.com/lib/pq",
+    "github.com/logrusorgru/aurora",
     "github.com/manifoldco/promptui",
     "github.com/mattn/go-sqlite3",
     "github.com/mitchellh/go-homedir",
     "github.com/olekukonko/tablewriter",
     "github.com/onsi/ginkgo",
     "github.com/onsi/gomega",
+    "github.com/ryanuber/columnize",
     "github.com/sanity-io/litter",
     "github.com/spf13/cobra",
     "github.com/spf13/viper",

@@ -8,14 +8,18 @@ import (
 	"net/http"
 	"os"
 	"regexp"
+	"strings"
 	"time"
 
+	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/initialize"
 	"github.com/ironstar-io/tokaido/services/git"
 	"github.com/ironstar-io/tokaido/services/tok/goos"
 	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/fs"
+	"github.com/ironstar-io/tokaido/system/ssh"
 	"github.com/ironstar-io/tokaido/utils"
+	. "github.com/logrusorgru/aurora"
 	"github.com/manifoldco/promptui"
 	yaml "gopkg.in/yaml.v2"
 )
@@ -188,99 +192,35 @@ func New(args []string, requestTemplate string) {
 	// Download and untar the install package
 	wo := console.SpinStart("Downloading and unpacking template...")
 	unpackTemplate(template, name)
-	console.SpinPersist(wo, "🚛", "Unpacked the install template")
+	console.SpinPersist(wo, "  ", "Unpacked the install template")
 
 	// Start the environment
 	initialize.TokConfig("up")
 	Init(true, false)
-	InitMessage()
 
-	wo = console.SpinStart("    Adding everything to a new Git reop...")
+	// Run the post-up custom installation commands
+	l := len(template.PostUpCommands)
+	if l > 0 {
+		fmt.Println("🏃‍♀  Running post-up installation commands...")
+		for _, v := range template.PostUpCommands {
+			fmt.Printf("%s", Blue("    - "))
+			fmt.Printf(v + "\n")
+			s := strings.Fields(v)
+			ssh.StreamConnectCommand(s)
+		}
+		fmt.Println()
+		fmt.Printf("    Ran %d post-up installation commands\n", l)
+	}
+
+	wo = console.SpinStart("Setting up a new Git repository...")
 	git.AddAll()
 	git.Commit("Initial Tokaido Configuration")
-	console.SpinPersist(wo, "🚛", "Added everything to a new Git reop")
+	console.SpinPersist(wo, "  ", "Saved everything to a new Git repository")
 
-	// console.Println("\n🍚  Creating a brand new Drupal 8 site with Tokaido!", "")
+	InitMessage()
 
-	// // Create Tokaido configuration
-	// conf.SetDrupalConfig("DEFAULT")
-	// docker.FindOrCreateTokCompose()
-	// docker.CreateDatabaseVolume()
-	// docker.CreateSiteVolume()
-	// docker.CreateComposerCacheVolume()
-	// ssh.GenerateKeys()
-
-	// // Initial directory sync
-	// siteVolName := "tok_" + conf.GetConfig().Tokaido.Project.Name + "_tokaido_site"
-	// wo := console.SpinStart("Performing an initial sync...")
-	// utils.StdoutStreamCmdDebug("docker", "run", "-e", "AUTO_SYNC=false", "-v", conf.GetConfig().Tokaido.Project.Path+":/tokaido/host-volume", "-v", siteVolName+":/tokaido/site", "tokaido/sync:stable")
-	// console.SpinPersist(wo, "🚛", "Initial sync completed")
-
-	// // Lift drush container and configure
-	// drush.DockerUp()
-	// drupal.ConfigureSSH()
-	// xdebug.Configure()
-
-	// // Lift background sync container
-	// docker.UpMulti([]string{"sync"})
-
-	// console.Println("🎼  Using composer to generate the new Drupal project files. This might take some time", "")
-	// // `composer create-project` inside the drush container
-	// composerCreateProject()
-	// // Pull all required docker images
-	// docker.PullImages()
-
-	// wo = console.SpinStart("Waiting for sync to complete. This might take a few minutes...")
-	// filepath := drupal.SettingsPath()
-	// err := fs.WaitForSync(filepath, 180)
-	// if err != nil {
-	// 	console.Println("\n🙅‍  Your new Drupal site failed to sync from the Tokaido environment to your local disk", "")
-	// 	panic(err)
-	// }
-	// console.SpinPersist(wo, "🚋", "Secondary sync completed successfully")
-
-	// // Fire up the full Tokaido environment
-	// fmt.Println()
-	// wo = console.SpinStart("Tokaido is starting your containers")
-	// docker.Up()
-	// console.SpinPersist(wo, "🚅", "Tokaido started your containers")
-
-	// // Create Tokaido configuration for drupal post composer install
-
-	// // Setup HTTPS proxy service. Retain if statement to preserve Tokaido level enable/disable defaults
-	// setupProxy()
-
-	// wo = console.SpinStart("Waiting for settings.tok.php to sync. This might take a few minutes...")
-	// filepath = drupal.SettingsTokPath()
-	// err = fs.WaitForSync(filepath, 120)
-	// if err != nil {
-	// 	console.Println("\n🙅‍  Your new Drupal site failed to sync from the Tokaido environment to your local disk", "")
-	// 	panic(err)
-	// }
-
-	// // Induce a final wait for the sync process to complete
-	// time.Sleep(120 * time.Second)
-
-	// console.SpinPersist(wo, "🚋", "Final sync completed successfully")
-
-	// // Drush site install, add additional packages
-	// console.Println(`💧  Running drush site-install for your new project`, "")
-	// drushSiteInstall(profile)
-
-	// // Generate a new .gitignore file
-	// git.NewGitignore()
-	// // Git stage all applicable files and commit
-	// git.AddAll()
-	// git.Commit("Initial Tokaido Configuration")
-
-	// // TODO: `tok status`
-	// // TODO: `tok test`
-
-	// // Provide the user a success message
-	// goos.InitMessage()
-
-	// // Open the main site at `https://<project-name>.local.tokaido.io:5154`
-	// system.OpenTokaidoProxy(false)
+	fmt.Println()
+	fmt.Println(Yellow("You need to move into the project directory before you can these commands: 'cd " + conf.GetConfig().Tokaido.Project.Name + "'"))
 
 }
 
