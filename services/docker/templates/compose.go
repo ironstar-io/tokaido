@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/ironstar-io/tokaido/conf"
+	homedir "github.com/mitchellh/go-homedir"
 )
 
 func calcPhpVersionString(version string) string {
@@ -197,10 +198,17 @@ func TokaidoFusionSiteVolumeAttach(path, name string) []byte {
 
 // TokaidoDockerSiteVolumeAttach ...
 func TokaidoDockerSiteVolumeAttach(path string) []byte {
+	h, err := homedir.Dir()
+	if err != nil {
+		log.Fatalf("Could not resolve your home directory: %v", err)
+	}
+
 	return []byte(`services:
   drush:
     volumes:
       - ` + path + `:/tokaido/site
+      - ` + h + `/.gitconfig:/home/tok/.gitconfig
+      - ` + h + `/.drush:/home/tok/.drush
       - tok_composer_cache:/home/tok/.composer/cache
   nginx:
     volumes:
