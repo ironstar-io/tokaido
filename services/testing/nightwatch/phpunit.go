@@ -9,7 +9,7 @@ import (
 	"github.com/ironstar-io/tokaido/utils"
 )
 
-var validPHPUnitRange = ">=6.x.x"
+var validPHPUnitRange = ">=6.x.x <7.0.0"
 var phpUnit = "phpunit/phpunit"
 
 func upgradePHPUnit(currentVersion string) {
@@ -21,7 +21,7 @@ func upgradePHPUnit(currentVersion string) {
 	}
 
 	composer.RemovePackage([]string{"--dev", phpUnit})
-	composer.RequirePackage([]string{"--dev", phpUnit, "^7"})
+	composer.RequirePackage([]string{"--dev", phpUnit, "^6.5"})
 }
 
 func installPHPUnit() {
@@ -32,7 +32,7 @@ func installPHPUnit() {
 		return
 	}
 
-	composer.RequirePackage([]string{"--dev", phpUnit, "^7"})
+	composer.RequirePackage([]string{"--dev", phpUnit, "^6.5"})
 }
 
 func checkPHPUnit() {
