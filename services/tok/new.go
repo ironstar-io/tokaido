@@ -170,8 +170,8 @@ func resolveTemplateName(requestTemplate string) (template Template) {
 }
 
 func unpackTemplate(template Template, name string) {
-	utils.CheckCmdHard("wget")
-	utils.StdoutStreamCmdDebug("wget", "https://downloads.tokaido.io/packages/"+template.PackageFilename)
+	utils.CheckCmdHard("curl")
+	utils.StdoutStreamCmdDebug("curl", "-O", "https://downloads.tokaido.io/packages/"+template.PackageFilename)
 	utils.StdoutStreamCmdDebug("tar", "xzf", template.PackageFilename)
 	utils.StdoutStreamCmdDebug("rm", template.PackageFilename)
 }
