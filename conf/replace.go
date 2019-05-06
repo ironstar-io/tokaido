@@ -2,6 +2,7 @@ package conf
 
 import (
 	"fmt"
+	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
@@ -28,9 +29,11 @@ func commandSubstitution(name string, args ...string) {
 func CreateOrReplaceDrupalConfig(path, version string) {
 	viper.Set("drupal.path", path)
 	viper.Set("drupal.majorversion", version)
-	cf := viper.ConfigFileUsed()
 
-	if cf == "" {
-		fs.TouchByteArray(filepath.Join(GetConfig().Tokaido.Project.Path, "/.tok/config.yml"), drupalVars(path, version))
+	configPath := filepath.Join(GetConfig().Tokaido.Project.Path, "/.tok/config.yml")
+
+	_, err := os.Stat(configPath)
+	if os.IsNotExist(err) {
+		fs.TouchByteArray(configPath, drupalVars(path, version))
 	}
 }

@@ -8,6 +8,10 @@
   unused-packages = true
 
 [[constraint]]
+  name = "github.com/logrusorgru/aurora"
+  version = "v2.0"
+
+[[constraint]]
   name = "github.com/onsi/ginkgo"
   version = "1.5.0"
 

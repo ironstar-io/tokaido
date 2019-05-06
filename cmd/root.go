@@ -63,13 +63,14 @@ func Execute() {
 // RootCmd will setup and return the root command
 func RootCmd() *cobra.Command {
 	rootCmd.PersistentFlags().StringP("config", "c", "", "Specify the Tokaido config file to use")
-	rootCmd.PersistentFlags().BoolP("force", "", false, "Forcefully skip confirmation prompts with 'yes' response")
+	rootCmd.PersistentFlags().BoolP("force", "", false, "Forcefully skip destructive confirmation prompts")
+	rootCmd.PersistentFlags().BoolP("yes", "y", false, "Auto-accept any non-destructive confirmation prompts")
 	rootCmd.PersistentFlags().BoolP("debug", "d", false, "Enable debug mode, command output is printed to the console")
 
 	OpenCmd.PersistentFlags().BoolVarP(&adminFlag, "admin", "", false, "Create a one-time admin login URL and open")
-
-	NewCmd.PersistentFlags().StringVarP(&profileFlag, "profile", "p", "", "Specify the Drupal install profile. Supported values are 'standard', 'minimal', and 'demo_umami")
 	SnapshotNewCmd.PersistentFlags().StringVarP(&nameFlag, "name", "n", "", "Specify a name to be added to the snapshot name. If not specified, Tokaido will only use the current UTC date and time")
+
+	NewCmd.PersistentFlags().StringVarP(&templateFlag, "template", "t", "", "Specify a template to use such as drupal8-standard. See templates at: https://github.com/ironstar-io/tokaido-drupal-package-builder")
 
 	return &rootCmd
 }

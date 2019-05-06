@@ -18,6 +18,7 @@ type Config struct {
 		Dependencychecks bool   `yaml:"dependencychecks"`
 		Enableemoji      bool   `yaml:"enableemoji"`
 		Force            bool   `yaml:"force,omitempty"`
+		Yes              bool   `yaml:"yes,omitempty"`
 		Phpversion       string `yaml:"phpversion"`
 		Stability        string `yaml:"stability"`
 		Xdebug           bool   `yaml:"xdebug"`
