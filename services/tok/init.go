@@ -55,11 +55,15 @@ func Init(yes, statuscheck bool) {
 		console.SpinPersist(wo, "🚛", "Initial sync completed")
 	}
 
-	wo := console.SpinStart("Tokaido is starting your containers")
-	console.SpinPersist(wo, "🚅", "Tokaido containers were started")
+	wo := console.SpinStart("Downloading the latest Docker images")
+	docker.PullImages()
+	console.SpinPersist(wo, "🤖", "You're now equipped with the latest Docker images")
 
+	// wo = console.SpinStart("Starting your containers")
 	docker.Up()
+	// console.SpinPersist(wo, "🚅", "Tokaido containers are online")
 
+	console.Println("🚅  Configuring your new Drupal environment", "")
 	// Perform post-launch configuration
 	drupal.ConfigureSSH()
 	xdebug.Configure()
