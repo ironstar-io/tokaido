@@ -37,5 +37,9 @@ func getContainerState(name string) (state string, err error) {
 		return "", nil
 	}
 
+	if containers[0].State == "" {
+		return "", fmt.Errorf("error looking up container state for container %s. Container state was empty", name)
+	}
+
 	return containers[0].State, nil
 }
