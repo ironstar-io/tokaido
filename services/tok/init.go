@@ -92,7 +92,7 @@ func Init(yes, statuscheck bool) {
 			fmt.Println(Sprintf(Cyan("    You can try running '%s' to see the full PHP startup log"), Blue("tok logs fpm")))
 		} else if !docker.StatusCheck("nginx") {
 			fmt.Println(Red("    The Tokaido NGINX container failed to start up."))
-			fmt.Println(Red("    This is most likely caused to a Tokaido misconfiguration."))
+			fmt.Println(Red("    This is most likely caused by a Tokaido misconfiguration."))
 			fmt.Println()
 			fmt.Println(Sprintf(Cyan("    You can try running '%s' to see the full startup log"), Blue("tok logs nginx")))
 		}
