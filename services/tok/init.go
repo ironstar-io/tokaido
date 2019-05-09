@@ -31,7 +31,7 @@ func Init(yes, statuscheck bool) {
 	// System readiness checks
 	version.Check()
 	docker.CheckClientVersion()
-	fmt.Println(Green("\n🚀  Tokaido is starting up!"))
+	fmt.Println(Cyan("\n🚀  Tokaido is starting up!"))
 
 	// Create Tokaido configuration
 	conf.SetDrupalConfig("CUSTOM")
@@ -61,6 +61,7 @@ func Init(yes, statuscheck bool) {
 
 	wo := console.SpinStart("Downloading the latest Docker images")
 	docker.PullImages()
+	proxy.PullImages()
 	console.SpinPersist(wo, "🤖", "Latest Docker images downloaded successfully")
 
 	// wo = console.SpinStart("Starting your containers")
