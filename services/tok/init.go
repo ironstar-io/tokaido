@@ -2,6 +2,7 @@ package tok
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/services/docker"
@@ -15,6 +16,8 @@ import (
 	"github.com/ironstar-io/tokaido/system/ssh"
 	"github.com/ironstar-io/tokaido/system/version"
 	"github.com/ironstar-io/tokaido/utils"
+
+	. "github.com/logrusorgru/aurora"
 )
 
 // Init - The core run sheet of `tok up`
@@ -27,7 +30,8 @@ func Init(yes, statuscheck bool) {
 
 	// System readiness checks
 	version.Check()
-	console.Println("\n🚀  Tokaido is starting up!", "")
+	docker.CheckClientVersion()
+	fmt.Println(Cyan("\n🚀  Tokaido is starting up!"))
 
 	// Create Tokaido configuration
 	conf.SetDrupalConfig("CUSTOM")
@@ -39,7 +43,7 @@ func Init(yes, statuscheck bool) {
 	err := snapshots.Init()
 	if err != nil {
 		fmt.Println()
-		console.Println("🙅  Tokaido encountered an unexpected error preparing the database snapshot service", "")
+		fmt.Println(Red("🙅  Tokaido encountered an unexpected error preparing the database snapshot service"))
 		panic(err)
 	}
 
@@ -55,11 +59,16 @@ func Init(yes, statuscheck bool) {
 		console.SpinPersist(wo, "🚛", "Initial sync completed")
 	}
 
-	wo := console.SpinStart("Tokaido is starting your containers")
-	console.SpinPersist(wo, "🚅", "Tokaido containers were started")
+	wo := console.SpinStart("Downloading the latest Docker images")
+	docker.PullImages()
+	proxy.PullImages()
+	console.SpinPersist(wo, "🤖", "Latest Docker images downloaded successfully")
 
+	// wo = console.SpinStart("Starting your containers")
 	docker.Up()
+	// console.SpinPersist(wo, "🚅", "Tokaido containers are online")
 
+	console.Println("🚅  Configuring your new Drupal environment", "")
 	// Perform post-launch configuration
 	drupal.ConfigureSSH()
 	xdebug.Configure()
@@ -70,18 +79,50 @@ func Init(yes, statuscheck bool) {
 		proxy.Setup()
 	}
 
-	err = docker.StatusCheck()
-	if err == nil {
+	// Check docker containers
+	ok := docker.StatusCheck("")
+	if !ok {
 		fmt.Println()
-		console.Println(`🙂  All containers are running`, "√")
+		fmt.Println(Red("😓  Tokaido containers are not working properly"))
+
+		if !docker.StatusCheck("fpm") {
+			fmt.Println(Red("    The Tokaido FPM container failed to start up."))
+			fmt.Println(Red("    This most likely suggests a problem with your Drupal site that is causing PHP to crash."))
+			fmt.Println()
+			fmt.Println(Sprintf(Cyan("    You can try running '%s' to see the full PHP startup log"), Blue("tok logs fpm")))
+		} else if !docker.StatusCheck("nginx") {
+			fmt.Println(Red("    The Tokaido NGINX container failed to start up."))
+			fmt.Println(Red("    This is most likely caused by a Tokaido misconfiguration."))
+			fmt.Println()
+			fmt.Println(Sprintf(Cyan("    You can try running '%s' to see the full startup log"), Blue("tok logs nginx")))
+		}
+
+		fmt.Println()
+		fmt.Println(Sprintf("    You can view the status of your containers with '%s' and you can see", Bold("tok ps")))
+		fmt.Println(Sprintf("    error logs by running '%s', such as '%s'", Bold("tok logs {container-name}"), Bold("tok logs mysql")))
+		fmt.Println()
+		fmt.Println(Cyan("    You can try to fix this by running 'tok repair'"))
+		fmt.Println()
+
+		os.Exit(1)
 	}
 
-	if statuscheck {
-		err = ssh.CheckKey()
-		err = drupal.CheckContainer()
+	fmt.Println()
+	fmt.Println(Green(`🙂  All containers are running`))
 
-		if err == nil {
-			console.Println(`🍜  Tokaido started up successfully`, "")
+	// Final startup checks
+	if statuscheck {
+		ok = ssh.CheckKey()
+		if ok {
+			fmt.Println(Green("😀  SSH access is configured"))
+		} else {
+			fmt.Println(Red("😓  SSH access is not configured"))
+			fmt.Println("  Your SSH access to the Drush container looks broken.")
+			fmt.Println("  You should be able to run 'tok repair' to attempt to fix this automatically")
+		}
+
+		if ok {
+			fmt.Println(Green(`🍜  Tokaido started up successfully`))
 		} else {
 			fmt.Println()
 			console.Println("🙅  Uh oh! It looks like Tokaido didn't start properly.", "")

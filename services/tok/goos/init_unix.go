@@ -3,26 +3,25 @@
 package goos
 
 import (
-	"github.com/ironstar-io/tokaido/conf"
-	"github.com/ironstar-io/tokaido/system/console"
-
 	"fmt"
+
+	"github.com/ironstar-io/tokaido/conf"
+	. "github.com/logrusorgru/aurora"
 )
 
 // InitMessage - Display message post `up` success
 func InitMessage() {
-	fmt.Println(`
-WELCOME TO TOKAIDO
-==================
+	n := conf.GetConfig().Tokaido.Project.Name
+	fmt.Println()
+	fmt.Println(Green("Your Drupal development environment is now up and running"))
+	fmt.Println(Green(Sprintf("You can find it at %s", Bold("https://"+n+".local.tokaido.io:5154/"))))
+	fmt.Println()
 
-Your Drupal development environment is now up and running
-	`)
-
-	console.Println(`💻  Run "ssh `+conf.GetConfig().Tokaido.Project.Name+`.tok" to ssh into the environment`, "-")
-	console.Println(`🌎  Run "tok open" to open the environment in your browser`, "-")
-	console.Println(`👀  Run "tok exec" to run one-time commands like 'tok exec drush status'`, "-")
-	console.Println(`🤔  Run "tok status" to check the status of your environment`, "-")
-	fmt.Println(`
-Check out https://docs.tokaido.io for tips to help you get the most out of your Tokaido environment
-	`)
+	fmt.Printf("💻  Run '%s' to ssh into the environment\n", Bold("ssh "+n+".tok"))
+	fmt.Printf("🌎  Run '%s' to open the environment in your browser\n", Bold("tok open"))
+	fmt.Printf("👀  Run '%s' to run one-time commands like '%s'\n", Bold("tok exec"), Bold("tok exec drush status"))
+	fmt.Printf("🤔  Run '%s' to check the status of your environment\n", Bold("tok status"))
+	fmt.Println()
+	fmt.Printf("Come join us in the %s channel in the Drupal Slack community!\n", Bold("#Tokaido"))
+	fmt.Printf("or visit %s to check out the Tokaido Documentation\n\n", Bold("https://docs.tokaido.io"))
 }

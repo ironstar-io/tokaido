@@ -9,6 +9,7 @@ import (
 	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/ssh"
 	"github.com/ironstar-io/tokaido/utils"
+	. "github.com/logrusorgru/aurora"
 	"github.com/spf13/cobra"
 )
 
@@ -18,20 +19,36 @@ var StatusCmd = &cobra.Command{
 	Short: "Have Tokaido perform a self-test",
 	Long:  "Checks the status of your Tokaido environment",
 	Run: func(cmd *cobra.Command, args []string) {
+
+		fmt.Println()
+
 		initialize.TokConfig("status")
 		utils.CheckCmdHard("docker-compose")
 
 		docker.HardCheckTokCompose()
 
-		err := docker.StatusCheck()
-		if err == nil {
-			fmt.Println()
+		ok := docker.StatusCheck("")
+		if ok {
 			console.Println(`🙂  All containers are running`, "√")
+		} else {
+			fmt.Println(`😓  Tokaido containers are not running`)
+			fmt.Println(`    It appears that some or all of the Tokaido containers are offline.
+
+    View the status of your containers with 'tok ps'
+
+    You can try to fix this by running 'tok up', or by running 'tok repair'.`)
 		}
 
-		err = ssh.CheckKey()
+		ok = ssh.CheckKey()
+		if ok {
+			fmt.Println("😀  SSH access is configured")
+		} else {
+			fmt.Println("😓  SSH access is not configured")
+			fmt.Println("    Your SSH access to the Drush container looks broken.")
+			fmt.Println("    You should be able to run 'tok repair' to attempt to fix this automatically")
+		}
 
-		err = drupal.CheckContainer()
+		err := drupal.CheckContainer()
 
 		if err == nil {
 			fmt.Println()
@@ -41,7 +58,7 @@ var StatusCmd = &cobra.Command{
 			fmt.Println()
 		} else {
 			fmt.Println()
-			console.Println("🙅  Some checks failed! You might be able to fix this by running `tok rebuild`", "")
+			fmt.Println(Yellow("🙅  Some checks failed! You might be able to fix this by running `tok rebuild`"))
 			fmt.Println()
 		}
 	},

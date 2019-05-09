@@ -5,7 +5,6 @@ import (
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/pem"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -14,7 +13,6 @@ import (
 
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/services/docker"
-	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/utils"
 	"golang.org/x/crypto/ssh"
@@ -24,25 +22,16 @@ var sshPriv = filepath.Join(fs.HomeDir(), "/.ssh/tok_ssh.key")
 var sshPub = filepath.Join(fs.HomeDir(), "/.ssh/tok_ssh.pub")
 
 // CheckKey ...
-func CheckKey() error {
+func CheckKey() (ok bool) {
 	localPort := docker.LocalPort("drush", "22")
 	cmdStr := `ssh ` + conf.GetConfig().Tokaido.Project.Name + `.tok -q -p ` + localPort + ` -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -C "echo 1" | echo $?`
 
 	keyResult := utils.BashStringCmd(cmdStr)
 	if keyResult == "0" {
-		console.Println("😀  SSH access is configured", "√")
-		return nil
+		return true
 	}
 
-	console.Println(`😓  SSH access is not configured
-
-Tokaido is running but your SSH access to the Drush container looks broken.
-Make sure you have an SSH public key uploaded in './.tok/local/ssh_key.pub'.
-
-You should be able to run 'tok repair' to attempt to fix this automatically
-	`, "×")
-
-	return errors.New("SSH access is not configured")
+	return false
 }
 
 // GenerateKeys ...

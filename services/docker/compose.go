@@ -1,7 +1,6 @@
 package docker
 
 import (
-	"bufio"
 	"errors"
 	"fmt"
 	"path/filepath"
@@ -130,36 +129,58 @@ func ExecWithExitCode(args []string) (err error) {
 
 }
 
-// StatusCheck ...
-func StatusCheck() error {
-	rawStatus := ComposeResult("ps")
+// StatusCheck tests for containers 'running' state.
+// If one container is specified and true if that container is 'running'
+// If no container is specified, all containers must be 'running' or will return false
+func StatusCheck(container string) (ok bool) {
+	// List of containers to be checked when no single container is specifieds
+	cl := []string{"fpm", "nginx", "varnish", "haproxy", "syslog", "drush", "mysql"}
 
-	unavailableContainers := false
-	foundContainers := false
-	scanner := bufio.NewScanner(strings.NewReader(rawStatus))
-	for scanner.Scan() {
-		if strings.Contains(scanner.Text(), "Name") || strings.Contains(scanner.Text(), "------") || strings.Contains(scanner.Text(), "cannot find the path specified") {
-			continue
-		} else if !strings.Contains(scanner.Text(), "Up") {
-			unavailableContainers = true
-			foundContainers = true
+	// Add additional optional containers to the checklist if they are in use
+	if conf.GetConfig().Services.Kishu.Enabled {
+		cl = append(cl, "kishu")
+	}
+
+	if conf.GetConfig().Services.Memcache.Enabled {
+		cl = append(cl, "memcache")
+	}
+
+	if conf.GetConfig().Services.Redis.Enabled {
+		cl = append(cl, "redis")
+	}
+
+	if conf.GetConfig().Services.Solr.Enabled {
+		cl = append(cl, "solr")
+	}
+
+	if conf.GetConfig().Global.Syncservice == "fusion" {
+		cl = append(cl, "unison")
+	}
+
+	// If the user specified a single container to check, only go for that one
+	if len(container) > 1 {
+		state, err := getContainerState(container)
+		if err != nil {
+			panic(err)
 		}
-		foundContainers = true
+
+		if state == "running" {
+			return true
+		}
+		return false
 	}
 
-	if unavailableContainers == true || foundContainers == false {
-		console.Println(`
-😓 Tokaido containers are not working properly`, "")
-		fmt.Println(`
-It appears that some or all of the Tokaido containers are offline.
-
-View the status of your containers with 'tok ps'
-
-You can try to fix this by running 'tok up', or by running 'tok repair'.
-	`)
-
-		return errors.New("Tokaido containers are not running correctly")
+	// The user didn't specify a container so we'll check them all
+	utils.DebugString("Checking container state for [" + strings.Join(cl, ",") + "]")
+	for _, v := range cl {
+		state, err := getContainerState(v)
+		if state != "running" {
+			if err != nil {
+				utils.DebugErrOutput(err)
+			}
+			return false
+		}
 	}
 
-	return nil
+	return true
 }
