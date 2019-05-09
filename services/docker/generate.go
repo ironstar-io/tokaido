@@ -14,6 +14,7 @@ import (
 	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/utils"
+	. "github.com/logrusorgru/aurora"
 	yaml "gopkg.in/yaml.v2"
 )
 
@@ -46,7 +47,7 @@ func FindOrCreateTokCompose() {
 	}
 
 	if conf.GetConfig().Tokaido.Customcompose == true {
-		console.Println(`    You've chosen to use a custom Compose file. Tokaido will not update your docker-compose.tok.yml file`, "")
+		fmt.Println(Magenta("    You've chosen to use a custom Compose file. Tokaido will not update your docker-compose.tok.yml file"))
 		StripModWarning()
 		return
 	}

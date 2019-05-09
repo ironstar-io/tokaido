@@ -21,8 +21,8 @@ var TestCmd = &cobra.Command{
 
 		docker.HardCheckTokCompose()
 
-		err := docker.StatusCheck()
-		if err != nil {
+		ok := docker.StatusCheck("")
+		if !ok {
 			log.Fatalf("Tokaido containers must be running in order to start automated tests. Have you run `tok up`?")
 		}
 

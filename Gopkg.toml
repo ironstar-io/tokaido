@@ -8,6 +8,10 @@
   unused-packages = true
 
 [[constraint]]
+  name = "github.com/docker/docker"
+  branch = "master"
+
+[[constraint]]
   name = "github.com/logrusorgru/aurora"
   version = "v2.0"
 

@@ -21,8 +21,8 @@ func New(args []string) {
 	var name string
 
 	// Check that this Tokaido environment is running
-	err := docker.StatusCheck()
-	if err != nil {
+	ok := docker.StatusCheck("")
+	if !ok {
 		console.Println("\n😦  Your Tokaido environment appears to be offline. Please run `tok up` to start it.", "")
 		return
 	}
@@ -45,7 +45,7 @@ func New(args []string) {
 	filename, _ := createSnapshot(name)
 	filepath := filepath.Join(conf.GetConfig().Tokaido.Project.Path, "/.tok/local/snapshots/", filename)
 
-	err = fs.WaitForSync(filepath, 180)
+	err := fs.WaitForSync(filepath, 180)
 	if err != nil {
 		console.Println("\n🙅‍  Your backup failed to sync from the Tokaido environment to your local disk", "")
 		panic(err)
