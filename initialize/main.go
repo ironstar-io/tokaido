@@ -38,7 +38,6 @@ func emojiDefaults() bool {
 // when talking to users about "config.yml". 1.8 changes this to ~/.tok/global.yml.
 // removeOldGlobalConfig will remove the old config file and advise the user.
 func removeOldGlobalConfig(h string) {
-	fmt.Println("looking for old global config")
 	oc := filepath.Join(h, ".tok/config.yml")
 	_, err := os.Stat(oc)
 	if err == nil {
@@ -59,10 +58,8 @@ func readGlobalConfig() {
 
 	gc := filepath.Join(h, ".tok/global.yml")
 
-	utils.DebugString("checking for global config at $HOME/.tok/global.yml")
-
 	// Check if the global config file exist, and read it in if it does
-
+	utils.DebugString("checking for global config at $HOME/.tok/global.yml")
 	_, err = os.Stat(gc)
 	if err == nil {
 		utils.DebugString("merging in global config file")
