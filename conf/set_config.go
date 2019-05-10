@@ -25,8 +25,6 @@ func SetConfigValueByArgs(args []string, configFile string) {
 		os.Exit(1)
 	}
 
-	fmt.Println(Magenta("modifying config: " + configFile))
-
 	validateArgs(args)
 
 	yt := argsToYaml(args)
