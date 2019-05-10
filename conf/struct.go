@@ -9,8 +9,8 @@ package conf
 // and that they are able to be properly parsed by the `tok config-x` commands
 type Config struct {
 	Global struct {
-		Syncservice string `yaml:"syncservice"`
-	} `yaml:"global"`
+		Syncservice string `yaml:"syncservice,omitempty"`
+	} `yaml:"global,omitempty"`
 	Tokaido struct {
 		Config           string `yaml:"config,omitempty"`
 		Customcompose    bool   `yaml:"customcompose"`

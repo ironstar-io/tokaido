@@ -225,9 +225,9 @@ Current Setting: [{{ .Current | green }}]
 	switch i {
 	case 0:
 		if GetConfig().Tokaido.Customcompose == true {
-			SetConfigValueByArgs([]string{"tokaido", "customcompose", "false"})
+			SetConfigValueByArgs([]string{"tokaido", "customcompose", "false"}, "project")
 		} else {
-			SetConfigValueByArgs([]string{"tokaido", "customcompose", "true"})
+			SetConfigValueByArgs([]string{"tokaido", "customcompose", "true"}, "project")
 		}
 		viper.ReadInConfig()
 		TokaidoMenu()
@@ -237,33 +237,33 @@ Current Setting: [{{ .Current | green }}]
 		TokaidoPhpversionMenu()
 	case 3:
 		if GetConfig().Tokaido.Xdebug == true {
-			SetConfigValueByArgs([]string{"tokaido", "xdebug", "false"})
+			SetConfigValueByArgs([]string{"tokaido", "xdebug", "false"}, "project")
 		} else {
-			SetConfigValueByArgs([]string{"tokaido", "xdebug", "true"})
+			SetConfigValueByArgs([]string{"tokaido", "xdebug", "true"}, "project")
 			if GetConfig().Tokaido.Xdebugport == "" {
-				SetConfigValueByArgs([]string{"tokaido", "xdebugport", "9000"})
+				SetConfigValueByArgs([]string{"tokaido", "xdebugport", "9000"}, "project")
 			}
 		}
 		viper.ReadInConfig()
 		TokaidoMenu()
 	case 4:
 		res := newStringValue("Specify the port that your IDE is listening on for xdebug connections from this project:")
-		SetConfigValueByArgs([]string{"tokaido", "xdebugport", res})
+		SetConfigValueByArgs([]string{"tokaido", "xdebugport", res}, "project")
 		viper.ReadInConfig()
 		TokaidoMenu()
 	case 5:
 		if GetConfig().Tokaido.Enableemoji == true {
-			SetConfigValueByArgs([]string{"tokaido", "enableemoji", "false"})
+			SetConfigValueByArgs([]string{"tokaido", "enableemoji", "false"}, "project")
 		} else {
-			SetConfigValueByArgs([]string{"tokaido", "enableemoji", "true"})
+			SetConfigValueByArgs([]string{"tokaido", "enableemoji", "true"}, "project")
 		}
 		viper.ReadInConfig()
 		TokaidoMenu()
 	case 6:
 		if GetConfig().Tokaido.Dependencychecks == true {
-			SetConfigValueByArgs([]string{"tokaido", "dependencychecks", "false"})
+			SetConfigValueByArgs([]string{"tokaido", "dependencychecks", "false"}, "project")
 		} else {
-			SetConfigValueByArgs([]string{"tokaido", "dependencychecks", "true"})
+			SetConfigValueByArgs([]string{"tokaido", "dependencychecks", "true"}, "project")
 		}
 		viper.ReadInConfig()
 		TokaidoMenu()
@@ -329,15 +329,15 @@ func TokaidoStabilityMenu() {
 
 	switch i {
 	case 0:
-		SetConfigValueByArgs([]string{"tokaido", "stability", "stable"})
+		SetConfigValueByArgs([]string{"tokaido", "stability", "stable"}, "project")
 		viper.ReadInConfig()
 		TokaidoMenu()
 	case 1:
-		SetConfigValueByArgs([]string{"tokaido", "stability", "edge"})
+		SetConfigValueByArgs([]string{"tokaido", "stability", "edge"}, "project")
 		viper.ReadInConfig()
 		TokaidoMenu()
 	case 2:
-		SetConfigValueByArgs([]string{"tokaido", "stability", "experimental"})
+		SetConfigValueByArgs([]string{"tokaido", "stability", "experimental"}, "project")
 		viper.ReadInConfig()
 		TokaidoMenu()
 	case 3:
@@ -394,11 +394,11 @@ func TokaidoPhpversionMenu() {
 
 	switch i {
 	case 0:
-		SetConfigValueByArgs([]string{"tokaido", "phpversion", "7.1"})
+		SetConfigValueByArgs([]string{"tokaido", "phpversion", "7.1"}, "project")
 		viper.ReadInConfig()
 		TokaidoMenu()
 	case 1:
-		SetConfigValueByArgs([]string{"tokaido", "phpversion", "7.2"})
+		SetConfigValueByArgs([]string{"tokaido", "phpversion", "7.2"}, "project")
 		viper.ReadInConfig()
 		TokaidoMenu()
 	case 2:
@@ -478,7 +478,7 @@ Current Setting: [{{ .Current | green }}]
 			log.Fatalf("Prompt failed %v\n", err)
 		}
 
-		SetConfigValueByArgs([]string{"drupal", "path", dp})
+		SetConfigValueByArgs([]string{"drupal", "path", dp}, "project")
 		viper.ReadInConfig()
 		DrupalMenu()
 	case 1:
@@ -582,32 +582,32 @@ Default Setting: [{{ .Default | cyan }}]
 	switch i {
 	case 0:
 		res := newStringValue("Specify the number of worker connections as an integer")
-		SetConfigValueByArgs([]string{"nginx", "workerconnections", res})
+		SetConfigValueByArgs([]string{"nginx", "workerconnections", res}, "project")
 		viper.ReadInConfig()
 		NginxMenu()
 	case 1:
 		res := newStringValue("Specify the max body size in MB, with 'm' at the end (eg '64m' or '128m')")
-		SetConfigValueByArgs([]string{"nginx", "clientmaxbodysize", res})
+		SetConfigValueByArgs([]string{"nginx", "clientmaxbodysize", res}, "project")
 		viper.ReadInConfig()
 		NginxMenu()
 	case 2:
 		res := newStringValue("Specify the keepalive timeout in seconds")
-		SetConfigValueByArgs([]string{"nginx", "keepalivetimeout", res})
+		SetConfigValueByArgs([]string{"nginx", "keepalivetimeout", res}, "project")
 		viper.ReadInConfig()
 		NginxMenu()
 	case 3:
 		res := newStringValue("Specify the fastcgi read timeout in seconds")
-		SetConfigValueByArgs([]string{"nginx", "fastcgireadtimeout", res})
+		SetConfigValueByArgs([]string{"nginx", "fastcgireadtimeout", res}, "project")
 		viper.ReadInConfig()
 		NginxMenu()
 	case 4:
 		res := newStringValue("Specify the fastcgi buffers config as 'number size' such as '16 16k'")
-		SetConfigValueByArgs([]string{"nginx", "fastcgibuffers", res})
+		SetConfigValueByArgs([]string{"nginx", "fastcgibuffers", res}, "project")
 		viper.ReadInConfig()
 		NginxMenu()
 	case 5:
 		res := newStringValue("Specify the fastcgi buffers size in kilobytes such as '16k' or '8k'")
-		SetConfigValueByArgs([]string{"nginx", "fastcgibuffersize", res})
+		SetConfigValueByArgs([]string{"nginx", "fastcgibuffersize", res}, "project")
 		viper.ReadInConfig()
 		NginxMenu()
 	case 6:
@@ -746,71 +746,71 @@ Default Setting: [{{ .Default | cyan }}]
 	switch i {
 	case 0:
 		res := newStringValue("Specify the max execution time in seconds")
-		SetConfigValueByArgs([]string{"fpm", "maxexecutiontime", res})
+		SetConfigValueByArgs([]string{"fpm", "maxexecutiontime", res}, "project")
 		viper.ReadInConfig()
 		FpmMenu()
 	case 1:
 		res := newStringValue("Specify memory limit in MB, with 'M' at the end (eg '1024M' or '512M')")
-		SetConfigValueByArgs([]string{"fpm", "phpmemorylimit", res})
+		SetConfigValueByArgs([]string{"fpm", "phpmemorylimit", res}, "project")
 		viper.ReadInConfig()
 		FpmMenu()
 	case 2:
 		if GetConfig().Fpm.Phpdisplayerrors == "On" {
-			SetConfigValueByArgs([]string{"fpm", "phpdisplayerrors", "Off"})
+			SetConfigValueByArgs([]string{"fpm", "phpdisplayerrors", "Off"}, "project")
 		} else {
-			SetConfigValueByArgs([]string{"fpm", "phpdisplayerrors", "On"})
+			SetConfigValueByArgs([]string{"fpm", "phpdisplayerrors", "On"}, "project")
 		}
 		viper.ReadInConfig()
 		FpmMenu()
 	case 3:
 		if GetConfig().Fpm.Phplogerrors == "On" {
-			SetConfigValueByArgs([]string{"fpm", "phplogerrors", "Off"})
+			SetConfigValueByArgs([]string{"fpm", "phplogerrors", "Off"}, "project")
 		} else {
-			SetConfigValueByArgs([]string{"fpm", "phplogerrors", "On"})
+			SetConfigValueByArgs([]string{"fpm", "phplogerrors", "On"}, "project")
 		}
 		viper.ReadInConfig()
 		FpmMenu()
 	case 4:
 		if GetConfig().Fpm.Phpreportmemleaks == "On" {
-			SetConfigValueByArgs([]string{"fpm", "phpreportmemleaks", "Off"})
+			SetConfigValueByArgs([]string{"fpm", "phpreportmemleaks", "Off"}, "project")
 		} else {
-			SetConfigValueByArgs([]string{"fpm", "phpreportmemleaks", "On"})
+			SetConfigValueByArgs([]string{"fpm", "phpreportmemleaks", "On"}, "project")
 		}
 		viper.ReadInConfig()
 		FpmMenu()
 	case 5:
 		res := newStringValue("Specify the max POST size in MB, with 'M' at the end (eg '64M' or '10M')")
-		SetConfigValueByArgs([]string{"fpm", "phppostmaxsize", res})
+		SetConfigValueByArgs([]string{"fpm", "phppostmaxsize", res}, "project")
 		viper.ReadInConfig()
 		FpmMenu()
 	case 6:
 		res := newStringValue("Specify the default character set")
-		SetConfigValueByArgs([]string{"fpm", "phpdefaultcharset", res})
+		SetConfigValueByArgs([]string{"fpm", "phpdefaultcharset", res}, "project")
 		viper.ReadInConfig()
 		FpmMenu()
 	case 7:
 		if GetConfig().Fpm.Phpfileuploads == "On" {
-			SetConfigValueByArgs([]string{"fpm", "phpfileuploads", "Off"})
+			SetConfigValueByArgs([]string{"fpm", "phpfileuploads", "Off"}, "project")
 		} else {
-			SetConfigValueByArgs([]string{"fpm", "phpfileuploads", "On"})
+			SetConfigValueByArgs([]string{"fpm", "phpfileuploads", "On"}, "project")
 		}
 		viper.ReadInConfig()
 		FpmMenu()
 	case 8:
 		res := newStringValue("Specify the max POST size in MB, with 'M' at the end (eg '64M' or '10M')")
-		SetConfigValueByArgs([]string{"fpm", "phpuploadmaxfilesize", res})
+		SetConfigValueByArgs([]string{"fpm", "phpuploadmaxfilesize", res}, "project")
 		viper.ReadInConfig()
 		FpmMenu()
 	case 9:
 		res := newStringValue("Specify the maximum number of simultaneous file uploads")
-		SetConfigValueByArgs([]string{"fpm", "phpmaxfileuploads", res})
+		SetConfigValueByArgs([]string{"fpm", "phpmaxfileuploads", res}, "project")
 		viper.ReadInConfig()
 		FpmMenu()
 	case 10:
 		if GetConfig().Fpm.Phpallowurlfopen == "On" {
-			SetConfigValueByArgs([]string{"fpm", "phpallowurlfopen", "Off"})
+			SetConfigValueByArgs([]string{"fpm", "phpallowurlfopen", "Off"}, "project")
 		} else {
-			SetConfigValueByArgs([]string{"fpm", "phpallowurlfopen", "On"})
+			SetConfigValueByArgs([]string{"fpm", "phpallowurlfopen", "On"}, "project")
 		}
 		viper.ReadInConfig()
 		FpmMenu()
@@ -908,41 +908,41 @@ Current Setting: [{{ .Current | green }}]
 	switch i {
 	case 0:
 		if GetConfig().Services.Solr.Enabled == true {
-			SetConfigValueByArgs([]string{"services", "solr", "enabled", "false"})
+			SetConfigValueByArgs([]string{"services", "solr", "enabled", "false"}, "project")
 		} else {
-			SetConfigValueByArgs([]string{"services", "solr", "enabled", "true"})
+			SetConfigValueByArgs([]string{"services", "solr", "enabled", "true"}, "project")
 		}
 		viper.ReadInConfig()
 		ServicesMenu()
 	case 1:
 		if GetConfig().Services.Memcache.Enabled == true {
-			SetConfigValueByArgs([]string{"services", "memcache", "enabled", "false"})
+			SetConfigValueByArgs([]string{"services", "memcache", "enabled", "false"}, "project")
 		} else {
-			SetConfigValueByArgs([]string{"services", "memcache", "enabled", "true"})
+			SetConfigValueByArgs([]string{"services", "memcache", "enabled", "true"}, "project")
 		}
 		viper.ReadInConfig()
 		ServicesMenu()
 	case 2:
 		if GetConfig().Services.Redis.Enabled == true {
-			SetConfigValueByArgs([]string{"services", "redis", "enabled", "false"})
+			SetConfigValueByArgs([]string{"services", "redis", "enabled", "false"}, "project")
 		} else {
-			SetConfigValueByArgs([]string{"services", "redis", "enabled", "true"})
+			SetConfigValueByArgs([]string{"services", "redis", "enabled", "true"}, "project")
 		}
 		viper.ReadInConfig()
 		ServicesMenu()
 	case 3:
 		if GetConfig().Services.Mailhog.Enabled == true {
-			SetConfigValueByArgs([]string{"services", "mailhog", "enabled", "false"})
+			SetConfigValueByArgs([]string{"services", "mailhog", "enabled", "false"}, "project")
 		} else {
-			SetConfigValueByArgs([]string{"services", "mailhog", "enabled", "true"})
+			SetConfigValueByArgs([]string{"services", "mailhog", "enabled", "true"}, "project")
 		}
 		viper.ReadInConfig()
 		ServicesMenu()
 	case 4:
 		if GetConfig().Services.Adminer.Enabled == true {
-			SetConfigValueByArgs([]string{"services", "adminer", "enabled", "false"})
+			SetConfigValueByArgs([]string{"services", "adminer", "enabled", "false"}, "project")
 		} else {
-			SetConfigValueByArgs([]string{"services", "adminer", "enabled", "true"})
+			SetConfigValueByArgs([]string{"services", "adminer", "enabled", "true"}, "project")
 		}
 		viper.ReadInConfig()
 		ServicesMenu()
