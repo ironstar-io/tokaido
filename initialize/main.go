@@ -13,6 +13,8 @@ import (
 	"github.com/ironstar-io/tokaido/utils"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
+
+	. "github.com/logrusorgru/aurora"
 )
 
 // TokConfig - loads the config from a file if specified, otherwise from the environment
@@ -32,18 +34,35 @@ func emojiDefaults() bool {
 	return true
 }
 
+// Tokaido 1.7 used ~/.tok/config.yml as the global config file, which confused things greatly
+// when talking to users about "config.yml". 1.8 changes this to ~/.tok/global.yml.
+// removeOldGlobalConfig will remove the old config file and advise the user.
+func removeOldGlobalConfig(h string) {
+	fmt.Println("looking for old global config")
+	oc := filepath.Join(h, ".tok/config.yml")
+	_, err := os.Stat(oc)
+	if err == nil {
+		fmt.Println(Magenta("Tokaido will remove your legacy global config file in $HOME/.tok/config.yml"))
+		fs.Remove(oc)
+	}
+}
+
 func readGlobalConfig() {
 	h, err := homedir.Dir()
 	if err != nil {
 		log.Fatalln("Unable to resolve home directory so can't initialise Tokaido. Sorry!")
 	}
 
-	viper.SetDefault("Global.Syncservice", "fusion")
+	removeOldGlobalConfig(h)
 
-	utils.DebugString("looking for global config")
+	viper.SetDefault("Global.Syncservice", "docker")
+
+	gc := filepath.Join(h, ".tok/global.yml")
+
+	utils.DebugString("checking for global config at $HOME/.tok/global.yml")
 
 	// Check if the global config file exist, and read it in if it does
-	gc := filepath.Join(h, ".tok/config.yml")
+
 	_, err = os.Stat(gc)
 	if err == nil {
 		utils.DebugString("merging in global config file")
