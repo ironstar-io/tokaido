@@ -15,6 +15,6 @@ var ConfigSetCmd = &cobra.Command{
 		initialize.TokConfig("config-get")
 		conf.ValidProjectRoot()
 
-		conf.SetConfigValueByArgs(args)
+		conf.SetConfigValueByArgs(args, "project")
 	},
 }

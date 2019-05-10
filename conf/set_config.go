@@ -1,7 +1,6 @@
 package conf
 
 import (
-	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/system/hash"
 
@@ -12,40 +11,56 @@ import (
 	"path/filepath"
 
 	yaml "gopkg.in/yaml.v2"
+
+	. "github.com/logrusorgru/aurora"
 )
 
-// SetConfigValueByArgs ...
-func SetConfigValueByArgs(args []string) {
+// SetConfigValueByArgs updates the config file by merging a single new value with the
+// current in memory configuration.
+// - args are a slice of new values such as `[]string{"nginx", "workerconnections", "30"}`
+// - file is either 'project' or 'global' and will determine which file is updated
+func SetConfigValueByArgs(args []string, configFile string) {
+	if configFile != "project" && configFile != "global" {
+		fmt.Println(Sprintf("The config file %s is unknown", Bold(configFile)))
+		os.Exit(1)
+	}
+
 	validateArgs(args)
 
 	yt := argsToYaml(args)
-	cp := getConfigPath()
+	cp := getConfigPath(configFile)
 
+	// 'c' initially carries in-memory config from Viper, which does not differentiate
+	//  between our "project" and "global" config files
+	// later on we merge our yaml config into this in-memory config
 	c := GetConfig()
 
+	// Read the saved config file from disk
 	yf, err := ioutil.ReadFile(cp)
 	if err != nil {
 		log.Fatalf("There was an issue reading in your config file\n%v", err)
 	}
 
+	// Unmarshal the saved config
 	err = yaml.Unmarshal(yf, &c)
 	if err != nil {
 		log.Fatalf("There was an issue parsing your config file\n%v", err)
 	}
 
+	// Merge the saved config into our in-memory config
 	err = yaml.Unmarshal([]byte(yt), &c)
 	if err != nil {
 		log.Fatalf("There was an issue updating your config file\n%v", err)
 	}
 
-	// Stop these values leaking into config
-	c.Tokaido.Debug = false
-	c.Tokaido.Force = false
-	c.Tokaido.Yes = false
-	c.Tokaido.Project.Path = ""
-	c.System.Syncsvc.Launchdpath = ""
-	c.System.Syncsvc.Systemdpath = ""
+	// Viper doesn't split config in memory so 'c' now contains merged
+	// project and global config settings. We need to split them out.
+	if configFile == "project" {
+		// These values must not be written to the project config file so we reset them to nil or empty
+		c.Global.Syncservice = ""
+	}
 
+	// Now that we've merged the config, we'll write that merged config to disk
 	fc, err := yaml.Marshal(c)
 	if err != nil {
 		log.Fatalf("There was an issue building your config file\n%v", err)
@@ -56,6 +71,7 @@ func SetConfigValueByArgs(args []string) {
 	compareFiles(yf, cp)
 }
 
+// compareFiles checks original and new config files to identify if any values were changed
 func compareFiles(original []byte, newPath string) {
 	o, err := hash.BytesMD5(original)
 	if err != nil {
@@ -91,12 +107,18 @@ func unmarshalConfig(cp string) *Config {
 	return c
 }
 
-func getConfigPath() string {
-	cp := filepath.Join(GetConfig().Tokaido.Project.Path, "/.tok/config.yml")
+func getConfigPath(configFile string) string {
+	var cp string
+	if configFile == "project" {
+		cp = filepath.Join(GetConfig().Tokaido.Project.Path, "/.tok/config.yml")
+	} else if configFile == "global" {
+		cp = filepath.Join(fs.HomeDir(), "/.tok/global.yml")
+	} else {
+		fmt.Println(Sprintf("The config file %s is unknown", Bold(configFile)))
+	}
 
 	var _, errf = os.Stat(cp)
 	if os.IsNotExist(errf) {
-		console.Println(`🏯  Generating a new .tok/config.yml file`, "")
 		fs.TouchEmpty(cp)
 	}
 
