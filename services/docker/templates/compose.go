@@ -2,6 +2,7 @@ package dockertmpl
 
 import (
 	"log"
+	"os"
 
 	"github.com/ironstar-io/tokaido/conf"
 	homedir "github.com/mitchellh/go-homedir"
@@ -203,20 +204,35 @@ func TokaidoDockerSiteVolumeAttach(path string) []byte {
 		log.Fatalf("Could not resolve your home directory: %v", err)
 	}
 
-	return []byte(`services:
-  drush:
-    volumes:
-      - ` + path + `:/tokaido/site
-      - ` + h + `/.gitconfig:/home/tok/.gitconfig
-      - ` + h + `/.drush:/home/tok/.drush
-      - tok_composer_cache:/home/tok/.composer/cache
+	vols := `services:
   nginx:
     volumes:
       - ` + path + `:/tokaido/site
   fpm:
     volumes:
       - ` + path + `:/tokaido/site
-`)
+  drush:
+    volumes:
+      - ` + path + `:/tokaido/site
+      - tok_composer_cache:/home/tok/.composer/cache`
+
+	// We'll mount the .gitconfig and .drush paths if they exist
+	gp := h + "/.gitconfig"
+	dp := h + "/.drush:/home/tok/.drush"
+
+	_, err = os.Stat(gp)
+	if err == nil {
+		vols = vols + `
+      - ` + h + `/.gitconfig:/home/tok/.gitconfig`
+	}
+
+	_, err = os.Stat(dp)
+	if err == nil {
+		vols = vols + `
+      - ` + h + `/.gitconfig:/home/tok/.drush`
+	}
+
+	return []byte(vols)
 }
 
 // ModWarning - Displayed at the top of `docker-compose.tok.yml`
