@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/docker/docker/client"
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/utils"
 	"github.com/olekukonko/tablewriter"
@@ -131,4 +132,14 @@ func UpContainer(container string) {
 // DeleteVolume - Delete an external docker volume
 func DeleteVolume(name string) {
 	utils.StdoutCmd("docker", "volume", "rm", name)
+}
+
+// GetAPIClient - Returns a Docker API Client
+func GetAPIClient() (dcli *client.Client) {
+	dcli, err := client.NewClientWithOpts(client.WithVersion("1.36"))
+	if err != nil {
+		log.Fatalf("Unable to obtain a Docker API client. Is Docker running?: %v", dcli)
+	}
+
+	return
 }
