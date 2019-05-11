@@ -55,7 +55,7 @@ func Init(yes, statuscheck bool) {
 		utils.DebugString("Using Fusion Sync Service")
 		wo := console.SpinStart("Performing an initial sync. This might take a few minutes")
 		siteVolName := "tok_" + conf.GetConfig().Tokaido.Project.Name + "_tokaido_site"
-		utils.StdoutStreamCmdDebug("docker", "run", "-e", "AUTO_SYNC=false", "-v", conf.GetConfig().Tokaido.Project.Path+":/tokaido/host-volume", "-v", siteVolName+":/tokaido/site", "tokaido/sync:stable")
+		utils.StdoutStreamCmdDebug("docker", "run", "--rm", "-e", "AUTO_SYNC=false", "-v", conf.GetConfig().Tokaido.Project.Path+":/tokaido/host-volume", "-v", siteVolName+":/tokaido/site", "tokaido/sync:stable")
 		console.SpinPersist(wo, "🚛", "Initial sync completed")
 	}
 
