@@ -154,7 +154,7 @@ func StatusCheck(container string) (ok bool) {
 	}
 
 	if conf.GetConfig().Global.Syncservice == "fusion" {
-		cl = append(cl, "unison")
+		cl = append(cl, "sync")
 	}
 
 	// If the user specified a single container to check, only go for that one
