@@ -8,6 +8,7 @@ import (
 	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/system/ssl"
+	"github.com/ironstar-io/tokaido/utils"
 
 	"fmt"
 	"path/filepath"
@@ -19,8 +20,10 @@ const proxy = "proxy"
 
 // Setup ...
 func Setup() {
+	utils.DebugString("setting up proxy directories")
 	buildDirectories()
 
+	utils.DebugString("configuring proxy TLS")
 	ssl.Configure(getProxyClientTLSDir())
 
 	GenerateProxyDockerCompose()
@@ -30,11 +33,14 @@ func Setup() {
 
 	removeLegacyYamanoteSetup()
 
+	utils.DebugString("restarting proxy container")
+	PullImages()
 	RestartContainer(proxy)
 }
 
 // ConfigureProjectNginx ...
 func ConfigureProjectNginx() {
+	utils.DebugString("starting nginx proxy configuration")
 	h, err := docker.GetContainerIP("haproxy")
 	if err != nil {
 		fmt.Printf("%s. Skipping HTTPS proxy setup...\n", err)

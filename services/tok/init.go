@@ -61,7 +61,6 @@ func Init(yes, statuscheck bool) {
 
 	wo := console.SpinStart("Downloading the latest Docker images")
 	docker.PullImages()
-	proxy.PullImages()
 	console.SpinPersist(wo, "🤖", "Latest Docker images downloaded successfully")
 
 	// wo = console.SpinStart("Starting your containers")
