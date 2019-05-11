@@ -2,9 +2,9 @@ package dockertmpl
 
 import (
 	"log"
-	"os"
 
 	"github.com/ironstar-io/tokaido/conf"
+	"github.com/ironstar-io/tokaido/system/fs"
 	homedir "github.com/mitchellh/go-homedir"
 )
 
@@ -220,14 +220,12 @@ func TokaidoDockerSiteVolumeAttach(path string) []byte {
 	gp := h + "/.gitconfig"
 	dp := h + "/.drush:/home/tok/.drush"
 
-	_, err = os.Stat(gp)
-	if err == nil {
+	if fs.CheckExists(gp) {
 		vols = vols + `
       - ` + h + `/.gitconfig:/home/tok/.gitconfig`
 	}
 
-	_, err = os.Stat(dp)
-	if err == nil {
+	if fs.CheckExists(dp) {
 		vols = vols + `
       - ` + h + `/.gitconfig:/home/tok/.drush`
 	}
