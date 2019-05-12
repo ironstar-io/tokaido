@@ -7,9 +7,7 @@ Tokaido is a Drupal environment manager for MacOS that _just works_.
 
 It creates Drupal environments in seconds and requires no manual configuration for your Drupal site to work out-of-the-box.
 
-[Click here to watch our full demo video](https://www.youtube.com/watch?v=pxktV9zQUhM&lc=z23nhfs54myvifnwn04t1aokg1km2r2d2ts4lrdilt4xrk0h00410) or just check out the latest quick-demo below.
-
-[![Tokaido 1.3.0 Quickdemo](https://i.imgur.com/CLAW9If.png)](https://www.youtube.com/watch?v=nEb20jM31_8)
+[Click here to watch our full demo video](https://www.youtube.com/watch?v=pxktV9zQUhM&lc=z23nhfs54myvifnwn04t1aokg1km2r2d2ts4lrdilt4xrk0h00410)
 
 ## Installation
 
@@ -38,12 +36,12 @@ With Tokaido, we have shifted towards a more opinionated Drupal environment
 setup and coupled it with the same containers that we (Ironstar) run in
 enterprise Drupal hosting environments.
 
-So what makes Tokaido faster and more efficient?
+So what makes Tokaido better?
 
 - Using Docker instead of Vagrant enables faster, more light-weight environments
-- We use Unison to sync files between your system and the Tokaido environment, so there's no performance hit from slow virtual disks
 - The powerful `tok` CLI streamlines your set up and helps keep you out of config files
-- Tokaido's inbuilt proxy enables verified SSL connections to your environment: https://local.tokaido.io:5154
+- Tokaido's inbuilt proxy enables verified SSL connections to your environment
+- We run Tokaido in production, so your local environment can be production-grade
 - Built-in Varnish caching enables production-like testing of your code
 
 ## The Tokaido CLI
