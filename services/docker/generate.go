@@ -111,9 +111,6 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 		}
 
 	} else {
-		fmt.Println("CONF AT THIS STAGE::::\n")
-		fmt.Println(conf.GetConfig())
-		fmt.Println("\n\n\n\n")
 		utils.DebugString("attaching repo to /tokaido/site folder using Fusion sync")
 		err := yaml.Unmarshal(dockertmpl.ComposeTokDefaultsFusionSync, &tokStruct)
 		if err != nil {
