@@ -89,7 +89,7 @@ func writeConfig(runningConfig *Config, configPath string) {
 
 // RegisterProject adds a project to the global config file
 func RegisterProject(name, path string) {
-	gcPath := filepath.Join(fs.HomeDir(), "/.tok/global.yml")
+	gcPath := getConfigPath("global")
 
 	// Read the global config from file
 	// Using the in-memory config from Viper isn't an option here because it would
@@ -136,7 +136,7 @@ func RegisterProject(name, path string) {
 
 // DeregisterProject removes a project from the global config file
 func DeregisterProject(name string) {
-	gcPath := filepath.Join(fs.HomeDir(), "/.tok/global.yml")
+	gcPath := getConfigPath("global")
 
 	// Read the global config from file
 	// Using the in-memory config from Viper isn't an option here because it would
