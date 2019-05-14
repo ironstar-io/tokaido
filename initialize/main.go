@@ -26,54 +26,29 @@ func TokConfig(command string) {
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 	viper.AutomaticEnv()
 
+	removeOldGlobalConfig()
 	readProjectConfig(command)
-	readGlobalConfig()
+	// readGlobalConfig()
 }
 
 func emojiDefaults() bool {
 	return true
 }
 
-// Tokaido 1.7 used ~/.tok/config.yml as the global config file, which confused things greatly
-// when talking to users about "config.yml". 1.8 changes this to ~/.tok/global.yml.
+// Tokaido 1.7 used ~/.tok/config.yml as the global config file, which confused users
+// when talking to them about "config.yml". 1.8 changes this to ~/.tok/global.yml.
 // removeOldGlobalConfig will remove the old config file and advise the user.
-func removeOldGlobalConfig(h string) {
-	oc := filepath.Join(h, ".tok/config.yml")
-	_, err := os.Stat(oc)
-	if err == nil {
-		fs.Remove(oc)
-		fmt.Println(Magenta("Tokaido has removed your legacy global config file in $HOME/.tok/config.yml. You don't need it anymore"))
-	}
-}
-
-func readGlobalConfig() {
+func removeOldGlobalConfig() {
 	h, err := homedir.Dir()
 	if err != nil {
 		log.Fatalln("Unable to resolve home directory so can't initialise Tokaido. Sorry!")
 	}
 
-	removeOldGlobalConfig(h)
-
-	viper.SetDefault("Global.Syncservice", "docker")
-
-	gc := filepath.Join(h, ".tok/global.yml")
-
-	// Check if the global config file exist, and read it in if it does
-	utils.DebugString("checking for global config at $HOME/.tok/global.yml")
-	_, err = os.Stat(gc)
+	oc := filepath.Join(h, ".tok/config.yml")
+	_, err = os.Stat(oc)
 	if err == nil {
-		utils.DebugString("merging in global config file")
-		viper.SetConfigFile(gc)
-		err = viper.MergeInConfig()
-		if err != nil {
-			log.Fatalf("Unrecoverable error merging in global config file: %v", err)
-		}
-	}
-
-	// Check and error if trying to pass in invalid values
-	_, err = conf.PopulateConfig(new(conf.Config))
-	if err != nil {
-		log.Fatalln("Error parsing global configuration file\n", err)
+		fs.Remove(oc)
+		fmt.Println(Magenta("Tokaido has removed your legacy global config file in $HOME/.tok/config.yml. You don't need it anymore"))
 	}
 }
 

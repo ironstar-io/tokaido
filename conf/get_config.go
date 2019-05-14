@@ -2,11 +2,13 @@ package conf
 
 import (
 	"errors"
+	"io/ioutil"
 	"log"
 	"reflect"
 	"strings"
 
 	"github.com/spf13/viper"
+	yaml "gopkg.in/yaml.v2"
 )
 
 // GetConfig ...
@@ -14,6 +16,17 @@ func GetConfig() *Config {
 	config := new(Config)
 	if err := viper.Unmarshal(config); err != nil {
 		log.Fatal("Failed to retrieve configuration values\n", err)
+	}
+
+	// Load the global config in to the config struct without using Viper
+	gcPath := getConfigPath("global")
+	gcFile, err := ioutil.ReadFile(gcPath)
+	if err != nil {
+		log.Fatalf("There was an issue reading in your global config file\n%v", err)
+	}
+	err = yaml.Unmarshal(gcFile, &config.Global)
+	if err != nil {
+		log.Fatalf("There was an issue unpacking your global config file\n%v", err)
 	}
 
 	return config
