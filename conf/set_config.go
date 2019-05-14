@@ -123,8 +123,6 @@ func RegisterProject(name, path string) {
 		gc.Projects = append(gc.Projects, project)
 	}
 
-	// fmt.Println("\n\nended with: ", gc)
-
 	// Write the updated global config back to file
 	newMarhsalled, err := yaml.Marshal(gc)
 	if err != nil {

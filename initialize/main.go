@@ -56,6 +56,8 @@ func readProjectConfig(command string) {
 	utils.DebugString("reading project config")
 	pr := fs.ProjectRoot()
 
+	viper.SetDefault("Global.Syncservice", "docker")
+
 	viper.SetDefault("Tokaido.Customcompose", viper.GetBool("customCompose"))
 	viper.SetDefault("Tokaido.Debug", viper.GetBool("debug"))
 	viper.SetDefault("Tokaido.Force", viper.GetBool("force"))
@@ -66,7 +68,6 @@ func readProjectConfig(command string) {
 	viper.SetDefault("Tokaido.Phpversion", "7.1")
 	viper.SetDefault("Tokaido.Xdebug", false)
 	viper.SetDefault("Tokaido.Project.Name", strings.Replace(filepath.Base(pr), ".", "", -1))
-	viper.SetDefault("Tokaido.Project.Path", pr)
 	viper.SetDefault("Drupal.FilePublicPath", "")
 	viper.SetDefault("Drupal.FilePrivatePath", constants.DefaultDrupalPrivatePath)
 	viper.SetDefault("Drupal.FileTemporaryPath", constants.DefaultDrupalTemporaryPath)

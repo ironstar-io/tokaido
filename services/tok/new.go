@@ -50,7 +50,13 @@ func buildProjectFrame(name string) {
 		panic(err)
 	}
 
-	git.Init()
+	pr, err := os.Getwd()
+	if err != nil {
+		panic(err)
+	}
+	conf.RegisterProject(name, pr)
+
+	git.Init(pr)
 }
 
 func resolveProjectName(args []string) (name string) {
@@ -170,10 +176,15 @@ func resolveTemplateName(requestTemplate string) (template Template) {
 }
 
 func unpackTemplate(template Template, name string) {
+	pr, err := os.Getwd()
+	if err != nil {
+		panic(err)
+	}
+
 	utils.CheckCmdHard("curl")
-	utils.StdoutStreamCmdDebug("curl", "-O", "https://downloads.tokaido.io/packages/"+template.PackageFilename)
-	utils.StdoutStreamCmdDebug("tar", "xzf", template.PackageFilename)
-	utils.StdoutStreamCmdDebug("rm", template.PackageFilename)
+	utils.StdoutStreamCmdDebugContext(pr, "curl", "-O", "https://downloads.tokaido.io/packages/"+template.PackageFilename)
+	utils.StdoutStreamCmdDebugContext(pr, "tar", "xzf", template.PackageFilename)
+	utils.StdoutStreamCmdDebugContext(pr, "rm", template.PackageFilename)
 }
 
 // New - The core run sheet of `tok new {project}`

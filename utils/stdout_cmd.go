@@ -39,10 +39,15 @@ func StdoutStreamCmd(name string, args ...string) {
 
 // StdoutStreamCmdDebug - Execute a command on the users' OS and stream stdout for debug only
 func StdoutStreamCmdDebug(name string, args ...string) {
+	CommandSubSplitOutputContext(conf.GetProjectPath(), name, args...)
+}
+
+// StdoutStreamCmdDebugContext - Execute a command on the users' OS and stream stdout for debug only
+func StdoutStreamCmdDebugContext(directory, name string, args ...string) {
 	DebugCmd(name + " " + strings.Join(args, " "))
 
 	cmd := exec.Command(name, args...)
-	cmd.Dir = conf.GetProjectPath()
+	cmd.Dir = directory
 
 	if conf.GetConfig().Tokaido.Debug == true {
 		cmd.Stdout = os.Stdout
