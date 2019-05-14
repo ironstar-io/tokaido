@@ -30,7 +30,7 @@ func SetConfigValueByArgs(args []string, configType string) {
 	newYaml := argsToYaml(args) // carries yaml-formatted string of singular args slice
 	configPath := getConfigPath(configType)
 
-	// 'c' initially carries in-memory config from Viper, which does not differentiate
+	// 'runningConfig' initially carries in-memory config from Viper, which does not differentiate
 	// between our "project" and "global" config files
 	// later on we merge our yaml config into this in-memory config
 	runningConfig := GetConfig()
@@ -38,7 +38,7 @@ func SetConfigValueByArgs(args []string, configType string) {
 	// merge our newYaml into our runningConfig
 	newConfig := mergeConfigInMemory(newYaml, configPath, runningConfig)
 
-	// Viper doesn't split config in memory so 'c' now contains merged
+	// Viper doesn't split config in memory so 'runningConfig' now contains merged
 	// project and global config settings. We need to split them out.
 	if configType == "project" {
 		// These values must not be written to the project config file so we reset them to nil or empty
@@ -89,21 +89,89 @@ func writeConfig(runningConfig *Config, configPath string) {
 
 // RegisterProject adds a project to the global config file
 func RegisterProject(name, path string) {
-	c := GetConfig()
+	gcPath := filepath.Join(fs.HomeDir(), "/.tok/global.yml")
 
-	fmt.Println("\n\nstarted with: ", c.Global.Projects)
-
-	project := Project{
-		Name: name,
-		Path: path,
+	// Read the global config from file
+	// Using the in-memory config from Viper isn't an option here because it would
+	// contain _all_ of the project-level config, and rubbing those out is too
+	// verbose and difficult to scale. Thankfully nothing modifies global config
+	// at run time so this mechanism is safe.
+	gcFile, err := ioutil.ReadFile(gcPath)
+	if err != nil {
+		log.Fatalf("There was an issue reading in your global config file\n%v", err)
 	}
 
-	fmt.Println("\n\nadding project: ", project)
+	gc := &Global{}
+	err = yaml.Unmarshal(gcFile, gc)
+	if err != nil {
+		log.Fatalf("There was an issue unpacking your global config file\n%v", err)
+	}
 
-	c.Global.Projects = append(c.Global.Projects, project)
+	// Add this project to the global list if it isn't already there
+	found := false
+	for _, v := range gc.Projects {
+		if v.Name == name {
+			found = true
+		}
+	}
 
-	fmt.Println("\n\nended with: ", c.Global)
+	if !found {
+		project := Project{
+			Name: name,
+			Path: path,
+		}
+		gc.Projects = append(gc.Projects, project)
+	}
 
+	// fmt.Println("\n\nended with: ", gc)
+
+	// Write the updated global config back to file
+	newMarhsalled, err := yaml.Marshal(gc)
+	if err != nil {
+		log.Fatalf("There was a fatal issue updating your global config file\n%v", err)
+	}
+
+	fs.Replace(gcPath, newMarhsalled)
+}
+
+// DeregisterProject removes a project from the global config file
+func DeregisterProject(name string) {
+	gcPath := filepath.Join(fs.HomeDir(), "/.tok/global.yml")
+
+	// Read the global config from file
+	// Using the in-memory config from Viper isn't an option here because it would
+	// contain _all_ of the project-level config, and rubbing those out is too
+	// verbose and difficult to scale. Thankfully nothing modifies global config
+	// at run time so this mechanism is safe.
+	gcFile, err := ioutil.ReadFile(gcPath)
+	if err != nil {
+		log.Fatalf("There was an issue reading in your global config file\n%v", err)
+	}
+
+	gc := &Global{}
+	err = yaml.Unmarshal(gcFile, gc)
+	if err != nil {
+		log.Fatalf("There was an issue unpacking your global config file\n%v", err)
+	}
+
+	// Remove this project to the global list if it isn't already there
+	var index int
+	for i, v := range gc.Projects {
+		if v.Name == name {
+			index = i
+		}
+	}
+	if index > 0 {
+		gc.Projects = append(gc.Projects[:index], gc.Projects[index+1:]...)
+	}
+
+	// Write the updated global config back to file
+	newMarhsalled, err := yaml.Marshal(gc)
+	if err != nil {
+		log.Fatalf("There was a fatal issue updating your global config file\n%v", err)
+	}
+
+	fs.Replace(gcPath, newMarhsalled)
 }
 
 // compareFiles checks original and new config files to identify if any values were changed

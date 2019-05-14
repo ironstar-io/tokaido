@@ -3,6 +3,8 @@ package tok
 import (
 	"fmt"
 	"os"
+	"path/filepath"
+	"strings"
 
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/services/docker"
@@ -13,6 +15,7 @@ import (
 	"github.com/ironstar-io/tokaido/services/tok/goos"
 	"github.com/ironstar-io/tokaido/services/xdebug"
 	"github.com/ironstar-io/tokaido/system/console"
+	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/system/ssh"
 	"github.com/ironstar-io/tokaido/system/version"
 	"github.com/ironstar-io/tokaido/utils"
@@ -46,6 +49,11 @@ func Init(yes, statuscheck bool) {
 		fmt.Println(Red("🙅  Tokaido encountered an unexpected error preparing the database snapshot service"))
 		panic(err)
 	}
+
+	// Add this project to the global configuration
+	pr := fs.ProjectRoot()
+	name := strings.Replace(filepath.Base(pr), ".", "", -1)
+	conf.RegisterProject(name, pr)
 
 	docker.CreateComposerCacheVolume()
 
