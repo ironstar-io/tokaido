@@ -1,5 +1,11 @@
 package conf
 
+// Project is a singular entry of a project name and path used in global config
+type Project struct {
+	Name string `yaml:"name,omitempty"`
+	Path string `yaml:"path,omitempty"`
+}
+
 // Config the application's configuration
 // IMPORTANT!
 // Casing of the `Config` struct properties is important to note
@@ -9,7 +15,8 @@ package conf
 // and that they are able to be properly parsed by the `tok config-x` commands
 type Config struct {
 	Global struct {
-		Syncservice string `yaml:"syncservice,omitempty"`
+		Syncservice string    `yaml:"syncservice,omitempty"`
+		Projects    []Project `yaml:"projects,omitempty"`
 	} `yaml:"global,omitempty"`
 	Tokaido struct {
 		Config           string `yaml:"config,omitempty"`

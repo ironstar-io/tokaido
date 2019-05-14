@@ -15,60 +15,94 @@ import (
 	. "github.com/logrusorgru/aurora"
 )
 
-// SetConfigValueByArgs updates the config file by merging a single new value with the
-// current in memory configuration.
+// SetConfigValueByArgs updates the config file by merging a **single** new value with the
+// current in memory configuration. Once merged, it writes the updated config to disk
 // - args are a slice of new values such as `[]string{"nginx", "workerconnections", "30"}`
-// - file is either 'project' or 'global' and will determine which file is updated
-func SetConfigValueByArgs(args []string, configFile string) {
-	if configFile != "project" && configFile != "global" {
-		fmt.Println(Sprintf("The config file %s is unknown", Bold(configFile)))
+// - configType is either 'project' or 'global' and will determine which file is updated
+func SetConfigValueByArgs(args []string, configType string) {
+	if configType != "project" && configType != "global" {
+		fmt.Println(Sprintf("The config file %s is unknown", Bold(configType)))
 		os.Exit(1)
 	}
 
 	validateArgs(args)
 
-	yt := argsToYaml(args)
-	cp := getConfigPath(configFile)
+	newYaml := argsToYaml(args) // carries yaml-formatted string of singular args slice
+	configPath := getConfigPath(configType)
 
 	// 'c' initially carries in-memory config from Viper, which does not differentiate
-	//  between our "project" and "global" config files
+	// between our "project" and "global" config files
 	// later on we merge our yaml config into this in-memory config
-	c := GetConfig()
+	runningConfig := GetConfig()
 
+	// merge our newYaml into our runningConfig
+	newConfig := mergeConfigInMemory(newYaml, configPath, runningConfig)
+
+	// Viper doesn't split config in memory so 'c' now contains merged
+	// project and global config settings. We need to split them out.
+	if configType == "project" {
+		// These values must not be written to the project config file so we reset them to nil or empty
+		runningConfig.Global.Syncservice = ""
+		runningConfig.Global.Projects = nil
+	}
+
+	writeConfig(runningConfig, newConfig, configPath)
+}
+
+// mergeConfigInMemory takes our saved config from disk, the new yaml string, and the running
+// config and merges all three into a new byte slice that can be saved to disk
+func mergeConfigInMemory(newYaml, configPath string, runningConfig *Config) (newConfig []byte) {
 	// Read the saved config file from disk
-	yf, err := ioutil.ReadFile(cp)
+	newConfig, err := ioutil.ReadFile(configPath) // newConfig will eventually be written to disk
 	if err != nil {
 		log.Fatalf("There was an issue reading in your config file\n%v", err)
 	}
 
-	// Unmarshal the saved config
-	err = yaml.Unmarshal(yf, &c)
+	// Unmarshal the new config from disk into our running config
+	err = yaml.Unmarshal(newConfig, &runningConfig)
 	if err != nil {
 		log.Fatalf("There was an issue parsing your config file\n%v", err)
 	}
 
-	// Merge the saved config into our in-memory config
-	err = yaml.Unmarshal([]byte(yt), &c)
+	// Merge the new yaml with our in-memory config
+	err = yaml.Unmarshal([]byte(newYaml), &runningConfig)
 	if err != nil {
 		log.Fatalf("There was an issue updating your config file\n%v", err)
 	}
 
-	// Viper doesn't split config in memory so 'c' now contains merged
-	// project and global config settings. We need to split them out.
-	if configFile == "project" {
-		// These values must not be written to the project config file so we reset them to nil or empty
-		c.Global.Syncservice = ""
-	}
+	return newConfig
+}
 
+// writeConfig writes the provided in-memory config to the configPath
+func writeConfig(runningConfig *Config, newConfig []byte, configPath string) {
 	// Now that we've merged the config, we'll write that merged config to disk
-	fc, err := yaml.Marshal(c)
+	newMarhsalled, err := yaml.Marshal(runningConfig)
 	if err != nil {
 		log.Fatalf("There was an issue building your config file\n%v", err)
 	}
 
-	fs.Replace(cp, fc)
+	fs.Replace(configPath, newMarhsalled)
 
-	compareFiles(yf, cp)
+	compareFiles(newConfig, configPath)
+}
+
+// RegisterProject adds a project to the global config file
+func RegisterProject(name, path string) {
+	c := GetConfig()
+
+	fmt.Println("\n\nstarted with: ", c.Global.Projects)
+
+	project := Project{
+		Name: name,
+		Path: path,
+	}
+
+	fmt.Println("\n\naddinug project: ", project)
+
+	c.Global.Projects = append(c.Global.Projects, project)
+
+	fmt.Println("\n\nended with: ", c.Global)
+
 }
 
 // compareFiles checks original and new config files to identify if any values were changed
@@ -125,6 +159,7 @@ func getConfigPath(configFile string) string {
 	return cp
 }
 
+// argsToYaml converts a string slice to a single yaml formatted-string
 func argsToYaml(args []string) string {
 	var y string
 	for i, a := range args {
