@@ -49,7 +49,7 @@ func GenerateKeys() {
 }
 
 func copyPub() {
-	td := filepath.Join(conf.GetConfig().Tokaido.Project.Path, "/.tok")
+	td := filepath.Join(conf.GetProjectPath(), "/.tok")
 
 	fs.Mkdir(td)
 	fs.Mkdir(filepath.Join(td, "/local"))

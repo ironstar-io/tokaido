@@ -43,7 +43,7 @@ func CheckReq(packageName string) {
 }
 
 func checkPHPCSXML() {
-	f := filepath.Join(conf.GetConfig().Tokaido.Project.Path, phpCSXML)
+	f := filepath.Join(conf.GetProjectPath(), phpCSXML)
 	if fs.CheckExists(f) == false {
 		fs.TouchByteArray(f, phpCSXMLTemplate(conf.GetConfig().Drupal.Path))
 	}

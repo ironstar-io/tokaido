@@ -12,7 +12,7 @@ func BashStringCmd(cmdStr string) string {
 	DebugCmd("bash -c " + cmdStr)
 
 	cmd := exec.Command("bash", "-c", cmdStr)
-	cmd.Dir = conf.GetConfig().Tokaido.Project.Path
+	cmd.Dir = conf.GetProjectPath()
 	stdoutStderr, _ := cmd.CombinedOutput()
 
 	DebugOutput(stdoutStderr)
@@ -25,7 +25,7 @@ func BashStringSplitOutput(cmdStr string) (string, error) {
 	DebugCmd("bash -c " + cmdStr)
 
 	cmd := exec.Command("bash", "-c", cmdStr)
-	cmd.Dir = conf.GetConfig().Tokaido.Project.Path
+	cmd.Dir = conf.GetProjectPath()
 	stdoutStderr, err := cmd.CombinedOutput()
 	if err != nil {
 		DebugErrOutput(err)

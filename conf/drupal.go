@@ -18,7 +18,7 @@ func GetRootPath() string {
 	c := GetConfig()
 	dp := c.Drupal.Path
 	if dp != "" {
-		return filepath.Join(c.Tokaido.Project.Path, dp)
+		return filepath.Join(GetProjectPath(), dp)
 	}
 
 	log.Fatalf("Drupal path setting is missing.")
@@ -43,7 +43,7 @@ func SetDrupalConfig(drupalType string) {
 }
 
 func detectDrupalSettings() (string, string) {
-	pr := GetConfig().Tokaido.Project.Path
+	pr := GetProjectPath()
 	var dp string
 	var dv string
 	d7 := filepath.Join("includes", "bootstrap.inc")
@@ -164,7 +164,7 @@ func CoreDrupalFile() string {
 // CoreDrupal8Path - Return the core Drupal 8 path for the users' installation
 func CoreDrupal8Path() string {
 	c := GetConfig()
-	tp := c.Tokaido.Project.Path
+	tp := GetProjectPath()
 	rp := c.Drupal.Path
 
 	return filepath.Join(tp, rp, "core")

@@ -72,7 +72,7 @@ func PrintPorts(containers []string) {
 // LocalPort - Return the local port of a container
 func LocalPort(containerName string, containerPort string) string {
 	// Example return: "unison:32757"
-	cs := utils.StdoutCmd("docker-compose", "-f", filepath.Join(conf.GetConfig().Tokaido.Project.Path, "/docker-compose.tok.yml"), "port", containerName, containerPort)
+	cs := utils.StdoutCmd("docker-compose", "-f", filepath.Join(conf.GetProjectPath(), "/docker-compose.tok.yml"), "port", containerName, containerPort)
 
 	p := strings.Split(cs, ":")
 	if len(p) <= 1 {
@@ -85,7 +85,7 @@ func LocalPort(containerName string, containerPort string) string {
 
 // GetContainerName ...
 func GetContainerName(name string) (string, error) {
-	cs, err := utils.BashStringSplitOutput("docker-compose -f " + filepath.Join(conf.GetConfig().Tokaido.Project.Path, "/docker-compose.tok.yml") + " ps " + name + " | grep " + name)
+	cs, err := utils.BashStringSplitOutput("docker-compose -f " + filepath.Join(conf.GetProjectPath(), "/docker-compose.tok.yml") + " ps " + name + " | grep " + name)
 	if err != nil {
 		return "", err
 	}
@@ -121,12 +121,12 @@ func GetContainerIP(name string) (string, error) {
 
 // KillContainer - Kill an individual container
 func KillContainer(container string) {
-	utils.StdoutCmd("docker-compose", "-f", filepath.Join(conf.GetConfig().Tokaido.Project.Path, "/docker-compose.tok.yml"), "kill", container)
+	utils.StdoutCmd("docker-compose", "-f", filepath.Join(conf.GetProjectPath(), "/docker-compose.tok.yml"), "kill", container)
 }
 
 // UpContainer - Lift an individual container
 func UpContainer(container string) {
-	utils.StdoutCmd("docker-compose", "-f", filepath.Join(conf.GetConfig().Tokaido.Project.Path, "/docker-compose.tok.yml"), "up", "-d", container)
+	utils.StdoutCmd("docker-compose", "-f", filepath.Join(conf.GetProjectPath(), "/docker-compose.tok.yml"), "up", "-d", container)
 }
 
 // DeleteVolume - Delete an external docker volume

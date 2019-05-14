@@ -35,7 +35,6 @@ type Config struct {
 		Xdebugport       string `yaml:"xdebugport"`
 		Project          struct {
 			Name string `yaml:"name"`
-			Path string `yaml:"path,omitempty"`
 		} `yaml:"project"`
 	} `yaml:"tokaido"`
 	Drupal struct {

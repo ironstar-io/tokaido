@@ -15,7 +15,7 @@ func StdoutCmd(name string, args ...string) string {
 	DebugCmd(name + " " + strings.Join(args, " "))
 
 	cmd := exec.Command(name, args...)
-	cmd.Dir = conf.GetConfig().Tokaido.Project.Path
+	cmd.Dir = conf.GetProjectPath()
 	stdoutStderr, err := cmd.CombinedOutput()
 	if err != nil {
 		fmt.Printf("Tokaido encountered a fatal error and had to stop at command '%s %s'\n%s", name, strings.Join(args, " "), stdoutStderr)
@@ -39,10 +39,15 @@ func StdoutStreamCmd(name string, args ...string) {
 
 // StdoutStreamCmdDebug - Execute a command on the users' OS and stream stdout for debug only
 func StdoutStreamCmdDebug(name string, args ...string) {
+	CommandSubSplitOutputContext(conf.GetProjectPath(), name, args...)
+}
+
+// StdoutStreamCmdDebugContext - Execute a command on the users' OS and stream stdout for debug only
+func StdoutStreamCmdDebugContext(directory, name string, args ...string) {
 	DebugCmd(name + " " + strings.Join(args, " "))
 
 	cmd := exec.Command(name, args...)
-	cmd.Dir = conf.GetConfig().Tokaido.Project.Path
+	cmd.Dir = directory
 
 	if conf.GetConfig().Tokaido.Debug == true {
 		cmd.Stdout = os.Stdout

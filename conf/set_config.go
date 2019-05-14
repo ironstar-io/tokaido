@@ -89,7 +89,7 @@ func writeConfig(runningConfig *Config, configPath string) {
 
 // RegisterProject adds a project to the global config file
 func RegisterProject(name, path string) {
-	gcPath := filepath.Join(fs.HomeDir(), "/.tok/global.yml")
+	gcPath := getConfigPath("global")
 
 	// Read the global config from file
 	// Using the in-memory config from Viper isn't an option here because it would
@@ -123,8 +123,6 @@ func RegisterProject(name, path string) {
 		gc.Projects = append(gc.Projects, project)
 	}
 
-	// fmt.Println("\n\nended with: ", gc)
-
 	// Write the updated global config back to file
 	newMarhsalled, err := yaml.Marshal(gc)
 	if err != nil {
@@ -136,7 +134,7 @@ func RegisterProject(name, path string) {
 
 // DeregisterProject removes a project from the global config file
 func DeregisterProject(name string) {
-	gcPath := filepath.Join(fs.HomeDir(), "/.tok/global.yml")
+	gcPath := getConfigPath("global")
 
 	// Read the global config from file
 	// Using the in-memory config from Viper isn't an option here because it would
@@ -213,7 +211,7 @@ func unmarshalConfig(cp string) *Config {
 func getConfigPath(configFile string) string {
 	var cp string
 	if configFile == "project" {
-		cp = filepath.Join(GetConfig().Tokaido.Project.Path, "/.tok/config.yml")
+		cp = filepath.Join(GetProjectPath(), "/.tok/config.yml")
 	} else if configFile == "global" {
 		cp = filepath.Join(fs.HomeDir(), "/.tok/global.yml")
 	} else {

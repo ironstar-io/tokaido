@@ -10,7 +10,7 @@ import (
 
 // StreamOSCmd - Execute a command outputting OS stdout/stdin/stderr directly to the console
 func StreamOSCmd(name string, args ...string) {
-	StreamOSCmdContext(conf.GetConfig().Tokaido.Project.Path, name, args...)
+	StreamOSCmdContext(conf.GetProjectPath(), name, args...)
 }
 
 // StreamOSCmdContext - Execute a command outputting OS stdout/stdin/stderr directly to the console from context
