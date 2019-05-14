@@ -45,8 +45,7 @@ func removeOldGlobalConfig() {
 	}
 
 	oc := filepath.Join(h, ".tok/config.yml")
-	_, err = os.Stat(oc)
-	if err == nil {
+	if fs.CheckExists(oc) {
 		fs.Remove(oc)
 		fmt.Println(Magenta("Tokaido has removed your legacy global config file in $HOME/.tok/config.yml. You don't need it anymore"))
 	}
