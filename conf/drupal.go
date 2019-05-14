@@ -43,7 +43,7 @@ func SetDrupalConfig(drupalType string) {
 }
 
 func detectDrupalSettings() (string, string) {
-	pr := GetConfig().Tokaido.Project.Path
+	pr := GetProjectPath()
 	var dp string
 	var dv string
 	d7 := filepath.Join("includes", "bootstrap.inc")

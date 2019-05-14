@@ -20,7 +20,7 @@ import (
 
 // GetTokComposePath ...
 func GetTokComposePath() string {
-	return filepath.Join(conf.GetConfig().Tokaido.Project.Path, "/docker-compose.tok.yml")
+	return filepath.Join(conf.GetProjectPath(), "/docker-compose.tok.yml")
 }
 
 // HardCheckTokCompose ...
@@ -105,7 +105,7 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 			log.Fatalf("Error setting Compose file defaults: %v", err)
 		}
 
-		err = yaml.Unmarshal(dockertmpl.TokaidoDockerSiteVolumeAttach(conf.GetConfig().Tokaido.Project.Path), &tokStruct)
+		err = yaml.Unmarshal(dockertmpl.TokaidoDockerSiteVolumeAttach(conf.GetProjectPath()), &tokStruct)
 		if err != nil {
 			log.Fatalf("Error attaching persistent /tokaido/site volume: %v", err)
 		}
@@ -124,7 +124,7 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 			log.Fatalf("Error declaring persistent /tokaido/site volume: %v", err)
 		}
 
-		err = yaml.Unmarshal(dockertmpl.TokaidoFusionSiteVolumeAttach(conf.GetConfig().Tokaido.Project.Path, siteVolName), &tokStruct)
+		err = yaml.Unmarshal(dockertmpl.TokaidoFusionSiteVolumeAttach(conf.GetProjectPath(), siteVolName), &tokStruct)
 		if err != nil {
 			log.Fatalf("Error attaching persistent /tokaido/site volume: %v", err)
 		}
@@ -267,7 +267,7 @@ func StripModWarning() {
 }
 
 func customTokPath() string {
-	ct := filepath.Join(conf.GetConfig().Tokaido.Project.Path, "/.tok")
+	ct := filepath.Join(conf.GetProjectPath(), "/.tok")
 
 	if fs.CheckExists(ct+".yml") == true {
 		return filepath.Join(ct, "compose.tok.yml")

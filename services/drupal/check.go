@@ -100,7 +100,7 @@ func GetDrupalVersion() string {
 
 // versionStr ...
 func versionStr() string {
-	f, err := os.Open(filepath.Join(conf.GetConfig().Tokaido.Project.Path, conf.CoreDrupalFile()))
+	f, err := os.Open(filepath.Join(conf.GetProjectPath(), conf.CoreDrupalFile()))
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -18,7 +18,7 @@ import (
 // Restore restores the specified snapshot (or lists snapshots to be chosen)
 func Restore(args []string) {
 	fmt.Println()
-	p := filepath.Join(conf.GetConfig().Tokaido.Project.Path, "/.tok/local/snapshots")
+	p := filepath.Join(conf.GetProjectPath(), "/.tok/local/snapshots")
 
 	// Get a list of all available snapshots
 	list := getSortedSnapshotList(p)

@@ -48,7 +48,7 @@ vendor
 
 // AppendGitignore ...
 func AppendGitignore(ignoreList []string) {
-	gi := filepath.Join(conf.GetConfig().Tokaido.Project.Path, "/.gitignore")
+	gi := filepath.Join(conf.GetProjectPath(), "/.gitignore")
 	if fs.CheckExists(gi) == false {
 		fs.TouchEmpty(gi)
 	}

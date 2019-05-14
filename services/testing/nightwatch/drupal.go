@@ -16,7 +16,7 @@ var validDrupalRange = ">=8.6.x"
 
 // CheckLocalDrupal ...
 func CheckLocalDrupal() error {
-	if fs.CheckExists(filepath.Join(conf.GetConfig().Tokaido.Project.Path, conf.CoreDrupalFile())) == false {
+	if fs.CheckExists(filepath.Join(conf.GetProjectPath(), conf.CoreDrupalFile())) == false {
 		return errors.New("A valid Drupal installation was not found. Exiting...")
 	}
 

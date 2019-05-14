@@ -12,7 +12,7 @@ func CommandSubstitution(name string, args ...string) string {
 	DebugCmd(name + " " + strings.Join(args, " "))
 
 	cmd := exec.Command(name, args...)
-	cmd.Dir = conf.GetConfig().Tokaido.Project.Path
+	cmd.Dir = conf.GetProjectPath()
 	stdoutStderr, _ := cmd.CombinedOutput()
 
 	DebugOutput(stdoutStderr)
@@ -27,7 +27,7 @@ func CommandSubstitutionExitCode(name string, args ...string) (exitCode int) {
 	DebugCmd(name + " " + strings.Join(args, " "))
 
 	cmd := exec.Command(name, args...)
-	cmd.Dir = conf.GetConfig().Tokaido.Project.Path
+	cmd.Dir = conf.GetProjectPath()
 	err := cmd.Run()
 
 	e, ok := err.(*exec.ExitError)
@@ -40,7 +40,7 @@ func CommandSubstitutionExitCode(name string, args ...string) (exitCode int) {
 
 // CommandSubSplitOutput - Execute a command and return the output value split into stdout and stderr. No exit on stdErr
 func CommandSubSplitOutput(name string, args ...string) (string, error) {
-	return CommandSubSplitOutputContext(conf.GetConfig().Tokaido.Project.Path, name, args...)
+	return CommandSubSplitOutputContext(conf.GetProjectPath(), name, args...)
 }
 
 // CommandSubSplitOutputContext - Execute a command and return the output value split into stdout and stderr from a directory context. No exit on stdErr

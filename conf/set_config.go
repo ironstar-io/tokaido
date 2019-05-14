@@ -213,7 +213,7 @@ func unmarshalConfig(cp string) *Config {
 func getConfigPath(configFile string) string {
 	var cp string
 	if configFile == "project" {
-		cp = filepath.Join(GetConfig().Tokaido.Project.Path, "/.tok/config.yml")
+		cp = filepath.Join(GetProjectPath(), "/.tok/config.yml")
 	} else if configFile == "global" {
 		cp = filepath.Join(fs.HomeDir(), "/.tok/global.yml")
 	} else {

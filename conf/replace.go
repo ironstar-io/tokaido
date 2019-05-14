@@ -19,7 +19,7 @@ func drupalVars(path, version string) []byte {
 
 func commandSubstitution(name string, args ...string) {
 	cmd := exec.Command(name, args...)
-	cmd.Dir = GetConfig().Tokaido.Project.Path
+	cmd.Dir = GetProjectPath()
 	stdoutStderr, _ := cmd.CombinedOutput()
 
 	fmt.Println(strings.TrimSpace(string(stdoutStderr)))
@@ -30,7 +30,7 @@ func CreateOrReplaceDrupalConfig(path, version string) {
 	viper.Set("drupal.path", path)
 	viper.Set("drupal.majorversion", version)
 
-	configPath := filepath.Join(GetConfig().Tokaido.Project.Path, "/.tok/config.yml")
+	configPath := filepath.Join(GetProjectPath(), "/.tok/config.yml")
 
 	_, err := os.Stat(configPath)
 	if os.IsNotExist(err) {
