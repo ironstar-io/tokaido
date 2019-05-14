@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/initialize"
 	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/services/tok"
@@ -19,6 +20,6 @@ var DestroyCmd = &cobra.Command{
 
 		docker.HardCheckTokCompose()
 
-		tok.Destroy()
+		tok.Destroy(conf.GetConfig().Tokaido.Project.Name)
 	},
 }

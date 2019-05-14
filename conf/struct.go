@@ -6,6 +6,12 @@ type Project struct {
 	Path string `yaml:"path,omitempty"`
 }
 
+// Global contains all our global config settings that are saved in ~/.tok/global.yml
+type Global struct {
+	Syncservice string    `yaml:"syncservice,omitempty"`
+	Projects    []Project `yaml:"projects,omitempty"`
+}
+
 // Config the application's configuration
 // IMPORTANT!
 // Casing of the `Config` struct properties is important to note
@@ -14,10 +20,7 @@ type Project struct {
 // This is to ensure they both conform to the golang convention
 // and that they are able to be properly parsed by the `tok config-x` commands
 type Config struct {
-	Global struct {
-		Syncservice string    `yaml:"syncservice,omitempty"`
-		Projects    []Project `yaml:"projects,omitempty"`
-	} `yaml:"global,omitempty"`
+	Global  Global `yaml:"global,omitempty"`
 	Tokaido struct {
 		Config           string `yaml:"config,omitempty"`
 		Customcompose    bool   `yaml:"customcompose"`
