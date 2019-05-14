@@ -46,7 +46,10 @@ func SetConfigValueByArgs(args []string, configType string) {
 		runningConfig.Global.Projects = nil
 	}
 
-	writeConfig(runningConfig, newConfig, configPath)
+	writeConfig(runningConfig, configPath)
+
+	// validate that our config was saved successfully
+	compareFiles(newConfig, configPath)
 }
 
 // mergeConfigInMemory takes our saved config from disk, the new yaml string, and the running
@@ -74,7 +77,7 @@ func mergeConfigInMemory(newYaml, configPath string, runningConfig *Config) (new
 }
 
 // writeConfig writes the provided in-memory config to the configPath
-func writeConfig(runningConfig *Config, newConfig []byte, configPath string) {
+func writeConfig(runningConfig *Config, configPath string) {
 	// Now that we've merged the config, we'll write that merged config to disk
 	newMarhsalled, err := yaml.Marshal(runningConfig)
 	if err != nil {
@@ -82,8 +85,6 @@ func writeConfig(runningConfig *Config, newConfig []byte, configPath string) {
 	}
 
 	fs.Replace(configPath, newMarhsalled)
-
-	compareFiles(newConfig, configPath)
 }
 
 // RegisterProject adds a project to the global config file
@@ -97,7 +98,7 @@ func RegisterProject(name, path string) {
 		Path: path,
 	}
 
-	fmt.Println("\n\naddinug project: ", project)
+	fmt.Println("\n\nadding project: ", project)
 
 	c.Global.Projects = append(c.Global.Projects, project)
 
