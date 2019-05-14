@@ -32,6 +32,17 @@ func GetConfig() *Config {
 	return config
 }
 
+// GetProjectPath returns the full system path to this project as it exists in the global.yml file
+func GetProjectPath() (path string) {
+	for _, v := range GetConfig().Global.Projects {
+		if v.Name == GetConfig().Tokaido.Project.Name {
+			return v.Path
+		}
+	}
+
+	panic("Unexpected error resolving this project's path in the global config file")
+}
+
 // GetConfigValueByArgs - Get a config value based on the arguments sent from the command line
 func GetConfigValueByArgs(args []string) (reflect.Value, error) {
 	c := GetConfig()
