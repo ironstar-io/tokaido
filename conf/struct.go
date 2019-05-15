@@ -87,16 +87,17 @@ type Config struct {
 // Services ...
 type Services struct {
 	Unison struct {
-		Image       string   `yaml:"image,omitempty"`
-		Hostname    string   `yaml:"hostname,omitempty"`
-		Ports       []string `yaml:"ports,omitempty"`
-		Entrypoint  []string `yaml:"entrypoint,omitempty"`
-		User        string   `yaml:"user,omitempty"`
-		Command     string   `yaml:"command,omitempty"`
-		Volumesfrom []string `yaml:"volumes_from,omitempty"`
-		Dependson   []string `yaml:"depends_on,omitempty"`
-		Environment []string `yaml:"environment,omitempty"`
-		Volumes     []string `yaml:"volumes,omitempty"`
+		Image       string            `yaml:"image,omitempty"`
+		Hostname    string            `yaml:"hostname,omitempty"`
+		Ports       []string          `yaml:"ports,omitempty"`
+		Entrypoint  []string          `yaml:"entrypoint,omitempty"`
+		User        string            `yaml:"user,omitempty"`
+		Command     string            `yaml:"command,omitempty"`
+		Volumesfrom []string          `yaml:"volumes_from,omitempty"`
+		Dependson   []string          `yaml:"depends_on,omitempty"`
+		Environment []string          `yaml:"environment,omitempty"`
+		Volumes     []string          `yaml:"volumes,omitempty"`
+		Labels      map[string]string `yaml:"labels,omitempty"`
 	} `yaml:"unison,omitempty"`
 	Sync struct {
 		Image       string            `yaml:"image,omitempty"`
@@ -110,6 +111,7 @@ type Services struct {
 		Environment map[string]string `yaml:"environment,omitempty"`
 		Volumes     []string          `yaml:"volumes,omitempty"`
 		Restart     string            `yaml:"restart,omitempty"`
+		Labels      map[string]string `yaml:"labels,omitempty"`
 	} `yaml:"sync,omitempty"`
 	Syslog struct {
 		Image       string            `yaml:"image,omitempty"`
@@ -122,6 +124,7 @@ type Services struct {
 		Dependson   []string          `yaml:"depends_on,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`
 		Volumes     []string          `yaml:"volumes,omitempty"`
+		Labels      map[string]string `yaml:"labels,omitempty"`
 	} `yaml:"syslog,omitempty"`
 	Haproxy struct {
 		Image       string            `yaml:"image,omitempty"`
@@ -133,6 +136,7 @@ type Services struct {
 		Volumesfrom []string          `yaml:"volumes_from,omitempty"`
 		Dependson   []string          `yaml:"depends_on,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`
+		Labels      map[string]string `yaml:"labels,omitempty"`
 	} `yaml:"haproxy,omitempty"`
 	Varnish struct {
 		Image       string            `yaml:"image,omitempty"`
@@ -144,6 +148,7 @@ type Services struct {
 		Volumesfrom []string          `yaml:"volumes_from,omitempty"`
 		Dependson   []string          `yaml:"depends_on,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`
+		Labels      map[string]string `yaml:"labels,omitempty"`
 	} `yaml:"varnish,omitempty"`
 	Nginx struct {
 		Image       string            `yaml:"image,omitempty"`
@@ -156,6 +161,7 @@ type Services struct {
 		Volumes     []string          `yaml:"volumes,omitempty"`
 		Dependson   []string          `yaml:"depends_on,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`
+		Labels      map[string]string `yaml:"labels,omitempty"`
 	} `yaml:"nginx,omitempty"`
 	Fpm struct {
 		Image       string            `yaml:"image,omitempty"`
@@ -169,6 +175,7 @@ type Services struct {
 		Workingdir  string            `yaml:"working_dir,omitempty"`
 		Dependson   []string          `yaml:"depends_on,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`
+		Labels      map[string]string `yaml:"labels,omitempty"`
 	} `yaml:"fpm,omitempty"`
 	Memcache struct {
 		Enabled     bool              `yaml:"enabled,omitempty"`
@@ -179,6 +186,7 @@ type Services struct {
 		User        string            `yaml:"user,omitempty"`
 		Command     string            `yaml:"command,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`
+		Labels      map[string]string `yaml:"labels,omitempty"`
 	} `yaml:"memcache,omitempty"`
 	Mysql struct {
 		Image       string            `yaml:"image,omitempty"`
@@ -190,6 +198,7 @@ type Services struct {
 		Environment map[string]string `yaml:"environment,omitempty"`
 		Volumesfrom []string          `yaml:"volumes_from,omitempty"`
 		Volumes     []string          `yaml:"volumes,omitempty"`
+		Labels      map[string]string `yaml:"labels,omitempty"`
 	} `yaml:"mysql,omitempty"`
 	Drush struct {
 		Image       string            `yaml:"image,omitempty"`
@@ -202,6 +211,7 @@ type Services struct {
 		Volumesfrom []string          `yaml:"volumes_from,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`
 		Volumes     []string          `yaml:"volumes,omitempty"`
+		Labels      map[string]string `yaml:"labels,omitempty"`
 	} `yaml:"drush,omitempty"`
 	Solr struct {
 		Enabled     bool              `yaml:"enabled,omitempty"`
@@ -212,6 +222,7 @@ type Services struct {
 		User        string            `yaml:"user,omitempty"`
 		Command     string            `yaml:"command,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`
+		Labels      map[string]string `yaml:"labels,omitempty"`
 	} `yaml:"solr,omitempty"`
 	Redis struct {
 		Enabled     bool              `yaml:"enabled,omitempty"`
@@ -222,6 +233,7 @@ type Services struct {
 		User        string            `yaml:"user,omitempty"`
 		Command     string            `yaml:"command,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`
+		Labels      map[string]string `yaml:"labels,omitempty"`
 	} `yaml:"redis,omitempty"`
 	Mailhog struct {
 		Enabled     bool              `yaml:"enabled,omitempty"`
@@ -232,6 +244,7 @@ type Services struct {
 		User        string            `yaml:"user,omitempty"`
 		Command     string            `yaml:"command,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`
+		Labels      map[string]string `yaml:"labels,omitempty"`
 	} `yaml:"mailhog,omitempty"`
 	Adminer struct {
 		Enabled     bool              `yaml:"enabled,omitempty"`
@@ -242,12 +255,14 @@ type Services struct {
 		User        string            `yaml:"user,omitempty"`
 		Command     string            `yaml:"command,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`
+		Labels      map[string]string `yaml:"labels,omitempty"`
 	} `yaml:"adminer,omitempty"`
 	Kishu struct {
 		Enabled     bool              `yaml:"enabled,omitempty"`
 		Image       string            `yaml:"image,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`
 		Volumes     []string          `yaml:"volumes,omitempty"`
+		Labels      map[string]string `yaml:"labels,omitempty"`
 	} `yaml:"kishu,omitempty"`
 }
 

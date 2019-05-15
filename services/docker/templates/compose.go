@@ -101,7 +101,9 @@ func EnableSolr(version string) []byte {
     entrypoint:
       - solr-precreate
       - drupal
-      - /opt/solr/server/solr/configsets/search-api-solr/`)
+      - /opt/solr/server/solr/configsets/search-api-solr/
+    labels:
+      io.tokaido.managed: local`)
 }
 
 // EnableRedis ...
@@ -110,7 +112,9 @@ func EnableRedis(version string) []byte {
   redis:
     image: redis:` + version + `
     ports:
-      - "6379"`)
+      - "6379"
+    labels:
+      io.tokaido.managed: local`)
 }
 
 // EnableMailhog ...
@@ -120,7 +124,9 @@ func EnableMailhog(version string) []byte {
     image: mailhog/mailhog:` + version + `
     ports:
       - "1025"
-      - "8025"`)
+      - "8025"
+    labels:
+      io.tokaido.managed: local`)
 }
 
 // EnableAdminer ...
@@ -129,13 +135,17 @@ func EnableAdminer(version string) []byte {
   adminer:
     image: adminer:` + version + `
     ports:
-      - "8080"`)
+      - "8080"
+    labels:
+      io.tokaido.managed: local`)
 }
 
 // EnableMemcache ...
 func EnableMemcache(version string) []byte {
 	return []byte(`services:
   memcache:
+    labels:
+      io.tokaido.managed: local
     image: memcached:` + version)
 }
 
@@ -251,10 +261,14 @@ services:
     environment:
       AUTO_SYNC: "true"
     restart: unless-stopped
+    labels:
+      io.tokaido.managed: local
   syslog:
     image: tokaido/syslog:stable
     volumes:
       - /tokaido/logs
+    labels:
+      io.tokaido.managed: local
   haproxy:
     user: "1005"
     image: tokaido/haproxy:stable
@@ -264,6 +278,8 @@ services:
     depends_on:
       - varnish
       - nginx
+    labels:
+      io.tokaido.managed: local
   varnish:
     user: "1004"
     image: tokaido/varnish:stable
@@ -273,6 +289,8 @@ services:
       - nginx
     volumes_from:
       - syslog
+    labels:
+      io.tokaido.managed: local
   nginx:
     user: "1002"
     image: tokaido/nginx:stable
@@ -286,6 +304,8 @@ services:
       - "8082"
     environment:
       DRUPAL_ROOT: docroot
+    labels:
+      io.tokaido.managed: local
   fpm:
     user: "1001"
     image: tokaido/php71-fpm:stable
@@ -300,6 +320,8 @@ services:
       - "9000"
     environment:
       PHP_DISPLAY_ERRORS: "yes"
+    labels:
+      io.tokaido.managed: local
   mysql:
     image: mysql:5.7
     volumes_from:
@@ -314,6 +336,8 @@ services:
       MYSQL_USER: tokaido
       MYSQL_PASSWORD: tokaido
       MYSQL_ROOT_PASSWORD: tokaido
+    labels:
+      io.tokaido.managed: local
   drush:
     image: tokaido/admin71-heavy:stable
     hostname: 'tokaido'
@@ -328,12 +352,16 @@ services:
       SSH_AUTH_SOCK: /ssh/auth/sock
       APP_ENV: local
       PROJECT_NAME: tokaido
+    labels:
+      io.tokaido.managed: local
   kishu:
     image: tokaido/kishu:stable
     volumes:
       - waiting
     environment:
       DRUPAL_ROOT: docroot
+    labels:
+      io.tokaido.managed: local
 `)
 
 // ComposeTokDefaultsDockerVolume - Template byte array for `docker-compose.tok.yml`
@@ -344,6 +372,8 @@ services:
     image: tokaido/syslog:stable
     volumes:
       - /tokaido/logs
+    labels:
+      io.tokaido.managed: local
   haproxy:
     user: "1005"
     image: tokaido/haproxy:stable
@@ -353,6 +383,8 @@ services:
     depends_on:
       - varnish
       - nginx
+    labels:
+      io.tokaido.managed: local
   varnish:
     user: "1004"
     image: tokaido/varnish:stable
@@ -362,6 +394,8 @@ services:
       - nginx
     volumes_from:
       - syslog
+    labels:
+      io.tokaido.managed: local
   nginx:
     user: "1002"
     image: tokaido/nginx:stable
@@ -375,6 +409,8 @@ services:
       - "8082"
     environment:
       DRUPAL_ROOT: docroot
+    labels:
+      io.tokaido.managed: local
   fpm:
     user: "1001"
     image: tokaido/php71-fpm:stable
@@ -389,6 +425,8 @@ services:
       - "9000"
     environment:
       PHP_DISPLAY_ERRORS: "yes"
+    labels:
+      io.tokaido.managed: local
   mysql:
     image: mysql:5.7
     volumes_from:
@@ -403,6 +441,8 @@ services:
       MYSQL_USER: tokaido
       MYSQL_PASSWORD: tokaido
       MYSQL_ROOT_PASSWORD: tokaido
+    labels:
+      io.tokaido.managed: local
   drush:
     image: tokaido/admin71-heavy:stable
     hostname: 'tokaido'
@@ -417,4 +457,6 @@ services:
       SSH_AUTH_SOCK: /ssh/auth/sock
       APP_ENV: local
       PROJECT_NAME: tokaido
+    labels:
+      io.tokaido.managed: local
 `)
