@@ -119,6 +119,36 @@ func GetContainerIP(name string) (string, error) {
 	return "", errors.New("Unable to find the internal IP for container " + name + ". Is it currently running?")
 }
 
+// GetContainerList returns a list of all configured containers in the current project context
+func GetContainerList() []string {
+	// List of containers to be checked when no single container is specifieds
+	cl := []string{"fpm", "nginx", "varnish", "haproxy", "syslog", "drush", "mysql"}
+
+	// Add additional optional containers to the checklist if they are in use
+	if conf.GetConfig().Services.Kishu.Enabled {
+		cl = append(cl, "kishu")
+	}
+
+	if conf.GetConfig().Services.Memcache.Enabled {
+		cl = append(cl, "memcache")
+	}
+
+	if conf.GetConfig().Services.Redis.Enabled {
+		cl = append(cl, "redis")
+	}
+
+	if conf.GetConfig().Services.Solr.Enabled {
+		cl = append(cl, "solr")
+	}
+
+	if conf.GetConfig().Global.Syncservice == "fusion" {
+		cl = append(cl, "sync")
+	}
+
+	return cl
+
+}
+
 // KillContainer - Kill an individual container
 func KillContainer(container string) {
 	utils.StdoutCmd("docker-compose", "-f", filepath.Join(conf.GetProjectPath(), "/docker-compose.tok.yml"), "kill", container)

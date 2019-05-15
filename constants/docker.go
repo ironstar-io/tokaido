@@ -1,4 +1,16 @@
 package constants
 
 // HaproxyInternalPort ...
-const HaproxyInternalPort = "8443"
+const HaproxyInternalPort = 8443
+
+// VarnishInternalPort ...
+const VarnishInternalPort = 8081
+
+// NginxInternalPort ...
+const NginxInternalPort = 8082
+
+// MysqlInternalPort ...
+const MysqlInternalPort = 3306
+
+// MailhogInternalHTTPPort ...
+const MailhogInternalHTTPPort = 8025
