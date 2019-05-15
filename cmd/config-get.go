@@ -19,7 +19,6 @@ var ConfigGetCmd = &cobra.Command{
 	Long:  "Get a config property value. Eg. `tok config-get drupal path`. See https://tokaido.io/docs/config for a full list of available options",
 	Run: func(cmd *cobra.Command, args []string) {
 		initialize.TokConfig("config-get")
-		conf.ValidProjectRoot()
 
 		c, err := conf.GetConfigValueByArgs(args)
 		if err != nil {
