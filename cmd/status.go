@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/initialize"
 	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/services/drupal"
@@ -27,7 +28,7 @@ var StatusCmd = &cobra.Command{
 
 		docker.HardCheckTokCompose()
 
-		ok := docker.StatusCheck("")
+		ok := docker.StatusCheck("", conf.GetConfig().Tokaido.Project.Name)
 		if ok {
 			console.Println(`🙂  All containers are running`, "√")
 		} else {

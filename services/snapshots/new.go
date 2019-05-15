@@ -21,7 +21,7 @@ func New(args []string) {
 	var name string
 
 	// Check that this Tokaido environment is running
-	ok := docker.StatusCheck("")
+	ok := docker.StatusCheck("", conf.GetConfig().Tokaido.Project.Name)
 	if !ok {
 		console.Println("\n😦  Your Tokaido environment appears to be offline. Please run `tok up` to start it.", "")
 		return

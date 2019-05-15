@@ -5,17 +5,16 @@ import (
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/filters"
-	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/utils"
 	"golang.org/x/net/context"
 )
 
 // getContainerState returns the state of a specified container
-func getContainerState(name string) (state string, err error) {
+func getContainerState(name, project string) (state string, err error) {
 	dcli := GetAPIClient()
 
 	filter := filters.NewArgs()
-	filter.Add("name", conf.GetConfig().Tokaido.Project.Name+"_"+name)
+	filter.Add("name", project+"_"+name)
 
 	containers, err := dcli.ContainerList(context.Background(), types.ContainerListOptions{
 		Filters: filter,

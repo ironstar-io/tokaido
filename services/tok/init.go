@@ -87,17 +87,17 @@ func Init(yes, statuscheck bool) {
 	}
 
 	// Check docker containers
-	ok := docker.StatusCheck("")
+	ok := docker.StatusCheck("", conf.GetConfig().Tokaido.Project.Name)
 	if !ok {
 		fmt.Println()
 		fmt.Println(Red("😓  Tokaido containers are not working properly"))
 
-		if !docker.StatusCheck("fpm") {
+		if !docker.StatusCheck("fpm", conf.GetConfig().Tokaido.Project.Name) {
 			fmt.Println(Red("    The Tokaido FPM container failed to start up."))
 			fmt.Println(Red("    This most likely suggests a problem with your Drupal site that is causing PHP to crash."))
 			fmt.Println()
 			fmt.Println(Sprintf(Cyan("    You can try running '%s' to see the full PHP startup log"), Blue("tok logs fpm")))
-		} else if !docker.StatusCheck("nginx") {
+		} else if !docker.StatusCheck("nginx", conf.GetConfig().Tokaido.Project.Name) {
 			fmt.Println(Red("    The Tokaido NGINX container failed to start up."))
 			fmt.Println(Red("    This is most likely caused by a Tokaido misconfiguration."))
 			fmt.Println()
