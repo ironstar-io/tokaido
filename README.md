@@ -3,9 +3,13 @@
 [![CircleCI](https://circleci.com/gh/ironstar-io/tokaido.svg?style=shield)](https://circleci.com/gh/ironstar-io/tokaido)
 [![GitHub license](https://img.shields.io/badge/license-BSD-blue.svg)](https://github.com/ironstar-io/tokaido)
 
-Tokaido is a Drupal environment manager for MacOS that _just works_.
+Tokaido is an automation platform for Drupal development environments on MacOS.
 
-It creates Drupal environments in seconds and requires no manual configuration for your Drupal site to work out-of-the-box.
+It streamlines the process of creating, managing, saving, and sharing local Drupal projects using Docker.
+
+With Tokaido, you can start new Drupal projects or launch production-grade local environments for existing projects in as little as 5 minutes.
+
+Tokaido provides a useful default configuration that makes it easy to get started, but offers progressively more advanced configuration options for power users.
 
 [Click here to watch our full demo video](https://www.youtube.com/watch?v=pxktV9zQUhM&lc=z23nhfs54myvifnwn04t1aokg1km2r2d2ts4lrdilt4xrk0h00410)
 
