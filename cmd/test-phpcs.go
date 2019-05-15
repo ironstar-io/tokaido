@@ -3,6 +3,7 @@ package cmd
 import (
 	"log"
 
+	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/initialize"
 	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/services/testing/phpcs"
@@ -21,7 +22,7 @@ var TestPhpcsCmd = &cobra.Command{
 
 		docker.HardCheckTokCompose()
 
-		ok := docker.StatusCheck("")
+		ok := docker.StatusCheck("", conf.GetConfig().Tokaido.Project.Name)
 		if !ok {
 			log.Fatalf("Tokaido containers must be running in order to start automated tests. Have you run `tok up`?")
 		}

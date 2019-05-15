@@ -132,7 +132,7 @@ func ExecWithExitCode(args []string) (err error) {
 // StatusCheck tests for containers 'running' state.
 // If one container is specified and true if that container is 'running'
 // If no container is specified, all containers must be 'running' or will return false
-func StatusCheck(container string) (ok bool) {
+func StatusCheck(container, project string) (ok bool) {
 	// List of containers to be checked when no single container is specifieds
 	cl := []string{"fpm", "nginx", "varnish", "haproxy", "syslog", "drush", "mysql"}
 
@@ -159,7 +159,7 @@ func StatusCheck(container string) (ok bool) {
 
 	// If the user specified a single container to check, only go for that one
 	if len(container) > 1 {
-		state, err := getContainerState(container)
+		state, err := getContainerState(container, project)
 		if err != nil {
 			panic(err)
 		}
@@ -173,7 +173,7 @@ func StatusCheck(container string) (ok bool) {
 	// The user didn't specify a container so we'll check them all
 	utils.DebugString("Checking container state for [" + strings.Join(cl, ",") + "]")
 	for _, v := range cl {
-		state, err := getContainerState(v)
+		state, err := getContainerState(v, project)
 		if state != "running" {
 			if err != nil {
 				utils.DebugErrOutput(err)
