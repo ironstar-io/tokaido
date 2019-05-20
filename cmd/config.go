@@ -13,7 +13,6 @@ var ConfigCmd = &cobra.Command{
 	Long:  "An interactive Tokaido config editor",
 	Run: func(cmd *cobra.Command, args []string) {
 		initialize.TokConfig("config")
-		conf.ValidProjectRoot()
 
 		conf.MainMenu()
 	},

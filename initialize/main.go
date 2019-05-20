@@ -19,6 +19,7 @@ import (
 
 // TokConfig - loads the config from a file if specified, otherwise from the environment
 func TokConfig(command string) {
+	conf.ValidProjectRoot()
 	createDotTok()
 	createGlobalDotTok()
 
