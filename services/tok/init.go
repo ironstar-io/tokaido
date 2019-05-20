@@ -2,6 +2,7 @@ package tok
 
 import (
 	"fmt"
+	"math/rand"
 	"os"
 	"path/filepath"
 	"strings"
@@ -86,6 +87,7 @@ func Init(yes, statuscheck bool) {
 	// console.SpinPersist(wo, "🚅", "Tokaido containers are online")
 
 	console.Println("🚅  Configuring your new Drupal environment", "")
+	surveyMessage()
 	// Perform post-launch configuration
 	drupal.ConfigureSSH()
 	xdebug.Configure()
@@ -152,6 +154,15 @@ func Init(yes, statuscheck bool) {
 	duration := time.Now().Sub(startTime)
 	telemetry.SendProject(startTime, int(duration.Seconds()))
 
+}
+
+// 1 in 6 chance of displaying survey message
+func surveyMessage() {
+	rand.Seed(time.Now().UnixNano())
+	n := rand.Intn(6-1) + 1
+	if n == 3 {
+		fmt.Println(Sprintf("    How's Tokaido? Run '%s' to share your feedback.", Bold("tok survey")))
+	}
 }
 
 // InitMessage ...
