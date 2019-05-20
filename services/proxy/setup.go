@@ -52,7 +52,7 @@ func ConfigureProjectNginx() {
 		return
 	}
 
-	pp := constants.HTTPSProtocol + h + ":" + constants.HaproxyInternalPort
+	pp := constants.HTTPSProtocol + h + ":" + string(constants.HaproxyInternalPort)
 
 	pn := conf.GetConfig().Tokaido.Project.Name
 	do := pn + `.` + constants.ProxyDomain

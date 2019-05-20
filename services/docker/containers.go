@@ -38,3 +38,44 @@ func getContainerState(name, project string) (state string, err error) {
 
 	return containers[0].State, nil
 }
+
+// GetContainers returns all containers for a project
+func GetContainers(project string) *[]types.Container {
+	dcli := GetAPIClient()
+
+	filter := filters.NewArgs()
+	filter.Add("name", project+"_")
+
+	containers, err := dcli.ContainerList(context.Background(), types.ContainerListOptions{
+		Filters: filter,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	return &containers
+}
+
+// GetContainer returns a docker Container object for the specified container, if it exists
+func GetContainer(name, project string) types.Container {
+	dcli := GetAPIClient()
+
+	filter := filters.NewArgs()
+	cn := project + "_" + name
+	filter.Add("name", cn)
+
+	containers, err := dcli.ContainerList(context.Background(), types.ContainerListOptions{
+		Filters: filter,
+	})
+	if err != nil {
+		utils.DebugString(fmt.Sprintf("Warning: received error retrieving container ["+cn+"]: %v", err))
+		return types.Container{}
+	}
+
+	if len(containers) != 1 {
+		return types.Container{}
+	}
+
+	return containers[0]
+
+}

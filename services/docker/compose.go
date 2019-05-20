@@ -133,29 +133,7 @@ func ExecWithExitCode(args []string) (err error) {
 // If one container is specified and true if that container is 'running'
 // If no container is specified, all containers must be 'running' or will return false
 func StatusCheck(container, project string) (ok bool) {
-	// List of containers to be checked when no single container is specifieds
-	cl := []string{"fpm", "nginx", "varnish", "haproxy", "syslog", "drush", "mysql"}
-
-	// Add additional optional containers to the checklist if they are in use
-	if conf.GetConfig().Services.Kishu.Enabled {
-		cl = append(cl, "kishu")
-	}
-
-	if conf.GetConfig().Services.Memcache.Enabled {
-		cl = append(cl, "memcache")
-	}
-
-	if conf.GetConfig().Services.Redis.Enabled {
-		cl = append(cl, "redis")
-	}
-
-	if conf.GetConfig().Services.Solr.Enabled {
-		cl = append(cl, "solr")
-	}
-
-	if conf.GetConfig().Global.Syncservice == "fusion" {
-		cl = append(cl, "sync")
-	}
+	cl := GetContainerList()
 
 	// If the user specified a single container to check, only go for that one
 	if len(container) > 1 {

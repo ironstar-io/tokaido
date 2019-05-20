@@ -3,6 +3,7 @@ package cmd
 import (
 	"github.com/ironstar-io/tokaido/initialize"
 	"github.com/ironstar-io/tokaido/services/docker"
+	"github.com/ironstar-io/tokaido/services/tok"
 	"github.com/ironstar-io/tokaido/utils"
 	"github.com/spf13/cobra"
 )
@@ -18,6 +19,6 @@ var PsCmd = &cobra.Command{
 
 		docker.HardCheckTokCompose()
 
-		docker.Ps()
+		tok.Ps()
 	},
 }

@@ -103,7 +103,8 @@ func EnableSolr(version string) []byte {
       - drupal
       - /opt/solr/server/solr/configsets/search-api-solr/
     labels:
-      io.tokaido.managed: local`)
+      io.tokaido.managed: local
+      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name)
 }
 
 // EnableRedis ...
@@ -114,7 +115,8 @@ func EnableRedis(version string) []byte {
     ports:
       - "6379"
     labels:
-      io.tokaido.managed: local`)
+      io.tokaido.managed: local
+      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name)
 }
 
 // EnableMailhog ...
@@ -126,7 +128,8 @@ func EnableMailhog(version string) []byte {
       - "1025"
       - "8025"
     labels:
-      io.tokaido.managed: local`)
+      io.tokaido.managed: local
+      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name)
 }
 
 // EnableAdminer ...
@@ -137,7 +140,8 @@ func EnableAdminer(version string) []byte {
     ports:
       - "8080"
     labels:
-      io.tokaido.managed: local`)
+      io.tokaido.managed: local
+      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name)
 }
 
 // EnableMemcache ...
@@ -146,6 +150,7 @@ func EnableMemcache(version string) []byte {
   memcache:
     labels:
       io.tokaido.managed: local
+      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
     image: memcached:` + version)
 }
 
@@ -263,12 +268,14 @@ services:
     restart: unless-stopped
     labels:
       io.tokaido.managed: local
+      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
   syslog:
     image: tokaido/syslog:stable
     volumes:
       - /tokaido/logs
     labels:
       io.tokaido.managed: local
+      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
   haproxy:
     user: "1005"
     image: tokaido/haproxy:stable
@@ -280,6 +287,7 @@ services:
       - nginx
     labels:
       io.tokaido.managed: local
+      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
   varnish:
     user: "1004"
     image: tokaido/varnish:stable
@@ -291,6 +299,7 @@ services:
       - syslog
     labels:
       io.tokaido.managed: local
+      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
   nginx:
     user: "1002"
     image: tokaido/nginx:stable
@@ -306,6 +315,7 @@ services:
       DRUPAL_ROOT: docroot
     labels:
       io.tokaido.managed: local
+      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
   fpm:
     user: "1001"
     image: tokaido/php71-fpm:stable
@@ -322,6 +332,7 @@ services:
       PHP_DISPLAY_ERRORS: "yes"
     labels:
       io.tokaido.managed: local
+      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
   mysql:
     image: mysql:5.7
     volumes_from:
@@ -338,6 +349,7 @@ services:
       MYSQL_ROOT_PASSWORD: tokaido
     labels:
       io.tokaido.managed: local
+      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
   drush:
     image: tokaido/admin71-heavy:stable
     hostname: 'tokaido'
@@ -354,6 +366,7 @@ services:
       PROJECT_NAME: tokaido
     labels:
       io.tokaido.managed: local
+      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
   kishu:
     image: tokaido/kishu:stable
     volumes:
@@ -362,6 +375,7 @@ services:
       DRUPAL_ROOT: docroot
     labels:
       io.tokaido.managed: local
+      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
 `)
 
 // ComposeTokDefaultsDockerVolume - Template byte array for `docker-compose.tok.yml`
@@ -374,6 +388,7 @@ services:
       - /tokaido/logs
     labels:
       io.tokaido.managed: local
+      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
   haproxy:
     user: "1005"
     image: tokaido/haproxy:stable
@@ -385,6 +400,7 @@ services:
       - nginx
     labels:
       io.tokaido.managed: local
+      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
   varnish:
     user: "1004"
     image: tokaido/varnish:stable
@@ -396,6 +412,7 @@ services:
       - syslog
     labels:
       io.tokaido.managed: local
+      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
   nginx:
     user: "1002"
     image: tokaido/nginx:stable
@@ -411,6 +428,7 @@ services:
       DRUPAL_ROOT: docroot
     labels:
       io.tokaido.managed: local
+      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
   fpm:
     user: "1001"
     image: tokaido/php71-fpm:stable
@@ -427,6 +445,7 @@ services:
       PHP_DISPLAY_ERRORS: "yes"
     labels:
       io.tokaido.managed: local
+      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
   mysql:
     image: mysql:5.7
     volumes_from:
@@ -443,6 +462,7 @@ services:
       MYSQL_ROOT_PASSWORD: tokaido
     labels:
       io.tokaido.managed: local
+      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
   drush:
     image: tokaido/admin71-heavy:stable
     hostname: 'tokaido'
@@ -459,4 +479,5 @@ services:
       PROJECT_NAME: tokaido
     labels:
       io.tokaido.managed: local
+      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
 `)
