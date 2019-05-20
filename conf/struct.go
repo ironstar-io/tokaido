@@ -6,10 +6,17 @@ type Project struct {
 	Path string `yaml:"path,omitempty"`
 }
 
+// Telemetry carries telemetry configuration settings
+type Telemetry struct {
+	Identifier string `yaml:"identifier"`
+	OptOut     bool   `yaml:"optout"`
+}
+
 // Global contains all our global config settings that are saved in ~/.tok/global.yml
 type Global struct {
 	Syncservice string    `yaml:"syncservice,omitempty"`
 	Projects    []Project `yaml:"projects,omitempty"`
+	Telemetry   Telemetry `yaml:"telemetry,omitempty"`
 }
 
 // Config the application's configuration
@@ -34,7 +41,8 @@ type Config struct {
 		Xdebug           bool   `yaml:"xdebug"`
 		Xdebugport       string `yaml:"xdebugport"`
 		Project          struct {
-			Name string `yaml:"name"`
+			Identifier string `yaml:"identifier"`
+			Name       string `yaml:"name"`
 		} `yaml:"project"`
 	} `yaml:"tokaido"`
 	Drupal struct {

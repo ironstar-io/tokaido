@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/ironstar-io/tokaido/services/drupal"
+	"github.com/ironstar-io/tokaido/services/telemetry"
 	"github.com/spf13/cobra"
 )
 
@@ -11,6 +12,7 @@ var HashCmd = &cobra.Command{
 	Short: "Returns a valid Drupal Hash Salt",
 	Long:  "Hash simply generates and returns Drupal hash salt. It is not saved anywhere",
 	Run: func(cmd *cobra.Command, args []string) {
+		telemetry.SendCommand("hash")
 		drupal.Hash()
 	},
 }

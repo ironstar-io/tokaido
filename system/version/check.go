@@ -50,7 +50,7 @@ func Check() {
 }
 
 func getLatestVersion() (ver, url string, err error) {
-	req, err := http.NewRequest(http.MethodGet, "https://releases.tokaido.io/latest", nil)
+	req, err := http.NewRequest(http.MethodGet, "https://api.tokaido.io/v1/release/latest", nil)
 	if err != nil {
 		return "", "", err
 	}

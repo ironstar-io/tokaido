@@ -4,6 +4,7 @@ import (
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/initialize"
 	"github.com/ironstar-io/tokaido/services/docker"
+	"github.com/ironstar-io/tokaido/services/telemetry"
 	"github.com/ironstar-io/tokaido/services/unison"
 	"github.com/ironstar-io/tokaido/utils"
 	"github.com/spf13/cobra"
@@ -16,6 +17,7 @@ var StopCmd = &cobra.Command{
 	Long:  "Gracefully stop/pause your Tokaido environment. Restart with `tok up`",
 	Run: func(cmd *cobra.Command, args []string) {
 		initialize.TokConfig("stop")
+		telemetry.SendCommand("stop")
 		utils.CheckCmdHard("docker-compose")
 
 		docker.HardCheckTokCompose()

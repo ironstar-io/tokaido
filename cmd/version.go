@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/ironstar-io/tokaido/services/telemetry"
 	"github.com/ironstar-io/tokaido/system/version"
 
 	"fmt"
@@ -14,6 +15,7 @@ var VersionCmd = &cobra.Command{
 	Short: "Print Tokdaido version information",
 	Long:  "Print Tokdaido version information including 'Build Date', 'Compiler' and 'Platform'",
 	Run: func(cmd *cobra.Command, args []string) {
+		telemetry.SendCommand("version")
 		info := version.Get()
 
 		fmt.Println(`

@@ -3,6 +3,7 @@ package cmd
 import (
 	"github.com/ironstar-io/tokaido/initialize"
 	"github.com/ironstar-io/tokaido/services/docker"
+	"github.com/ironstar-io/tokaido/services/telemetry"
 	"github.com/ironstar-io/tokaido/utils"
 	"github.com/spf13/cobra"
 )
@@ -14,6 +15,7 @@ var LogsCmd = &cobra.Command{
 	Long:  "Output container logs to the console for all or a single container. Example: tok logs fpm",
 	Run: func(cmd *cobra.Command, args []string) {
 		initialize.TokConfig("logs")
+		telemetry.SendCommand("logs")
 		utils.CheckCmdHard("docker-compose")
 
 		docker.HardCheckTokCompose()

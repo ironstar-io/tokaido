@@ -4,6 +4,7 @@ import (
 	"github.com/ironstar-io/tokaido/initialize"
 	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/services/snapshots"
+	"github.com/ironstar-io/tokaido/services/telemetry"
 	"github.com/ironstar-io/tokaido/utils"
 	"github.com/spf13/cobra"
 )
@@ -17,6 +18,7 @@ var SnapshotCmd = &cobra.Command{
 	Long:  "Create, restore, database snapshots saved to .tok/local/snapshots. These can be created by Tokaido, or saved SQL dumps from somewhere else.",
 	Run: func(cmd *cobra.Command, args []string) {
 		initialize.TokConfig("tokaido")
+		telemetry.SendCommand("snapshot")
 		utils.CheckCmdHard("docker-compose")
 
 		docker.HardCheckTokCompose()
@@ -32,6 +34,7 @@ var SnapshotNewCmd = &cobra.Command{
 	Long:  "Creates a new database snapshot and saves it to .tok/local/snapshots with the current UTC date",
 	Run: func(cmd *cobra.Command, args []string) {
 		initialize.TokConfig("tokaido")
+		telemetry.SendCommand("snapshot/new")
 		utils.CheckCmdHard("docker-compose")
 
 		docker.HardCheckTokCompose()
@@ -47,6 +50,7 @@ var SnapshotListCmd = &cobra.Command{
 	Long:  "Lists all snapshots with their current ID",
 	Run: func(cmd *cobra.Command, args []string) {
 		initialize.TokConfig("tokaido")
+		telemetry.SendCommand("snapshot/list")
 		utils.CheckCmdHard("docker-compose")
 
 		docker.HardCheckTokCompose()
@@ -63,6 +67,7 @@ var SnapshotDeleteCmd = &cobra.Command{
 	Args:  cobra.MaximumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		initialize.TokConfig("tokaido")
+		telemetry.SendCommand("snapshot/delete")
 		utils.CheckCmdHard("docker-compose")
 
 		docker.HardCheckTokCompose()
@@ -79,6 +84,7 @@ var SnapshotRestoreCmd = &cobra.Command{
 	Args:  cobra.MaximumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		initialize.TokConfig("tokaido")
+		telemetry.SendCommand("snapshot/restore")
 		utils.CheckCmdHard("docker-compose")
 
 		docker.HardCheckTokCompose()

@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/ironstar-io/tokaido/services/telemetry"
 	"github.com/spf13/cobra"
 )
 
@@ -12,6 +13,7 @@ var SyncCmd = &cobra.Command{
 	Short: "Perform a one-time sync of your Tokaido environment and local host",
 	Long:  "Perform a one-time sync of your Tokaido environment and local host",
 	Run: func(cmd *cobra.Command, args []string) {
+		telemetry.SendCommand("sync")
 		fmt.Println(`
 🛠   This command was deprecated in Tokaido 1.6.0.
 

@@ -3,6 +3,7 @@ package cmd
 import (
 	"github.com/ironstar-io/tokaido/initialize"
 	"github.com/ironstar-io/tokaido/services/docker"
+	"github.com/ironstar-io/tokaido/services/telemetry"
 	"github.com/ironstar-io/tokaido/system/ssh"
 	"github.com/ironstar-io/tokaido/utils"
 	"github.com/spf13/cobra"
@@ -16,6 +17,7 @@ var ExecCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		initialize.TokConfig("exec")
 		utils.CheckCmdHard("docker-compose")
+		telemetry.SendCommand("exec")
 
 		docker.HardCheckTokCompose()
 

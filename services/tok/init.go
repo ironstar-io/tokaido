@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/services/docker"
@@ -12,6 +13,7 @@ import (
 	"github.com/ironstar-io/tokaido/services/git"
 	"github.com/ironstar-io/tokaido/services/proxy"
 	"github.com/ironstar-io/tokaido/services/snapshots"
+	"github.com/ironstar-io/tokaido/services/telemetry"
 	"github.com/ironstar-io/tokaido/services/tok/goos"
 	"github.com/ironstar-io/tokaido/services/xdebug"
 	"github.com/ironstar-io/tokaido/system/console"
@@ -30,6 +32,8 @@ func Init(yes, statuscheck bool) {
 	if yes {
 		cs = "FORCE"
 	}
+
+	startTime := time.Now().UTC()
 
 	// System readiness checks
 	version.Check()
@@ -54,6 +58,12 @@ func Init(yes, statuscheck bool) {
 	pr := fs.ProjectRoot()
 	name := strings.Replace(filepath.Base(pr), ".", "", -1)
 	conf.RegisterProject(name, pr)
+
+	// Telemetry actions
+	telemetry.GenerateProjectID()
+	telemetry.RequestOptIn()
+	telemetry.SendGlobal()
+	telemetry.SendProject(startTime, 0)
 
 	docker.CreateComposerCacheVolume()
 
@@ -137,6 +147,10 @@ func Init(yes, statuscheck bool) {
 			fmt.Println()
 		}
 	}
+
+	// Send a final telemetry
+	duration := time.Now().Sub(startTime)
+	telemetry.SendProject(startTime, int(duration.Seconds()))
 
 }
 

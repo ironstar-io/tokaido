@@ -37,6 +37,7 @@ func init() {
 	rootCmd.AddCommand(SnapshotCmd)
 	rootCmd.AddCommand(StatusCmd)
 	rootCmd.AddCommand(StopCmd)
+	rootCmd.AddCommand(SurveyCmd)
 	rootCmd.AddCommand(SyncCmd)
 	rootCmd.AddCommand(SyscheckCmd)
 	rootCmd.AddCommand(TestCmd)

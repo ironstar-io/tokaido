@@ -6,6 +6,7 @@ import (
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/initialize"
 	"github.com/ironstar-io/tokaido/services/docker"
+	"github.com/ironstar-io/tokaido/services/telemetry"
 	"github.com/ironstar-io/tokaido/services/testing/phpcs"
 	"github.com/ironstar-io/tokaido/utils"
 	"github.com/spf13/cobra"
@@ -18,6 +19,7 @@ var TestPhpcbfCmd = &cobra.Command{
 	Long:  "Run the PHPCodeSniffer linter and attempt to fix automatically",
 	Run: func(cmd *cobra.Command, args []string) {
 		initialize.TokConfig("test")
+		telemetry.SendCommand("test:phpcbf")
 		utils.CheckCmdHard("docker-compose")
 
 		docker.HardCheckTokCompose()
