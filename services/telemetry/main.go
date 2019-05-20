@@ -59,7 +59,7 @@ The data we collect can not be used to identify you and will never be sold, lice
 transferred to a third party. We commit to sharing summary reports on this data (but not
 the raw data itself) with the community to help us all understand how Drupal is used.
 
-You can learn more and read our privacy policy at https://tokaido.io/anonymous-usage-data
+You can learn more and read our privacy policy at https://docs.tokaido.io/tokaido/usage-data
 
 Would you like to opt-in to sending anonymous usage data?`, "n")
 
