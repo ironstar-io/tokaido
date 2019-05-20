@@ -44,6 +44,11 @@ func SetConfigValueByArgs(args []string, configType string) {
 		// These values must not be written to the project config file so we reset them to nil or empty
 		runningConfig.Global.Syncservice = ""
 		runningConfig.Global.Projects = nil
+		runningConfig.Global.Telemetry = Telemetry{}
+
+		// Stop our debug flag from leaking into project config
+		emptyDebug := new(bool)
+		runningConfig.Tokaido.Debug = *emptyDebug
 	}
 
 	writeConfig(runningConfig, configPath)
@@ -164,7 +169,16 @@ func DeregisterProject(name string) {
 	}
 
 	// Write the updated global config back to file
-	newMarhsalled, err := yaml.Marshal(gc)
+	WriteGlobalConfig(*gc)
+
+}
+
+// WriteGlobalConfig overwrites the existing global.yml with the supplied config
+func WriteGlobalConfig(ng Global) {
+	gcPath := getConfigPath("global")
+
+	// Marhsal the supplied global config into yaml
+	newMarhsalled, err := yaml.Marshal(ng)
 	if err != nil {
 		log.Fatalf("There was a fatal issue updating your global config file\n%v", err)
 	}
@@ -189,7 +203,6 @@ func compareFiles(original []byte, newPath string) {
 		return
 	}
 
-	fmt.Println("Config updated successfully")
 }
 
 func unmarshalConfig(cp string) *Config {

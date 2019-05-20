@@ -12,6 +12,7 @@ import (
 	"github.com/ironstar-io/tokaido/services/git"
 	"github.com/ironstar-io/tokaido/services/proxy"
 	"github.com/ironstar-io/tokaido/services/snapshots"
+	"github.com/ironstar-io/tokaido/services/telemetry"
 	"github.com/ironstar-io/tokaido/services/tok/goos"
 	"github.com/ironstar-io/tokaido/services/xdebug"
 	"github.com/ironstar-io/tokaido/system/console"
@@ -54,6 +55,12 @@ func Init(yes, statuscheck bool) {
 	pr := fs.ProjectRoot()
 	name := strings.Replace(filepath.Base(pr), ".", "", -1)
 	conf.RegisterProject(name, pr)
+
+	// Telemetry actions
+	telemetry.GenerateProjectID()
+	telemetry.RequestOptIn()
+	telemetry.SendGlobal()
+	telemetry.SendProject()
 
 	docker.CreateComposerCacheVolume()
 
