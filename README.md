@@ -1,7 +1,9 @@
 # 🚅 Tokaido by Ironstar
 
-[![CircleCI](https://circleci.com/gh/ironstar-io/tokaido.svg?style=shield)](https://circleci.com/gh/ironstar-io/tokaido)
-[![GitHub license](https://img.shields.io/badge/license-BSD-blue.svg)](https://github.com/ironstar-io/tokaido)
+[![Release](https://img.shields.io/github/release/ironstar-io/tokaido.svg?style=flat-square)](https://github.com/ironstar-io/tokaido/releases)
+[![CircleCI](https://img.shields.io/circleci/project/github/ironstar-io/tokaido/develop.svg?style=flat-square)](https://circleci.com/gh/ironstar-io/tokaido)
+[![GitHub license](https://img.shields.io/badge/license-BSD-blue.svg?style=flat-square)](https://github.com/ironstar-io/tokaido/blob/develop/LICENSE)
+[![Goreportcard](https://goreportcard.com/badge/github.com/ironstar-io/tokaido?style=flat-square)](https://goreportcard.com/report/github.com/ironstar-io/tokaido)
 
 Tokaido is an automation platform for Drupal development environments on MacOS.
 
