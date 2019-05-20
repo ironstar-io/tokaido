@@ -110,14 +110,14 @@ func SendGlobal() {
 
 	data, err := json.Marshal(checkin)
 	if err != nil {
-		fmt.Println("[warning] Could not prepare global telemetry data: ", err.Error())
+		utils.DebugString(fmt.Sprintf("[warning] Could not prepare global telemetry data: %v", err.Error()))
 		return
 	}
 
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(data))
 	req.Header.Set("Content-Type", "application/json")
 	if err != nil {
-		fmt.Println("[warning] Could not prepare global telemetry data: ", err.Error())
+		utils.DebugString(fmt.Sprintf("[warning] Could not prepare global telemetry data: %v", err.Error()))
 		return
 	}
 
@@ -126,7 +126,7 @@ func SendGlobal() {
 	}
 	resp, err := client.Do(req)
 	if err != nil {
-		fmt.Println("[warning] Could not POST global telemetry data: ", err.Error())
+		utils.DebugString(fmt.Sprintf("[warning] Could not POST global telemetry data: %v", err.Error()))
 		return
 	}
 	defer resp.Body.Close()
@@ -145,23 +145,29 @@ func SendProject(startTime time.Time, duration int) {
 		return
 	}
 
+	if len(c.Global.Telemetry.Identifier) < 1 {
+		utils.DebugString("unable to send command telemetry data because the global identifier is missing")
+		return
+	}
+
 	if len(c.Tokaido.Project.Identifier) < 1 {
-		utils.DebugString("unable to send project telemetry data because the project identifier is missing")
+		utils.DebugString("unable to send command telemetry data because the project identifier is missing")
+		return
 	}
 
 	checkin := tsurumi.DrupalProjectCheckin{
-		TelemetryID:    c.Global.Telemetry.Identifier,
-		Timestamp:      startTime,
-		PhpVersion:     c.Tokaido.Phpversion,
-		Mailhog:        c.Services.Mailhog.Enabled,
-		Adminer:        c.Services.Adminer.Enabled,
-		Solr:           c.Services.Solr.Enabled,
-		Redis:          c.Services.Redis.Enabled,
-		Memcache:       c.Services.Memcache.Enabled,
-		Stability:      c.Tokaido.Stability,
-		DrupalVersion:  c.Drupal.Majorversion,
-		PHPMemory:      c.Fpm.Phpmemorylimit,
-		StartupSeconds: duration,
+		TelemetryID:   c.Global.Telemetry.Identifier,
+		Timestamp:     startTime,
+		PhpVersion:    c.Tokaido.Phpversion,
+		Mailhog:       c.Services.Mailhog.Enabled,
+		Adminer:       c.Services.Adminer.Enabled,
+		Solr:          c.Services.Solr.Enabled,
+		Redis:         c.Services.Redis.Enabled,
+		Memcache:      c.Services.Memcache.Enabled,
+		Stability:     c.Tokaido.Stability,
+		DrupalVersion: c.Drupal.Majorversion,
+		PHPMemory:     c.Fpm.Phpmemorylimit,
+		Duration:      duration,
 	}
 
 	url := "https://api.tokaido.io/v1/project/drupal/checkin/" + c.Tokaido.Project.Identifier
@@ -169,14 +175,14 @@ func SendProject(startTime time.Time, duration int) {
 
 	data, err := json.Marshal(checkin)
 	if err != nil {
-		fmt.Println("[warning] Could not prepare project telemetry data: ", err.Error())
+		utils.DebugString(fmt.Sprintf("[warning] Could not prepare project telemetry data: %v", err.Error()))
 		return
 	}
 
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(data))
 	req.Header.Set("Content-Type", "application/json")
 	if err != nil {
-		fmt.Println("[warning] Could not prepare project telemetry data: ", err.Error())
+		utils.DebugString(fmt.Sprintf("[warning] Could not prepare command telemetry data: %v", err.Error()))
 		return
 	}
 
@@ -185,10 +191,53 @@ func SendProject(startTime time.Time, duration int) {
 	}
 	resp, err := client.Do(req)
 	if err != nil {
-		fmt.Println("[warning] Could not POST project telemetry data: ", err.Error())
+		utils.DebugString(fmt.Sprintf("[warning] Could not POST project telemetry data: %v", err.Error()))
 		return
 	}
 	defer resp.Body.Close()
 	utils.DebugString("received project checkin response to: " + strconv.Itoa(resp.StatusCode) + " " + resp.Status)
+
+}
+
+// SendCommand posts that a command was executed
+func SendCommand(command string) {
+	c := conf.GetConfig()
+
+	if c.Global.Telemetry.OptOut {
+		return
+	}
+
+	checkin := tsurumi.CommandCheckin{
+		TelemetryID: c.Global.Telemetry.Identifier,
+		ProjectID:   c.Tokaido.Project.Identifier,
+		Command:     command,
+	}
+
+	url := "https://api.tokaido.io/v1/command/checkin/" + command
+	utils.DebugString("sending command checkin to: " + url)
+
+	data, err := json.Marshal(checkin)
+	if err != nil {
+		utils.DebugString(fmt.Sprintf("[warning] Could not prepare command telemetry data: %v", err.Error()))
+		return
+	}
+
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(data))
+	req.Header.Set("Content-Type", "application/json")
+	if err != nil {
+		utils.DebugString(fmt.Sprintf("[warning] Could not prepare command telemetry data: %v", err.Error()))
+		return
+	}
+
+	client := &http.Client{
+		Timeout: time.Duration(3 * time.Second),
+	}
+	resp, err := client.Do(req)
+	if err != nil {
+		utils.DebugString(fmt.Sprintf("[warning] Could not POST command telemetry data: %v", err.Error()))
+		return
+	}
+	defer resp.Body.Close()
+	utils.DebugString("received command checkin response to: " + strconv.Itoa(resp.StatusCode) + " " + resp.Status)
 
 }

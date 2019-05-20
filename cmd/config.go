@@ -3,6 +3,7 @@ package cmd
 import (
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/initialize"
+	"github.com/ironstar-io/tokaido/services/telemetry"
 	"github.com/spf13/cobra"
 )
 
@@ -14,6 +15,7 @@ var ConfigCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		initialize.TokConfig("config")
 		conf.ValidProjectRoot()
+		telemetry.SendCommand("config")
 
 		conf.MainMenu()
 	},

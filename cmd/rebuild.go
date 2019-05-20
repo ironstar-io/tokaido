@@ -4,6 +4,7 @@ import (
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/initialize"
 	"github.com/ironstar-io/tokaido/services/docker"
+	"github.com/ironstar-io/tokaido/services/telemetry"
 	"github.com/ironstar-io/tokaido/services/tok"
 	"github.com/ironstar-io/tokaido/services/unison"
 	"github.com/ironstar-io/tokaido/utils"
@@ -17,6 +18,7 @@ var RebuildCmd = &cobra.Command{
 	Long:  "Rebuilds your Tokaido environmnet",
 	Run: func(cmd *cobra.Command, args []string) {
 		initialize.TokConfig("stop")
+		telemetry.SendCommand("rebuild")
 		utils.CheckCmdHard("docker-compose")
 
 		docker.Stop()

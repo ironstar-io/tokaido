@@ -4,6 +4,7 @@ import (
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/initialize"
 	"github.com/ironstar-io/tokaido/services/docker"
+	"github.com/ironstar-io/tokaido/services/telemetry"
 	"github.com/ironstar-io/tokaido/services/tok"
 	"github.com/ironstar-io/tokaido/utils"
 	"github.com/spf13/cobra"
@@ -17,6 +18,7 @@ var DestroyCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		initialize.TokConfig("destroy")
 		utils.CheckCmdHard("docker-compose")
+		telemetry.SendCommand("destroy")
 
 		docker.HardCheckTokCompose()
 
