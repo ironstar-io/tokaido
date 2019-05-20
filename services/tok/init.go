@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/services/docker"
@@ -31,6 +32,8 @@ func Init(yes, statuscheck bool) {
 	if yes {
 		cs = "FORCE"
 	}
+
+	startTime := time.Now().UTC()
 
 	// System readiness checks
 	version.Check()
@@ -60,7 +63,7 @@ func Init(yes, statuscheck bool) {
 	telemetry.GenerateProjectID()
 	telemetry.RequestOptIn()
 	telemetry.SendGlobal()
-	telemetry.SendProject()
+	telemetry.SendProject(startTime, 0)
 
 	docker.CreateComposerCacheVolume()
 
@@ -144,6 +147,10 @@ func Init(yes, statuscheck bool) {
 			fmt.Println()
 		}
 	}
+
+	// Send a final telemetry
+	duration := time.Now().Sub(startTime)
+	telemetry.SendProject(startTime, int(duration.Seconds()))
 
 }
 

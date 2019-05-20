@@ -66,9 +66,9 @@ func RequestOptIn() {
 	confirmation := utils.ConfirmationPrompt(`
 To help us improve Tokaido, you can opt-in to sending anonymous usage data.
 
-The data we collect can not be used to identify you and will never be sold or licensed to
-a third party. It simply helps us to see how Tokaido is used so we can target our limited
-development resources in the right areas.
+The data we collect can not be used to identify you and will never be sold, licensed, or
+transferred to a third party. We commit to sharing summary reports on this data (but not
+the raw data itself) with the community to help us all understand how Drupal is used.
 
 You can learn more and read our privacy policy at https://tokaido.io/anonymous-usage-data
 
@@ -136,7 +136,9 @@ func SendGlobal() {
 }
 
 // SendProject posts the  current project telemetry info
-func SendProject() {
+// startTime is used to record the startup time and tags the checkin
+// duration is how long Tokaido took to complete a successful startup
+func SendProject(startTime time.Time, duration int) {
 	c := conf.GetConfig()
 
 	if c.Global.Telemetry.OptOut {
@@ -148,16 +150,18 @@ func SendProject() {
 	}
 
 	checkin := tsurumi.DrupalProjectCheckin{
-		TelemetryID:   c.Global.Telemetry.Identifier,
-		PhpVersion:    c.Tokaido.Phpversion,
-		Mailhog:       c.Services.Mailhog.Enabled,
-		Adminer:       c.Services.Adminer.Enabled,
-		Solr:          c.Services.Solr.Enabled,
-		Redis:         c.Services.Redis.Enabled,
-		Memcache:      c.Services.Memcache.Enabled,
-		Stability:     c.Tokaido.Stability,
-		DrupalVersion: c.Drupal.Majorversion,
-		PHPMemory:     c.Fpm.Phpmemorylimit,
+		TelemetryID:    c.Global.Telemetry.Identifier,
+		Timestamp:      startTime,
+		PhpVersion:     c.Tokaido.Phpversion,
+		Mailhog:        c.Services.Mailhog.Enabled,
+		Adminer:        c.Services.Adminer.Enabled,
+		Solr:           c.Services.Solr.Enabled,
+		Redis:          c.Services.Redis.Enabled,
+		Memcache:       c.Services.Memcache.Enabled,
+		Stability:      c.Tokaido.Stability,
+		DrupalVersion:  c.Drupal.Majorversion,
+		PHPMemory:      c.Fpm.Phpmemorylimit,
+		StartupSeconds: duration,
 	}
 
 	url := "https://api.tokaido.io/v1/project/drupal/checkin/" + c.Tokaido.Project.Identifier
