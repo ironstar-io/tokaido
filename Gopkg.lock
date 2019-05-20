@@ -228,6 +228,14 @@
   version = "v1.0"
 
 [[projects]]
+  branch = "master"
+  digest = "1:8ef281fe382a245e799cfe1b2e0f1e9d31835e7e7b6aaef66cbe0f165d8a4277"
+  name = "github.com/ironstar-io/telemetry"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "8244bec954bfc80eaaa1ac0b0fe880ac77885059"
+
+[[projects]]
   digest = "1:abb6572474aa961d2aa78aabf5aaa96cf623db17eb690e4dd1714611de999618"
   name = "github.com/jmhodges/clock"
   packages = ["."]
@@ -512,6 +520,14 @@
   version = "v1.1.0"
 
 [[projects]]
+  digest = "1:274f67cb6fed9588ea2521ecdac05a6d62a8c51c074c1fccc6a49a40ba80e925"
+  name = "github.com/satori/go.uuid"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "f58768cc1a7a7e77a3bd49e98cdd21419399b6a3"
+  version = "v1.2.0"
+
+[[projects]]
   digest = "1:fd61cf4ae1953d55df708acb6b91492d538f49c305b364a014049914495db426"
   name = "github.com/sirupsen/logrus"
   packages = ["."]
@@ -711,6 +727,7 @@
     "github.com/google/certificate-transparency-go/jsonclient",
     "github.com/google/certificate-transparency-go/tls",
     "github.com/google/certificate-transparency-go/x509",
+    "github.com/ironstar-io/telemetry",
     "github.com/jmhodges/clock",
     "github.com/jmoiron/sqlx",
     "github.com/kisielk/sqlstruct",
@@ -725,6 +742,7 @@
     "github.com/onsi/gomega",
     "github.com/ryanuber/columnize",
     "github.com/sanity-io/litter",
+    "github.com/satori/go.uuid",
     "github.com/spf13/cobra",
     "github.com/spf13/viper",
     "github.com/stretchr/testify/assert",

@@ -23,11 +23,7 @@ func GenerateTelemetryID() {
 		return
 	}
 
-	uuid, err := uuid.NewV4()
-	if err != nil {
-		panic(err)
-	}
-	c.Global.Telemetry.Identifier = uuid.String()
+	c.Global.Telemetry.Identifier = uuid.NewV4().String()
 
 	conf.WriteGlobalConfig(c.Global)
 }
@@ -41,12 +37,7 @@ func GenerateProjectID() {
 		return
 	}
 
-	uuid, err := uuid.NewV4()
-	if err != nil {
-		panic(err)
-	}
-
-	conf.SetConfigValueByArgs([]string{"tokaido", "project", "identifier", uuid.String()}, "project")
+	conf.SetConfigValueByArgs([]string{"tokaido", "project", "identifier", uuid.NewV4().String()}, "project")
 }
 
 // RequestOptIn will prompt the user to opt-in to telemetry if they haven't previously opted out
