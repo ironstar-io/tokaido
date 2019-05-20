@@ -9,14 +9,12 @@ import (
 	"strconv"
 	"time"
 
+	tsurumi "github.com/ironstar-io/telemetry"
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/system/version"
 	"github.com/ironstar-io/tokaido/utils"
-	tsurumi "github.com/ironstar-io/tsurumi/pkg/telemetry"
 	uuid "github.com/satori/go.uuid"
 )
-
-// getTelemetryID will return the telemetry id if it exists, or create one if it does not
 
 // GenerateTelemetryID will generate a unique telemetry ID and save it to global config
 func GenerateTelemetryID() {
