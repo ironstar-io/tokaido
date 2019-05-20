@@ -44,5 +44,5 @@
   version = "v1.2.0"
 
 [[constraint]]
-  name = "github.com/ironstar-io/telemetry"
-  branch = "master"
+  name = "gopkg.in/AlecAivazis/survey.v1"
+  version = "v1.8.4"

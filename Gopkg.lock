@@ -228,12 +228,12 @@
   version = "v1.0"
 
 [[projects]]
-  branch = "master"
-  digest = "1:8ef281fe382a245e799cfe1b2e0f1e9d31835e7e7b6aaef66cbe0f165d8a4277"
+  digest = "1:c4c20ee60f79950d3fbc699ad57d2f92b20dff0e307b499bfd832eb5db749da5"
   name = "github.com/ironstar-io/telemetry"
   packages = ["."]
   pruneopts = "UT"
-  revision = "8244bec954bfc80eaaa1ac0b0fe880ac77885059"
+  revision = "1c15a16e7802782d00bb7fa2413d09392c6b0780"
+  version = "v1.0"
 
 [[projects]]
   digest = "1:abb6572474aa961d2aa78aabf5aaa96cf623db17eb690e4dd1714611de999618"
@@ -272,6 +272,14 @@
   packages = ["."]
   pruneopts = "UT"
   revision = "ae77be60afb1dcacde03767a8c37337fad28ac14"
+
+[[projects]]
+  branch = "master"
+  digest = "1:400e113a367b511b9b09ca642ee11d9885485a93838526d697033af334a2fdde"
+  name = "github.com/kballard/go-shellquote"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "95032a82bc518f77982ea72343cc1ade730072f0"
 
 [[projects]]
   branch = "master"
@@ -387,6 +395,14 @@
   pruneopts = "UT"
   revision = "25ecb14adfc7543176f7d85291ec7dba82c6f7e4"
   version = "v1.9.0"
+
+[[projects]]
+  branch = "master"
+  digest = "1:2b32af4d2a529083275afc192d1067d8126b578c7a9613b26600e4df9c735155"
+  name = "github.com/mgutz/ansi"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "9520e82c474b0a04dd04f8a40959027271bab992"
 
 [[projects]]
   digest = "1:78bbb1ba5b7c3f2ed0ea1eab57bdd3859aec7e177811563edc41198a760b06af"
@@ -699,6 +715,18 @@
   version = "v1.20.1"
 
 [[projects]]
+  digest = "1:dcc9a8960eeca11b8b988d502776ae2e5d394262eefdcf6392026101bc6bd2b2"
+  name = "gopkg.in/AlecAivazis/survey.v1"
+  packages = [
+    ".",
+    "core",
+    "terminal",
+  ]
+  pruneopts = "UT"
+  revision = "7cbcdead7f38aefeda49da82a8ec69910154b154"
+  version = "v1.8.4"
+
+[[projects]]
   digest = "1:342378ac4dcb378a5448dd723f0784ae519383532f5e70ade24132c4c8693202"
   name = "gopkg.in/yaml.v2"
   packages = ["."]
@@ -752,6 +780,7 @@
     "golang.org/x/crypto/ssh",
     "golang.org/x/net/context",
     "golang.org/x/sys/unix",
+    "gopkg.in/AlecAivazis/survey.v1",
     "gopkg.in/yaml.v2",
   ]
   solver-name = "gps-cdcl"
