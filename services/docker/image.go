@@ -6,7 +6,7 @@ import (
 
 // PullImages - Pull all images in compose file
 func PullImages() {
-	ComposeStdout("pull")
+	ComposeStreamStdout("pull")
 }
 
 // ImageExists - Check if an image exists

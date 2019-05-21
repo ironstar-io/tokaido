@@ -18,6 +18,13 @@ func ComposeStdout(args ...string) {
 	utils.StdoutCmd("docker-compose", composeParams...)
 }
 
+// ComposeStreamStdout - Convenience method for docker-compose shell commands
+func ComposeStreamStdout(args ...string) {
+	composeParams := composeArgs(args...)
+
+	utils.StdoutStreamCmd("docker-compose", composeParams...)
+}
+
 // ComposeResult - Convenience method for docker-compose shell commands returning a result
 func ComposeResult(args ...string) string {
 	composeParams := composeArgs(args...)
