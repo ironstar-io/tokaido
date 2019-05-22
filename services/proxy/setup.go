@@ -2,6 +2,7 @@ package proxy
 
 import (
 	"log"
+	"strconv"
 
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/constants"
@@ -52,7 +53,7 @@ func ConfigureProjectNginx() {
 		return
 	}
 
-	pp := constants.HTTPSProtocol + h + ":" + string(constants.HaproxyInternalPort)
+	pp := constants.HTTPSProtocol + h + ":" + strconv.Itoa(constants.HaproxyInternalPort)
 
 	pn := conf.GetConfig().Tokaido.Project.Name
 	do := pn + `.` + constants.ProxyDomain

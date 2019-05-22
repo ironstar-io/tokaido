@@ -2,6 +2,7 @@ package conf
 
 import (
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"reflect"
@@ -41,6 +42,18 @@ func GetProjectPath() (path string) {
 	}
 
 	panic("Unexpected error resolving this project's path in the global config file")
+}
+
+// GetGlobalProjectSettings returns the current global conf object for the current project
+func GetGlobalProjectSettings() (*Project, error) {
+	c := GetConfig()
+	for _, v := range c.Global.Projects {
+		if v.Name == c.Tokaido.Project.Name {
+			return &v, nil
+		}
+	}
+
+	return &Project{}, fmt.Errorf("unable to find global project configuration")
 }
 
 // GetConfigValueByArgs - Get a config value based on the arguments sent from the command line

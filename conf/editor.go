@@ -159,6 +159,10 @@ func MainMenu() {
 
 // TokaidoMenu is exposes Tokaido-level config settings
 func TokaidoMenu() {
+	gprj, err := GetGlobalProjectSettings()
+	if err != nil {
+		panic(err)
+	}
 	menu := []ConfigGenericString{
 		{
 			Name:    "Use Custom Compose File",
@@ -176,7 +180,7 @@ func TokaidoMenu() {
 		},
 		{
 			Name:    "PHP Version",
-			Default: "7.1",
+			Default: "7.2",
 			Type:    "value",
 			Current: GetConfig().Tokaido.Phpversion,
 			Detail:  "Use the latest version of PHP 7.1 or 7.2 when this version of Tokaido was compiled",
@@ -185,14 +189,14 @@ func TokaidoMenu() {
 			Name:    "PHP XDebug Support",
 			Default: "false",
 			Type:    "value",
-			Current: strconv.FormatBool(GetConfig().Tokaido.Xdebug),
+			Current: strconv.FormatBool(gprj.Xdebug.Enabled),
 			Detail:  "Set to 'true' to enable Xdebug support in the FPM and Admin containers",
 		},
 		{
-			Name:    "PHP XDebug Port",
+			Name:    "PHP FPM XDebug Port",
 			Default: "9000",
 			Type:    "value",
-			Current: GetConfig().Tokaido.Xdebugport,
+			Current: strconv.Itoa(gprj.Xdebug.FpmPort),
 			Detail:  "Set to port number your IDE is listening for incoming Xdebug connections for this project",
 		},
 		{
@@ -268,19 +272,17 @@ Current Setting: [{{ .Current | green }}]
 	case 2:
 		TokaidoPhpversionMenu()
 	case 3:
-		if GetConfig().Tokaido.Xdebug == true {
-			SetConfigValueByArgs([]string{"tokaido", "xdebug", "false"}, "project")
+		if gprj.Xdebug.Enabled == true {
+			SetGlobalConfigValueByArgs([]string{"global", "project", "xdebug", "enabled", "false"})
+			// SetConfigValueByArgs([]string{"tokaido", "xdebug", "false"}, "project")
 		} else {
-			SetConfigValueByArgs([]string{"tokaido", "xdebug", "true"}, "project")
-			if GetConfig().Tokaido.Xdebugport == "" {
-				SetConfigValueByArgs([]string{"tokaido", "xdebugport", "9000"}, "project")
-			}
+			SetGlobalConfigValueByArgs([]string{"global", "project", "xdebug", "enabled", "true"})
 		}
 		reloadConfig()
 		TokaidoMenu()
 	case 4:
-		res := newStringValue("Specify the port that your IDE is listening on for xdebug connections from this project:")
-		SetConfigValueByArgs([]string{"tokaido", "xdebugport", res}, "project")
+		res := newStringValue("Specify the port that your IDE is listening on for xdebug from PHP FPM:")
+		SetGlobalConfigValueByArgs([]string{"global", "project", "xdebug", "fpmport", res})
 		reloadConfig()
 		TokaidoMenu()
 	case 5:

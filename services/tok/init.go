@@ -42,10 +42,11 @@ func Init(yes, statuscheck bool) {
 	fmt.Println(Cyan("\n🚀  Tokaido is starting up!"))
 
 	// Create Tokaido configuration
-	conf.SetDrupalConfig("CUSTOM")
 	drupal.CheckSettings(cs)
+	conf.SetDrupalConfig("CUSTOM")
 	docker.FindOrCreateTokCompose()
 	ssh.GenerateKeys()
+
 	docker.CreateDatabaseVolume()
 	docker.CreateSiteVolume()
 	err := snapshots.Init()
@@ -157,7 +158,7 @@ func surveyMessage() {
 	rand.Seed(time.Now().UnixNano())
 	n := rand.Intn(6-1) + 1
 	if n == 3 {
-		fmt.Println(Sprintf("    How's Tokaido? Run '%s' to share your feedback.", Bold("tok survey")))
+		fmt.Println(Sprintf("🤗  How's Tokaido? Run '%s' to share your feedback.", Bold("tok survey")))
 	}
 }
 

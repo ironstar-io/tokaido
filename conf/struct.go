@@ -2,8 +2,12 @@ package conf
 
 // Project is a singular entry of a project name and path used in global config
 type Project struct {
-	Name string `yaml:"name,omitempty"`
-	Path string `yaml:"path,omitempty"`
+	Name   string `yaml:"name,omitempty"`
+	Path   string `yaml:"path,omitempty"`
+	Xdebug struct {
+		Enabled bool `yaml:"enabled"`
+		FpmPort int  `yaml:"fpmport"`
+	} `yaml:"xdebug,omitempty"`
 }
 
 // Telemetry carries telemetry configuration settings
@@ -38,8 +42,6 @@ type Config struct {
 		Yes              bool   `yaml:"yes,omitempty"`
 		Phpversion       string `yaml:"phpversion"`
 		Stability        string `yaml:"stability"`
-		Xdebug           bool   `yaml:"xdebug"`
-		Xdebugport       string `yaml:"xdebugport"`
 		Project          struct {
 			Identifier string `yaml:"identifier"`
 			Name       string `yaml:"name"`
@@ -74,12 +76,6 @@ type Config struct {
 		Phpallowurlfopen     string `yaml:"phpallowurlfopen,omitempty"`
 	}
 	System struct {
-		Xdebug struct {
-			Port      string `yaml:"port,omitempty"`
-			Logpath   string `yaml:"logpath,omitempty"`
-			Enabled   bool   `yaml:"enabled"`
-			Autostart bool   `yaml:"autostart"`
-		} `yaml:"xdebug,omitempty"`
 		Syncsvc struct {
 			Systemdpath string `yaml:"systemdpath,omitempty"`
 			Launchdpath string `yaml:"launchdpath,omitempty"`

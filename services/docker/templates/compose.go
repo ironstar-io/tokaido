@@ -154,16 +154,6 @@ func EnableMemcache(version string) []byte {
     image: memcached:` + version)
 }
 
-// EnableXdebug ...
-func EnableXdebug(phpVersion, xdebugImageVersion string) []byte {
-	v := calcPhpVersionString(phpVersion)
-	return []byte(`services:
-  fpm:
-    image: tokaido/php` + v + `-fpm-xdebug:` + xdebugImageVersion + `
-  drush:
-    image: tokaido/admin` + v + `-heavy-xdebug:` + xdebugImageVersion)
-}
-
 // ExternalVolumeDeclare ...
 func ExternalVolumeDeclare(name string) []byte {
 	return []byte(`volumes:

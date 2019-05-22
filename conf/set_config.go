@@ -1,6 +1,8 @@
 package conf
 
 import (
+	"strconv"
+
 	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/system/hash"
 
@@ -55,6 +57,64 @@ func SetConfigValueByArgs(args []string, configType string) {
 
 	// validate that our config was saved successfully
 	compareFiles(newConfig, configPath)
+}
+
+// SetGlobalConfigValueByArgs enables the update of global config values by a string slice
+// When working project-level global config, it defaults to updating the active project
+func SetGlobalConfigValueByArgs(args []string) (err error) {
+	if len(args) < 2 {
+		return fmt.Errorf("Error: too few arguments for global config")
+	}
+
+	if args[1] == "project" {
+		if len(args) < 3 {
+			return fmt.Errorf("Error: too few arguments for global project config. Did you want 'xdebug'?")
+		}
+
+		if args[2] == "xdebug" {
+			if len(args) < 4 {
+				return fmt.Errorf("Error: too few arguments for xdebug config. Please specify 'enabled {true/false}' or 'port {number}'")
+			}
+			p, err := GetGlobalProjectSettings()
+			if err != nil {
+				return err
+			}
+
+			if args[3] == "enabled" {
+				if len(args) < 5 {
+					return fmt.Errorf("Error: too few arguments for xdebug setting. Please specify 'enabled {true/false}'")
+				}
+				enabled, err := strconv.ParseBool(args[4])
+				if err != nil {
+					return err
+				}
+
+				p.Xdebug.Enabled = enabled
+				err = WriteGlobalProjectSettings(p)
+				return err
+			}
+
+			if args[3] == "fpmport" {
+				if len(args) < 5 {
+					return fmt.Errorf("Error: too few arguments for xdebug port. Please specify 'fpmport {number}'")
+				}
+				fpmPort, err := strconv.Atoi(args[4])
+				if err != nil {
+					return err
+				}
+				if fpmPort < 1024 || fpmPort > 65535 {
+					return fmt.Errorf("Error: you must specify an xdebug fpmport between 1025 and 65535")
+				}
+
+				p.Xdebug.FpmPort = fpmPort
+				err = WriteGlobalProjectSettings(p)
+			}
+			return nil
+		}
+	}
+
+	return fmt.Errorf("requested global config path is not known")
+
 }
 
 // mergeConfigInMemory takes our saved config from disk, the new yaml string, and the running
@@ -184,6 +244,22 @@ func WriteGlobalConfig(ng Global) {
 	}
 
 	fs.Replace(gcPath, newMarhsalled)
+}
+
+// WriteGlobalProjectSettings takes an updated Project object and merges it with all of the
+// Projects defined in the global config, finally saving the whole global config back to disk
+func WriteGlobalProjectSettings(p *Project) error {
+	g := GetConfig().Global
+
+	for k, v := range g.Projects {
+		if v.Name == p.Name {
+			g.Projects[k] = *p
+		}
+	}
+
+	WriteGlobalConfig(g)
+
+	return nil
 }
 
 // compareFiles checks original and new config files to identify if any values were changed
