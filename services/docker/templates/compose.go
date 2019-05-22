@@ -179,6 +179,14 @@ func MysqlVolumeAttach(name string) []byte {
 `)
 }
 
+// SetDatabase sets the database engine and configuration
+func SetDatabase(image, version string) []byte {
+	return []byte(`services:
+  mysql:
+    image: ` + image + `:` + version + `
+`)
+}
+
 // TokaidoFusionSiteVolumeAttach ...
 func TokaidoFusionSiteVolumeAttach(path, name string) []byte {
 	return []byte(`services:

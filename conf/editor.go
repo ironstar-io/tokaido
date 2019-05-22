@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	"github.com/ironstar-io/tokaido/system/fs"
+	. "github.com/logrusorgru/aurora"
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/viper"
 )
@@ -87,6 +88,11 @@ func MainMenu() {
 			Detail:      "These settings tell Tokaido how this project should be built and managed. \nIt includes essential items like if Tokaido should use beta Docker images and if\nyou want to self-manage your Docker Compose file.\n\n\n\n",
 		},
 		{
+			Name:        "Database Engine Settings »",
+			Description: "Configure your Database Engine and Version",
+			Detail:      "Tokaido includes support for MySQL and MariaDB. The default is currently MySQL 5.7\n\n\n\n",
+		},
+		{
 			Name:        "Drupal Settings »",
 			Description: "Simple Drupal settings that Tokaido needs, like your document root",
 			Detail:      "Tokaido needs to know a little bit about your project.\nYou almost never need to edit these settings, and doing \nso could break your installation",
@@ -130,7 +136,7 @@ func MainMenu() {
 		Label:     "Main Menu >>",
 		Items:     menu,
 		Templates: templates,
-		Size:      7,
+		Size:      8,
 	}
 
 	i, _, err := prompt.Run()
@@ -144,14 +150,16 @@ func MainMenu() {
 	case 0:
 		TokaidoMenu()
 	case 1:
-		DrupalMenu()
+		DatabaseMenu()
 	case 2:
-		NginxMenu()
+		DrupalMenu()
 	case 3:
-		FpmMenu()
+		NginxMenu()
 	case 4:
-		ServicesMenu()
+		FpmMenu()
 	case 5:
+		ServicesMenu()
+	case 6:
 		fmt.Println("Please note that if you have made config changes, you need to run `tok rebuild`")
 		os.Exit(0)
 	}
@@ -437,6 +445,298 @@ func TokaidoPhpversionMenu() {
 		TokaidoMenu()
 	case 2:
 		TokaidoMenu()
+	}
+}
+
+// DatabaseMenu ...
+func DatabaseMenu() {
+	fmt.Println(BgRed(White("!! WARNING !!")))
+	fmt.Println(BgRed(White("Changing your database configuration can completely break your database. We strongly recommend creating a `tok snapshot` first")))
+	fmt.Println(BgRed(White("!! WARNING !!")))
+	fmt.Println()
+	menu := []ConfigGenericString{
+		{
+			Name:    "Database Engine",
+			Type:    "menu",
+			Current: GetConfig().Database.Engine,
+			Default: "mysql",
+			Detail:  "This is the current database engine. Wherever possible, you should set this to match what you're running in Production",
+		},
+		{
+			Name:    "MySQL Version",
+			Type:    "menu",
+			Current: GetConfig().Database.Mysqlconfig.Version,
+			Default: "5.6",
+			Detail:  "Set the MySQL Version if MySQL is used",
+		},
+		{
+			Name:    "MariaDB Version",
+			Type:    "menu",
+			Current: GetConfig().Database.Mariadbconfig.Version,
+			Default: "10.3",
+			Detail:  "Set the MariaDB Version if MariaDB is used",
+		},
+		{
+			Name:    "« Main Menu",
+			Type:    "mainmenu",
+			Default: "",
+			Current: "",
+			Detail:  "Go back to the Main Menu",
+		},
+		{
+			Name:    "Exit",
+			Type:    "mainmenu",
+			Default: "",
+			Current: "",
+			Detail:  "Stop editing your configuration",
+		},
+	}
+
+	templates := &promptui.SelectTemplates{
+		Label:    "{{ . }}?",
+		Active:   `🤔 {{ .Name | cyan }} {{ if ne .Type "mainmenu" }} {{if or (eq .Current .Default) (eq .Current "") }} Using default value [{{ .Default | cyan }}] {{ else }} Using custom value [{{ .Current | green }}] {{ end }} {{ end }}`,
+		Inactive: `   {{ .Name | cyan }} {{ if ne .Type "mainmenu" }} {{if or (eq .Current .Default) (eq .Current "") }} Using default value [{{ .Default | cyan }}] {{ else }} Using custom value [{{ .Current | green }}] {{ end }} {{ end }}`,
+		Selected: "{{ .Name | blue }}",
+		Details: `
+{{ if ne .Type "mainmenu" }}---------
+{{ .Detail }}
+
+{{ end }}
+`,
+	}
+
+	prompt := promptui.Select{
+		Label:     "Main Menu » Database Configuration",
+		Items:     menu,
+		Templates: templates,
+		Size:      5,
+	}
+
+	i, _, err := prompt.Run()
+
+	if err != nil {
+		fmt.Printf("Prompt failed %v\n", err)
+		return
+	}
+
+	switch i {
+	case 0:
+		DatabaseEngineMenu()
+		reloadConfig()
+		DatabaseMenu()
+	case 1:
+		DatabaseMysqlconfigMenu()
+		reloadConfig()
+		DatabaseMenu()
+	case 2:
+		DatabaseMariadbconfigMenu()
+		reloadConfig()
+		DatabaseMenu()
+	case 3:
+		MainMenu()
+	case 4:
+		fmt.Println("Please note that if you have made config changes, you need to run `tok rebuild`")
+		os.Exit(0)
+	}
+}
+
+// DatabaseEngineMenu is exposes Tokaido-level config settings
+func DatabaseEngineMenu() {
+
+	menu := []ConfigGenericString{
+		{
+			Name:    "mysql",
+			Type:    "value",
+			Current: GetConfig().Database.Engine,
+			Detail:  "Enable MySQL. This is the default provider for Tokaido.",
+		},
+		{
+			Name:    "mariadb",
+			Type:    "value",
+			Current: GetConfig().Database.Engine,
+			Detail:  "Enable MariaDB as an alternative to MySQL. Note that your database hostname will still be 'mysql'",
+		},
+		{
+			Name:   "« Database Menu",
+			Type:   "mainmenu",
+			Detail: "Go back to the Database",
+		},
+	}
+
+	templates := &promptui.SelectTemplates{
+		Label:    "{{ . }}?",
+		Active:   `🤔 {{ .Name | cyan }} {{if eq .Current .Name }} [{{ "current setting" | green }}] {{ end }}`,
+		Inactive: `   {{ .Name | cyan }} {{if eq .Current .Name }} [{{ "current setting" | green }}] {{ end }}`,
+		Selected: "{{ .Name | blue }}",
+		Details: `
+{{ if ne .Type "mainmenu" }}---------
+{{ .Detail }}
+
+{{ end }}
+`,
+	}
+
+	prompt := promptui.Select{
+		Label:     "Main Menu » Database » Engine",
+		Items:     menu,
+		Templates: templates,
+		Size:      4,
+	}
+
+	i, _, err := prompt.Run()
+
+	if err != nil {
+		fmt.Printf("Prompt failed %v\n", err)
+		return
+	}
+
+	switch i {
+	case 0:
+		SetConfigValueByArgs([]string{"database", "engine", "mysql"}, "project")
+		reloadConfig()
+		DatabaseMenu()
+	case 1:
+		SetConfigValueByArgs([]string{"database", "engine", "mariadb"}, "project")
+		reloadConfig()
+		DatabaseMenu()
+	case 2:
+		DatabaseMenu()
+	}
+}
+
+// DatabaseMysqlconfigMenu enables the user to change the MySQL version
+func DatabaseMysqlconfigMenu() {
+	menu := []ConfigGenericString{
+		{
+			Name:    "MySQL 5.6",
+			Current: GetConfig().Database.Mysqlconfig.Version,
+			Type:    "value",
+			Detail:  "Use the latest version of the MySQL 5.6 Docker image.\nSee https://hub.docker.com/_/mysql for more info.",
+		},
+		{
+			Name:    "MySQL 5.7",
+			Current: GetConfig().Database.Mysqlconfig.Version,
+			Type:    "value",
+			Detail:  "Use the latest version of the MySQL 5.7 Docker image.\nSee https://hub.docker.com/_/mysql for more info.\n\nThis is the Tokaido default",
+		},
+		{
+			Name:    "MySQL 8.0",
+			Current: GetConfig().Database.Mysqlconfig.Version,
+			Type:    "value",
+			Detail:  "Use the latest version of the MySQL 8.0 Docker image.\nSee https://hub.docker.com/_/mysql for more info.",
+		},
+		{
+			Name:   "« Database Config",
+			Type:   "menu",
+			Detail: "Go back to the Database Config Menu",
+		},
+	}
+
+	templates := &promptui.SelectTemplates{
+		Label:    "{{ . }}?",
+		Active:   `🤔 {{ .Name | cyan }} {{if eq .Current .Name }} [{{ "current setting" | green }}] {{ end }}`,
+		Inactive: `   {{ .Name | cyan }} {{if eq .Current .Name }} [{{ "current setting" | green }}] {{ end }}`,
+		Selected: "{{ .Name | blue }}",
+		Details: `
+{{ if ne .Type "menu" }}---------
+{{ .Detail }}
+
+{{ end }}
+`,
+	}
+
+	prompt := promptui.Select{
+		Label:     "Main Menu » MySQL Configuration » Version",
+		Items:     menu,
+		Templates: templates,
+		Size:      4,
+	}
+
+	i, _, err := prompt.Run()
+
+	if err != nil {
+		fmt.Printf("Prompt failed %v\n", err)
+		return
+	}
+
+	switch i {
+	case 0:
+		SetConfigValueByArgs([]string{"database", "mysqlconfig", "version", "5.6"}, "project")
+		reloadConfig()
+		DatabaseMenu()
+	case 1:
+		SetConfigValueByArgs([]string{"database", "mysqlconfig", "version", "5.7"}, "project")
+		reloadConfig()
+		DatabaseMenu()
+	case 2:
+		SetConfigValueByArgs([]string{"database", "mysqlconfig", "version", "8.0"}, "project")
+		reloadConfig()
+		DatabaseMenu()
+	case 3:
+		DatabaseMenu()
+	}
+}
+
+// DatabaseMariadbconfigMenu enables the user to change the Mariadb version
+func DatabaseMariadbconfigMenu() {
+	menu := []ConfigGenericString{
+		{
+			Name:    "MariaDB 10.3",
+			Type:    "value",
+			Current: GetConfig().Database.Mysqlconfig.Version,
+			Detail:  "Use the latest version of the MariaDB 10.3 Docker image.\nSee https://hub.docker.com/_/mysql for more info.\n\nThis is the Tokaido default",
+		},
+		{
+			Name:    "MariaDB 10.4",
+			Type:    "value",
+			Current: GetConfig().Database.Mysqlconfig.Version,
+			Detail:  "Use the latest version of the MariaDB 10.4 Docker image.\nSee https://hub.docker.com/_/mysql for more info.",
+		},
+		{
+			Name:   "« Database Menu",
+			Type:   "mainmenu",
+			Detail: "Go back to the Main Menu",
+		},
+	}
+
+	templates := &promptui.SelectTemplates{
+		Label:    "{{ . }}?",
+		Active:   `🤔 {{ .Name | cyan }} {{if eq .Current .Name }} [{{ "current setting" | green }}] {{ end }}`,
+		Inactive: `   {{ .Name | cyan }} {{if eq .Current .Name }} [{{ "current setting" | green }}] {{ end }}`,
+		Selected: "{{ .Name | blue }}",
+		Details: `
+{{ if ne .Type "menu" }}---------
+{{ .Detail }}
+
+{{ end }}
+`,
+	}
+
+	prompt := promptui.Select{
+		Label:     "Main Menu » MariaDB Configuration » Version",
+		Items:     menu,
+		Templates: templates,
+		Size:      3,
+	}
+
+	i, _, err := prompt.Run()
+
+	if err != nil {
+		fmt.Printf("Prompt failed %v\n", err)
+		return
+	}
+
+	switch i {
+	case 0:
+		SetConfigValueByArgs([]string{"database", "mariadbconfig", "version", "10.3"}, "project")
+		reloadConfig()
+		DatabaseMenu()
+	case 1:
+		SetConfigValueByArgs([]string{"database", "mariadbconfig", "version", "10.4"}, "project")
+		reloadConfig()
+		DatabaseMenu()
+	case 2:
+		DatabaseMenu()
 	}
 }
 

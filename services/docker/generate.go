@@ -146,6 +146,26 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 		log.Fatalf("Error attaching persistent MySQL volume: %v", err)
 	}
 
+	// Set database engine and parameters
+	dbImage := "mysql"
+	dbVersion := "5.7"
+	if conf.GetConfig().Database.Engine == "mariadb" {
+		dbImage = "mariadb"
+		if len(conf.GetConfig().Database.Mariadbconfig.Version) > 1 {
+			dbVersion = conf.GetConfig().Database.Mariadbconfig.Version
+		} else {
+			dbVersion = "10.4"
+		}
+	} else {
+		if len(conf.GetConfig().Database.Mysqlconfig.Version) > 1 {
+			dbVersion = conf.GetConfig().Database.Mysqlconfig.Version
+		}
+	}
+	err = yaml.Unmarshal(dockertmpl.SetDatabase(dbImage, dbVersion), &tokStruct)
+	if err != nil {
+		log.Fatalf("Error generating database config: %v", err)
+	}
+
 	if conf.GetConfig().Services.Solr.Enabled {
 		v := "6.6" // Solr only supports 6.6 right now, no need to decide between stable/edge/experimental versions
 

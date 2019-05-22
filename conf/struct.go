@@ -54,6 +54,15 @@ type Config struct {
 		FilePrivatePath   string `yaml:"fileprivatepath,omitempty"`
 		FileTemporaryPath string `yaml:"filetemporarypath,omitempty"`
 	} `yaml:"drupal,omitempty"`
+	Database struct {
+		Engine      string `yaml:"engine,omitempty"`
+		Mysqlconfig struct {
+			Version string `yaml:"version,omitempty"`
+		} `yaml:"mysqlconfig,omitempty"`
+		Mariadbconfig struct {
+			Version string `yaml:"version,omitempty"`
+		} `yaml:"mariadbconfig,omitempty"`
+	} `yaml:"database,omitempty"`
 	Nginx struct {
 		Workerconnections  string `yaml:"workerconnections,omitempty"`
 		Clientmaxbodysize  string `yaml:"clientmaxbodysize,omitempty"`
