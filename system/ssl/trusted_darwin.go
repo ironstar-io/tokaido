@@ -5,7 +5,6 @@ package ssl
 import (
 	"github.com/ironstar-io/tokaido/utils"
 
-	"fmt"
 	"path/filepath"
 	"strings"
 )
@@ -15,13 +14,6 @@ func ConfigureTrustedCerts(certificate string) {
 	utils.DebugString("Going to configure trusted SSL certificate. An error here is OK and indicates that the certificate is just not trusted yet")
 	if CertIsTrusted(certificate) == true {
 		utils.DebugString("SSL certificate is already trusted. Nothing to do.")
-		return
-	}
-
-	fmt.Println()
-	p := utils.ConfirmationPrompt("Would you like Tokaido to add the generated SSL certificate to your keychain? You may be prompted for elevated access", "y")
-	if p == false {
-		fmt.Println(`    The generated SSL certificates can be manually added to your keychain later. \n    See https://tokaido.io/docs/config/#adding-a-trusted-certificate for more information.`)
 		return
 	}
 
