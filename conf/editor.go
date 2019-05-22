@@ -191,7 +191,7 @@ func TokaidoMenu() {
 			Default: "7.2",
 			Type:    "value",
 			Current: GetConfig().Tokaido.Phpversion,
-			Detail:  "Use the latest version of PHP 7.1 or 7.2 when this version of Tokaido was compiled",
+			Detail:  "Use the latest version of PHP 7.1, 7.2, or 7.3",
 		},
 		{
 			Name:    "PHP XDebug Support",
@@ -401,6 +401,11 @@ func TokaidoPhpversionMenu() {
 			Detail: "Enable the latest PHP 7.2 release at the time that this version of Tokaido was created",
 		},
 		{
+			Name:   "PHP 7.3",
+			Type:   "value",
+			Detail: "Enable the latest PHP 7.3 release at the time that this version of Tokaido was created",
+		},
+		{
 			Name:   "« Tokaido Config",
 			Type:   "menu",
 			Detail: "Go back to the Main Menu",
@@ -444,6 +449,10 @@ func TokaidoPhpversionMenu() {
 		reloadConfig()
 		TokaidoMenu()
 	case 2:
+		SetConfigValueByArgs([]string{"tokaido", "phpversion", "7.3"}, "project")
+		reloadConfig()
+		TokaidoMenu()
+	case 3:
 		TokaidoMenu()
 	}
 }

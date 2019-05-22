@@ -15,8 +15,10 @@ func calcPhpVersionString(version string) string {
 		v = "71"
 	case "7.2":
 		v = "72"
+	case "7.3":
+		v = "73"
 	default:
-		log.Fatalf("PHP version %s is not supported. Must use '7.1' or '7.2'", version)
+		log.Fatalf("PHP version %s is not supported. Must use '7.1', '7.2', or '7.3'", version)
 	}
 
 	return v
