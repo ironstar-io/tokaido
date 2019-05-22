@@ -41,9 +41,14 @@ func Init(yes, statuscheck bool) {
 	docker.CheckClientVersion()
 	fmt.Println(Cyan("\n🚀  Tokaido is starting up!"))
 
+	// Add this project to the global configuration
+	pr := fs.ProjectRoot()
+	name := strings.Replace(filepath.Base(pr), ".", "", -1)
+	conf.RegisterProject(name, pr)
+
 	// Create Tokaido configuration
-	drupal.CheckSettings(cs)
 	conf.SetDrupalConfig("CUSTOM")
+	drupal.CheckSettings(cs)
 	docker.FindOrCreateTokCompose()
 	ssh.GenerateKeys()
 
@@ -55,11 +60,6 @@ func Init(yes, statuscheck bool) {
 		fmt.Println(Red("🙅  Tokaido encountered an unexpected error preparing the database snapshot service"))
 		panic(err)
 	}
-
-	// Add this project to the global configuration
-	pr := fs.ProjectRoot()
-	name := strings.Replace(filepath.Base(pr), ".", "", -1)
-	conf.RegisterProject(name, pr)
 
 	// Telemetry actions
 	telemetry.GenerateProjectID()
