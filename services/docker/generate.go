@@ -96,7 +96,6 @@ func MarshalledDefaults() []byte {
 func UnmarshalledDefaults() conf.ComposeDotTok {
 	tokStruct := conf.ComposeDotTok{}
 	phpVersion := conf.GetConfig().Tokaido.Phpversion
-	unisonVersion := version.GetUnisonVersion()
 	syncservice := conf.GetConfig().Global.Syncservice
 
 	switch syncservice {
@@ -133,6 +132,8 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 		}
 
 	case "unison":
+		unisonVersion := version.GetUnisonVersion()
+
 		// Use Unison Compose Template
 		err := yaml.Unmarshal(dockertmpl.ComposeTokDefaultsUnison, &tokStruct)
 		if err != nil {
