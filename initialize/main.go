@@ -60,9 +60,13 @@ func readProjectConfig(command string) {
 	switch system.CheckOS() {
 	case "osx":
 		viper.SetDefault("Global.Syncservice", "docker")
+
 	default:
 		viper.SetDefault("Global.Syncservice", "unison")
 	}
+
+	viper.SetDefault("System.Syncsvc.Launchdpath", filepath.Join(fs.HomeDir(), "/Library/LaunchAgents/"))
+	viper.SetDefault("System.Syncsvc.Systemdpath", filepath.Join(fs.HomeDir(), "/.config/systemd/user/"))
 
 	viper.SetDefault("Tokaido.Customcompose", viper.GetBool("customCompose"))
 	viper.SetDefault("Tokaido.Debug", viper.GetBool("debug"))
