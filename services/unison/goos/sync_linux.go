@@ -77,7 +77,7 @@ func (s UnisonSvc) CreateSyncFile() {
 	if _, pErr := os.Stat(s.Systemdpath); os.IsNotExist(pErr) {
 		mErr := os.MkdirAll(s.Systemdpath, os.ModePerm)
 		if mErr != nil {
-			log.Fatal("There was an error creating the systemd path:", mErr)
+			log.Fatalf("There was an error creating the systemd path [%s]\nError: %v", s.Systemdpath, mErr)
 		}
 	}
 
@@ -99,6 +99,12 @@ func (s UnisonSvc) RegisterSyncService() {
 
 // StartSyncService Start the systemd service after it is created
 func (s UnisonSvc) StartSyncService() {
+	daemon.StartService(s.Filename)
+}
+
+// RestartSyncService ...
+func (s UnisonSvc) RestartSyncService() {
+	daemon.StopService(s.Filename)
 	daemon.StartService(s.Filename)
 }
 
