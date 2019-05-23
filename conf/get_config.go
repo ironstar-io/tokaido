@@ -8,6 +8,7 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/spf13/viper"
 	yaml "gopkg.in/yaml.v2"
 )
@@ -19,8 +20,13 @@ func GetConfig() *Config {
 		log.Fatal("Failed to retrieve configuration values\n", err)
 	}
 
-	// Load the global config in to the config struct without using Viper
+	// Create an empty global config file if on doesn't exist
 	gcPath := getConfigPath("global")
+	if fs.CheckExists(gcPath) {
+		WriteGlobalConfig(Global{})
+	}
+
+	// Load the global config in to the config struct without using Viper
 	gcFile, err := ioutil.ReadFile(gcPath)
 	if err != nil {
 		log.Fatalf("There was an issue reading in your global config file\n%v", err)
