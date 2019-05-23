@@ -90,8 +90,8 @@ func SetGlobalConfigValueByArgs(args []string) (err error) {
 				}
 
 				p.Xdebug.Enabled = enabled
-				err = WriteGlobalProjectSettings(p)
-				return err
+				WriteGlobalProjectSettings(p)
+				return nil
 			}
 
 			if args[3] == "fpmport" {
@@ -107,7 +107,8 @@ func SetGlobalConfigValueByArgs(args []string) (err error) {
 				}
 
 				p.Xdebug.FpmPort = fpmPort
-				err = WriteGlobalProjectSettings(p)
+				WriteGlobalProjectSettings(p)
+				return nil
 			}
 			return nil
 		}
@@ -248,7 +249,7 @@ func WriteGlobalConfig(ng Global) {
 
 // WriteGlobalProjectSettings takes an updated Project object and merges it with all of the
 // Projects defined in the global config, finally saving the whole global config back to disk
-func WriteGlobalProjectSettings(p *Project) error {
+func WriteGlobalProjectSettings(p *Project) {
 	g := GetConfig().Global
 
 	for k, v := range g.Projects {
@@ -258,8 +259,6 @@ func WriteGlobalProjectSettings(p *Project) error {
 	}
 
 	WriteGlobalConfig(g)
-
-	return nil
 }
 
 // compareFiles checks original and new config files to identify if any values were changed
