@@ -1,29 +1,42 @@
 package xdebug
 
 import (
+	"fmt"
 	"runtime"
+	"strconv"
 
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/services/docker"
 
 	"log"
 
+	. "github.com/logrusorgru/aurora"
 	yaml "gopkg.in/yaml.v2"
 )
 
 // Configure - Amend docker-compose.tok.yml to be compatible with xdebug
 func Configure() {
-	xdebugPort := conf.GetConfig().Tokaido.Xdebugport
-	if xdebugPort != "" {
-		networkUp := docker.CheckNetworkUp()
-
-		regenerateGateway(networkUp, xdebugPort)
+	gprj, err := conf.GetGlobalProjectSettings()
+	if err != nil {
+		panic(err)
 	}
+
+	if gprj.Xdebug.Enabled {
+		regenerateGateway(gprj)
+	}
+
 }
 
 // regenerateGateway - Regenerate the docker-compose.tok.yml file and change the IP value in
-func regenerateGateway(networkUp bool, xdebugPort string) {
+func regenerateGateway(gprj *conf.Project) {
 	docker.HardCheckTokCompose()
+	networkUp := docker.CheckNetworkUp()
+	fpmPort := "9000"
+	if gprj.Xdebug.FpmPort != 0 {
+		fpmPort = strconv.Itoa(gprj.Xdebug.FpmPort)
+	}
+
+	fmt.Printf("🧐   Enabling PHP FPM XDebug Support on port %s\n", Cyan(fpmPort))
 
 	if networkUp == false {
 		docker.Up()
@@ -41,14 +54,15 @@ func regenerateGateway(networkUp bool, xdebugPort string) {
 
 	tokStruct := docker.UnmarshalledDefaults()
 
-	err := yaml.Unmarshal(xdebugFpmEnv(networkGateway, xdebugPort), &tokStruct)
+	fpmYaml := xdebugFpmEnv(networkGateway, fpmPort)
+	err := yaml.Unmarshal(fpmYaml, &tokStruct)
 	if err != nil {
-		log.Fatalf("error: %v", err)
+		log.Fatalf("Error unmarshalling fpm yaml: %v", err)
 	}
 
 	tokComposeYml, err := yaml.Marshal(&tokStruct)
 	if err != nil {
-		log.Fatalf("error: %v", err)
+		log.Fatalf("Error marhsalling fpm tok yaml: %v", err)
 	}
 
 	// Append the volume setting on to the docker-compose setting directly
@@ -70,14 +84,12 @@ func regenerateGateway(networkUp bool, xdebugPort string) {
 	docker.UpContainer("fpm")
 }
 
-func xdebugFpmEnv(networkGateway string, port string) []byte {
+func xdebugFpmEnv(networkGateway string, fpmPort string) []byte {
 	return []byte(`
 services:
   fpm:
     environment:
-      PHP_DISPLAY_ERRORS: "yes"
-      XDEBUG_REMOTE_ENABLE: "yes"
-      XDEBUG_REMOTE_AUTOSTART: "yes"
-      XDEBUG_REMOTE_HOST: ` + networkGateway + `
-      XDEBUG_REMOTE_PORT: "` + port + `"`)
+      XDEBUG_REMOTE_ENABLE: "ON"
+      XDEBUG_REMOTE_HOST: "` + networkGateway + `"
+      XDEBUG_REMOTE_PORT: "` + fpmPort + `"`)
 }

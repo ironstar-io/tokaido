@@ -31,6 +31,16 @@ func StopSyncService(syncName string) {
 	s.StopSyncService()
 }
 
+// RestartSyncService ...
+func RestartSyncService(syncName string) {
+	if conf.GetConfig().System.Syncsvc.Enabled != true {
+		return
+	}
+
+	s := goos.NewUnisonSvc(syncName, "")
+	s.RestartSyncService()
+}
+
 // UnloadSyncService will uninstall the sync service
 func UnloadSyncService(syncName string) {
 	if conf.GetConfig().System.Syncsvc.Enabled != true {
@@ -59,10 +69,18 @@ func BackgroundServiceWarning(syncName string) {
 		return
 	}
 
-	s := goos.NewUnisonSvc(syncName, "")
-	if s.SyncServiceStatus() != "running" {
+	if !CheckBackgroundService(syncName) {
 		fmt.Println()
 		console.Println("⚠️  The background sync service is not running. Manually sync with `tok watch` or try running `tok up` again", "")
 		fmt.Println()
 	}
+}
+
+// CheckBackgroundService - Returns true or false based on whether the sync service is running
+func CheckBackgroundService(syncName string) (ok bool) {
+	s := goos.NewUnisonSvc(syncName, "")
+	if s.SyncServiceStatus() == "running" {
+		return true
+	}
+	return
 }

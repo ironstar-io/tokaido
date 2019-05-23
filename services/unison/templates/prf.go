@@ -9,7 +9,7 @@ root = socket://localhost:{{.UnisonPort}}
 path = .
 
 # Some regexps specifying names and paths to ignore
-ignore = Name .git
+# ignore = Name .git
 
 # Log actions to the terminal
 log = true

@@ -25,13 +25,24 @@ func Ps() {
 	o := []string{}
 	o = append(o, "Container|Local Endpoint|Shortcut|Status")
 	o = append(o, "--------|--------|--------|--------")
+	// Output Unison status if relevant
+	if c.Global.Syncservice == "unison" {
+		unison := docker.GetContainer("unison", pn)
+		if unison.State == "running" {
+			o = append(o, Sprintf("unison(sync)|-|-|%s", Green(unison.State)))
+		} else {
+			o = append(o, Sprintf("unison(sync)|-|-|%s", Yellow("offline")))
+			failure = true
+		}
+	}
+
 	// Output Drush status
 	admin := docker.GetContainer("drush", pn)
 	if admin.State == "running" {
 		port := strconv.Itoa(int(admin.Ports[0].PublicPort))
-		o = append(o, Sprintf("admin(drush)|ssh://localhost:%s|ssh %s.tok|%s", port, pn, Green(admin.State)))
+		o = append(o, Sprintf("admin(drush/ssh)|ssh://localhost:%s|ssh %s.tok|%s", port, pn, Green(admin.State)))
 	} else {
-		o = append(o, Sprintf("admin(drush)|-|-|%s", Yellow("offline")))
+		o = append(o, Sprintf("admin(drush/ssh)|-|-|%s", Yellow("offline")))
 		failure = true
 	}
 

@@ -11,7 +11,7 @@ import (
 	"text/template"
 
 	"github.com/ironstar-io/tokaido/conf"
-	"github.com/ironstar-io/tokaido/services/unison/templates"
+	unisontmpl "github.com/ironstar-io/tokaido/services/unison/templates"
 	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/daemon"
 	"github.com/ironstar-io/tokaido/system/fs"
@@ -101,6 +101,12 @@ func (s UnisonSvc) UnloadSyncService() {
 
 // StartSyncService Start the launchd service after it is created
 func (s UnisonSvc) StartSyncService() {
+	daemon.StartService(s.Filename)
+}
+
+// RestartSyncService ...
+func (s UnisonSvc) RestartSyncService() {
+	daemon.StopService(s.Filename)
 	daemon.StartService(s.Filename)
 }
 

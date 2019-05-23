@@ -6,6 +6,8 @@ import (
 
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/constants"
+	"github.com/ironstar-io/tokaido/services/docker"
+	"github.com/ironstar-io/tokaido/services/unison"
 	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/system/hostsfile"
 )
@@ -22,6 +24,11 @@ func DestroyProject() {
 
 	RemoveNginxConf()
 	RemoveFromHostsfile()
+
+	if conf.GetConfig().Global.Syncservice == "unison" {
+		docker.DeleteVolume("tok_" + conf.GetConfig().Tokaido.Project.Name + "_tokaido_site")
+		unison.UnloadSyncService(conf.GetConfig().Tokaido.Project.Name)
+	}
 
 	RestartContainer("proxy")
 }

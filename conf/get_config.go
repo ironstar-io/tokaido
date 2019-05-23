@@ -2,11 +2,13 @@ package conf
 
 import (
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"reflect"
 	"strings"
 
+	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/spf13/viper"
 	yaml "gopkg.in/yaml.v2"
 )
@@ -18,8 +20,13 @@ func GetConfig() *Config {
 		log.Fatal("Failed to retrieve configuration values\n", err)
 	}
 
-	// Load the global config in to the config struct without using Viper
+	// Create an empty global config file if on doesn't exist
 	gcPath := getConfigPath("global")
+	if fs.CheckExists(gcPath) {
+		WriteGlobalConfig(Global{})
+	}
+
+	// Load the global config in to the config struct without using Viper
 	gcFile, err := ioutil.ReadFile(gcPath)
 	if err != nil {
 		log.Fatalf("There was an issue reading in your global config file\n%v", err)
@@ -41,6 +48,18 @@ func GetProjectPath() (path string) {
 	}
 
 	panic("Unexpected error resolving this project's path in the global config file")
+}
+
+// GetGlobalProjectSettings returns the current global conf object for the current project
+func GetGlobalProjectSettings() (*Project, error) {
+	c := GetConfig()
+	for _, v := range c.Global.Projects {
+		if v.Name == c.Tokaido.Project.Name {
+			return &v, nil
+		}
+	}
+
+	return &Project{}, fmt.Errorf("unable to find global project configuration")
 }
 
 // GetConfigValueByArgs - Get a config value based on the arguments sent from the command line

@@ -30,6 +30,13 @@ func getExistingCompose() []byte {
 	return dcf
 }
 
+// SetUnisonVersion ...
+func SetUnisonVersion(version string) []byte {
+	return []byte(`services:
+  unison:
+    image: tokaido/unison:` + version)
+}
+
 // projectInCompose identifies if the specified project exists in the
 // provided list of networks
 func projectInCompose(networks []string, projectName string) bool {

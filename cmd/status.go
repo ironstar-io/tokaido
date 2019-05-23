@@ -2,13 +2,18 @@ package cmd
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
 
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/initialize"
 	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/services/drupal"
 	"github.com/ironstar-io/tokaido/services/telemetry"
+	"github.com/ironstar-io/tokaido/services/unison"
+	"github.com/ironstar-io/tokaido/system"
 	"github.com/ironstar-io/tokaido/system/console"
+	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/system/ssh"
 	"github.com/ironstar-io/tokaido/utils"
 	. "github.com/logrusorgru/aurora"
@@ -29,9 +34,32 @@ var StatusCmd = &cobra.Command{
 
 		docker.HardCheckTokCompose()
 
+		if conf.GetConfig().Global.Syncservice == "unison" {
+			ok := unison.CheckBackgroundService(conf.GetConfig().Tokaido.Project.Name)
+			if ok {
+				console.Println(`🙂  Background sync service is running`, "√")
+			} else {
+				fmt.Println(Red(`😓  The Unison background sync service is not running`))
+				fmt.Println()
+				pn := conf.GetConfig().Tokaido.Project.Name
+				switch system.CheckOS() {
+				case "osx":
+					h := fs.HomeDir()
+					lp := filepath.Join(h, "Library/Logs/tokaido.sync."+pn)
+					fmt.Printf("You can check Unison logs in the...\n%s and \n%s files\n", Bold(lp+".out"), Bold(lp+".err"))
+					fmt.Printf("Or you can run %s to reconfigure and restart it\n", "tok up")
+				case "linux":
+					sn := "tokaido-sync-" + pn + ".service"
+					fmt.Printf("You can check Unison logs by running 'journalctl -u %s'", sn)
+				}
+				fmt.Println()
+				os.Exit(1)
+			}
+		}
+
 		ok := docker.StatusCheck("", conf.GetConfig().Tokaido.Project.Name)
 		if ok {
-			console.Println(`🙂  All containers are running`, "√")
+			console.Println(`😊  All containers are running`, "√")
 		} else {
 			fmt.Println(`😓  Tokaido containers are not running`)
 			fmt.Println(`    It appears that some or all of the Tokaido containers are offline.

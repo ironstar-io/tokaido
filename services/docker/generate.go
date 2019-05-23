@@ -13,6 +13,7 @@ import (
 	dockertmpl "github.com/ironstar-io/tokaido/services/docker/templates"
 	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/fs"
+	"github.com/ironstar-io/tokaido/system/version"
 	"github.com/ironstar-io/tokaido/utils"
 	. "github.com/logrusorgru/aurora"
 	yaml "gopkg.in/yaml.v2"
@@ -94,15 +95,17 @@ func MarshalledDefaults() []byte {
 // UnmarshalledDefaults ...
 func UnmarshalledDefaults() conf.ComposeDotTok {
 	tokStruct := conf.ComposeDotTok{}
-	xdebugImageVersion := conf.GetConfig().Tokaido.Stability
 	phpVersion := conf.GetConfig().Tokaido.Phpversion
+	unisonVersion := version.GetUnisonVersion()
+	syncservice := conf.GetConfig().Global.Syncservice
 
-	if conf.GetConfig().Global.Syncservice == "docker" {
+	switch syncservice {
+	case "docker":
 		utils.DebugString("attaching repo to /tokaido/site folder using direct Docker mount")
 
 		err := yaml.Unmarshal(dockertmpl.ComposeTokDefaultsDockerVolume, &tokStruct)
 		if err != nil {
-			log.Fatalf("Error setting Compose file defaults: %v", err)
+			log.Fatalf("Error marshalling Docker Volumes Composer template: %v", err)
 		}
 
 		err = yaml.Unmarshal(dockertmpl.TokaidoDockerSiteVolumeAttach(conf.GetProjectPath()), &tokStruct)
@@ -110,11 +113,11 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 			log.Fatalf("Error attaching persistent /tokaido/site volume: %v", err)
 		}
 
-	} else {
+	case "fusion":
 		utils.DebugString("attaching repo to /tokaido/site folder using Fusion sync")
 		err := yaml.Unmarshal(dockertmpl.ComposeTokDefaultsFusionSync, &tokStruct)
 		if err != nil {
-			log.Fatalf("Error setting Compose file defaults: %v", err)
+			log.Fatalf("Error marshalling Fusion Composer template: %v", err)
 		}
 
 		// Configure Fusion Sync volumes
@@ -127,6 +130,25 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 		err = yaml.Unmarshal(dockertmpl.TokaidoFusionSiteVolumeAttach(conf.GetProjectPath(), siteVolName), &tokStruct)
 		if err != nil {
 			log.Fatalf("Error attaching persistent /tokaido/site volume: %v", err)
+		}
+
+	case "unison":
+		// Use Unison Compose Template
+		err := yaml.Unmarshal(dockertmpl.ComposeTokDefaultsUnison, &tokStruct)
+		if err != nil {
+			log.Fatalf("Error marshalling Unison Composer template: %v", err)
+		}
+
+		// Attach the Composer cache volume
+		err = yaml.Unmarshal(dockertmpl.ComposerCacheVolumeAttach(), &tokStruct)
+		if err != nil {
+			log.Fatalf("Error attaching persistent Composer cache volume: %v", err)
+		}
+
+		// Set Unison Version
+		err = yaml.Unmarshal(dockertmpl.SetUnisonVersion(unisonVersion), &tokStruct)
+		if err != nil {
+			log.Fatalf("Error setting Unison version: %v", err)
 		}
 	}
 
@@ -145,6 +167,26 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 	err = yaml.Unmarshal(dockertmpl.MysqlVolumeAttach(mysqlVolName), &tokStruct)
 	if err != nil {
 		log.Fatalf("Error attaching persistent MySQL volume: %v", err)
+	}
+
+	// Set database engine and parameters
+	dbImage := "mysql"
+	dbVersion := "5.7"
+	if conf.GetConfig().Database.Engine == "mariadb" {
+		dbImage = "mariadb"
+		if len(conf.GetConfig().Database.Mariadbconfig.Version) > 1 {
+			dbVersion = conf.GetConfig().Database.Mariadbconfig.Version
+		} else {
+			dbVersion = "10.4"
+		}
+	} else {
+		if len(conf.GetConfig().Database.Mysqlconfig.Version) > 1 {
+			dbVersion = conf.GetConfig().Database.Mysqlconfig.Version
+		}
+	}
+	err = yaml.Unmarshal(dockertmpl.SetDatabase(dbImage, dbVersion), &tokStruct)
+	if err != nil {
+		log.Fatalf("Error generating database config: %v", err)
 	}
 
 	if conf.GetConfig().Services.Solr.Enabled {
@@ -193,13 +235,6 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 	err = yaml.Unmarshal(dockertmpl.StabilityLevel(phpVersion, conf.GetConfig().Tokaido.Stability), &tokStruct)
 	if err != nil {
 		log.Fatalf("Error updating stability version for containers in Compose file: %v", err)
-	}
-
-	if conf.GetConfig().Tokaido.Xdebug {
-		err = yaml.Unmarshal(dockertmpl.EnableXdebug(phpVersion, xdebugImageVersion), &tokStruct)
-		if err != nil {
-			log.Fatalf("Error enabling Xdebug in Compose file: %v", err)
-		}
 	}
 
 	err = yaml.Unmarshal(getCustomTok(), &tokStruct)

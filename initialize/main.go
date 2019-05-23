@@ -9,6 +9,7 @@ import (
 
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/constants"
+	"github.com/ironstar-io/tokaido/system"
 	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/utils"
 	homedir "github.com/mitchellh/go-homedir"
@@ -56,7 +57,16 @@ func readProjectConfig(command string) {
 	utils.DebugString("reading project config")
 	pr := fs.ProjectRoot()
 
-	viper.SetDefault("Global.Syncservice", "docker")
+	switch system.CheckOS() {
+	case "osx":
+		viper.SetDefault("Global.Syncservice", "docker")
+
+	default:
+		viper.SetDefault("Global.Syncservice", "unison")
+	}
+
+	viper.SetDefault("System.Syncsvc.Launchdpath", filepath.Join(fs.HomeDir(), "/Library/LaunchAgents/"))
+	viper.SetDefault("System.Syncsvc.Systemdpath", filepath.Join(fs.HomeDir(), "/.config/systemd/user/"))
 
 	viper.SetDefault("Tokaido.Customcompose", viper.GetBool("customCompose"))
 	viper.SetDefault("Tokaido.Debug", viper.GetBool("debug"))

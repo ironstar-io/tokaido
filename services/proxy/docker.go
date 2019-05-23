@@ -11,12 +11,19 @@ import (
 
 // DockerComposeUp - Lift all containers in the proxy compose file in detached mode
 func DockerComposeUp() {
-	ComposeStdout("up", "-d")
+	ComposeStdout("up", "--remove-orphans", "-d")
 }
 
 // DockerComposeDown ...
 func DockerComposeDown() {
 	ComposeStdout("down")
+}
+
+// DockerComposeRemoveProxy will stop and delete an existing proxy container
+// this is necessary to stop conflicts and hard crashes when changing the sync service
+func DockerComposeRemoveProxy() {
+	ComposeStdout("kill", "proxy")
+	ComposeStdout("rm", "proxy")
 }
 
 // RestartContainer ...
@@ -95,4 +102,14 @@ func DisconnectNetworkEndpoint(network, endpoint string) error {
 	}
 
 	return nil
+}
+
+// UnisonPort - Return the local port for unison
+func UnisonPort() string {
+	p := LocalPort("unison", "5000")
+	if p == "" {
+		log.Fatal("Unison container doesn't appear to be running!")
+	}
+
+	return p
 }
