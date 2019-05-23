@@ -18,10 +18,17 @@ func GenerateProxyDockerCompose() {
 	pn := conf.GetConfig().Tokaido.Project.Name
 	nn := strings.Replace(pn, ".", "", -1) + "_default"
 
-	// Read in the default docker-compose.yml file for proxy
-	err := yaml.Unmarshal(ComposeDefaults(), &dc)
-	if err != nil {
-		log.Fatalf("Error setting Compose file defaults for Proxy service: %v", err)
+	if conf.GetConfig().Global.Syncservice == "unison" {
+		err := yaml.Unmarshal(ComposeDefaultsUnison(), &dc)
+		if err != nil {
+			log.Fatalf("Error setting Compose file defaults for Proxy service: %v", err)
+		}
+	} else {
+		// Read in the default docker-compose.yml file for proxy
+		err := yaml.Unmarshal(ComposeDefaults(), &dc)
+		if err != nil {
+			log.Fatalf("Error setting Compose file defaults for Proxy service: %v", err)
+		}
 	}
 
 	dc.Services.Proxy.Networks = append(dc.Services.Proxy.Networks, nn)

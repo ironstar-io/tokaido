@@ -189,6 +189,13 @@ func SetDatabase(image, version string) []byte {
 `)
 }
 
+// SetUnisonVersion ...
+func SetUnisonVersion(version string) []byte {
+	return []byte(`services:
+  unison:
+    image: tokaido/unison:` + version)
+}
+
 // TokaidoFusionSiteVolumeAttach ...
 func TokaidoFusionSiteVolumeAttach(path, name string) []byte {
 	return []byte(`services:
@@ -246,6 +253,15 @@ func TokaidoDockerSiteVolumeAttach(path string) []byte {
 	}
 
 	return []byte(vols)
+}
+
+// ComposerCacheVolumeAttach ...
+func ComposerCacheVolumeAttach() []byte {
+	return []byte(`services:
+  drush:
+    volumes:
+      - tok_composer_cache:/home/tok/.composer/cache
+`)
 }
 
 // ModWarning - Displayed at the top of `docker-compose.tok.yml`
@@ -473,6 +489,119 @@ services:
       - waiting
     volumes_from:
       - syslog
+    environment:
+      SSH_AUTH_SOCK: /ssh/auth/sock
+      APP_ENV: local
+      PROJECT_NAME: tokaido
+    labels:
+      io.tokaido.managed: local
+      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
+`)
+
+// ComposeTokDefaultsUnison - Template byte array for `docker-compose.tok.yml`
+var ComposeTokDefaultsUnison = []byte(`
+version: "2"
+services:
+  unison:
+    image: tokaido/unison:2.51.2
+    environment:
+      - UNISON_DIR=/tokaido/site
+      - UNISON_UID=1001
+      - UNISON_GID=1001
+    ports:
+      - "5000"
+    volumes:
+      - /tokaido/site
+  syslog:
+    image: tokaido/syslog:stable
+    volumes:
+      - /tokaido/logs
+    labels:
+      io.tokaido.managed: local
+      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
+  haproxy:
+    user: "1005"
+    image: tokaido/haproxy:stable
+    ports:
+      - "8080"
+      - "8443"
+    depends_on:
+      - varnish
+      - nginx
+    labels:
+      io.tokaido.managed: local
+      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
+  varnish:
+    user: "1004"
+    image: tokaido/varnish:stable
+    ports:
+      - "8081"
+    depends_on:
+      - nginx
+    volumes_from:
+      - syslog
+    labels:
+      io.tokaido.managed: local
+      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
+  nginx:
+    user: "1002"
+    image: tokaido/nginx:stable
+    volumes_from:
+      - syslog
+      - unison
+    depends_on:
+      - fpm
+    ports:
+      - "8082"
+    environment:
+      DRUPAL_ROOT: docroot
+    labels:
+      io.tokaido.managed: local
+      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
+  fpm:
+    user: "1001"
+    image: tokaido/php71-fpm:stable
+    working_dir: /tokaido/site/
+    volumes_from:
+      - syslog
+      - unison
+    depends_on:
+      - syslog
+    ports:
+      - "9000"
+    environment:
+      PHP_DISPLAY_ERRORS: "yes"
+    labels:
+      io.tokaido.managed: local
+      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
+  mysql:
+    image: mysql:5.7
+    volumes_from:
+      - syslog
+    volumes:
+      - waiting
+    ports:
+      - "3306"
+    command: --max_allowed_packet=1073741824 --ignore-db-dir=lost+found
+    environment:
+      MYSQL_DATABASE: tokaido
+      MYSQL_USER: tokaido
+      MYSQL_PASSWORD: tokaido
+      MYSQL_ROOT_PASSWORD: tokaido
+    labels:
+      io.tokaido.managed: local
+      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
+  drush:
+    image: tokaido/admin71-heavy:stable
+    hostname: 'tokaido'
+    ports:
+      - "22"
+    working_dir: /tokaido/site
+    volumes:
+      - waiting
+    volumes_from:
+      - syslog
+      - unison
     environment:
       SSH_AUTH_SOCK: /ssh/auth/sock
       APP_ENV: local

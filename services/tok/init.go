@@ -16,7 +16,9 @@ import (
 	"github.com/ironstar-io/tokaido/services/snapshots"
 	"github.com/ironstar-io/tokaido/services/telemetry"
 	"github.com/ironstar-io/tokaido/services/tok/goos"
+	"github.com/ironstar-io/tokaido/services/unison"
 	"github.com/ironstar-io/tokaido/services/xdebug"
+	"github.com/ironstar-io/tokaido/system"
 	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/system/ssh"
@@ -39,6 +41,8 @@ func Init(yes, statuscheck bool) {
 	// System readiness checks
 	version.Check()
 	docker.CheckClientVersion()
+	checkSyncConfig()
+
 	fmt.Println(Cyan("\n🚀  Tokaido is starting up!"))
 
 	// Add this project to the global configuration
@@ -67,11 +71,25 @@ func Init(yes, statuscheck bool) {
 	telemetry.SendGlobal()
 	telemetry.SendProject(startTime, 0)
 
-	docker.CreateComposerCacheVolume()
-
 	git.IgnoreDefaults()
 
+	if c.Global.Syncservice == "unison" {
+		docker.CreateComposerCacheVolume()
+		unison.DockerUp()
+		unison.CreateOrUpdatePrf(unison.LocalPort(), c.Tokaido.Project.Name, pr)
+		s := unison.SyncServiceStatus(c.Tokaido.Project.Name)
+		if s == "stopped" {
+			unison.Sync(c.Tokaido.Project.Name)
+		}
+		if c.System.Syncsvc.Enabled {
+			fmt.Println()
+			console.Println(`🔄  Creating a background process to sync your local repo into the Tokaido environment`, "")
+			unison.CreateSyncService(c.Tokaido.Project.Name, pr)
+		}
+	}
+
 	if c.Global.Syncservice == "fusion" {
+		docker.CreateComposerCacheVolume()
 		utils.DebugString("Using Fusion Sync Service")
 		wo := console.SpinStart("Performing an initial sync. This might take a few minutes")
 		siteVolName := "tok_" + conf.GetConfig().Tokaido.Project.Name + "_tokaido_site"
@@ -165,4 +183,26 @@ func surveyMessage() {
 // InitMessage ...
 func InitMessage() {
 	goos.InitMessage()
+}
+
+// checkSyncConfig verifies if the user's syncservice setting is compatible with their system
+func checkSyncConfig() {
+	c := conf.GetConfig()
+
+	switch system.CheckOS() {
+	case "osx":
+		if c.Global.Syncservice == "fusion" {
+			fmt.Println(Yellow("Warning: The Fusion Sync Service will be removed in Tokaido 1.10. Please migrate to 'docker' or 'unison'"))
+		}
+	case "linux":
+		if c.Global.Syncservice != "unison" {
+			fmt.Println(Sprintf(Yellow("Warning: The syncservice '%s' is not compatible with Linux. Tokaido will automatically be set to use Unison\n\n"), Bold(c.Global.Syncservice)))
+			conf.SetGlobalConfigValueByArgs([]string{"syncservice", "unison"})
+		}
+	}
+
+	if c.Global.Syncservice == "unison" {
+		unison.SystemCompatibilityChecks()
+	}
+
 }

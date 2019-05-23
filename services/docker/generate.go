@@ -13,6 +13,7 @@ import (
 	dockertmpl "github.com/ironstar-io/tokaido/services/docker/templates"
 	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/fs"
+	"github.com/ironstar-io/tokaido/system/version"
 	"github.com/ironstar-io/tokaido/utils"
 	. "github.com/logrusorgru/aurora"
 	yaml "gopkg.in/yaml.v2"
@@ -95,13 +96,16 @@ func MarshalledDefaults() []byte {
 func UnmarshalledDefaults() conf.ComposeDotTok {
 	tokStruct := conf.ComposeDotTok{}
 	phpVersion := conf.GetConfig().Tokaido.Phpversion
+	unisonVersion := version.GetUnisonVersion()
+	syncservice := conf.GetConfig().Global.Syncservice
 
-	if conf.GetConfig().Global.Syncservice == "docker" {
+	switch syncservice {
+	case "docker":
 		utils.DebugString("attaching repo to /tokaido/site folder using direct Docker mount")
 
 		err := yaml.Unmarshal(dockertmpl.ComposeTokDefaultsDockerVolume, &tokStruct)
 		if err != nil {
-			log.Fatalf("Error setting Compose file defaults: %v", err)
+			log.Fatalf("Error marshalling Docker Volumes Composer template: %v", err)
 		}
 
 		err = yaml.Unmarshal(dockertmpl.TokaidoDockerSiteVolumeAttach(conf.GetProjectPath()), &tokStruct)
@@ -109,11 +113,11 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 			log.Fatalf("Error attaching persistent /tokaido/site volume: %v", err)
 		}
 
-	} else {
+	case "fusion":
 		utils.DebugString("attaching repo to /tokaido/site folder using Fusion sync")
 		err := yaml.Unmarshal(dockertmpl.ComposeTokDefaultsFusionSync, &tokStruct)
 		if err != nil {
-			log.Fatalf("Error setting Compose file defaults: %v", err)
+			log.Fatalf("Error marshalling Fusion Composer template: %v", err)
 		}
 
 		// Configure Fusion Sync volumes
@@ -126,6 +130,25 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 		err = yaml.Unmarshal(dockertmpl.TokaidoFusionSiteVolumeAttach(conf.GetProjectPath(), siteVolName), &tokStruct)
 		if err != nil {
 			log.Fatalf("Error attaching persistent /tokaido/site volume: %v", err)
+		}
+
+	case "unison":
+		// Use Unison Compose Template
+		err := yaml.Unmarshal(dockertmpl.ComposeTokDefaultsUnison, &tokStruct)
+		if err != nil {
+			log.Fatalf("Error marshalling Unison Composer template: %v", err)
+		}
+
+		// Attach the Composer cache volume
+		err = yaml.Unmarshal(dockertmpl.ComposerCacheVolumeAttach(), &tokStruct)
+		if err != nil {
+			log.Fatalf("Error attaching persistent Composer cache volume: %v", err)
+		}
+
+		// Set Unison Version
+		err = yaml.Unmarshal(dockertmpl.SetUnisonVersion(unisonVersion), &tokStruct)
+		if err != nil {
+			log.Fatalf("Error setting Unison version: %v", err)
 		}
 	}
 

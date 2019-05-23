@@ -12,7 +12,7 @@ import (
 	"path/filepath"
 
 	"github.com/ironstar-io/tokaido/conf"
-	"github.com/ironstar-io/tokaido/services/unison/templates"
+	unisontmpl "github.com/ironstar-io/tokaido/services/unison/templates"
 	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/daemon"
 	"github.com/ironstar-io/tokaido/system/fs"

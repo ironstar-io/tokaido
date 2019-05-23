@@ -27,8 +27,13 @@ func Setup() {
 	utils.DebugString("configuring proxy TLS")
 	ssl.Configure(getProxyClientTLSDir())
 
+	DockerComposeRemoveProxy()
 	GenerateProxyDockerCompose()
 	DockerComposeUp()
+
+	if conf.GetConfig().Global.Syncservice == "unison" {
+		ConfigureUnison()
+	}
 
 	ConfigureProjectNginx()
 
