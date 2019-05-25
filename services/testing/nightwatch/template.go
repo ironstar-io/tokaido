@@ -2,11 +2,11 @@ package nightwatch
 
 import "github.com/ironstar-io/tokaido/system/fs"
 
-func generateEnvFile(path, baseURL string) {
-	fs.TouchByteArray(path, buildEnvFileContents(baseURL))
+func generateEnvFile(path string) {
+	fs.TouchByteArray(path, buildEnvFileContents())
 }
 
-func buildEnvFileContents(baseURL string) []byte {
+func buildEnvFileContents() []byte {
 	return []byte(`# This is a dotenv file used by JavaScript tasks.
 # Copy this to '.env' to override.
 
@@ -18,7 +18,7 @@ func buildEnvFileContents(baseURL string) []byte {
 # don't already have one running, e.g. Apache, you can use PHP's built-in web
 # server by running the following command in your Drupal root folder:
 # php -S localhost:8888 .ht.router.php
-DRUPAL_TEST_BASE_URL=` + baseURL + `
+DRUPAL_TEST_BASE_URL=http://nginx:8082
 
 # Tests need to be executed with a user in the same group as the web server
 # user.

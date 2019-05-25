@@ -265,6 +265,7 @@ func getCustomTok() []byte {
 	dc.Services.Redis.Enabled = false
 	dc.Services.Mailhog.Enabled = false
 	dc.Services.Adminer.Enabled = false
+	dc.Services.Chromedriver.Enabled = false
 
 	cc, err := yaml.Marshal(dc)
 	if err != nil {

@@ -113,9 +113,10 @@ type Services struct {
 		Labels      map[string]string `yaml:"labels,omitempty"`
 	} `yaml:"unison,omitempty"`
 	Chromedriver struct {
-		Enabled bool     `yaml:"enabled,omitempty"`
-		Image   string   `yaml:"image,omitempty"`
-		Ports   []string `yaml:"ports,omitempty"`
+		Enabled     bool              `yaml:"enabled,omitempty"`
+		Environment map[string]string `yaml:"environment,omitempty"`
+		Image       string            `yaml:"image,omitempty"`
+		Ports       []string          `yaml:"ports,omitempty"`
 	} `yaml:"chromedriver,omitempty"`
 	Sync struct {
 		Image       string            `yaml:"image,omitempty"`

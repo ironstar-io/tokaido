@@ -10,7 +10,7 @@ import (
 	"github.com/ironstar-io/tokaido/services/testing/nightwatch/goos"
 	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/fs"
-	"github.com/ironstar-io/tokaido/utils"
+	"github.com/ironstar-io/tokaido/system/ssh"
 )
 
 func calcSiteURL() string {
@@ -25,28 +25,33 @@ func calcSiteURL() string {
 func configureEnvFile() {
 	env := filepath.Join(conf.CoreDrupal8Path(), ".env")
 	if fs.CheckExists(env) == false {
-		generateEnvFile(env, calcSiteURL())
+		generateEnvFile(env)
 	}
 }
 
 func yarnInstall() error {
-	d := conf.CoreDrupal8Path()
+	cp := conf.CoreDrupal8Path()
 
-	_, err := utils.CommandSubSplitOutputContext(d, "yarn", "check", "--verify-tree")
-	if err != nil {
-		fmt.Println()
-		console.Println("🧶   Nightwatch dependencies haven't been installed yet. Attempting to install with yarn", "")
-		utils.StreamOSCmdContext(d, "yarn", "install")
-	}
+	fmt.Println("    Ensuring Nightwatch dependencies are installed")
+	ssh.StreamConnectCommand([]string{"cd", cp, "&&", "yarn", "install"})
+
+	// _, err := utils.CommandSubSplitOutputContext(d, "yarn", "check", "--verify-tree")
+	// if err != nil {
+	// 	fmt.Println()
+	// 	console.Println("🧶   Nightwatch dependencies haven't been installed yet. Attempting to install with yarn", "")
+	// 	utils.StreamOSCmdContext(d, "yarn", "install")
+	// }
 
 	return nil
 }
 
 func yarnTestNightwatch() {
-	d := conf.CoreDrupal8Path()
+	cp := conf.CoreDrupal8Path()
 
 	console.Println("👩‍💻  Tokaido is starting a Nightwatch test run with the command `yarn test:nightwatch`\n", "")
-	utils.StreamOSCmdContext(d, "yarn", "test:nightwatch")
+
+	ssh.StreamConnectCommand([]string{"cd", cp, "&&", "yarn", "test:nightwatch"})
+
 }
 
 func checkCompatibility() error {
