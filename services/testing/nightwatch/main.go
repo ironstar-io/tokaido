@@ -54,6 +54,10 @@ func checkCompatibility() error {
 	return nil
 }
 
+func enableChromedriver() {
+	conf.SetConfigValueByArgs([]string{"services", "chromedriver", "enabled", "true"}, "project")
+}
+
 // RunDrupalTests - Run Drupal Nightwatch tests. See: https://github.com/drupal/drupal/blob/8.6.x/core/tests/README.md#nightwatch-tests
 func RunDrupalTests() error {
 	err := CheckLocalDrupal()
@@ -66,6 +70,8 @@ func RunDrupalTests() error {
 	if err != nil {
 		return err
 	}
+
+	enableChromedriver()
 
 	checkPHPUnit()
 	yarnInstall()

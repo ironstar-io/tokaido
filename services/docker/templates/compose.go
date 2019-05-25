@@ -156,6 +156,20 @@ func EnableMemcache(version string) []byte {
     image: memcached:` + version)
 }
 
+// EnableChromedriver ...
+func EnableChromedriver() []byte {
+	return []byte(`services:
+  chromedriver:
+    labels:
+      io.tokaido.managed: local
+      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
+    image: robcherry/docker-chromedriver:latest
+    ports:
+      - "4444"
+    environment:
+      CHROMEDRIVER_WHITELISTED_IPS: ""`)
+}
+
 // ExternalVolumeDeclare ...
 func ExternalVolumeDeclare(name string) []byte {
 	return []byte(`volumes:

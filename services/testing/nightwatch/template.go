@@ -34,8 +34,8 @@ DRUPAL_TEST_DB_URL=sqlite://localhost/sites/default/files/db.sqlite
 
 # If Chromedriver is running as a service elsewhere, set it here.
 # When using DRUPAL_TEST_CHROMEDRIVER_AUTOSTART leave this at the default settings.
-DRUPAL_TEST_WEBDRIVER_HOSTNAME=localhost
-DRUPAL_TEST_WEBDRIVER_PORT=9515
+DRUPAL_TEST_WEBDRIVER_HOSTNAME=chromedriver
+DRUPAL_TEST_WEBDRIVER_PORT=4444
 
 # If using Selenium, override the path prefix here.
 # See http://nightwatchjs.org/gettingstarted#browser-drivers-setup

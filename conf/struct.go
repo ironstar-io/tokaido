@@ -112,6 +112,11 @@ type Services struct {
 		Volumes     []string          `yaml:"volumes,omitempty"`
 		Labels      map[string]string `yaml:"labels,omitempty"`
 	} `yaml:"unison,omitempty"`
+	Chromedriver struct {
+		Enabled bool     `yaml:"enabled,omitempty"`
+		Image   string   `yaml:"image,omitempty"`
+		Ports   []string `yaml:"ports,omitempty"`
+	} `yaml:"chromedriver,omitempty"`
 	Sync struct {
 		Image       string            `yaml:"image,omitempty"`
 		Hostname    string            `yaml:"hostname,omitempty"`

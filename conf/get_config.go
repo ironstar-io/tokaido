@@ -41,13 +41,18 @@ func GetConfig() *Config {
 
 // GetProjectPath returns the full system path to this project as it exists in the global.yml file
 func GetProjectPath() (path string) {
+	// If the path exists in the global config, return it
 	for _, v := range GetConfig().Global.Projects {
 		if v.Name == GetConfig().Tokaido.Project.Name {
 			return v.Path
 		}
 	}
 
-	panic("Unexpected error resolving this project's path in the global config file")
+	// Construct the path and save it to global config since it doesn't already exist
+	pr := fs.ProjectRoot()
+	RegisterProject(GetConfig().Tokaido.Project.Name, pr)
+
+	return pr
 }
 
 // GetGlobalProjectSettings returns the current global conf object for the current project
