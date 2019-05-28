@@ -4,7 +4,6 @@ import (
 	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/services/drush"
 	"github.com/ironstar-io/tokaido/services/proxy"
-	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/goos"
 )
 
@@ -42,14 +41,6 @@ func OpenTokaidoProxy(admin bool) {
 	var path string
 	if admin == true {
 		path = drush.GetAdminSignOnPath()
-	}
-
-	if proxy.CheckProxyUp() != true {
-		console.Println(`
-🤔  It looks like your Drupal site might not be working properly.
-    Tokaido will open the site in your browser anyway, but you might want to run 'tok open haproxy'
-    to bypass the Tokaido proxy service if this is causing problems.
-    `, "")
 	}
 
 	u := proxy.GetProxyURL()
