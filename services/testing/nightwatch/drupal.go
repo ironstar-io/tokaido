@@ -60,10 +60,15 @@ func checkNightwatchConfig() error {
 	dr := conf.GetConfig().Drupal.Path
 
 	nightwatchConfPath := filepath.Join(pr, dr, "core/tests/Drupal/Nightwatch/nightwatch.conf.js")
-	nightwatchOk := fs.Contains(nightwatchConfPath, "acceptInsecureCerts: true")
 	utils.DebugString("nightwatchConfPath: " + nightwatchConfPath)
-	utils.DebugString("nightwatchOk: " + strconv.FormatBool(nightwatchOk))
+	if !fs.CheckExists(nightwatchConfPath) {
+		fmt.Println(Red("Expected nightwatch configuration file was not found: "), nightwatchConfPath)
+		fmt.Println(Red("Tokaido cannot continue. Is your Drupal Core installation working?"))
+		os.Exit(1)
+	}
 
+	nightwatchOk := fs.Contains(nightwatchConfPath, "acceptInsecureCerts: true")
+	utils.DebugString("nightwatchOk: " + strconv.FormatBool(nightwatchOk))
 	if !nightwatchOk {
 		ok = false
 		fmt.Println(Red("Tokaido tests via HTTPS, but Druapl's Nightwatch config only supports HTTP."))
@@ -75,10 +80,15 @@ func checkNightwatchConfig() error {
 	}
 
 	drupalUserIsLoggedInPath := filepath.Join(pr, dr, "core/tests/Drupal/Nightwatch/Commands/drupalUserIsLoggedIn.js")
-	drupalUserIsLoggedInOk := fs.Contains(drupalUserIsLoggedInPath, "/^SSESS/")
 	utils.DebugString("drupalUserIsLoggedInPath: " + drupalUserIsLoggedInPath)
-	utils.DebugString("drupalUserIsLoggedInOk: " + strconv.FormatBool(drupalUserIsLoggedInOk))
+	if !fs.CheckExists(drupalUserIsLoggedInPath) {
+		fmt.Println(Red("Expected nightwatch command file was not found: "), drupalUserIsLoggedInPath)
+		fmt.Println(Red("Tokaido cannot continue. Is your Drupal Core installation working?"))
+		os.Exit(1)
+	}
 
+	drupalUserIsLoggedInOk := fs.Contains(drupalUserIsLoggedInPath, "/^SSESS/")
+	utils.DebugString("drupalUserIsLoggedInOk: " + strconv.FormatBool(drupalUserIsLoggedInOk))
 	if !drupalUserIsLoggedInOk {
 		ok = false
 		fmt.Println(Red("Tokaido tests via HTTPS, but Druapl's Nightwatch config only supports HTTP."))
