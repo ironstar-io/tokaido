@@ -27,7 +27,11 @@ func Setup() {
 	utils.DebugString("configuring proxy TLS")
 	ssl.Configure(getProxyClientTLSDir())
 
-	DockerComposeRemoveProxy()
+	// If an existing proxy config exists, remove it to start again.
+	if fs.CheckExists(fs.HomeDir() + "/.tok/proxy/docker-compose.yml") {
+		DockerComposeRemoveProxy()
+	}
+
 	GenerateProxyDockerCompose()
 	DockerComposeUp()
 
