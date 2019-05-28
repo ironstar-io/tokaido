@@ -2,13 +2,19 @@ package nightwatch
 
 import (
 	"errors"
+	"fmt"
+	"os"
 	"path/filepath"
 	"regexp"
+	"strconv"
 
-	"github.com/blang/semver"
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/services/drupal"
 	"github.com/ironstar-io/tokaido/system/fs"
+	"github.com/ironstar-io/tokaido/utils"
+
+	"github.com/blang/semver"
+	. "github.com/logrusorgru/aurora"
 )
 
 var rgx = regexp.MustCompile("'(.*?)'")
@@ -17,7 +23,7 @@ var validDrupalRange = ">=8.6.x"
 // CheckLocalDrupal ...
 func CheckLocalDrupal() error {
 	if fs.CheckExists(filepath.Join(conf.GetProjectPath(), conf.CoreDrupalFile())) == false {
-		return errors.New("A valid Drupal installation was not found. Exiting...")
+		return errors.New("a valid Drupal installation was not found")
 	}
 
 	e := checkDrupalVersion()
@@ -43,4 +49,50 @@ func checkDrupalVersion() error {
 	}
 
 	return errors.New("The Drupal version (" + drupalVersion + ") is not supported for Nightwatch tests. Drupal version must be " + validDrupalRange + ". See: https://github.com/drupal/drupal/blob/8.6.x/core/tests/README.md#nightwatch-tests for more information.")
+}
+
+// checkNightwatchConfig scans nightwatch config files in Drupal Core to see
+// if they contain settings that we need. If not, we provide info for the user
+// to manually fix those, until such time as we have Drupal patches ready
+func checkNightwatchConfig() error {
+	ok := true // If false at the end of checking, the program will exit with an error
+	pr := conf.GetProjectPath()
+	dr := conf.GetConfig().Drupal.Path
+
+	nightwatchConfPath := filepath.Join(pr, dr, "core/tests/Drupal/Nightwatch/nightwatch.conf.js")
+	nightwatchOk := fs.Contains(nightwatchConfPath, "acceptInsecureCerts: true")
+	utils.DebugString("nightwatchConfPath: " + nightwatchConfPath)
+	utils.DebugString("nightwatchOk: " + strconv.FormatBool(nightwatchOk))
+
+	if !nightwatchOk {
+		ok = false
+		fmt.Println(Red("Tokaido tests via HTTPS, but Druapl's Nightwatch config only supports HTTP."))
+		fmt.Println(Red("To fix this, you need to add 'acceptInsecureCerts: true' to the desiredCapabilities "))
+		fmt.Println(Red("section of "), nightwatchConfPath)
+		fmt.Println()
+		fmt.Println(Yellow("Please see docs.tokaido.io for more information"))
+		fmt.Println()
+	}
+
+	drupalUserIsLoggedInPath := filepath.Join(pr, dr, "core/tests/Drupal/Nightwatch/Commands/drupalUserIsLoggedIn.js")
+	drupalUserIsLoggedInOk := fs.Contains(drupalUserIsLoggedInPath, "/^SSESS/")
+	utils.DebugString("drupalUserIsLoggedInPath: " + drupalUserIsLoggedInPath)
+	utils.DebugString("drupalUserIsLoggedInOk: " + strconv.FormatBool(drupalUserIsLoggedInOk))
+
+	if !drupalUserIsLoggedInOk {
+		ok = false
+		fmt.Println(Red("Tokaido tests via HTTPS, but Druapl's Nightwatch config only supports HTTP."))
+		fmt.Println(Red("To fix this, you need change the cookie name in"), drupalUserIsLoggedInPath)
+		fmt.Println(Red("from 'SESS' to 'SSESS' (adding one extra 'S') "))
+		fmt.Println()
+		fmt.Println(Yellow("Please see docs.tokaido.io for more information"))
+		fmt.Println()
+	}
+
+	if !ok {
+		fmt.Println(Red("'tok test' cannot continue until Drupal core config is updated"))
+		os.Exit(0)
+	}
+
+	return nil
 }

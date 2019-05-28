@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/ironstar-io/tokaido/conf"
@@ -20,6 +21,7 @@ var TestCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		initialize.TokConfig("test")
 		telemetry.SendCommand("test")
+		fmt.Println()
 		utils.CheckCmdHard("docker-compose")
 
 		docker.HardCheckTokCompose()

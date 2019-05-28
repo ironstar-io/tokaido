@@ -7,9 +7,7 @@ func generateEnvFile(path string) {
 }
 
 func buildEnvFileContents() []byte {
-	return []byte(`# This is a dotenv file used by JavaScript tasks.
-# Copy this to '.env' to override.
-
+	return []byte(`
 #############################
 # General Test Environment #
 #############################
@@ -18,7 +16,7 @@ func buildEnvFileContents() []byte {
 # don't already have one running, e.g. Apache, you can use PHP's built-in web
 # server by running the following command in your Drupal root folder:
 # php -S localhost:8888 .ht.router.php
-DRUPAL_TEST_BASE_URL=http://nginx:8082
+DRUPAL_TEST_BASE_URL=https://haproxy:8443
 
 # Tests need to be executed with a user in the same group as the web server
 # user.
@@ -26,7 +24,8 @@ DRUPAL_TEST_BASE_URL=http://nginx:8082
 
 # By default we use sqlite as database. Use
 # mysql://username:password@localhost/databasename#table_prefix for mysql.
-DRUPAL_TEST_DB_URL=sqlite://localhost/sites/default/files/db.sqlite
+#DRUPAL_TEST_DB_URL=sqlite://localhost/sites/default/files/db.sqlite
+DRUPAL_TEST_DB_URL=mysql://tokaido:tokaido@mysql/tests
 
 #############
 # Webdriver #
@@ -35,7 +34,7 @@ DRUPAL_TEST_DB_URL=sqlite://localhost/sites/default/files/db.sqlite
 # If Chromedriver is running as a service elsewhere, set it here.
 # When using DRUPAL_TEST_CHROMEDRIVER_AUTOSTART leave this at the default settings.
 DRUPAL_TEST_WEBDRIVER_HOSTNAME=chromedriver
-DRUPAL_TEST_WEBDRIVER_PORT=4444
+DRUPAL_TEST_WEBDRIVER_PORT=9515
 
 # If using Selenium, override the path prefix here.
 # See http://nightwatchjs.org/gettingstarted#browser-drivers-setup
@@ -48,7 +47,7 @@ DRUPAL_TEST_WEBDRIVER_PORT=4444
 # Automatically start chromedriver for local development. Set to false when you
 # use your own webdriver or chromedriver setup.
 # Also set it to false when you use a different browser for testing.
-DRUPAL_TEST_CHROMEDRIVER_AUTOSTART=true
+DRUPAL_TEST_CHROMEDRIVER_AUTOSTART=false
 
 # A list of arguments to pass to Chrome, separated by spaces
 # e.g. '--disable-gpu --headless --no-sandbox'.

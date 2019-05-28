@@ -88,7 +88,7 @@ type Config struct {
 		Syncsvc struct {
 			Systemdpath string `yaml:"systemdpath,omitempty"`
 			Launchdpath string `yaml:"launchdpath,omitempty"`
-			Enabled     bool   `yaml:"enabled"`
+			Enabled     bool   `yaml:"enabled,omitempty"`
 		} `yaml:"syncsvc,omitempty"`
 		Proxy struct {
 			Enabled bool `yaml:"enabled"`

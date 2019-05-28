@@ -163,11 +163,9 @@ func EnableChromedriver() []byte {
     labels:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
-    image: robcherry/docker-chromedriver:latest
+    image: drupalci/chromedriver:production
     ports:
-      - "4444"
-    environment:
-      CHROMEDRIVER_WHITELISTED_IPS: ""`)
+      - "9515"`)
 }
 
 // ExternalVolumeDeclare ...

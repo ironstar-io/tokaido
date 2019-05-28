@@ -36,6 +36,16 @@ func Ps() {
 		}
 	}
 
+	if conf.GetConfig().Services.Chromedriver.Enabled {
+		chromedriver := docker.GetContainer("chromedriver", pn)
+		if chromedriver.State == "running" {
+			o = append(o, Sprintf("chromedriver|-|-|%s", Green(chromedriver.State)))
+		} else {
+			o = append(o, Sprintf("chromedriver|-|-|%s", Yellow("offline")))
+			failure = true
+		}
+	}
+
 	// Output Drush status
 	admin := docker.GetContainer("drush", pn)
 	if admin.State == "running" {

@@ -55,7 +55,7 @@ func RequestOptIn() {
 	confirmation := utils.ConfirmationPrompt(`
 To help us improve Tokaido, you can opt-in to sending anonymous usage data.
 
-The data we collect can not be used to identify you and will never be sold, licensed, or
+The data we collect cannot be used to identify you and will never be sold, licensed, or
 transferred to a third party. We commit to sharing summary reports on this data (but not
 the raw data itself) with the community to help us all understand how Drupal is used.
 
