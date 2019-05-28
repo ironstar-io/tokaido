@@ -22,7 +22,7 @@ func GetConfig() *Config {
 
 	// Create an empty global config file if on doesn't exist
 	gcPath := getConfigPath("global")
-	if fs.CheckExists(gcPath) {
+	if !fs.CheckExists(gcPath) {
 		WriteGlobalConfig(Global{})
 	}
 
@@ -41,13 +41,15 @@ func GetConfig() *Config {
 
 // GetProjectPath returns the full system path to this project as it exists in the global.yml file
 func GetProjectPath() (path string) {
+	// If the path exists in the global config, return it
 	for _, v := range GetConfig().Global.Projects {
 		if v.Name == GetConfig().Tokaido.Project.Name {
 			return v.Path
 		}
 	}
 
-	panic("Unexpected error resolving this project's path in the global config file")
+	// The path isn't in global.yml yet, so we'll just return it based on the current project context
+	return fs.ProjectRoot()
 }
 
 // GetGlobalProjectSettings returns the current global conf object for the current project

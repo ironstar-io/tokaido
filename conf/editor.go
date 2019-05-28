@@ -475,7 +475,7 @@ func DatabaseMenu() {
 			Name:    "MySQL Version",
 			Type:    "menu",
 			Current: GetConfig().Database.Mysqlconfig.Version,
-			Default: "5.6",
+			Default: "5.7",
 			Detail:  "Set the MySQL Version if MySQL is used",
 		},
 		{

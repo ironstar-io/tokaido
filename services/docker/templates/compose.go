@@ -156,6 +156,18 @@ func EnableMemcache(version string) []byte {
     image: memcached:` + version)
 }
 
+// EnableChromedriver ...
+func EnableChromedriver() []byte {
+	return []byte(`services:
+  chromedriver:
+    labels:
+      io.tokaido.managed: local
+      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
+    image: drupalci/chromedriver:production
+    ports:
+      - "9515"`)
+}
+
 // ExternalVolumeDeclare ...
 func ExternalVolumeDeclare(name string) []byte {
 	return []byte(`volumes:

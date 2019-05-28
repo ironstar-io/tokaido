@@ -40,7 +40,6 @@ func SetDrupalConfig(drupalType string) {
 	if (p == "") || (v == "") {
 		p, v = detectDrupalSettings()
 	}
-
 	CreateOrReplaceDrupalConfig(p, v)
 }
 
@@ -163,13 +162,12 @@ func CoreDrupalFile() string {
 	return path
 }
 
-// CoreDrupal8Path - Return the core Drupal 8 path for the users' installation
+// CoreDrupal8Path - Return the core Drupal 8 path
 func CoreDrupal8Path() string {
 	c := GetConfig()
-	tp := GetProjectPath()
 	rp := c.Drupal.Path
 
-	return filepath.Join(tp, rp, "core")
+	return filepath.Join("/tokaido/site", rp, "core")
 }
 
 // GetRootDir - Return the drupal root folder name without workdir

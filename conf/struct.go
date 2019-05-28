@@ -88,7 +88,7 @@ type Config struct {
 		Syncsvc struct {
 			Systemdpath string `yaml:"systemdpath,omitempty"`
 			Launchdpath string `yaml:"launchdpath,omitempty"`
-			Enabled     bool   `yaml:"enabled"`
+			Enabled     bool   `yaml:"enabled,omitempty"`
 		} `yaml:"syncsvc,omitempty"`
 		Proxy struct {
 			Enabled bool `yaml:"enabled"`
@@ -112,6 +112,12 @@ type Services struct {
 		Volumes     []string          `yaml:"volumes,omitempty"`
 		Labels      map[string]string `yaml:"labels,omitempty"`
 	} `yaml:"unison,omitempty"`
+	Chromedriver struct {
+		Enabled     bool              `yaml:"enabled,omitempty"`
+		Environment map[string]string `yaml:"environment,omitempty"`
+		Image       string            `yaml:"image,omitempty"`
+		Ports       []string          `yaml:"ports,omitempty"`
+	} `yaml:"chromedriver,omitempty"`
 	Sync struct {
 		Image       string            `yaml:"image,omitempty"`
 		Hostname    string            `yaml:"hostname,omitempty"`

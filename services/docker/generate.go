@@ -232,6 +232,13 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 		}
 	}
 
+	if conf.GetConfig().Services.Chromedriver.Enabled {
+		err = yaml.Unmarshal(dockertmpl.EnableChromedriver(), &tokStruct)
+		if err != nil {
+			log.Fatalf("Error enabling Chromedriver in Compose file: %v", err)
+		}
+	}
+
 	// Set our stability version
 	err = yaml.Unmarshal(dockertmpl.StabilityLevel(phpVersion, conf.GetConfig().Tokaido.Stability), &tokStruct)
 	if err != nil {
@@ -258,6 +265,7 @@ func getCustomTok() []byte {
 	dc.Services.Redis.Enabled = false
 	dc.Services.Mailhog.Enabled = false
 	dc.Services.Adminer.Enabled = false
+	dc.Services.Chromedriver.Enabled = false
 
 	cc, err := yaml.Marshal(dc)
 	if err != nil {
