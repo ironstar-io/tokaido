@@ -72,9 +72,9 @@ func Init(yes, statuscheck bool) {
 	telemetry.SendProject(startTime, 0)
 
 	git.IgnoreDefaults()
+	docker.CreateComposerCacheVolume()
 
 	if c.Global.Syncservice == "unison" {
-		docker.CreateComposerCacheVolume()
 		unison.DockerUp()
 		unison.CreateOrUpdatePrf(unison.LocalPort(), c.Tokaido.Project.Name, pr)
 		s := unison.SyncServiceStatus(c.Tokaido.Project.Name)
