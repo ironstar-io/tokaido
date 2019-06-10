@@ -306,8 +306,17 @@ func getConfigPath(configFile string) string {
 		fmt.Println(Sprintf("The config file %s is unknown", Bold(configFile)))
 	}
 
+	// Initialise the config file if it doesn't exist
 	var _, errf = os.Stat(cp)
 	if os.IsNotExist(errf) {
+		// The global .tok path requires appropriate permissions
+		gp := filepath.Dir(cp)
+		if configFile == "global" && !fs.CheckExists(gp) {
+			err := os.MkdirAll(gp, 0700)
+			if err != nil {
+				log.Fatalf("Unexpected error creating global config directory")
+			}
+		}
 		fs.TouchEmpty(cp)
 	}
 
