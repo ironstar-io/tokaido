@@ -89,7 +89,7 @@ func marshalTemplates() Templates {
 	}
 
 	client := http.Client{
-		Timeout: time.Second * 3,
+		Timeout: time.Second * 15,
 	}
 	res, err := client.Do(req)
 	if err != nil {
