@@ -2,11 +2,11 @@ package proxy
 
 import (
 	"github.com/ironstar-io/tokaido/conf"
+	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/utils"
 
 	"log"
-	"strings"
 
 	yaml "gopkg.in/yaml.v2"
 )
@@ -16,7 +16,8 @@ func GenerateProxyDockerCompose() {
 	utils.DebugString("generating proxy compose file")
 	dc := DockerCompose{}
 	pn := conf.GetConfig().Tokaido.Project.Name
-	nn := strings.Replace(pn, ".", "", -1) + "_default"
+	nn := docker.GetNetworkName(pn)
+	utils.DebugString("resolved network name is: " + nn)
 
 	if conf.GetConfig().Global.Syncservice == "unison" {
 		err := yaml.Unmarshal(ComposeDefaultsUnison(), &dc)

@@ -35,7 +35,7 @@ func DestroyProject() {
 
 // RemoveNetwork ...
 func RemoveNetwork() {
-	n := conf.GetConfig().Tokaido.Project.Name + "_default"
+	n := docker.GetNetworkName(conf.GetConfig().Tokaido.Project.Name)
 
 	err := DisconnectNetworkEndpoint(n, proxyNetworkName)
 	if err != nil {
