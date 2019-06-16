@@ -32,9 +32,11 @@ func GenerateProxyDockerCompose() {
 		}
 	}
 
-	dc.Services.Proxy.Networks = append(dc.Services.Proxy.Networks, nn)
+	// build the list of networks that are attached to the proxy service itself
+	dc.Services.Proxy.Networks = buildProxyServiceNetworkAttachments()
 
-	n := buildNetworks(dc.Services.Proxy.Networks)
+	// build the list of networks as part of the base 'networks:' tree in docker compose
+	n := buildProxyExternalNetworkList()
 
 	cy, err := yaml.Marshal(&dc)
 	if err != nil {
