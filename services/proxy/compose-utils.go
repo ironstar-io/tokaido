@@ -10,6 +10,7 @@ import (
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/filters"
+	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/utils"
 )
@@ -52,35 +53,61 @@ func projectInCompose(networks []string, projectName string) bool {
 	return false
 }
 
-// buildNetworks compiles the provided list of networks into a docker-compose format
-// while also checking those networks still exist in Docker
-func buildNetworks(networks []string) []byte {
-	utils.DebugString("Creating a list of available networks for proxy service")
-	n := `networks:
-  proxy:
-`
+func buildProxyServiceNetworkAttachments() []string {
+	utils.DebugString("Creating a list of networks to be attached to the proxy container")
 
-	for _, v := range networks {
-		if v == "proxy" {
-			continue
-		}
+	c := conf.GetConfig()
+	nl := []string{"proxy"}
 
+	for _, v := range c.Global.Projects {
+		nn := docker.GetNetworkName(v.Name)
 		// Verify that this network still exists in Docker
-		ok, err := validateNetwork(v)
+		ok, err := validateNetwork(nn)
 		if err != nil {
 			log.Fatal(err)
 		}
 		if !ok {
 			// That network no longer exists, don't add it
-			utils.DebugString("network [" + v + "] no longer exists, not adding it to proxy service")
+			utils.DebugString("network [" + nn + "] no longer exists, not attaching it to the proxy container")
 			continue
 		}
 
-		utils.DebugString("adding network [" + v + "] to proxy service")
+		utils.DebugString("attaching network [" + nn + "] to the proxy container")
+		nl = append(nl, nn)
 
-		n = n + `  ` + v + `:
+	}
+
+	return nl
+}
+
+// buildProxyExternalNetworkList uses the global project list to create a docker-compose.yml segment with
+// those networks, but only if they still exist
+func buildProxyExternalNetworkList() []byte {
+	utils.DebugString("Creating a list of networks for proxy's docker-compose.yml external network declaration")
+
+	c := conf.GetConfig()
+	n := `networks:
+  proxy:
+`
+
+	for _, v := range c.Global.Projects {
+		nn := docker.GetNetworkName(v.Name)
+		// Verify that this network still exists in Docker
+		ok, err := validateNetwork(nn)
+		if err != nil {
+			log.Fatal(err)
+		}
+		if !ok {
+			// That network no longer exists, don't add it
+			utils.DebugString("network [" + nn + "] no longer exists, not adding it to proxy service")
+			continue
+		}
+
+		utils.DebugString("adding network [" + nn + "] to proxy service")
+		n = n + `  ` + nn + `:
     external: true
 `
+
 	}
 
 	return []byte(n)

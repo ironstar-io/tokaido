@@ -36,7 +36,7 @@ func RemoveProjectFromDockerCompose() {
 		log.Fatalf("Error setting Unison version: %v", err)
 	}
 
-	// Find and remove the project network
+	// Find and remove the project network if it is duplicated
 	for i, v := range dc.Services.Proxy.Networks {
 		if v == nn {
 			dc.Services.Proxy.Networks = append(dc.Services.Proxy.Networks[:i], dc.Services.Proxy.Networks[i+1:]...)
@@ -44,7 +44,7 @@ func RemoveProjectFromDockerCompose() {
 		}
 	}
 
-	n := buildNetworks(dc.Services.Proxy.Networks)
+	n := buildProxyExternalNetworkList()
 
 	cy, err := yaml.Marshal(&dc)
 	if err != nil {
