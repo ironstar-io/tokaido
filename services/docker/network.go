@@ -9,10 +9,10 @@ import (
 
 // CheckNetworkUp ...
 func CheckNetworkUp() bool {
-	p := conf.GetConfig().Tokaido.Project.Name
+	p := strings.ToLower(conf.GetConfig().Tokaido.Project.Name)
 
 	// Periods being replaced in recent versions of Docker for network names
-	n := strings.Replace(p, ".", "", -1) + "_default"
+	n := GetNetworkName(p)
 
 	_, err := utils.CommandSubSplitOutput("docker", "network", "inspect", n)
 	if err != nil {
@@ -25,7 +25,7 @@ func CheckNetworkUp() bool {
 // GetGateway - Get the Gateway IP adress of the docker network
 func GetGateway(projectName string) string {
 	// Periods being replaced in recent versions of Docker for network names
-	n := strings.Replace(projectName, ".", "", -1) + "_default"
+	n := GetNetworkName(projectName)
 
 	gatewayLine := utils.BashStringCmd("docker network inspect " + n + " | grep Gateway")
 

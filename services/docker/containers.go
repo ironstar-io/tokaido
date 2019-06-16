@@ -2,6 +2,7 @@ package docker
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/filters"
@@ -12,6 +13,7 @@ import (
 // getContainerState returns the state of a specified container
 func getContainerState(name, project string) (state string, err error) {
 	dcli := GetAPIClient()
+	project = strings.ToLower(project)
 
 	filter := filters.NewArgs()
 	filter.Add("name", project+"_"+name)
@@ -42,6 +44,7 @@ func getContainerState(name, project string) (state string, err error) {
 // GetContainers returns all containers for a project
 func GetContainers(project string) *[]types.Container {
 	dcli := GetAPIClient()
+	project = strings.ToLower(project)
 
 	filter := filters.NewArgs()
 	filter.Add("name", project+"_")
@@ -59,6 +62,7 @@ func GetContainers(project string) *[]types.Container {
 // GetContainer returns a docker Container object for the specified container, if it exists
 func GetContainer(name, project string) types.Container {
 	dcli := GetAPIClient()
+	project = strings.ToLower(project)
 
 	filter := filters.NewArgs()
 	cn := project + "_" + name

@@ -40,8 +40,7 @@ func SetUnisonVersion(version string) []byte {
 // projectInCompose identifies if the specified project exists in the
 // provided list of networks
 func projectInCompose(networks []string, projectName string) bool {
-	// Periods being replaced in recent versions of Docker for network names
-	n := strings.Replace(projectName, ".", "", -1)
+	n := docker.GetNetworkName(projectName)
 	utils.DebugString("[proxy] searching to determine if the network '" + n + "' is already configured")
 
 	for _, v := range networks {
@@ -56,6 +55,7 @@ func projectInCompose(networks []string, projectName string) bool {
 // buildNetworks compiles the provided list of networks into a docker-compose format
 // while also checking those networks still exist in Docker
 func buildNetworks(networks []string) []byte {
+	utils.DebugString("Creating a list of available networks for proxy service")
 	n := `networks:
   proxy:
 `
@@ -76,7 +76,9 @@ func buildNetworks(networks []string) []byte {
 			continue
 		}
 
-		n = n + `  ` + strings.Replace(v, ".", "", -1) + `:
+		utils.DebugString("adding network [" + v + "] to proxy service")
+
+		n = n + `  ` + v + `:
     external: true
 `
 	}
@@ -90,7 +92,7 @@ func validateNetwork(name string) (ok bool, err error) {
 	dcli := docker.GetAPIClient()
 
 	filter := filters.NewArgs()
-	filter.Add("name", name)
+	filter.Add("name", strings.ToLower(name))
 
 	networks, err := dcli.NetworkList(context.Background(), types.NetworkListOptions{
 		Filters: filter,

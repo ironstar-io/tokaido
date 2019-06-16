@@ -98,6 +98,13 @@ func GetContainerName(name string) (string, error) {
 	return cn, nil
 }
 
+// GetNetworkName takes a project name and returns a matching network name
+// that complies with the same sanitisation that docker compose uses when
+// it auto-generates networks from compose files
+func GetNetworkName(pn string) string {
+	return strings.ToLower(strings.Replace(pn, ".", "", -1)) + "_default"
+}
+
 // GetContainerIP ...
 func GetContainerIP(name string) (string, error) {
 	cn, err := GetContainerName(name)

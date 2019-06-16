@@ -2,19 +2,19 @@ package proxy
 
 import (
 	"github.com/ironstar-io/tokaido/conf"
+	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/system/version"
 	yaml "gopkg.in/yaml.v2"
 
 	"log"
-	"strings"
 )
 
 // RemoveProjectFromDockerCompose ...
 func RemoveProjectFromDockerCompose() {
 	dc := DockerCompose{}
 	pn := conf.GetConfig().Tokaido.Project.Name
-	nn := strings.Replace(pn, ".", "", -1) + "_default"
+	nn := docker.GetNetworkName(pn)
 	uv := version.GetUnisonVersion()
 
 	var err error
