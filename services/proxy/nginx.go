@@ -10,7 +10,7 @@ const proxyNetwork = "proxy_proxy"
 func GenerateNginxConf(domain, proxyPassDomain string) []byte {
 	return []byte(`server {
   listen          ` + constants.ProxyPort + ` ssl;
-  server_name     ` + domain + `;
+  server_name     test.` + domain + ` ` + domain + `;
   server_tokens   off;
 
   ssl_certificate           /tokaido/proxy/config/client/tls/tokaido.pem;

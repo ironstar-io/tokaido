@@ -6,7 +6,7 @@ import (
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/system/fs"
-	. "github.com/logrusorgru/aurora"
+	"github.com/logrusorgru/aurora"
 	"github.com/ryanuber/columnize"
 )
 
@@ -21,14 +21,14 @@ func List() {
 	for _, v := range conf.GetConfig().Global.Projects {
 		ok := docker.StatusCheck("", v.Name)
 		if ok {
-			o = append(o, fmt.Sprintf("%s|%s|%s", v.Name, v.Path, Green("running")))
+			o = append(o, fmt.Sprintf("%s|%s|%s", v.Name, v.Path, aurora.Green("running")))
 		} else {
 			x := fs.CheckExists(v.Path)
 			if !x {
-				o = append(o, fmt.Sprintf("%s|%s|%s", v.Name, v.Path, Red("missing")))
+				o = append(o, fmt.Sprintf("%s|%s|%s", v.Name, v.Path, aurora.Red("missing")))
 				missing = true
 			} else {
-				o = append(o, fmt.Sprintf("%s|%s|%s", v.Name, v.Path, Yellow("offline")))
+				o = append(o, fmt.Sprintf("%s|%s|%s", v.Name, v.Path, aurora.Yellow("offline")))
 			}
 		}
 	}
@@ -46,7 +46,7 @@ func List() {
 
 	if missing {
 		fmt.Println()
-		fmt.Println(fmt.Sprintf("'missing' projects indicate that the project was deleted without using '%s'", Bold("tok destroy")))
+		fmt.Println(fmt.Sprintf("'missing' projects indicate that the project was deleted without using '%s'", aurora.Bold("tok destroy")))
 		fmt.Println("See https://docs.tokaido.io/tokaido/cleaning-up-tokaido-environments")
 	}
 	fmt.Println()

@@ -18,3 +18,4 @@ vendor
 
 # Other project specific files
 dist/*
+.vscode

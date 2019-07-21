@@ -14,7 +14,7 @@ import (
 	"github.com/ironstar-io/tokaido/utils"
 
 	"github.com/blang/semver"
-	. "github.com/logrusorgru/aurora"
+	"github.com/logrusorgru/aurora"
 )
 
 var rgx = regexp.MustCompile("'(.*?)'")
@@ -62,8 +62,8 @@ func checkNightwatchConfig() error {
 	nightwatchConfPath := filepath.Join(pr, dr, "core/tests/Drupal/Nightwatch/nightwatch.conf.js")
 	utils.DebugString("nightwatchConfPath: " + nightwatchConfPath)
 	if !fs.CheckExists(nightwatchConfPath) {
-		fmt.Println(Red("Expected nightwatch configuration file was not found: "), nightwatchConfPath)
-		fmt.Println(Red("Tokaido cannot continue. Is your Drupal Core installation working?"))
+		fmt.Println(aurora.Red("Expected nightwatch configuration file was not found: "), nightwatchConfPath)
+		fmt.Println(aurora.Red("Tokaido cannot continue. Is your Drupal Core installation working?"))
 		os.Exit(1)
 	}
 
@@ -71,19 +71,19 @@ func checkNightwatchConfig() error {
 	utils.DebugString("nightwatchOk: " + strconv.FormatBool(nightwatchOk))
 	if !nightwatchOk {
 		ok = false
-		fmt.Println(Red("Tokaido tests via HTTPS, but Druapl's Nightwatch config only supports HTTP."))
-		fmt.Println(Red("To fix this, you need to add 'acceptInsecureCerts: true' to the desiredCapabilities "))
-		fmt.Println(Red("section of "), nightwatchConfPath)
+		fmt.Println(aurora.Red("Tokaido tests via HTTPS, but Druapl's Nightwatch config only supports HTTP."))
+		fmt.Println(aurora.Red("To fix this, you need to add 'acceptInsecureCerts: true' to the desiredCapabilities "))
+		fmt.Println(aurora.Red("section of "), nightwatchConfPath)
 		fmt.Println()
-		fmt.Println(Yellow("Please see docs.tokaido.io for more information"))
+		fmt.Println(aurora.Yellow("Please see docs.tokaido.io for more information"))
 		fmt.Println()
 	}
 
 	drupalUserIsLoggedInPath := filepath.Join(pr, dr, "core/tests/Drupal/Nightwatch/Commands/drupalUserIsLoggedIn.js")
 	utils.DebugString("drupalUserIsLoggedInPath: " + drupalUserIsLoggedInPath)
 	if !fs.CheckExists(drupalUserIsLoggedInPath) {
-		fmt.Println(Red("Expected nightwatch command file was not found: "), drupalUserIsLoggedInPath)
-		fmt.Println(Red("Tokaido cannot continue. Is your Drupal Core installation working?"))
+		fmt.Println(aurora.Red("Expected nightwatch command file was not found: "), drupalUserIsLoggedInPath)
+		fmt.Println(aurora.Red("Tokaido cannot continue. Is your Drupal Core installation working?"))
 		os.Exit(1)
 	}
 
@@ -91,16 +91,16 @@ func checkNightwatchConfig() error {
 	utils.DebugString("drupalUserIsLoggedInOk: " + strconv.FormatBool(drupalUserIsLoggedInOk))
 	if !drupalUserIsLoggedInOk {
 		ok = false
-		fmt.Println(Red("Tokaido tests via HTTPS, but Druapl's Nightwatch config only supports HTTP."))
-		fmt.Println(Red("To fix this, you need change the cookie name in"), drupalUserIsLoggedInPath)
-		fmt.Println(Red("from 'SESS' to 'SSESS' (adding one extra 'S') "))
+		fmt.Println(aurora.Red("Tokaido tests via HTTPS, but Druapl's Nightwatch config only supports HTTP."))
+		fmt.Println(aurora.Red("To fix this, you need change the cookie name in"), drupalUserIsLoggedInPath)
+		fmt.Println(aurora.Red("from 'SESS' to 'SSESS' (adding one extra 'S') "))
 		fmt.Println()
-		fmt.Println(Yellow("Please see docs.tokaido.io for more information"))
+		fmt.Println(aurora.Yellow("Please see docs.tokaido.io for more information"))
 		fmt.Println()
 	}
 
 	if !ok {
-		fmt.Println(Red("'tok test' cannot continue until Drupal core config is updated"))
+		fmt.Println(aurora.Red("'tok test' cannot continue until Drupal core config is updated"))
 		os.Exit(0)
 	}
 

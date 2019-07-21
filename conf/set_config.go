@@ -14,7 +14,7 @@ import (
 
 	yaml "gopkg.in/yaml.v2"
 
-	. "github.com/logrusorgru/aurora"
+	"github.com/logrusorgru/aurora"
 )
 
 // SetConfigValueByArgs updates the config file by merging a **single** new value with the
@@ -23,7 +23,7 @@ import (
 // - configType is either 'project' or 'global' and will determine which file is updated
 func SetConfigValueByArgs(args []string, configType string) {
 	if configType != "project" && configType != "global" {
-		fmt.Println(Sprintf("The config file %s is unknown", Bold(configType)))
+		fmt.Println(aurora.Sprintf("The config file %s is unknown", aurora.Bold(configType)))
 		os.Exit(1)
 	}
 
@@ -328,7 +328,7 @@ func getConfigPath(configFile string) string {
 	} else if configFile == "global" {
 		cp = filepath.Join(fs.HomeDir(), "/.tok/global.yml")
 	} else {
-		fmt.Println(Sprintf("The config file %s is unknown", Bold(configFile)))
+		fmt.Println(aurora.Sprintf("The config file %s is unknown", aurora.Bold(configFile)))
 	}
 
 	// Initialise the config file if it doesn't exist

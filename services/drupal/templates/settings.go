@@ -88,6 +88,17 @@ $databases['default']['default'] = [
   'prefix' => '',
 ];
 
+$databases['test_db']['default'] = [
+  'host' => 'mysql',
+  'database' => 'tokaido_test',
+  'username' => 'tokaido',
+  'password' => 'tokaido',
+  'port' => 3306,
+  'driver' => 'mysql',
+  'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
+  'prefix' => '',
+];
+
 ` + s.generateD8Paths() + `
 
 $settings['hash_salt'] = '` + s.HashSalt + `';
