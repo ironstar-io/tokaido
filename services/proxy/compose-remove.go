@@ -1,13 +1,13 @@
 package proxy
 
 import (
+	"log"
+
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/system/version"
 	yaml "gopkg.in/yaml.v2"
-
-	"log"
 )
 
 // RemoveProjectFromDockerCompose ...
@@ -15,7 +15,6 @@ func RemoveProjectFromDockerCompose() {
 	dc := DockerCompose{}
 	pn := conf.GetConfig().Tokaido.Project.Name
 	nn := docker.GetNetworkName(pn)
-	uv := version.GetUnisonVersion()
 
 	var err error
 	err = yaml.Unmarshal(ComposeDefaults(), &dc)
@@ -31,9 +30,13 @@ func RemoveProjectFromDockerCompose() {
 		}
 	}
 
-	err = yaml.Unmarshal(SetUnisonVersion(uv), &dc)
-	if err != nil {
-		log.Fatalf("Error setting Unison version: %v", err)
+	ss := conf.GetConfig().Global.Syncservice
+	if ss == "unison" {
+		uv := version.GetUnisonVersion()
+		err = yaml.Unmarshal(SetUnisonVersion(uv), &dc)
+		if err != nil {
+			log.Fatalf("Error setting Unison version: %v", err)
+		}
 	}
 
 	// Find and remove the project network if it is duplicated
