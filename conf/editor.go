@@ -8,7 +8,7 @@ import (
 	"strconv"
 
 	"github.com/ironstar-io/tokaido/system/fs"
-	. "github.com/logrusorgru/aurora"
+	"github.com/logrusorgru/aurora"
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/viper"
 )
@@ -459,9 +459,9 @@ func TokaidoPhpversionMenu() {
 
 // DatabaseMenu ...
 func DatabaseMenu() {
-	fmt.Println(BgRed(White("!! WARNING !!")))
-	fmt.Println(BgRed(White("Changing your database configuration can completely break your database. We strongly recommend creating a `tok snapshot` first")))
-	fmt.Println(BgRed(White("!! WARNING !!")))
+	fmt.Println(aurora.BgRed(aurora.White("!! WARNING !!")))
+	fmt.Println(aurora.BgRed(aurora.White("Changing your database configuration can completely break your database. We strongly recommend creating a `tok snapshot` first")))
+	fmt.Println(aurora.BgRed(aurora.White("!! WARNING !!")))
 	fmt.Println()
 	menu := []ConfigGenericString{
 		{

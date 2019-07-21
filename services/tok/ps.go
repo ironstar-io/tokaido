@@ -7,7 +7,7 @@ import (
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/constants"
 	"github.com/ironstar-io/tokaido/services/docker"
-	. "github.com/logrusorgru/aurora"
+	"github.com/logrusorgru/aurora"
 	"github.com/ryanuber/columnize"
 )
 
@@ -18,9 +18,9 @@ func Ps() {
 	failure := false
 
 	fmt.Println()
-	fmt.Println(Cyan(Sprintf("Your main Tokaido HTTPS entrypoint is:  %s", Bold("https://"+pn+".local.tokaido.io:5154/"))))
-	fmt.Println(Cyan(Sprintf("You can open the entrypoint by running: %s", Bold("tok open"))))
-	fmt.Println(Cyan(Sprintf("You can SSH in by running the command:  %s", Bold("ssh "+pn+".tok"))))
+	fmt.Println(aurora.Cyan(aurora.Sprintf("Your main Tokaido HTTPS entrypoint is:  %s", aurora.Bold("https://"+pn+".local.tokaido.io:5154/"))))
+	fmt.Println(aurora.Cyan(aurora.Sprintf("You can open the entrypoint by running: %s", aurora.Bold("tok open"))))
+	fmt.Println(aurora.Cyan(aurora.Sprintf("You can SSH in by running the command:  %s", aurora.Bold("ssh "+pn+".tok"))))
 
 	o := []string{}
 	o = append(o, "Container|Local Endpoint|Shortcut|Status")
@@ -29,9 +29,9 @@ func Ps() {
 	if c.Global.Syncservice == "unison" {
 		unison := docker.GetContainer("unison", pn)
 		if unison.State == "running" {
-			o = append(o, Sprintf("unison(sync)|-|-|%s", Green(unison.State)))
+			o = append(o, aurora.Sprintf("unison(sync)|-|-|%s", aurora.Green(unison.State)))
 		} else {
-			o = append(o, Sprintf("unison(sync)|-|-|%s", Yellow("offline")))
+			o = append(o, aurora.Sprintf("unison(sync)|-|-|%s", aurora.Yellow("offline")))
 			failure = true
 		}
 	}
@@ -39,9 +39,9 @@ func Ps() {
 	if conf.GetConfig().Services.Chromedriver.Enabled {
 		chromedriver := docker.GetContainer("chromedriver", pn)
 		if chromedriver.State == "running" {
-			o = append(o, Sprintf("chromedriver|-|-|%s", Green(chromedriver.State)))
+			o = append(o, aurora.Sprintf("chromedriver|-|-|%s", aurora.Green(chromedriver.State)))
 		} else {
-			o = append(o, Sprintf("chromedriver|-|-|%s", Yellow("offline")))
+			o = append(o, aurora.Sprintf("chromedriver|-|-|%s", aurora.Yellow("offline")))
 			failure = true
 		}
 	}
@@ -50,9 +50,9 @@ func Ps() {
 	admin := docker.GetContainer("drush", pn)
 	if admin.State == "running" {
 		port := strconv.Itoa(int(admin.Ports[0].PublicPort))
-		o = append(o, Sprintf("admin(drush/ssh)|ssh://localhost:%s|ssh %s.tok|%s", port, pn, Green(admin.State)))
+		o = append(o, aurora.Sprintf("admin(drush/ssh)|ssh://localhost:%s|ssh %s.tok|%s", port, pn, aurora.Green(admin.State)))
 	} else {
-		o = append(o, Sprintf("admin(drush/ssh)|-|-|%s", Yellow("offline")))
+		o = append(o, aurora.Sprintf("admin(drush/ssh)|-|-|%s", aurora.Yellow("offline")))
 		failure = true
 	}
 
@@ -65,9 +65,9 @@ func Ps() {
 				port = int(v.PublicPort)
 			}
 		}
-		o = append(o, Sprintf("haproxy|https://localhost:%d|tok open haproxy|%s", port, Green(haproxy.State)))
+		o = append(o, aurora.Sprintf("haproxy|https://localhost:%d|tok open haproxy|%s", port, aurora.Green(haproxy.State)))
 	} else {
-		o = append(o, Sprintf("haproxy|-|-|%s", Yellow("offline")))
+		o = append(o, aurora.Sprintf("haproxy|-|-|%s", aurora.Yellow("offline")))
 		failure = true
 
 	}
@@ -81,9 +81,9 @@ func Ps() {
 				port = int(v.PublicPort)
 			}
 		}
-		o = append(o, Sprintf("varnish|http://localhost:%d|tok open varnish|%s", port, Green(varnish.State)))
+		o = append(o, aurora.Sprintf("varnish|http://localhost:%d|tok open varnish|%s", port, aurora.Green(varnish.State)))
 	} else {
-		o = append(o, Sprintf("varnish|-|-|%s", Yellow("offline")))
+		o = append(o, aurora.Sprintf("varnish|-|-|%s", aurora.Yellow("offline")))
 		failure = true
 	}
 
@@ -96,18 +96,18 @@ func Ps() {
 				port = int(v.PublicPort)
 			}
 		}
-		o = append(o, Sprintf("nginx|http://localhost:%d|tok open nginx|%s", port, Green(nginx.State)))
+		o = append(o, aurora.Sprintf("nginx|http://localhost:%d|tok open nginx|%s", port, aurora.Green(nginx.State)))
 	} else {
-		o = append(o, Sprintf("nginx|-|-|%s", Yellow("offline")))
+		o = append(o, aurora.Sprintf("nginx|-|-|%s", aurora.Yellow("offline")))
 		failure = true
 	}
 
 	// Output FPM status
 	fpm := docker.GetContainer("fpm", pn)
 	if fpm.State == "running" {
-		o = append(o, Sprintf("fpm|-|-|%s", Green(fpm.State)))
+		o = append(o, aurora.Sprintf("fpm|-|-|%s", aurora.Green(fpm.State)))
 	} else {
-		o = append(o, Sprintf("fpm|-|-|%s", Yellow("offline")))
+		o = append(o, aurora.Sprintf("fpm|-|-|%s", aurora.Yellow("offline")))
 		failure = true
 	}
 
@@ -125,9 +125,9 @@ func Ps() {
 				port = int(v.PublicPort)
 			}
 		}
-		o = append(o, Sprintf("mysql|mysql://localhost:%d|%s|%s", port, adminerMsg, Green(mysql.State)))
+		o = append(o, aurora.Sprintf("mysql|mysql://localhost:%d|%s|%s", port, adminerMsg, aurora.Green(mysql.State)))
 	} else {
-		o = append(o, Sprintf("mysql|-|-|%s", Yellow("offline")))
+		o = append(o, aurora.Sprintf("mysql|-|-|%s", aurora.Yellow("offline")))
 		failure = true
 	}
 
@@ -141,9 +141,9 @@ func Ps() {
 					port = int(v.PublicPort)
 				}
 			}
-			o = append(o, Sprintf("mailhog|mailhog://localhost:%d|tok open mailhog|%s", port, Green(mailhog.State)))
+			o = append(o, aurora.Sprintf("mailhog|mailhog://localhost:%d|tok open mailhog|%s", port, aurora.Green(mailhog.State)))
 		} else {
-			o = append(o, Sprintf("mailhog|-|-|%s", Yellow("offline")))
+			o = append(o, aurora.Sprintf("mailhog|-|-|%s", aurora.Yellow("offline")))
 			failure = true
 		}
 	}
@@ -153,9 +153,9 @@ func Ps() {
 		adminer := docker.GetContainer("adminer", pn)
 		if adminer.State == "running" {
 			port := strconv.Itoa(int(adminer.Ports[0].PublicPort))
-			o = append(o, Sprintf("adminer|adminer://localhost:%s|tok open adminer|%s", port, Green(adminer.State)))
+			o = append(o, aurora.Sprintf("adminer|adminer://localhost:%s|tok open adminer|%s", port, aurora.Green(adminer.State)))
 		} else {
-			o = append(o, Sprintf("adminer|-|-|%s", Yellow("offline")))
+			o = append(o, aurora.Sprintf("adminer|-|-|%s", aurora.Yellow("offline")))
 			failure = true
 		}
 	}
@@ -165,9 +165,9 @@ func Ps() {
 		redis := docker.GetContainer("redis", pn)
 		if redis.State == "running" {
 			port := strconv.Itoa(int(redis.Ports[0].PublicPort))
-			o = append(o, Sprintf("redis|redis://localhost:%s|-|%s", port, Green(redis.State)))
+			o = append(o, aurora.Sprintf("redis|redis://localhost:%s|-|%s", port, aurora.Green(redis.State)))
 		} else {
-			o = append(o, Sprintf("redis|-|-|%s", Yellow("offline")))
+			o = append(o, aurora.Sprintf("redis|-|-|%s", aurora.Yellow("offline")))
 			failure = true
 		}
 	}
@@ -177,9 +177,9 @@ func Ps() {
 		solr := docker.GetContainer("solr", pn)
 		if solr.State == "running" {
 			port := strconv.Itoa(int(solr.Ports[0].PublicPort))
-			o = append(o, Sprintf("solr|http://localhost:%s|tok open solr|%s", port, Green(solr.State)))
+			o = append(o, aurora.Sprintf("solr|http://localhost:%s|tok open solr|%s", port, aurora.Green(solr.State)))
 		} else {
-			o = append(o, Sprintf("solr|-|-|%s", Yellow("offline")))
+			o = append(o, aurora.Sprintf("solr|-|-|%s", aurora.Yellow("offline")))
 			failure = true
 		}
 	}
@@ -188,9 +188,9 @@ func Ps() {
 	if c.Services.Memcache.Enabled {
 		memcache := docker.GetContainer("memcache", pn)
 		if memcache.State == "running" {
-			o = append(o, Sprintf("memcache|-|-|%s", Green(memcache.State)))
+			o = append(o, aurora.Sprintf("memcache|-|-|%s", aurora.Green(memcache.State)))
 		} else {
-			o = append(o, Sprintf("memcache|-|-|%s", Yellow("offline")))
+			o = append(o, aurora.Sprintf("memcache|-|-|%s", aurora.Yellow("offline")))
 			failure = true
 		}
 	}
@@ -198,9 +198,9 @@ func Ps() {
 	// Output Syslog Status
 	syslog := docker.GetContainer("syslog", pn)
 	if syslog.State == "running" {
-		o = append(o, Sprintf("logging|-|-|%s", Green(syslog.State)))
+		o = append(o, aurora.Sprintf("logging|-|-|%s", aurora.Green(syslog.State)))
 	} else {
-		o = append(o, Sprintf("logging|-|-|%s", Yellow("offline")))
+		o = append(o, aurora.Sprintf("logging|-|-|%s", aurora.Yellow("offline")))
 		failure = true
 	}
 
@@ -218,9 +218,9 @@ func Ps() {
 
 	if failure {
 		fmt.Println()
-		fmt.Println(Red("It looks like one of your Tokaido containers is offline"))
-		fmt.Println(Sprintf("You can try to fix this by running '%s' again, or you can use", Blue("tok up")))
-		fmt.Println(Sprintf("'%s %s' to see the docker logs for that container", Blue("tok logs"), BrightBlue("{container name}")))
+		fmt.Println(aurora.Red("It looks like one of your Tokaido containers is offline"))
+		fmt.Println(aurora.Sprintf("You can try to fix this by running '%s' again, or you can use", aurora.Blue("tok up")))
+		fmt.Println(aurora.Sprintf("'%s %s' to see the docker logs for that container", aurora.Blue("tok logs"), aurora.BrightBlue("{container name}")))
 	}
 
 	fmt.Println()

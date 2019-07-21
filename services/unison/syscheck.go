@@ -6,7 +6,7 @@ import (
 	"runtime"
 
 	"github.com/ironstar-io/tokaido/system/fs"
-	. "github.com/logrusorgru/aurora"
+	"github.com/logrusorgru/aurora"
 )
 
 // SystemCompatibilityChecks ...
@@ -14,11 +14,11 @@ func SystemCompatibilityChecks() {
 	switch opsys := runtime.GOOS; opsys {
 	case "darwin":
 		if !fs.CheckExists("/usr/local/opt/unox") {
-			fmt.Println(Red("Could not find Unison dependency 'unox' on your system. Please install with `brew install eugenmayer/dockersync/unox"))
+			fmt.Println(aurora.Red("Could not find Unison dependency 'unox' on your system. Please install with `brew install eugenmayer/dockersync/unox"))
 			os.Exit(1)
 		}
 		if !fs.CheckExists("/usr/local/bin/unison-fsmonitor") {
-			fmt.Println(Red("Could not find Unison dependency 'unison-fsmonitor' on your system. Please install with `brew install eugenmayer/dockersync/unox"))
+			fmt.Println(aurora.Red("Could not find Unison dependency 'unison-fsmonitor' on your system. Please install with `brew install eugenmayer/dockersync/unox"))
 			os.Exit(1)
 		}
 		// case "linux":

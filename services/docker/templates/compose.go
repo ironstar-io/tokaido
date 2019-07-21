@@ -344,6 +344,11 @@ services:
     labels:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
+    networks:
+      default:
+        aliases:
+          - nginx
+          - nginx-test
   fpm:
     user: "1001"
     image: tokaido/php71-fpm:stable
@@ -457,6 +462,11 @@ services:
     labels:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
+    networks:
+      default:
+        aliases:
+          - nginx
+          - nginx-test
   fpm:
     user: "1001"
     image: tokaido/php71-fpm:stable
@@ -570,6 +580,11 @@ services:
     labels:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
+    networks:
+      default:
+        aliases:
+          - nginx
+          - nginx-test
   fpm:
     user: "1001"
     image: tokaido/php71-fpm:stable

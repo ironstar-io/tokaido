@@ -16,7 +16,7 @@ import (
 	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/system/ssh"
 	"github.com/ironstar-io/tokaido/utils"
-	. "github.com/logrusorgru/aurora"
+	"github.com/logrusorgru/aurora"
 	"github.com/spf13/cobra"
 )
 
@@ -39,14 +39,14 @@ var StatusCmd = &cobra.Command{
 			if ok {
 				console.Println(`🙂  Background sync service is running`, "√")
 			} else {
-				fmt.Println(Red(`😓  The Unison background sync service is not running`))
+				fmt.Println(aurora.Red(`😓  The Unison background sync service is not running`))
 				fmt.Println()
 				pn := conf.GetConfig().Tokaido.Project.Name
 				switch system.CheckOS() {
 				case "osx":
 					h := fs.HomeDir()
 					lp := filepath.Join(h, "Library/Logs/tokaido.sync."+pn)
-					fmt.Printf("You can check Unison logs in the...\n%s and \n%s files\n", Bold(lp+".out"), Bold(lp+".err"))
+					fmt.Printf("You can check Unison logs in the...\n%s and \n%s files\n", aurora.Bold(lp+".out"), aurora.Bold(lp+".err"))
 					fmt.Printf("Or you can run %s to reconfigure and restart it\n", "tok up")
 				case "linux":
 					sn := "tokaido-sync-" + pn + ".service"
@@ -88,7 +88,7 @@ var StatusCmd = &cobra.Command{
 			fmt.Println()
 		} else {
 			fmt.Println()
-			fmt.Println(Yellow("🙅  Some checks failed! You might be able to fix this by running `tok rebuild`"))
+			fmt.Println(aurora.Yellow("🙅  Some checks failed! You might be able to fix this by running `tok rebuild`"))
 			fmt.Println()
 		}
 	},

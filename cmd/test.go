@@ -8,7 +8,7 @@ import (
 	"github.com/ironstar-io/tokaido/initialize"
 	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/services/telemetry"
-	"github.com/ironstar-io/tokaido/services/testing/nightwatch"
+	"github.com/ironstar-io/tokaido/services/testing/testcafe"
 	"github.com/ironstar-io/tokaido/utils"
 	"github.com/spf13/cobra"
 )
@@ -17,7 +17,7 @@ import (
 var TestCmd = &cobra.Command{
 	Use:   "test",
 	Short: "Run all available tests",
-	Long:  "Runs all available test suites; Drupal with Nightwatch, others TBD",
+	Long:  "Runs all available test suites for Drupal with TestCafe",
 	Run: func(cmd *cobra.Command, args []string) {
 		initialize.TokConfig("test")
 		telemetry.SendCommand("test")
@@ -31,7 +31,6 @@ var TestCmd = &cobra.Command{
 			log.Fatalf("Tokaido containers must be running in order to start automated tests. Have you run `tok up`?")
 		}
 
-		// phpcs.RunLinter()
-		nightwatch.RunDrupalTests()
+		testcafe.RunDrupalTests()
 	},
 }

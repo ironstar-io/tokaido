@@ -19,7 +19,8 @@ import (
 	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/system/ssh"
 	"github.com/ironstar-io/tokaido/utils"
-	. "github.com/logrusorgru/aurora"
+
+	"github.com/logrusorgru/aurora"
 	"github.com/manifoldco/promptui"
 	yaml "gopkg.in/yaml.v2"
 )
@@ -214,7 +215,7 @@ func New(args []string, requestTemplate string) {
 	if l > 0 {
 		fmt.Println("🏃‍♀  Running post-up installation commands...")
 		for _, v := range template.PostUpCommands {
-			fmt.Printf("%s", Blue("    - "))
+			fmt.Printf("%s", aurora.Blue("    - "))
 			fmt.Printf(v + "\n")
 			s := strings.Fields(v)
 			ssh.StreamConnectCommand(s)
@@ -231,7 +232,7 @@ func New(args []string, requestTemplate string) {
 	InitMessage()
 
 	fmt.Println()
-	fmt.Println(Yellow("You need to move into the project directory before you can these commands: 'cd " + conf.GetConfig().Tokaido.Project.Name + "'"))
+	fmt.Println(aurora.Yellow("You need to move into the project directory before you can these commands: 'cd " + conf.GetConfig().Tokaido.Project.Name + "'"))
 
 }
 
