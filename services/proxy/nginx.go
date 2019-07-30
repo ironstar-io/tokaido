@@ -7,10 +7,10 @@ import (
 const proxyNetwork = "proxy_proxy"
 
 // GenerateNginxConf ...
-func GenerateNginxConf(domain, proxyPassDomain string) []byte {
+func GenerateNginxConf(projectName, domain, proxyPassDomain string) []byte {
 	return []byte(`server {
   listen          ` + constants.ProxyPort + ` ssl;
-  server_name     test.` + domain + ` ` + domain + `;
+  server_name     ` + projectName + `-toktestdb.` + domain + ` ` + projectName + `.` + domain + `;
   server_tokens   off;
 
   ssl_certificate           /tokaido/proxy/config/client/tls/tokaido.pem;
@@ -25,7 +25,8 @@ func GenerateNginxConf(domain, proxyPassDomain string) []byte {
   }
 
   location / {
-    proxy_pass ` + proxyPassDomain + `;
+    proxy_pass             ` + proxyPassDomain + `;
+    proxy_set_header       Host              $host;
     proxy_intercept_errors on;
   }
 }
