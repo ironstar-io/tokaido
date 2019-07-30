@@ -5,8 +5,6 @@ import (
 	"path/filepath"
 
 	"github.com/ironstar-io/tokaido/conf"
-	"github.com/ironstar-io/tokaido/services/docker"
-	"github.com/ironstar-io/tokaido/services/proxy"
 	"github.com/ironstar-io/tokaido/services/testing/testcafe/goos"
 	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/fs"
@@ -35,9 +33,13 @@ func RunDrupalTests() error {
 	br := baseRepoExists()
 	if br == false {
 		pullBaseRepo()
-		configureDefaultJSON()
-		addTestCafeUsers()
 	}
+
+	recreateTokaidoTestDB()
+	clearDrupalCache()
+	copyDefaultDB()
+	// Clone prod DB
+	addTestCafeUsers()
 
 	npmCI()
 	npmHeadlessTestCafe()
@@ -59,9 +61,8 @@ func testCafeContainerPath() string {
 	return filepath.Join("/tokaido", "site", dr, ".tok", "testcafe")
 }
 
-// Copy and amend .env file if it doesn't already exist
 func baseRepoExists() bool {
-	env := filepath.Join(testCafeLocalPath(), "config", "default.json")
+	env := filepath.Join(testCafeLocalPath(), "tests")
 	if fs.CheckExists(env) == false {
 		return false
 	}
@@ -69,7 +70,7 @@ func baseRepoExists() bool {
 	return true
 }
 
-// Clone the base testcafe repo and copy into the Drupal project
+// Download the base testcafe repo and copy into the Drupal project
 func pullBaseRepo() {
 	utils.CheckCmdHard("curl")
 
@@ -78,51 +79,43 @@ func pullBaseRepo() {
 	tp := filepath.Join(pr, dr, ".tok")
 	fs.Mkdir(tp)
 
-	utils.StdoutCmd("wget", "https://github.com/ironstar-io/drupal-testcafe/releases/download/v0.0.1-alpha/drupal-testcafe-0.0.1-alpha.tar.gz")
-	utils.StdoutCmd("tar", "xzf", "drupal-testcafe-0.0.1-alpha.tar.gz")
-	utils.StdoutCmd("mv", "drupal-testcafe-0.0.1-alpha", filepath.Join(tp, "testcafe"))
-	utils.StdoutCmd("rm", "drupal-testcafe-0.0.1-alpha.tar.gz")
+	utils.StdoutCmd("wget", "https://github.com/ironstar-io/tokaido-testcafe/archive/0.0.4.tar.gz")
+	utils.StdoutCmd("tar", "xzf", "0.0.4.tar.gz")
+	utils.StdoutCmd("mv", "tokaido-testcafe-0.0.4", filepath.Join(tp, "testcafe"))
+	utils.StdoutCmd("rm", "0.0.4.tar.gz")
 }
 
-// Copy and amend the default.json config file if it doesn't already exist
-func configureDefaultJSON() {
-	env := filepath.Join(testCafeLocalPath(), "config", "default.json")
-	if fs.CheckExists(env) == false {
-		url := calcSiteURL()
-		fmt.Println(aurora.Cyan(fmt.Sprintf("📋  Adding TestCafe config to %s for %s", env, url)))
+func recreateTokaidoTestDB() {
+	ssh.ConnectCommand([]string{"drush", "sql:create", "--database=test", "-y", "-d"})
+}
 
-		generateEnvFile(env, url)
-	}
+func clearDrupalCache() {
+	ssh.ConnectCommand([]string{"drush", "cache-rebuild", "-d"})
+}
+
+func copyDefaultDB() {
+	ssh.ConnectCommand([]string{"drush", "sql:dump", "--result-file=toktest-dump.sql", "-d"})
+	ssh.ConnectCommand([]string{"drush", "sql:cli", "--database=test", "<", "toktest-dump.sql", "-d"})
 }
 
 func addTestCafeUsers() {
-	// TODO - Check if user exists first, or will error
-
-	// ssh.ConnectCommand([]string{"drush", "user-create", "testcafe_user", `--password="testcafe_user"`, `--mail="testcafe_user@localhost"`})
-	// ssh.ConnectCommand([]string{"drush", "user-create", "testcafe_admin", `--password="testcafe_admin"`, `--mail="testcafe_admin@localhost"`})
-	// ssh.ConnectCommand([]string{"drush", "user-add-role", `"administrator"`, "testcafe_admin"})
-	// ssh.ConnectCommand([]string{"drush", "user-create", "testcafe_editor", `--password="testcafe_editor"`, `--mail="testcafe_editor@localhost"`})
-	// ssh.ConnectCommand([]string{"drush", "user-add-role", `"editor"`, "testcafe_editor"})
-}
-
-func calcSiteURL() string {
-	if proxy.CheckProxyUp() == true {
-		return proxy.GetProxyURL()
-	}
-
-	return "https://localhost:" + docker.LocalPort("haproxy", "8443")
+	ssh.ConnectCommand([]string{"drush", "user:create", "testcafe_user", `--password="testcafe_user"`, `--mail="testcafe_user@localhost"`, "-d"})
+	ssh.ConnectCommand([]string{"drush", "user:create", "testcafe_admin", `--password="testcafe_admin"`, `--mail="testcafe_admin@localhost"`, "-d"})
+	ssh.ConnectCommand([]string{"drush", "user:role:add", `"administrator"`, "testcafe_admin", "-d"})
+	ssh.ConnectCommand([]string{"drush", "user:create", "testcafe_editor", `--password="testcafe_editor"`, `--mail="testcafe_editor@localhost"`, "-d"})
+	ssh.ConnectCommand([]string{"drush", "user:role:add", `"editor"`, "testcafe_editor", "-d"})
 }
 
 func npmCI() {
-	fmt.Println(aurora.Cyan("🦉  Ensuring TestCafe dependencies are installed"))
-	ssh.StreamConnectCommand([]string{"cd", testCafeContainerPath(), "&&", "npm", "ci"})
+	nm := filepath.Join(testCafeLocalPath(), "node_modules")
+	if fs.CheckExists(nm) == false {
+		fmt.Println(aurora.Cyan("🦉  Installing TestCafe dependencies"))
+		ssh.StreamConnectCommand([]string{"cd", testCafeContainerPath(), "&&", "npm", "ci"})
+	}
 }
 
 func npmHeadlessTestCafe() {
-	fmt.Println(aurora.Cyan("👩‍💻  Tokaido is starting a TestCafe test run with the command `npm run tests:headless:all`"))
-	fmt.Println(aurora.Yellow(aurora.Sprintf("    If you want to run this command directly, you need run it from %s", aurora.Bold("inside the Tokaido SSH container"))))
-
-	ssh.StreamConnectCommand([]string{"cd", testCafeContainerPath(), "&&", "npm", "run", "tests:headless:all"})
+	utils.StdoutStreamCmd("docker-compose", "-f", filepath.Join(conf.GetProjectPath(), "/docker-compose.tok.yml"), "exec", "-T", "testcafe", "npm", "run", "test")
 }
 
 func checkCompatibility() {

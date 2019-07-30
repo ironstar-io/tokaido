@@ -65,9 +65,8 @@ func ConfigureProjectNginx() {
 	pp := constants.HTTPSProtocol + h + ":" + strconv.Itoa(constants.HaproxyInternalPort)
 
 	pn := conf.GetConfig().Tokaido.Project.Name
-	do := pn + `.` + constants.ProxyDomain
 
-	nc := GenerateNginxConf(do, pp)
+	nc := GenerateNginxConf(pn, constants.ProxyDomain, pp)
 
 	np := filepath.Join(getProxyClientConfdDir(), pn+".conf")
 	fs.Replace(np, nc)

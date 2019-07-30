@@ -230,6 +230,9 @@ func TokaidoFusionSiteVolumeAttach(path, name string) []byte {
   nginx:
     volumes:
       - ` + name + `:/tokaido/site
+  testcafe:
+    volumes:
+      - ` + path + `/web/.tok/testcafe:/testcafe
   fpm:
     volumes:
       - ` + name + `:/tokaido/site
@@ -253,6 +256,9 @@ func TokaidoDockerSiteVolumeAttach(path string) []byte {
   fpm:
     volumes:
       - ` + path + `:/tokaido/site
+  testcafe:
+    volumes:
+      - ` + path + `/web/.tok/testcafe:/testcafe
   drush:
     volumes:
       - ` + path + `:/tokaido/site
@@ -357,6 +363,20 @@ services:
         aliases:
           - nginx
           - nginx-test
+  testcafe:
+    image: testcafe/testcafe
+    working_dir: /testcafe
+    command: tail -f /dev/null
+    entrypoint:
+      - tail
+      - -f
+      - /dev/null
+    volumes:
+      - waiting
+    depends_on:
+      - nginx
+    ports:
+      - "1337"
   fpm:
     user: "1001"
     image: tokaido/php71-fpm:stable
@@ -475,6 +495,20 @@ services:
         aliases:
           - nginx
           - nginx-test
+  testcafe:
+    image: testcafe/testcafe
+    working_dir: /testcafe
+    command: tail -f /dev/null
+    entrypoint:
+      - tail
+      - -f
+      - /dev/null
+    volumes:
+      - waiting
+    depends_on:
+      - nginx
+    ports:
+      - "1337"
   fpm:
     user: "1001"
     image: tokaido/php71-fpm:stable
@@ -593,6 +627,20 @@ services:
         aliases:
           - nginx
           - nginx-test
+  testcafe:
+    image: testcafe/testcafe
+    working_dir: /testcafe
+    command: tail -f /dev/null
+    entrypoint:
+      - tail
+      - -f
+      - /dev/null
+    volumes:
+      - waiting
+    depends_on:
+      - nginx
+    ports:
+      - "1337"
   fpm:
     user: "1001"
     image: tokaido/php71-fpm:stable

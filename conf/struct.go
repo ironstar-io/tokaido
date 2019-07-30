@@ -177,7 +177,26 @@ type Services struct {
 		Dependson   []string          `yaml:"depends_on,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`
 		Labels      map[string]string `yaml:"labels,omitempty"`
+		Networks    struct {
+			Default struct {
+				Aliases []string `yaml:"aliases,omitempty"`
+			} `yaml:"default,omitempty"`
+		} `yaml:"networks,omitempty"`
 	} `yaml:"nginx,omitempty"`
+	Testcafe struct {
+		Image       string            `yaml:"image,omitempty"`
+		Hostname    string            `yaml:"hostname,omitempty"`
+		Ports       []string          `yaml:"ports,omitempty"`
+		Entrypoint  []string          `yaml:"entrypoint,omitempty"`
+		User        string            `yaml:"user,omitempty"`
+		Command     string            `yaml:"command,omitempty"`
+		Volumesfrom []string          `yaml:"volumes_from,omitempty"`
+		Volumes     []string          `yaml:"volumes,omitempty"`
+		Workingdir  string            `yaml:"working_dir,omitempty"`
+		Dependson   []string          `yaml:"depends_on,omitempty"`
+		Environment map[string]string `yaml:"environment,omitempty"`
+		Labels      map[string]string `yaml:"labels,omitempty"`
+	} `yaml:"testcafe,omitempty"`
 	Fpm struct {
 		Image       string            `yaml:"image,omitempty"`
 		Hostname    string            `yaml:"hostname,omitempty"`
