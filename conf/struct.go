@@ -156,6 +156,11 @@ type Services struct {
 		Dependson   []string          `yaml:"depends_on,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`
 		Labels      map[string]string `yaml:"labels,omitempty"`
+		Networks    struct {
+			Default struct {
+				Aliases []string `yaml:"aliases,omitempty"`
+			} `yaml:"default,omitempty"`
+		} `yaml:"networks,omitempty"`
 	} `yaml:"haproxy,omitempty"`
 	Varnish struct {
 		Image       string            `yaml:"image,omitempty"`

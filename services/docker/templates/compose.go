@@ -322,6 +322,11 @@ services:
     labels:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
+    networks:
+      default:
+        aliases:
+          - haproxy
+          - haproxy-test
   varnish:
     user: "1004"
     image: tokaido/varnish:stable
@@ -350,11 +355,6 @@ services:
     labels:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
-    networks:
-      default:
-        aliases:
-          - nginx
-          - nginx-test
   testcafe:
     image: testcafe/testcafe
     working_dir: /testcafe
@@ -454,6 +454,11 @@ services:
     labels:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
+    networks:
+      default:
+        aliases:
+          - haproxy
+          - haproxy-test
   varnish:
     user: "1004"
     image: tokaido/varnish:stable
@@ -482,11 +487,6 @@ services:
     labels:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
-    networks:
-      default:
-        aliases:
-          - nginx
-          - nginx-test
   testcafe:
     image: testcafe/testcafe
     working_dir: /testcafe
@@ -587,6 +587,11 @@ services:
     labels:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
+    networks:
+      default:
+        aliases:
+          - haproxy
+          - haproxy-test
   varnish:
     user: "1004"
     image: tokaido/varnish:stable
@@ -614,11 +619,6 @@ services:
     labels:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
-    networks:
-      default:
-        aliases:
-          - nginx
-          - nginx-test
   testcafe:
     image: testcafe/testcafe
     working_dir: /testcafe

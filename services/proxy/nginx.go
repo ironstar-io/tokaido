@@ -26,7 +26,7 @@ func GenerateNginxConf(projectName, domain, proxyPassDomain string) []byte {
 
   location / {
     proxy_pass             ` + proxyPassDomain + `;
-    proxy_set_header       Host              $host;
+    proxy_set_header       Host              $host:$server_port;
     proxy_intercept_errors on;
   }
 }
