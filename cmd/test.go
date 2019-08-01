@@ -13,6 +13,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var staleDBFlag bool
+
 // TestCmd - `tok test`
 var TestCmd = &cobra.Command{
 	Use:   "test",
@@ -31,6 +33,6 @@ var TestCmd = &cobra.Command{
 			log.Fatalf("Tokaido containers must be running in order to start automated tests. Have you run `tok up`?")
 		}
 
-		testcafe.RunDrupalTests()
+		testcafe.RunDrupalTests(staleDBFlag)
 	},
 }

@@ -15,7 +15,7 @@ import (
 )
 
 // RunDrupalTests - Run Drupal TestCafe tests. See: https://github.com/drupal/drupal/blob/8.6.x/core/tests/README.md#testcafe-tests
-func RunDrupalTests() error {
+func RunDrupalTests(staleDB bool) error {
 	fmt.Println(aurora.Blue("Please note 'tok test' is a beta feature and under active development"))
 	fmt.Println(aurora.Blue("We'd to hear what you think - you can use `tok survey` to send us feedback"))
 	fmt.Println(aurora.Blue("If you'd like to contribute by discussing test frameworks and included tests"))
@@ -35,11 +35,12 @@ func RunDrupalTests() error {
 		pullBaseRepo()
 	}
 
-	recreateTokaidoTestDB()
-	clearDrupalCache()
-	copyDefaultDB()
-	// Clone prod DB
-	addTestCafeUsers()
+	if staleDB == false {
+		recreateTokaidoTestDB()
+		clearDrupalCache()
+		copyDefaultDB()
+		addTestCafeUsers()
+	}
 
 	npmCI()
 	npmHeadlessTestCafe()
@@ -90,15 +91,21 @@ func recreateTokaidoTestDB() {
 }
 
 func clearDrupalCache() {
+	fmt.Println("🗑️   Clearing the Drupal cache...")
+
 	ssh.ConnectCommand([]string{"drush", "cache-rebuild", "-d"})
 }
 
 func copyDefaultDB() {
+	fmt.Println("🖨️   Creating a test copy of the database")
+
 	ssh.ConnectCommand([]string{"drush", "sql:dump", "--result-file=toktest-dump.sql", "-d"})
 	ssh.ConnectCommand([]string{"drush", "sql:cli", "--database=test", "<", "toktest-dump.sql", "-d"})
 }
 
 func addTestCafeUsers() {
+	fmt.Println("👩‍💻  Adding temporary Drupal user, admin and editor")
+
 	ssh.ConnectCommand([]string{"drush", "user:create", "testcafe_user", `--password="testcafe_user"`, `--mail="testcafe_user@localhost"`, "-d"})
 	ssh.ConnectCommand([]string{"drush", "user:create", "testcafe_admin", `--password="testcafe_admin"`, `--mail="testcafe_admin@localhost"`, "-d"})
 	ssh.ConnectCommand([]string{"drush", "user:role:add", `"administrator"`, "testcafe_admin", "-d"})

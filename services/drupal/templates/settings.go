@@ -104,7 +104,7 @@ $databases['test']['default'] = [
   'prefix' => '',
 ];
 
-if ($_SERVER['HTTP_HOST'] == "` + s.ProjectName + `-toktestdb.local.tokaido.io" || $_SERVER['HTTP_HOST'] == "nginx-test") {
+if ($_SERVER['HTTP_HOST'] == "` + s.ProjectName + `-toktestdb.local.tokaido.io:5154" || $_SERVER['HTTP_HOST'] == "haproxy-test:8443" || in_array("testcafe_user", $_SERVER["argv"]) || in_array("testcafe_admin", $_SERVER["argv"]) || in_array("testcafe_editor", $_SERVER["argv"])) {
   Database::addConnectionInfo('test', 'default', $databases['test']['default']);
   Database::setActiveConnection('test');
 }
