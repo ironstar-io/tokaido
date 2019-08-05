@@ -1,10 +1,14 @@
 package testcafe
 
 import (
+	"database/sql"
 	"fmt"
 	"path/filepath"
+	"time"
 
 	"github.com/ironstar-io/tokaido/conf"
+	"github.com/ironstar-io/tokaido/services/database"
+	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/services/testing/testcafe/goos"
 	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/fs"
@@ -15,7 +19,7 @@ import (
 )
 
 // RunDrupalTests - Run Drupal TestCafe tests. See: https://github.com/drupal/drupal/blob/8.6.x/core/tests/README.md#testcafe-tests
-func RunDrupalTests(staleDB bool) error {
+func RunDrupalTests(useExistingDB bool) error {
 	fmt.Println(aurora.Blue("Please note 'tok test' is a beta feature and under active development"))
 	fmt.Println(aurora.Blue("We'd to hear what you think - you can use `tok survey` to send us feedback"))
 	fmt.Println(aurora.Blue("If you'd like to contribute by discussing test frameworks and included tests"))
@@ -33,10 +37,25 @@ func RunDrupalTests(staleDB bool) error {
 	br := baseRepoExists()
 	if br == false {
 		pullBaseRepo()
+		// Restart the testcafe container to ensure the workdir and volume is bound
+		docker.ComposeStdout("restart", "testcafe")
 	}
 
-	if staleDB == false {
-		recreateTokaidoTestDB()
+	db, err := database.ConnectRoot("tokaido")
+	if err != nil {
+		fmt.Println(aurora.Red("Error: Could not connect to the database container failed. Have you run `tok up`?"))
+		utils.DebugString(err.Error())
+		return err
+	}
+
+	testDBReady := isTestDBAccessible(db)
+
+	if useExistingDB == false || testDBReady == false {
+		err = recreateTokaidoTestDB(db)
+		if err != nil {
+			return err
+		}
+
 		clearDrupalCache()
 		copyDefaultDB()
 		addTestCafeUsers()
@@ -63,8 +82,8 @@ func testCafeContainerPath() string {
 }
 
 func baseRepoExists() bool {
-	env := filepath.Join(testCafeLocalPath(), "tests")
-	if fs.CheckExists(env) == false {
+	p := filepath.Join(testCafeLocalPath(), "tests")
+	if fs.CheckExists(p) == false {
 		return false
 	}
 
@@ -73,6 +92,8 @@ func baseRepoExists() bool {
 
 // Download the base testcafe repo and copy into the Drupal project
 func pullBaseRepo() {
+	fmt.Println("🗃️   Fetching the TestCafe base repo and placing in " + conf.GetRootDir() + "/.tok/testcafe")
+
 	utils.CheckCmdHard("curl")
 
 	pr := conf.GetProjectPath()
@@ -80,18 +101,94 @@ func pullBaseRepo() {
 	tp := filepath.Join(pr, dr, ".tok")
 	fs.Mkdir(tp)
 
-	utils.StdoutCmd("wget", "https://github.com/ironstar-io/tokaido-testcafe/archive/0.0.4.tar.gz")
-	utils.StdoutCmd("tar", "xzf", "0.0.4.tar.gz")
-	utils.StdoutCmd("mv", "tokaido-testcafe-0.0.4", filepath.Join(tp, "testcafe"))
-	utils.StdoutCmd("rm", "0.0.4.tar.gz")
+	utils.StdoutStreamCmdDebugContext(filepath.Join(tp), "wget", "https://github.com/ironstar-io/tokaido-testcafe/archive/0.0.7.tar.gz")
+	utils.StdoutStreamCmdDebugContext(filepath.Join(tp), "tar", "xzf", "0.0.7.tar.gz")
+	fs.Remove(filepath.Join(tp, "0.0.7.tar.gz"))
+	fs.Remove(filepath.Join(tp, "testcafe"))
+	fs.Rename(filepath.Join(tp, "tokaido-testcafe-0.0.7"), filepath.Join(tp, "testcafe"))
 }
 
-func recreateTokaidoTestDB() {
-	ssh.ConnectCommand([]string{"drush", "sql:create", "--database=test", "-y", "-d"})
+// isTestDBAccessible returns a boolean marking whether the 'tokaido_test' DB can be accessed or not
+func isTestDBAccessible(db *sql.DB) bool {
+	// Check to see if the database already exists
+	db, err := database.Connect("tokaido_test")
+	if err != nil {
+		fmt.Println(aurora.Red("Error: Could not connect to the database container failed. Have you run `tok up`?"))
+		utils.DebugString(err.Error())
+
+		return false
+	}
+
+	err = db.Ping()
+	if err != nil {
+		// The database connection was opened but failed, so the provided database doesn't exist
+		return false
+	}
+
+	return true
+}
+
+func recreateTokaidoTestDB(db *sql.DB) error {
+	db, err := database.ConnectRoot("tokaido")
+	if err != nil {
+		fmt.Println(aurora.Red("Error: Could not connect to the database container failed. Have you run `tok up`?"))
+		utils.DebugString(err.Error())
+
+		return err
+	}
+
+	utils.DebugString("Creating tokaido_test database")
+	_, err = db.Exec("DROP DATABASE IF EXISTS tokaido_test;")
+	if err != nil {
+		fmt.Println(aurora.Red("Error: Could not drop the tokaido_test database: "), err.Error())
+		utils.DebugString(err.Error())
+
+		return err
+	}
+
+	// Create the database
+	utils.DebugString("Creating tokaido_test database")
+	_, err = db.Exec("CREATE DATABASE tokaido_test;")
+	if err != nil {
+		fmt.Println(aurora.Red("Error: Could not create the tokaido_test database: "), err.Error())
+		utils.DebugString(err.Error())
+
+		return err
+	}
+
+	// Grant 'tokaido' user access
+	utils.DebugString("Creating full access to 'tokaido_test' database to 'tokaido' user")
+	_, err = db.Exec("GRANT ALL ON tokaido_test.* TO 'tokaido'@'%';")
+	if err != nil {
+		fmt.Println(aurora.Red("Error: Could not grant access to the tokaido_test database: "), err.Error())
+		utils.DebugString(err.Error())
+
+		return err
+	}
+
+	// Flush
+	utils.DebugString("Flushing privileges")
+	_, err = db.Exec("FLUSH PRIVILEGES;")
+	if err != nil {
+		fmt.Println(aurora.Red("Error: Could not successfully flush privileges: "), err.Error())
+		utils.DebugString(err.Error())
+		return err
+	}
+
+	time.Sleep(1 * time.Second)
+
+	// See if the creation was successful
+	success := isTestDBAccessible(db)
+	if !success {
+		fmt.Println(aurora.Red("Error: Tokaido was not able to successfully create the 'tests' database"))
+		return err
+	}
+
+	return nil
 }
 
 func clearDrupalCache() {
-	fmt.Println("🗑️   Clearing the Drupal cache...")
+	fmt.Println("🗑️   Clearing the Drupal cache")
 
 	ssh.ConnectCommand([]string{"drush", "cache-rebuild", "-d"})
 }
@@ -104,13 +201,11 @@ func copyDefaultDB() {
 }
 
 func addTestCafeUsers() {
-	fmt.Println("👩‍💻  Adding temporary Drupal user, admin and editor")
+	fmt.Println("👩‍💻  Adding temporary Drupal user and administrator")
 
 	ssh.ConnectCommand([]string{"drush", "user:create", "testcafe_user", `--password="testcafe_user"`, `--mail="testcafe_user@localhost"`, "-d"})
 	ssh.ConnectCommand([]string{"drush", "user:create", "testcafe_admin", `--password="testcafe_admin"`, `--mail="testcafe_admin@localhost"`, "-d"})
 	ssh.ConnectCommand([]string{"drush", "user:role:add", `"administrator"`, "testcafe_admin", "-d"})
-	ssh.ConnectCommand([]string{"drush", "user:create", "testcafe_editor", `--password="testcafe_editor"`, `--mail="testcafe_editor@localhost"`, "-d"})
-	ssh.ConnectCommand([]string{"drush", "user:role:add", `"editor"`, "testcafe_editor", "-d"})
 }
 
 func npmCI() {
@@ -118,6 +213,7 @@ func npmCI() {
 	if fs.CheckExists(nm) == false {
 		fmt.Println(aurora.Cyan("🦉  Installing TestCafe dependencies"))
 		ssh.StreamConnectCommand([]string{"cd", testCafeContainerPath(), "&&", "npm", "ci"})
+		docker.ComposeStdout("restart", "testcafe")
 	}
 }
 
