@@ -37,8 +37,6 @@ func RunDrupalTests(useExistingDB bool) error {
 	br := baseRepoExists()
 	if br == false {
 		pullBaseRepo()
-		// Restart the testcafe container to ensure the workdir and volume is bound
-		docker.ComposeStdout("restart", "testcafe")
 	}
 
 	db, err := database.ConnectRoot("tokaido")
@@ -213,11 +211,13 @@ func npmCI() {
 	if fs.CheckExists(nm) == false {
 		fmt.Println(aurora.Cyan("🦉  Installing TestCafe dependencies"))
 		ssh.StreamConnectCommand([]string{"cd", testCafeContainerPath(), "&&", "npm", "ci"})
-		docker.ComposeStdout("restart", "testcafe")
 	}
 }
 
 func npmHeadlessTestCafe() {
+	// Restart the testcafe container to ensure the workdir and volume is bound
+	docker.ComposeStdout("restart", "testcafe")
+
 	utils.StdoutStreamCmd("docker-compose", "-f", filepath.Join(conf.GetProjectPath(), "/docker-compose.tok.yml"), "exec", "-T", "testcafe", "npm", "run", "test")
 }
 
