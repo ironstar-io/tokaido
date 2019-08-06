@@ -224,7 +224,7 @@ func TokaidoFusionSiteVolumeAttach(path, name string) []byte {
       - ` + name + `:/tokaido/site
   testcafe:
     volumes:
-      - ` + path + `/web/.tok/testcafe:/testcafe
+      - ` + path + `/.tok/testcafe:/testcafe
   fpm:
     volumes:
       - ` + name + `:/tokaido/site
@@ -250,7 +250,7 @@ func TokaidoDockerSiteVolumeAttach(path string) []byte {
       - ` + path + `:/tokaido/site
   testcafe:
     volumes:
-      - ` + path + `/web/.tok/testcafe:/testcafe
+      - ` + path + `/.tok/testcafe:/testcafe
   drush:
     volumes:
       - ` + path + `:/tokaido/site

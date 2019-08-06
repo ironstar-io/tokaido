@@ -68,15 +68,12 @@ func RunDrupalTests(useExistingDB bool) error {
 // Pull the testcafe folder absolute path
 func testCafeLocalPath() string {
 	pr := conf.GetProjectPath()
-	dr := conf.GetConfig().Drupal.Path
 
-	return filepath.Join(pr, dr, ".tok", "testcafe")
+	return filepath.Join(pr, ".tok", "testcafe")
 }
 
 func testCafeContainerPath() string {
-	dr := conf.GetConfig().Drupal.Path
-
-	return filepath.Join("/tokaido", "site", dr, ".tok", "testcafe")
+	return filepath.Join("/tokaido", "site", ".tok", "testcafe")
 }
 
 func baseRepoExists() bool {
@@ -90,20 +87,19 @@ func baseRepoExists() bool {
 
 // Download the base testcafe repo and copy into the Drupal project
 func pullBaseRepo() {
-	fmt.Println("🗃️   Fetching the TestCafe base repo and placing in " + conf.GetRootDir() + "/.tok/testcafe")
+	fmt.Println("🗃️   Fetching the TestCafe base repo and placing in .tok/testcafe")
 
-	utils.CheckCmdHard("curl")
+	utils.CheckCmdHard("wget")
 
 	pr := conf.GetProjectPath()
-	dr := conf.GetConfig().Drupal.Path
-	tp := filepath.Join(pr, dr, ".tok")
+	tp := filepath.Join(pr, ".tok")
 	fs.Mkdir(tp)
 
-	utils.StdoutStreamCmdDebugContext(filepath.Join(tp), "wget", "https://github.com/ironstar-io/tokaido-testcafe/archive/0.0.7.tar.gz")
-	utils.StdoutStreamCmdDebugContext(filepath.Join(tp), "tar", "xzf", "0.0.7.tar.gz")
-	fs.Remove(filepath.Join(tp, "0.0.7.tar.gz"))
+	utils.StdoutStreamCmdDebugContext(filepath.Join(tp), "wget", "https://github.com/ironstar-io/tokaido-testcafe/archive/0.0.8.tar.gz")
+	utils.StdoutStreamCmdDebugContext(filepath.Join(tp), "tar", "xzf", "0.0.8.tar.gz")
+	fs.Remove(filepath.Join(tp, "0.0.8.tar.gz"))
 	fs.Remove(filepath.Join(tp, "testcafe"))
-	fs.Rename(filepath.Join(tp, "tokaido-testcafe-0.0.7"), filepath.Join(tp, "testcafe"))
+	fs.Rename(filepath.Join(tp, "tokaido-testcafe-0.0.8"), filepath.Join(tp, "testcafe"))
 }
 
 // isTestDBAccessible returns a boolean marking whether the 'tokaido_test' DB can be accessed or not
@@ -194,16 +190,16 @@ func clearDrupalCache() {
 func copyDefaultDB() {
 	fmt.Println("🖨️   Creating a test copy of the database")
 
-	ssh.ConnectCommand([]string{"drush", "sql:dump", "--result-file=toktest-dump.sql", "-d"})
-	ssh.ConnectCommand([]string{"drush", "sql:cli", "--database=test", "<", "toktest-dump.sql", "-d"})
+	ssh.ConnectCommand([]string{"drush", "sql-dump", "--result-file=toktest-dump.sql", "-d"})
+	ssh.ConnectCommand([]string{"drush", "sql-cli", "--database=test", "<", "toktest-dump.sql", "-d"})
 }
 
 func addTestCafeUsers() {
 	fmt.Println("👩‍💻  Adding temporary Drupal user and administrator")
 
-	ssh.ConnectCommand([]string{"drush", "user:create", "testcafe_user", `--password="testcafe_user"`, `--mail="testcafe_user@localhost"`, "-d"})
-	ssh.ConnectCommand([]string{"drush", "user:create", "testcafe_admin", `--password="testcafe_admin"`, `--mail="testcafe_admin@localhost"`, "-d"})
-	ssh.ConnectCommand([]string{"drush", "user:role:add", `"administrator"`, "testcafe_admin", "-d"})
+	ssh.ConnectCommand([]string{"drush", "user-create", "testcafe_user", `--password="testcafe_user"`, `--mail="testcafe_user@localhost"`, "-d"})
+	ssh.ConnectCommand([]string{"drush", "user-create", "testcafe_admin", `--password="testcafe_admin"`, `--mail="testcafe_admin@localhost"`, "-d"})
+	ssh.ConnectCommand([]string{"drush", "user-add-role", `"administrator"`, "testcafe_admin", "-d"})
 }
 
 func npmCI() {
