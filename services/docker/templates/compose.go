@@ -201,6 +201,14 @@ func SetDatabase(image, version string) []byte {
 `)
 }
 
+// SetDatabasePort assigns a static local port for the database
+func SetDatabasePort(port string) []byte {
+	return []byte(`services:
+  mysql:
+    ports:
+      - ` + port + `:3306`)
+}
+
 // SetUnisonVersion ...
 func SetUnisonVersion(version string) []byte {
 	return []byte(`services:

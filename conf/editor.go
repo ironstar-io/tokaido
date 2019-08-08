@@ -282,7 +282,6 @@ Current Setting: [{{ .Current | green }}]
 	case 3:
 		if gprj.Xdebug.Enabled == true {
 			SetGlobalConfigValueByArgs([]string{"global", "project", "xdebug", "enabled", "false"})
-			// SetConfigValueByArgs([]string{"tokaido", "xdebug", "false"}, "project")
 		} else {
 			SetGlobalConfigValueByArgs([]string{"global", "project", "xdebug", "enabled", "true"})
 		}
@@ -459,6 +458,10 @@ func TokaidoPhpversionMenu() {
 
 // DatabaseMenu ...
 func DatabaseMenu() {
+	gprj, err := GetGlobalProjectSettings()
+	if err != nil {
+		panic(err)
+	}
 	fmt.Println(BgRed(White("!! WARNING !!")))
 	fmt.Println(BgRed(White("Changing your database configuration can completely break your database. We strongly recommend creating a `tok snapshot` first")))
 	fmt.Println(BgRed(White("!! WARNING !!")))
@@ -484,6 +487,12 @@ func DatabaseMenu() {
 			Current: GetConfig().Database.Mariadbconfig.Version,
 			Default: "10.3",
 			Detail:  "Set the MariaDB Version if MariaDB is used",
+		},
+		{
+			Name:    "Set static database port",
+			Type:    "value",
+			Current: strconv.Itoa(gprj.Database.Port),
+			Detail:  "Instead of using a dynamic random port number, always expose this project's database locally on a pre-defined port",
 		},
 		{
 			Name:    "« Main Menu",
@@ -542,8 +551,13 @@ func DatabaseMenu() {
 		reloadConfig()
 		DatabaseMenu()
 	case 3:
-		MainMenu()
+		res := newStringValue("Specify the port to always use for this project:")
+		SetGlobalConfigValueByArgs([]string{"global", "project", "database", "port", res})
+		reloadConfig()
+		DatabaseMenu()
 	case 4:
+		MainMenu()
+	case 5:
 		fmt.Println("Please note that if you have made config changes, you need to run `tok rebuild`")
 		os.Exit(0)
 	}
