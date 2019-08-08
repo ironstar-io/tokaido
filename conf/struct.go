@@ -21,6 +21,9 @@ type Global struct {
 	Syncservice string    `yaml:"syncservice,omitempty"`
 	Projects    []Project `yaml:"projects,omitempty"`
 	Telemetry   Telemetry `yaml:"telemetry,omitempty"`
+	Proxy       struct {
+		Enabled bool `yaml:"enabled"`
+	} `yaml:"proxy,omitempty"`
 }
 
 // Config the application's configuration
@@ -84,16 +87,6 @@ type Config struct {
 		Phpmaxfileuploads    string `yaml:"phpmaxfileuploads,omitempty"`
 		Phpallowurlfopen     string `yaml:"phpallowurlfopen,omitempty"`
 	}
-	System struct {
-		Syncsvc struct {
-			Systemdpath string `yaml:"systemdpath,omitempty"`
-			Launchdpath string `yaml:"launchdpath,omitempty"`
-			Enabled     bool   `yaml:"enabled,omitempty"`
-		} `yaml:"syncsvc,omitempty"`
-		Proxy struct {
-			Enabled bool `yaml:"enabled"`
-		} `yaml:"proxy,omitempty"`
-	} `yaml:"system,omitempty"`
 	Services Services `yaml:"services,omitempty"`
 }
 

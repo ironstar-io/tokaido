@@ -29,7 +29,7 @@ import (
 )
 
 // Init - The core run sheet of `tok up`
-func Init(yes, statuscheck bool) {
+func Init(yes, statuscheck, noPullImagesFlag bool) {
 	c := conf.GetConfig()
 	cs := "ASK"
 	if yes {
@@ -81,11 +81,9 @@ func Init(yes, statuscheck bool) {
 		if s == "stopped" {
 			unison.Sync(c.Tokaido.Project.Name)
 		}
-		if c.System.Syncsvc.Enabled {
-			fmt.Println()
-			console.Println(`🔄  Creating a background process to sync your local repo into the Tokaido environment`, "")
-			unison.CreateSyncService(c.Tokaido.Project.Name, pr)
-		}
+		fmt.Println()
+		console.Println(`🔄  Creating a background process to sync your local repo into the Tokaido environment`, "")
+		unison.CreateSyncService(c.Tokaido.Project.Name, pr)
 	}
 
 	if c.Global.Syncservice == "fusion" {
@@ -97,8 +95,12 @@ func Init(yes, statuscheck bool) {
 		console.SpinPersist(wo, "🚛", "Initial sync completed")
 	}
 
-	fmt.Println("🤖  Downloading the latest Docker images")
-	docker.PullImages()
+	if noPullImagesFlag {
+		fmt.Println("    Not downloading the latest Docker images")
+	} else {
+		fmt.Println("🤖  Downloading the latest Docker images")
+		docker.PullImages()
+	}
 
 	console.Println("🚅  Starting your Drupal environment", "")
 	docker.Up()
@@ -107,7 +109,7 @@ func Init(yes, statuscheck bool) {
 	drupal.ConfigureSSH()
 	xdebug.Configure()
 
-	if c.System.Proxy.Enabled {
+	if c.Global.Proxy.Enabled {
 		// This step can't be in a spinner because the spinner can't ask for user input during the SSL trust stage.
 		console.Println(`🔐  Setting up HTTPS access...`, "")
 		proxy.Setup()

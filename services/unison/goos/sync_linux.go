@@ -43,7 +43,7 @@ func NewUnisonSvc(syncName, syncDir string) UnisonSvc {
 		SyncDir:     syncDir,
 		Filename:    getServiceFilename(syncName),
 		Filepath:    getServicePath(syncName),
-		Systemdpath: c.System.Syncsvc.Systemdpath,
+		Systemdpath: filepath.Join(fs.HomeDir(), "/.config/systemd/user/"),
 	}
 
 	return s
@@ -54,7 +54,7 @@ func getServiceFilename(syncName string) string {
 }
 
 func getServicePath(syncName string) string {
-	return conf.GetConfig().System.Syncsvc.Systemdpath + getServiceFilename(syncName)
+	return conf.GetConfig().Global.Syncsvc.Systemdpath + getServiceFilename(syncName)
 }
 
 // CreateSyncFile creates the systemd path (if necessary) and file

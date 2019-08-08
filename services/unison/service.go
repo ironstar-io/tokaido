@@ -3,7 +3,6 @@ package unison
 import (
 	"fmt"
 
-	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/services/unison/goos"
 	"github.com/ironstar-io/tokaido/system/console"
 )
@@ -23,30 +22,18 @@ func CreateSyncService(syncName, syncDir string) {
 
 // StopSyncService stop systemd sync service
 func StopSyncService(syncName string) {
-	if conf.GetConfig().System.Syncsvc.Enabled != true {
-		return
-	}
-
 	s := goos.NewUnisonSvc(syncName, "")
 	s.StopSyncService()
 }
 
 // RestartSyncService ...
 func RestartSyncService(syncName string) {
-	if conf.GetConfig().System.Syncsvc.Enabled != true {
-		return
-	}
-
 	s := goos.NewUnisonSvc(syncName, "")
 	s.RestartSyncService()
 }
 
 // UnloadSyncService will uninstall the sync service
 func UnloadSyncService(syncName string) {
-	if conf.GetConfig().System.Syncsvc.Enabled != true {
-		return
-	}
-
 	s := goos.NewUnisonSvc(syncName, "")
 	s.UnloadSyncService()
 }
@@ -65,10 +52,6 @@ func CheckSyncService(syncName string) error {
 
 // BackgroundServiceWarning - Check if the background sync service is running and warn if not
 func BackgroundServiceWarning(syncName string) {
-	if conf.GetConfig().System.Syncsvc.Enabled != true {
-		return
-	}
-
 	if !CheckBackgroundService(syncName) {
 		fmt.Println()
 		console.Println("⚠️  The background sync service is not running. Manually sync with `tok watch` or try running `tok up` again", "")
