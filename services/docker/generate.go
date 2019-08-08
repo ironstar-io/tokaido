@@ -98,6 +98,11 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 	phpVersion := conf.GetConfig().Tokaido.Phpversion
 	syncservice := conf.GetConfig().Global.Syncservice
 
+	gprj, err := conf.GetGlobalProjectSettings()
+	if err != nil {
+		panic(err)
+	}
+
 	switch syncservice {
 	case "docker":
 		utils.DebugString("attaching repo to /tokaido/site folder using direct Docker mount")
@@ -153,7 +158,7 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 		}
 	}
 
-	err := yaml.Unmarshal(getDrupalSettings(), &tokStruct)
+	err = yaml.Unmarshal(getDrupalSettings(), &tokStruct)
 	if err != nil {
 		log.Fatalf("Error adding Drupal settings to Compose file: %v", err)
 	}
@@ -188,6 +193,13 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 	err = yaml.Unmarshal(dockertmpl.SetDatabase(dbImage, dbVersion), &tokStruct)
 	if err != nil {
 		log.Fatalf("Error generating database config: %v", err)
+	}
+
+	if gprj.Database.Port > 0 {
+		err = yaml.Unmarshal(dockertmpl.SetDatabasePort(fmt.Sprint(gprj.Database.Port)), &tokStruct)
+		if err != nil {
+			log.Fatalf("Error generating static database port: %v", err)
+		}
 	}
 
 	if conf.GetConfig().Services.Solr.Enabled {

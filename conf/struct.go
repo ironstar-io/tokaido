@@ -2,8 +2,11 @@ package conf
 
 // Project is a singular entry of a project name and path used in global config
 type Project struct {
-	Name   string `yaml:"name,omitempty"`
-	Path   string `yaml:"path,omitempty"`
+	Name     string `yaml:"name,omitempty"`
+	Path     string `yaml:"path,omitempty"`
+	Database struct {
+		Port int `yaml:"port,omitempty"`
+	} `yaml:"database,omitempty"`
 	Xdebug struct {
 		Enabled bool `yaml:"enabled"`
 		FpmPort int  `yaml:"fpmport"`

@@ -72,13 +72,36 @@ func SetGlobalConfigValueByArgs(args []string) (err error) {
 			return fmt.Errorf("Error: too few arguments for global project config. Did you want 'xdebug'?")
 		}
 
+		p, err := GetGlobalProjectSettings()
+		if err != nil {
+			return err
+		}
+
+		if args[2] == "database" {
+			if len(args) < 4 {
+				return fmt.Errorf("Error: too few arguments for database port. Please specify 'port {number}'")
+			}
+
+			if args[3] != "port" {
+				return fmt.Errorf("Error: unknown argument '%s'. Expected 'port'", args[3])
+			}
+
+			dbPort, err := strconv.Atoi(args[4])
+			if err != nil {
+				return err
+			}
+			if dbPort < 1024 || dbPort > 65535 {
+				return fmt.Errorf("Error: you must specify an static database port between 1025 and 65535")
+			}
+
+			p.Database.Port = dbPort
+			WriteGlobalProjectSettings(p)
+			return nil
+		}
+
 		if args[2] == "xdebug" {
 			if len(args) < 4 {
 				return fmt.Errorf("Error: too few arguments for xdebug config. Please specify 'enabled {true/false}' or 'port {number}'")
-			}
-			p, err := GetGlobalProjectSettings()
-			if err != nil {
-				return err
 			}
 
 			if args[3] == "enabled" {
@@ -111,6 +134,7 @@ func SetGlobalConfigValueByArgs(args []string) (err error) {
 				WriteGlobalProjectSettings(p)
 				return nil
 			}
+
 			return nil
 		}
 	}
