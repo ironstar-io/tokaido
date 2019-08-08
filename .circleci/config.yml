@@ -6,7 +6,7 @@ jobs:
         environment:
           GO111MODULE: "ON"
 
-    working_directory: /tokaido
+    working_directory: ~/tokaido
 
     steps:
       - checkout
@@ -19,11 +19,11 @@ jobs:
       - run: sha256sum dist/tok-macos > dist/tok-macos-sha.txt
 
       - store_artifacts:
-          path: /tokaido/dist/
+          path: ~/tokaido/dist/
           destination: artifacts
 
       - persist_to_workspace:
-          root: /tokaido/
+          root: ~/tokaido/
           paths:
             - dist
 
