@@ -207,7 +207,7 @@ func New(args []string, requestTemplate string) {
 
 	// Start the environment
 	initialize.TokConfig("up")
-	Init(true, false)
+	Init(true, false, false)
 
 	// Run the post-up custom installation commands
 	l := len(template.PostUpCommands)

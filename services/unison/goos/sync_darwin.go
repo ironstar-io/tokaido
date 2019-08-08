@@ -10,7 +10,6 @@ import (
 	"path/filepath"
 	"text/template"
 
-	"github.com/ironstar-io/tokaido/conf"
 	unisontmpl "github.com/ironstar-io/tokaido/services/unison/templates"
 	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/daemon"
@@ -29,7 +28,6 @@ type UnisonSvc struct {
 
 // NewUnisonSvc - Return a new instance of `UnisonSvc`.
 func NewUnisonSvc(syncName, syncDir string) UnisonSvc {
-	c := conf.GetConfig()
 	u, uErr := user.Current()
 	if uErr != nil {
 		log.Fatal(uErr)
@@ -40,7 +38,7 @@ func NewUnisonSvc(syncName, syncDir string) UnisonSvc {
 		SyncDir:     syncDir,
 		Filename:    getServiceFilename(syncName),
 		Filepath:    getServicePath(syncName),
-		Launchdpath: c.System.Syncsvc.Launchdpath,
+		Launchdpath: filepath.Join(fs.HomeDir(), "/Library/LaunchAgents/"),
 		Username:    u.Username,
 	}
 
@@ -59,7 +57,7 @@ func getServiceFilename(syncName string) string {
 }
 
 func getServicePath(syncName string) string {
-	return filepath.Join(conf.GetConfig().System.Syncsvc.Launchdpath, getServiceFilename(syncName))
+	return filepath.Join(filepath.Join(fs.HomeDir(), "/Library/LaunchAgents/"), getServiceFilename(syncName))
 }
 
 // CreateSyncFile - Create a .plist file for the unison service
@@ -122,10 +120,6 @@ func (s UnisonSvc) SyncServiceStatus() string {
 
 // CheckSyncService a verbose sync status check used for tok status
 func (s UnisonSvc) CheckSyncService() error {
-	if conf.GetConfig().System.Syncsvc.Enabled != true {
-		return nil
-	}
-
 	c := s.SyncServiceStatus()
 	if c == "running" {
 		console.Println("✅  Background sync service is running", "√")

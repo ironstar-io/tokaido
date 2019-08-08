@@ -65,8 +65,8 @@ func readProjectConfig(command string) {
 		viper.SetDefault("Global.Syncservice", "unison")
 	}
 
-	viper.SetDefault("System.Syncsvc.Launchdpath", filepath.Join(fs.HomeDir(), "/Library/LaunchAgents/"))
-	viper.SetDefault("System.Syncsvc.Systemdpath", filepath.Join(fs.HomeDir(), "/.config/systemd/user/"))
+	viper.SetDefault("Global.Syncsvc.Launchdpath", filepath.Join(fs.HomeDir(), "/Library/LaunchAgents/"))
+	viper.SetDefault("Global.Syncsvc.Systemdpath", filepath.Join(fs.HomeDir(), "/.config/systemd/user/"))
 
 	viper.SetDefault("Tokaido.Customcompose", viper.GetBool("customCompose"))
 	viper.SetDefault("Tokaido.Debug", viper.GetBool("debug"))
@@ -81,8 +81,8 @@ func readProjectConfig(command string) {
 	viper.SetDefault("Drupal.FilePublicPath", "")
 	viper.SetDefault("Drupal.FilePrivatePath", constants.DefaultDrupalPrivatePath)
 	viper.SetDefault("Drupal.FileTemporaryPath", constants.DefaultDrupalTemporaryPath)
-	viper.SetDefault("System.Syncsvc.Enabled", true)
-	viper.SetDefault("System.Proxy.Enabled", true)
+	viper.SetDefault("Global.Syncsvc.Enabled", true)
+	viper.SetDefault("Global.Proxy.Enabled", true)
 
 	if command == "new" {
 		viper.SetDefault("Services.Adminer.Enabled", true)

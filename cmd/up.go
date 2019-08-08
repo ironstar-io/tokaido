@@ -9,6 +9,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var noPullImagesFlag bool
+
 // UpCmd - `tok up`
 var UpCmd = &cobra.Command{
 	Use:   "up",
@@ -19,7 +21,7 @@ var UpCmd = &cobra.Command{
 		telemetry.SendCommand("up")
 		utils.CheckCmdHard("docker-compose")
 
-		tok.Init(conf.GetConfig().Tokaido.Yes, true)
+		tok.Init(conf.GetConfig().Tokaido.Yes, true, noPullImagesFlag)
 		tok.InitMessage()
 	},
 }

@@ -108,7 +108,7 @@ func enableChromedriver() {
 
 	if !docker.StatusCheck("chromedriver", conf.GetConfig().Tokaido.Project.Name) {
 		fmt.Println(Cyan("👾  Restarting Tokaido with Chromedriver enabled"))
-		tok.Init(true, false)
+		tok.Init(true, false, false)
 
 	}
 }
