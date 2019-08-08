@@ -3,8 +3,10 @@ jobs:
   build:
     docker:
       - image: circleci/golang:1.12-stretch
+        environment:
+          GO111MODULE: "ON"
 
-    working_directory: /go/src/github.com/ironstar-io/tokaido
+    working_directory: /tokaido
 
     steps:
       - checkout
@@ -17,11 +19,11 @@ jobs:
       - run: sha256sum dist/tok-macos > dist/tok-macos-sha.txt
 
       - store_artifacts:
-          path: /go/src/github.com/ironstar-io/tokaido/dist/
+          path: /tokaido/dist/
           destination: artifacts
 
       - persist_to_workspace:
-          root: /go/src/github.com/ironstar-io/tokaido/
+          root: /tokaido/
           paths:
             - dist
 
