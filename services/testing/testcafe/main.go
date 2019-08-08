@@ -9,6 +9,7 @@ import (
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/services/database"
 	"github.com/ironstar-io/tokaido/services/docker"
+	"github.com/ironstar-io/tokaido/services/drupal"
 	"github.com/ironstar-io/tokaido/services/testing/testcafe/goos"
 	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/fs"
@@ -38,6 +39,9 @@ func RunDrupalTests(useExistingDB bool) error {
 	if br == false {
 		pullBaseRepo()
 	}
+
+	// Regenerate `settings.tok.php` to ensure the tests database connection is defined
+	drupal.CreateSettingsTok()
 
 	db, err := database.ConnectRoot("tokaido")
 	if err != nil {
