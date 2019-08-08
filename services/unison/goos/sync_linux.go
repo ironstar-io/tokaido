@@ -11,7 +11,6 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/ironstar-io/tokaido/conf"
 	unisontmpl "github.com/ironstar-io/tokaido/services/unison/templates"
 	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/daemon"
@@ -36,8 +35,6 @@ type UnisonSvc struct {
 
 // NewUnisonSvc - Return a new instance of `UnisonSvc`.
 func NewUnisonSvc(syncName, syncDir string) UnisonSvc {
-	c := conf.GetConfig()
-
 	s := UnisonSvc{
 		SyncName:    syncName,
 		SyncDir:     syncDir,
@@ -54,7 +51,7 @@ func getServiceFilename(syncName string) string {
 }
 
 func getServicePath(syncName string) string {
-	return conf.GetConfig().Global.Syncsvc.Systemdpath + getServiceFilename(syncName)
+	return filepath.Join(fs.HomeDir(), "/.config/systemd/user/") + getServiceFilename(syncName)
 }
 
 // CreateSyncFile creates the systemd path (if necessary) and file
@@ -126,10 +123,6 @@ func (s UnisonSvc) StopSyncService() {
 
 // CheckSyncService a verbose sync status check used for tok status
 func (s UnisonSvc) CheckSyncService() error {
-	if conf.GetConfig().System.Syncsvc.Enabled != true {
-		return nil
-	}
-
 	c := s.SyncServiceStatus()
 	if c == "running" {
 		console.Println("✅  Background sync service is running", "√")
