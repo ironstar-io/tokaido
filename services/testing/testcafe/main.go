@@ -76,6 +76,10 @@ func testCafeContainerPath() string {
 	return filepath.Join("/tokaido", "site", ".tok", "testcafe")
 }
 
+func tokLocalContainerPath() string {
+	return filepath.Join("/tokaido", "site", ".tok", "local")
+}
+
 func baseRepoExists() bool {
 	p := filepath.Join(testCafeLocalPath(), "tests")
 	if fs.CheckExists(p) == false {
@@ -189,7 +193,7 @@ func clearDrupalCache() {
 
 func copyDefaultDB() {
 	fmt.Println("🖨️   Creating a test copy of the database")
-	outputPath := filepath.Join(testCafeContainerPath(), "toktest-dump.sql")
+	outputPath := filepath.Join(tokLocalContainerPath(), "toktest-dump.sql")
 
 	ssh.ConnectCommand([]string{"drush", "sql-dump", "--result-file=" + outputPath, "-d"})
 	ssh.ConnectCommand([]string{"drush", "sql-cli", "--database=test", "<", outputPath, "-d"})
