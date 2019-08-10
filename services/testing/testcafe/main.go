@@ -3,6 +3,7 @@ package testcafe
 import (
 	"database/sql"
 	"fmt"
+	"os"
 	"path/filepath"
 	"time"
 
@@ -21,6 +22,8 @@ import (
 
 // RunDrupalTests - Run Drupal TestCafe tests. See: https://github.com/drupal/drupal/blob/8.6.x/core/tests/README.md#testcafe-tests
 func RunDrupalTests(useExistingDB bool) error {
+	checkCompatibility()
+
 	fmt.Println(aurora.Blue("Please note 'tok test' is a beta feature and under active development"))
 	fmt.Println(aurora.Blue("We'd to hear what you think - you can use `tok survey` to send us feedback"))
 	fmt.Println(aurora.Blue("If you'd like to contribute by discussing test frameworks and included tests"))
@@ -32,8 +35,6 @@ func RunDrupalTests(useExistingDB bool) error {
 		console.Println("⚠️   "+err.Error(), "")
 		return err
 	}
-
-	checkCompatibility()
 
 	br := baseRepoExists()
 	if br == false {
@@ -228,4 +229,11 @@ func npmHeadlessTestCafe() {
 
 func checkCompatibility() {
 	goos.CheckDependencies()
+
+	// Temporary block for Unison
+	c := conf.GetConfig()
+	if c.Global.Syncservice == "unison" {
+		fmt.Println(aurora.Red("Sorry! `tok test` is currently only supported on MacOS using the 'docker' sync strategy."))
+		os.Exit(1)
+	}
 }

@@ -635,8 +635,8 @@ services:
       - tail
       - -f
       - /dev/null
-    volumes:
-      - waiting
+    volumes_from:
+      - unison
     depends_on:
       - nginx
     ports:
