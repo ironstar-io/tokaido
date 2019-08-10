@@ -10,7 +10,7 @@ import (
 	"strings"
 
 	"github.com/ironstar-io/tokaido/system/console"
-	. "github.com/logrusorgru/aurora"
+	"github.com/logrusorgru/aurora"
 	"github.com/manifoldco/promptui"
 )
 
@@ -22,7 +22,7 @@ func GetRootPath() string {
 		return filepath.Join(GetProjectPath(), dp)
 	}
 
-	fmt.Println(Red("Drupal path setting is missing. Are you in a project directory?"))
+	fmt.Println(aurora.Red("Drupal path setting is missing. Are you in a project directory?"))
 	os.Exit(1)
 	return ""
 }

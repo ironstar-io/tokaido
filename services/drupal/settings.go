@@ -68,7 +68,7 @@ Could not find a file located at "` + SettingsPath() + `", database connection m
 	}
 
 	if tokSettingsExists == false {
-		createSettingsTok()
+		CreateSettingsTok()
 	}
 
 	restoreFilePerimissions(defaultMasks)
@@ -174,7 +174,8 @@ func appendTokSettingsRef() {
 	fs.Replace(SettingsPath(), buffer.Bytes())
 }
 
-func createSettingsTok() {
+// CreateSettingsTok - Generate a `settings.tok.php` file
+func CreateSettingsTok() {
 	c := conf.GetConfig()
 	dv := c.Drupal.Majorversion
 

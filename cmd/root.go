@@ -41,7 +41,7 @@ func init() {
 	rootCmd.AddCommand(SyncCmd)
 	rootCmd.AddCommand(SyscheckCmd)
 	rootCmd.AddCommand(TestCmd)
-	rootCmd.AddCommand(TestNightwatchCmd)
+	// rootCmd.AddCommand(TestNightwatchCmd)
 	rootCmd.AddCommand(TestPhpcbfCmd)
 	rootCmd.AddCommand(TestPhpcsCmd)
 	rootCmd.AddCommand(UpCmd)
@@ -71,6 +71,7 @@ func RootCmd() *cobra.Command {
 
 	OpenCmd.PersistentFlags().BoolVarP(&adminFlag, "admin", "", false, "Create a one-time admin login URL and open")
 	UpCmd.PersistentFlags().BoolVarP(&noPullImagesFlag, "no-pull-images", "", false, "Stop Tokaido from downloaded the latest Docker images")
+	TestCmd.PersistentFlags().BoolVarP(&useExistingDBFlag, "use-existing-db", "", false, "Run the test suite without recreating the database or temporary users. Note: this may cause test flakiness due to database having prior state.")
 	SnapshotNewCmd.PersistentFlags().StringVarP(&nameFlag, "name", "n", "", "Specify a name to be added to the snapshot name. If not specified, Tokaido will only use the current UTC date and time")
 
 	NewCmd.PersistentFlags().StringVarP(&templateFlag, "template", "t", "", "Specify a template to use such as drupal8-standard. See templates at: https://github.com/ironstar-io/tokaido-drupal-package-builder")

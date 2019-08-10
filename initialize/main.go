@@ -15,7 +15,7 @@ import (
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
 
-	. "github.com/logrusorgru/aurora"
+	"github.com/logrusorgru/aurora"
 )
 
 // TokConfig - loads the config from a file if specified, otherwise from the environment
@@ -49,7 +49,7 @@ func removeOldGlobalConfig() {
 	oc := filepath.Join(h, ".tok/config.yml")
 	if fs.CheckExists(oc) {
 		fs.Remove(oc)
-		fmt.Println(Magenta("Tokaido has removed your legacy global config file in $HOME/.tok/config.yml. You don't need it anymore"))
+		fmt.Println(aurora.Magenta("Tokaido has removed your legacy global config file in $HOME/.tok/config.yml. You don't need it anymore"))
 	}
 }
 

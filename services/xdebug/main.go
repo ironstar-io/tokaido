@@ -10,7 +10,7 @@ import (
 
 	"log"
 
-	. "github.com/logrusorgru/aurora"
+	"github.com/logrusorgru/aurora"
 	yaml "gopkg.in/yaml.v2"
 )
 
@@ -36,7 +36,7 @@ func regenerateGateway(gprj *conf.Project) {
 		fpmPort = strconv.Itoa(gprj.Xdebug.FpmPort)
 	}
 
-	fmt.Printf("🧐   Enabling PHP FPM XDebug Support on port %s\n", Cyan(fpmPort))
+	fmt.Printf("🧐   Enabling PHP FPM XDebug Support on port %s\n", aurora.Cyan(fpmPort))
 
 	if networkUp == false {
 		docker.Up()

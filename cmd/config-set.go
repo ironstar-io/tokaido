@@ -6,7 +6,7 @@ import (
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/initialize"
 	"github.com/ironstar-io/tokaido/services/telemetry"
-	. "github.com/logrusorgru/aurora"
+	"github.com/logrusorgru/aurora"
 	"github.com/spf13/cobra"
 )
 
@@ -23,7 +23,7 @@ var ConfigSetCmd = &cobra.Command{
 		if args[0] == "global" {
 			err := conf.SetGlobalConfigValueByArgs(args)
 			if err != nil {
-				fmt.Println(Red(err))
+				fmt.Println(aurora.Red(err))
 			}
 		} else {
 			conf.SetConfigValueByArgs(args, "project")

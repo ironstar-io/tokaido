@@ -4,36 +4,36 @@ jobs:
     docker:
       - image: circleci/golang:1.12-stretch
 
-    working_directory: /go/src/github.com/ironstar-io/tokaido
+    working_directory: ~/tokaido
 
     steps:
-      - checkout     
+      - checkout
 
-      - run: dep ensure
+      - run: go mod vendor
 
       - run: make build-linux
       - run: sha256sum dist/tok-linux-amd64 > dist/tok-linux-amd64-sha.txt
       - run: make build-osx
-      - run: sha256sum dist/tok-macos > dist/tok-macos-sha.txt      
+      - run: sha256sum dist/tok-macos > dist/tok-macos-sha.txt
 
       - store_artifacts:
-          path: /go/src/github.com/ironstar-io/tokaido/dist/
+          path: ~/tokaido/dist/
           destination: artifacts
 
-      - persist_to_workspace:        
-          root: /go/src/github.com/ironstar-io/tokaido/
-          paths: 
+      - persist_to_workspace:
+          root: ~/tokaido/
+          paths:
             - dist
 
   release-edge:
     docker:
       - image: circleci/golang:1.12-stretch
     environment:
-      VERSION: edge            
+      VERSION: edge
     steps:
       - attach_workspace:
           at: ./
-      - run: go get github.com/tcnksm/ghr          
+      - run: go get github.com/tcnksm/ghr
       - run:
           name: "Publish Linux Release on GitHub"
           command: ghr -t ${GITHUB_TOKEN} -u ironstar-io -r tokaido -b "The latest (unstable) build of the Tokaido CLI. Please use a numbered release if you need a stable Tokaido environment." -c ${CIRCLE_SHA1} -prerelease -delete ${VERSION} ./dist/
@@ -44,7 +44,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ./
-      - run: go get github.com/tcnksm/ghr          
+      - run: go get github.com/tcnksm/ghr
       - run: echo tag = ${CIRCLE_TAG}
       - run:
           name: "Publish Linux Release on GitHub"
@@ -56,11 +56,11 @@ workflows:
     jobs:
       - build
       - release-edge:
-          requires: 
+          requires:
             - build
           filters:
             branches:
-              only:               
+              only:
                 - develop
   tagged-build:
     jobs:
@@ -71,7 +71,7 @@ workflows:
             tags:
               only: /^([0-9]+)\.([0-9]+)\.([0-9]+)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+)?$/
       - release-stable:
-          requires: 
+          requires:
             - build
           filters:
             branches:

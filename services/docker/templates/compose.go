@@ -230,6 +230,9 @@ func TokaidoFusionSiteVolumeAttach(path, name string) []byte {
   nginx:
     volumes:
       - ` + name + `:/tokaido/site
+  testcafe:
+    volumes:
+      - ` + path + `/.tok/testcafe:/testcafe
   fpm:
     volumes:
       - ` + name + `:/tokaido/site
@@ -253,6 +256,9 @@ func TokaidoDockerSiteVolumeAttach(path string) []byte {
   fpm:
     volumes:
       - ` + path + `:/tokaido/site
+  testcafe:
+    volumes:
+      - ` + path + `/.tok/testcafe:/testcafe
   drush:
     volumes:
       - ` + path + `:/tokaido/site
@@ -324,6 +330,11 @@ services:
     labels:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
+    networks:
+      default:
+        aliases:
+          - haproxy
+          - haproxy-test
   varnish:
     user: "1004"
     image: tokaido/varnish:stable
@@ -352,6 +363,20 @@ services:
     labels:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
+  testcafe:
+    image: testcafe/testcafe
+    working_dir: /testcafe
+    command: tail -f /dev/null
+    entrypoint:
+      - tail
+      - -f
+      - /dev/null
+    volumes:
+      - waiting
+    depends_on:
+      - nginx
+    ports:
+      - "1337"
   fpm:
     user: "1001"
     image: tokaido/php71-fpm:stable
@@ -437,6 +462,11 @@ services:
     labels:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
+    networks:
+      default:
+        aliases:
+          - haproxy
+          - haproxy-test
   varnish:
     user: "1004"
     image: tokaido/varnish:stable
@@ -465,6 +495,20 @@ services:
     labels:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
+  testcafe:
+    image: testcafe/testcafe
+    working_dir: /testcafe
+    command: tail -f /dev/null
+    entrypoint:
+      - tail
+      - -f
+      - /dev/null
+    volumes:
+      - waiting
+    depends_on:
+      - nginx
+    ports:
+      - "1337"
   fpm:
     user: "1001"
     image: tokaido/php71-fpm:stable
@@ -551,6 +595,11 @@ services:
     labels:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
+    networks:
+      default:
+        aliases:
+          - haproxy
+          - haproxy-test
   varnish:
     user: "1004"
     image: tokaido/varnish:stable
@@ -578,6 +627,20 @@ services:
     labels:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
+  testcafe:
+    image: testcafe/testcafe
+    working_dir: /testcafe
+    command: tail -f /dev/null
+    entrypoint:
+      - tail
+      - -f
+      - /dev/null
+    volumes:
+      - waiting
+    depends_on:
+      - nginx
+    ports:
+      - "1337"
   fpm:
     user: "1001"
     image: tokaido/php71-fpm:stable
