@@ -16,24 +16,24 @@ import (
 	"fmt"
 )
 
-// configureTrustedCerts ...
-func configureTrustedCerts(certificate string) {
+// configureTrustedCA ...
+func configureTrustedCA(certificate string) {
 	fmt.Println("    The generated SSL certificates can be manually added to your keychain for easy HTTPS development. \n    See https://tokaido.io/docs/config/#adding-a-trusted-certificate for more information.")
 	return
 }
 
-// addTrustedCertToKeychain ...
-func addTrustedCertToKeychain(certificate string) {
+// addTrustedCAToKeychain ...
+func addTrustedCAToKeychain(certificate string) {
 	return
 }
 
-// removeTrustedCertFromKeychain ...
-func removeTrustedCertFromKeychain(certificate string) {
+// removeTrustedCAFromKeychain ...
+func removeTrustedCAFromKeychain(certificate string) {
 	fmt.Println("    The generated SSL certificates need to be manually removed from your keychain if they were added during `tok up`. \n    See https://tokaido.io/docs/config/#adding-a-trusted-certificate for more information.")
 	return
 }
 
-// certIsTrusted  ...
-func certIsTrusted(certificate string) bool {
+// caIsTrusted  ...
+func caIsTrusted(certificate string) bool {
 	return false
 }
