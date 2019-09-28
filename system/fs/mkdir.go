@@ -10,6 +10,6 @@ func Mkdir(path string) {
 
 	// create file if not exists
 	if os.IsNotExist(err) {
-		os.Mkdir(path, os.ModePerm)
+		os.MkdirAll(path, os.ModePerm)
 	}
 }

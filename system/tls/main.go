@@ -20,10 +20,10 @@ func ConfigureTLS() (err error) {
 	removeLegacyCertificate()
 
 	// Generate a new Certificate Authority
-
-	// Install the Certificate Authority into the OS (if the user consents)
+	createCA()
 
 	// Sign a new Certificate for *.local.tokaido.io
+	createWildcardCertificate()
 	return nil
 
 }

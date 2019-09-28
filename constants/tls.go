@@ -22,7 +22,7 @@ const KeyAlgorithm = "rsa"
 const KeySize = 2048
 
 // PkixOrganization ...
-const PkixOrganization = "Tokaido"
+const PkixOrganization = "Tokaido Certificate Authority - Generation 3"
 
 // PkixLocality ...
 const PkixLocality = "Shin-Osaka"
@@ -44,3 +44,18 @@ const CAFilename = "proxy_ca"
 
 // ClientCertFilename ...
 const ClientCertFilename = "tokaido"
+
+// TLSRoot is the root for all TLS certificates in ~/.tok/tls
+const TLSRoot = ".tok/tls"
+
+// CertificateAuthorityCertificatePath ...
+const CertificateAuthorityCertificatePath = "ca/ca.crt"
+
+// CertificateAuthorityKeyPath ...
+const CertificateAuthorityKeyPath = "ca/ca.key"
+
+// WildcardCertificatePath ...
+const WildcardCertificatePath = "proxy/wildcard.crt"
+
+// WildcardKeyPath ...
+const WildcardKeyPath = "proxy/wildcard.key"

@@ -116,7 +116,7 @@ func Init(yes, statuscheck, noPullImagesFlag bool) {
 
 	if c.Global.Proxy.Enabled {
 		// This step can't be in a spinner because the spinner can't ask for user input during the SSL trust stage.
-		console.Println(`🔐  Setting up HTTPS access...`, "")
+		console.Println(`    Setting up the local.tokaido.io proxy...`, "")
 		proxy.Setup()
 	}
 

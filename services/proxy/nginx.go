@@ -13,8 +13,8 @@ func GenerateNginxConf(projectName, domain, proxyPassDomain string) []byte {
   server_name     ` + projectName + `-toktestdb.` + domain + ` ` + projectName + `.` + domain + `;
   server_tokens   off;
 
-  ssl_certificate           /tokaido/proxy/config/client/tls/tokaido.pem;
-  ssl_certificate_key       /tokaido/proxy/config/client/tls/tokaido-key.pem;
+  ssl_certificate           /tokaido/proxy/config/client/tls/wildcard.crt;
+  ssl_certificate_key       /tokaido/proxy/config/client/tls/wildcard.key;
 
   error_page 502 /tokaido-errors/502.html;
   error_page 503 /tokaido-errors/503.html;

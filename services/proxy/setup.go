@@ -1,20 +1,18 @@
 package proxy
 
 import (
-	"log"
 	"strconv"
 
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/constants"
 	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/system/fs"
-	"github.com/ironstar-io/tokaido/system/ssl"
 	"github.com/ironstar-io/tokaido/utils"
 
 	"fmt"
 	"path/filepath"
 
-	homedir "github.com/mitchellh/go-homedir"
+	"github.com/logrusorgru/aurora"
 )
 
 const proxy = "proxy"
@@ -25,7 +23,8 @@ func Setup() {
 	buildDirectories()
 
 	utils.DebugString("configuring proxy TLS")
-	ssl.Configure(getProxyClientTLSDir())
+	// ssl.Configure(getProxyClientTLSDir())
+	copyTLSCertificates()
 
 	// If an existing proxy config exists, remove it to start again.
 	if fs.CheckExists(fs.HomeDir() + "/.tok/proxy/docker-compose.yml") {
@@ -51,35 +50,36 @@ func Setup() {
 // ConfigureProjectNginx ...
 func ConfigureProjectNginx() {
 	utils.DebugString("starting nginx proxy configuration")
-	h, err := docker.GetContainerIP("haproxy")
-	if err != nil {
-		fmt.Printf("%s. Skipping HTTPS proxy setup...\n", err)
-		return
+	// Remove all existing nginx configuration files
+	fs.EmptyDir(getProxyClientConfdDir())
+
+	// Regenerate Nginx config for all active projects on this system
+	for _, v := range conf.GetConfig().Global.Projects {
+		h, err := docker.GetContainerIPFromProject("haproxy", v.Name)
+		if err != nil {
+			utils.DebugString("Skipping Nginx setup for project [" + v.Name + "]. Project haproxy container is not running")
+			continue
+		}
+
+		if h == "" {
+			fmt.Println(aurora.Red("    There was an error retrieving the IP address for the haproxy container in project [" + v.Name + "]."))
+			fmt.Println(aurora.Red("    This is an unexpected error. Could you please create a GitHub Issue to help us fix this?"))
+			continue
+		}
+
+		pp := constants.HTTPSProtocol + h + ":" + strconv.Itoa(constants.HaproxyInternalPort)
+		nc := GenerateNginxConf(v.Name, constants.ProxyDomain, pp)
+		np := filepath.Join(getProxyClientConfdDir(), v.Name+".conf")
+		fs.Replace(np, nc)
 	}
 
-	if h == "" {
-		fmt.Println("The haproxy container doesn't appear to be running. Skipping HTTPS proxy setup...")
-		return
-	}
-
-	pp := constants.HTTPSProtocol + h + ":" + strconv.Itoa(constants.HaproxyInternalPort)
-
-	pn := conf.GetConfig().Tokaido.Project.Name
-
-	nc := GenerateNginxConf(pn, constants.ProxyDomain, pp)
-
-	np := filepath.Join(getProxyClientConfdDir(), pn+".conf")
-	fs.Replace(np, nc)
 }
 
 // Yamanote left a 'local.tokaido.io' nginx config file. This needs to be
 // remove with the removal of Yamanote in 1.5.0, otherwise the proxy service
 // won't start for existing Tokaido users.
 func removeLegacyYamanoteSetup() {
-	h, err := homedir.Dir()
-	if err != nil {
-		log.Fatalf("Unable to resolve home directory: %v", err)
-	}
+	h := fs.HomeDir()
 
 	// Remove the yamanote config from when we used DNS auto-resolving "local.tokaido.io"
 	p := h + "/.tok/proxy/client/conf.d/local.tokaido.io.conf"
@@ -95,4 +95,16 @@ func removeLegacyYamanoteSetup() {
 		fs.Remove(p)
 	}
 
+}
+
+// copyTLSCertificates copies the proxy wildcard certificate from it's official
+// location to where the proxy server can mount it
+func copyTLSCertificates() {
+	certSource := filepath.Join(fs.HomeDir(), constants.TLSRoot, constants.WildcardCertificatePath)
+	certDest := filepath.Join(getProxyClientTLSDir(), "wildcard.crt")
+	fs.Copy(certSource, certDest)
+
+	keySource := filepath.Join(fs.HomeDir(), constants.TLSRoot, constants.WildcardKeyPath)
+	keyDest := filepath.Join(getProxyClientTLSDir(), "wildcard.key")
+	fs.Copy(keySource, keyDest)
 }

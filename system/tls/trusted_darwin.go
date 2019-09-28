@@ -26,8 +26,7 @@ func configureTrustedCA(certificate string) {
 
 	utils.DebugString("Adding the Tokaido Certificate Authority to the macOS Keychain. An error here is OK and indicates that the certificate is just not trusted yet")
 
-	fmt.Println("Tokaido has created a TLS Certificate Authority to create trusted TLS certificates.")
-	p := utils.ConfirmationPrompt("Would you like to automatically add it to your keychain? You may be prompted for elevated access", "y")
+	p := utils.ConfirmationPrompt("    Would you like to automatically add Tokaido's SSL authority to your macOS keychain? You may be prompted for elevated access", "y")
 	if p == false {
 		fmt.Println(`    The generated TLS certificates can be manually added to your keychain later. \n    See https://tokaido.io/docs/config/#adding-a-trusted-certificate for more information.`)
 		return
@@ -47,7 +46,7 @@ func addTrustedCAToKeychain(certificate string) {
 func removeTrustedCAFromKeychain(certificate string) {
 	utils.DebugString("removing legacy proxy CA from keychain")
 	utils.BashStringCmd("sudo security remove-trusted-cert -d " + certificate)
-	utils.BashStringCmd("sudo security remove-trusted-cert -d local.tokaido.io")
+	utils.BashStringCmd("sudo security delete-certificate -c local.tokaido.io")
 }
 
 const certSuccess = "certificate verification successful"
