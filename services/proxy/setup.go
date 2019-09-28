@@ -5,7 +5,6 @@ import (
 
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/constants"
-	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/utils"
 
@@ -19,44 +18,40 @@ const proxy = "proxy"
 
 // Setup ...
 func Setup() {
-	utils.DebugString("setting up proxy directories")
+	// Remove legacy Tokaido proxy config from 1.11 installations
+	UpgradeTok111()
+
+	// Configure the proxy path (if it doesn't exist already)
 	buildDirectories()
 
-	utils.DebugString("configuring proxy TLS")
-	// ssl.Configure(getProxyClientTLSDir())
+	// Configure proxy TLS (if it doesn't exist already)
 	copyTLSCertificates()
 
-	// If an existing proxy config exists, remove it to start again.
-	if fs.CheckExists(fs.HomeDir() + "/.tok/proxy/docker-compose.yml") {
-		DockerComposeRemoveProxy()
-	}
-
-	GenerateProxyDockerCompose()
-	DockerComposeUp()
+	// (re)-generate the nginx configuration for all active projects
+	configureProjectNginx()
 
 	if conf.GetConfig().Global.Syncservice == "unison" {
-		ConfigureUnison()
+		configureUnison()
 	}
 
-	ConfigureProjectNginx()
+	// If the proxy server isn't running, generate a docker-compose.yml file and start it
+	bootstrapProxy()
 
-	removeLegacyYamanoteSetup()
-
-	utils.DebugString("restarting proxy container")
-	PullImages()
-	RestartContainer(proxy)
+	// Bump the nginx process with a HUP signal
+	restartNginx()
 }
 
-// ConfigureProjectNginx ...
-func ConfigureProjectNginx() {
+// configureProjectNginx ...
+func configureProjectNginx() {
 	utils.DebugString("starting nginx proxy configuration")
 	// Remove all existing nginx configuration files
 	fs.EmptyDir(getProxyClientConfdDir())
 
 	// Regenerate Nginx config for all active projects on this system
 	for _, v := range conf.GetConfig().Global.Projects {
-		h, err := docker.GetContainerIPFromProject("haproxy", v.Name)
+		h, err := getContainerProxyIP("haproxy", v.Name)
 		if err != nil {
+			utils.DebugString(err.Error())
 			utils.DebugString("Skipping Nginx setup for project [" + v.Name + "]. Project haproxy container is not running")
 			continue
 		}
@@ -68,7 +63,7 @@ func ConfigureProjectNginx() {
 		}
 
 		pp := constants.HTTPSProtocol + h + ":" + strconv.Itoa(constants.HaproxyInternalPort)
-		nc := GenerateNginxConf(v.Name, constants.ProxyDomain, pp)
+		nc := generateNginxConf(v.Name, constants.ProxyDomain, pp)
 		np := filepath.Join(getProxyClientConfdDir(), v.Name+".conf")
 		fs.Replace(np, nc)
 	}
@@ -100,6 +95,7 @@ func removeLegacyYamanoteSetup() {
 // copyTLSCertificates copies the proxy wildcard certificate from it's official
 // location to where the proxy server can mount it
 func copyTLSCertificates() {
+	utils.DebugString("copying wildcard cert and key")
 	certSource := filepath.Join(fs.HomeDir(), constants.TLSRoot, constants.WildcardCertificatePath)
 	certDest := filepath.Join(getProxyClientTLSDir(), "wildcard.crt")
 	fs.Copy(certSource, certDest)

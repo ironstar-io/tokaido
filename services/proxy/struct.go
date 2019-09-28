@@ -42,13 +42,15 @@ func ComposeDefaults() []byte {
 	return []byte(`version: "2"
 services:
   proxy:
-    image: tokaido/proxy:latest
+    image: tokaido/proxy:` + constants.ProxyStableVersion + `
     ports:
       - "` + constants.ProxyPort + `:` + constants.ProxyPort + `"
     volumes:
       - ./client:/tokaido/proxy/config/client
     networks:
-      - proxy
+      - default
+      - tokaido_proxy
+
 `)
 }
 
@@ -67,14 +69,16 @@ services:
     volumes:
       - /tokaido/proxy/config/client
     networks:
-      - proxy
+      - default
+      - tokaido_proxy
   proxy:
-    image: tokaido/proxy:latest
+    image: tokaido/proxy:` + constants.ProxyStableVersion + `
     ports:
       - "` + constants.ProxyPort + `:` + constants.ProxyPort + `"
     volumes_from:
-      - unison
+	  - unison
     networks:
-      - proxy
+      - default
+      - tokaido_proxy
 `)
 }

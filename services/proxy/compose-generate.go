@@ -11,13 +11,28 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
-// GenerateProxyDockerCompose ...
-func GenerateProxyDockerCompose() {
+// bootstrapProxy generates a docker-compose.yml file and starts the proxy, but only if there isn't
+// an instance of proxy already running
+func bootstrapProxy() {
+	// Identify if the proxy container is running
+	proxy := docker.GetContainer("proxy", "proxy")
+	if proxy.State == "running" {
+		// proxy is already running, so nothing to do
+		return
+	}
+
+	// generate a new proxy compose file
+	generateProxyDockerCompose()
+
+	// start the proxy container
+	DockerComposeUp()
+
+}
+
+// generateProxyDockerCompose ...
+func generateProxyDockerCompose() {
 	utils.DebugString("generating proxy compose file")
 	dc := DockerCompose{}
-	pn := conf.GetConfig().Tokaido.Project.Name
-	nn := docker.GetNetworkName(pn)
-	utils.DebugString("resolved network name is: " + nn)
 
 	if conf.GetConfig().Global.Syncservice == "unison" {
 		err := yaml.Unmarshal(ComposeDefaultsUnison(), &dc)
@@ -32,11 +47,10 @@ func GenerateProxyDockerCompose() {
 		}
 	}
 
-	// build the list of networks that are attached to the proxy service itself
-	dc.Services.Proxy.Networks = buildProxyServiceNetworkAttachments()
-
-	// build the list of networks as part of the base 'networks:' tree in docker compose
-	n := buildProxyExternalNetworkList()
+	n := []byte(`networks:
+  default:
+  tokaido_proxy:
+    external: true`)
 
 	cy, err := yaml.Marshal(&dc)
 	if err != nil {

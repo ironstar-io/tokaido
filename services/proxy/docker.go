@@ -11,28 +11,28 @@ import (
 
 // DockerComposeUp - Lift all containers in the proxy compose file in detached mode
 func DockerComposeUp() {
-	ComposeStdout("up", "--remove-orphans", "-d")
+	composeStdout("up", "--remove-orphans", "-d")
 }
 
-// DockerComposeDown ...
-func DockerComposeDown() {
-	ComposeStdout("down")
+// dockerComposeDown ...
+func dockerComposeDown() {
+	composeStdout("down")
 }
 
-// DockerComposeRemoveProxy will stop and delete an existing proxy container
+// dockerComposeRemoveProxy will stop and delete an existing proxy container
 // this is necessary to stop conflicts and hard crashes when changing the sync service
-func DockerComposeRemoveProxy() {
-	ComposeStdout("kill", "proxy")
-	ComposeStdout("rm", "proxy")
+func dockerComposeRemoveProxy() {
+	composeStdout("kill", "proxy")
+	composeStdout("rm", "proxy")
 }
 
-// RestartContainer ...
-func RestartContainer(container string) {
-	ComposeStdout("restart", container)
+// restartContainer ...
+func restartContainer(container string) {
+	composeStdout("restart", container)
 }
 
-// ComposeStdout - Convenience method for docker-compose shell commands
-func ComposeStdout(args ...string) {
+// composeStdout - Convenience method for docker-compose shell commands
+func composeStdout(args ...string) {
 	composeParams := composeArgs(args...)
 
 	utils.StdoutCmd("docker-compose", composeParams...)
@@ -44,8 +44,8 @@ func composeArgs(args ...string) []string {
 	return append(composeFile, args...)
 }
 
-// LocalPort - Return the local port of a container
-func LocalPort(containerName string, containerPort string) string {
+// localPort - Return the local port of a container
+func localPort(containerName string, containerPort string) string {
 	// Example return: "unison:32757"
 	cs := utils.StdoutCmd("docker-compose", "-f", getComposePath(), "port", containerName, containerPort)
 
@@ -58,8 +58,8 @@ func LocalPort(containerName string, containerPort string) string {
 	return p[1]
 }
 
-// GetContainerName ...
-func GetContainerName(name string) (string, error) {
+// getContainerName ...
+func getContainerName(name string) (string, error) {
 	cs, err := utils.BashStringSplitOutput("docker-compose -f " + getComposePath() + " ps " + name + " | grep " + name)
 	if err != nil {
 		return "", err
@@ -73,9 +73,9 @@ func GetContainerName(name string) (string, error) {
 	return cn, nil
 }
 
-// GetContainerIP ...
-func GetContainerIP(name string) (string, error) {
-	cn, err := GetContainerName(name)
+// getContainerIP ...
+func getContainerIP(name string) (string, error) {
+	cn, err := getContainerName(name)
 	if err != nil {
 		return "", err
 	}
@@ -94,8 +94,8 @@ func GetContainerIP(name string) (string, error) {
 	return "", errors.New("Unable to find the internal IP for container " + name + ". Is it currently running?")
 }
 
-// DisconnectNetworkEndpoint ...
-func DisconnectNetworkEndpoint(network, endpoint string) error {
+// disconnectNetworkEndpoint ...
+func disconnectNetworkEndpoint(network, endpoint string) error {
 	_, err := utils.BashStringSplitOutput(`docker network disconnect -f ` + network + ` ` + endpoint)
 	if err != nil {
 		return err
@@ -104,9 +104,9 @@ func DisconnectNetworkEndpoint(network, endpoint string) error {
 	return nil
 }
 
-// UnisonPort - Return the local port for unison
-func UnisonPort() string {
-	p := LocalPort("unison", "5000")
+// unisonPort - Return the local port for unison
+func unisonPort() string {
+	p := localPort("unison", "5000")
 	if p == "" {
 		log.Fatal("Unison container doesn't appear to be running!")
 	}

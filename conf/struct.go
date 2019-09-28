@@ -154,8 +154,12 @@ type Services struct {
 		Labels      map[string]string `yaml:"labels,omitempty"`
 		Networks    struct {
 			Default struct {
-				Aliases []string `yaml:"aliases,omitempty"`
+				Aliases  []string `yaml:"aliases,omitempty"`
+				Priority int      `yaml:"priority,omitempty"`
 			} `yaml:"default,omitempty"`
+			Proxy struct {
+				Priority int `yaml:"priority,omitempty"`
+			} `yaml:"tokaido_proxy"`
 		} `yaml:"networks,omitempty"`
 	} `yaml:"haproxy,omitempty"`
 	Varnish struct {

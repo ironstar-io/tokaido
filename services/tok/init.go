@@ -56,6 +56,7 @@ func Init(yes, statuscheck, noPullImagesFlag bool) {
 	drupal.CheckSettings(cs)
 	docker.FindOrCreateTokCompose()
 	ssh.GenerateKeys()
+	proxy.CreateProxyNetwork()
 
 	docker.CreateDatabaseVolume()
 	docker.CreateSiteVolume()

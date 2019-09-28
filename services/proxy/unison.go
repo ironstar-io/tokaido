@@ -4,9 +4,9 @@ import (
 	"github.com/ironstar-io/tokaido/services/unison"
 )
 
-// ConfigureUnison ...
-func ConfigureUnison() {
-	unison.CreateOrUpdatePrf(UnisonPort(), proxy, getProxyClientDir())
+// configureUnison ...
+func configureUnison() {
+	unison.CreateOrUpdatePrf(unisonPort(), proxy, getProxyClientDir())
 
 	s := unison.SyncServiceStatus(proxy)
 	if s == "stopped" {

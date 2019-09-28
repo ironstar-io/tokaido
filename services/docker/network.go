@@ -5,16 +5,14 @@ import (
 	"github.com/ironstar-io/tokaido/utils"
 
 	"strings"
+
+	"github.com/docker/docker/api/types"
+	"golang.org/x/net/context"
 )
 
 // CheckNetworkUp ...
 func CheckNetworkUp() bool {
-	p := strings.ToLower(conf.GetConfig().Tokaido.Project.Name)
-
-	// Periods being replaced in recent versions of Docker for network names
-	n := GetNetworkName(p)
-
-	_, err := utils.CommandSubSplitOutput("docker", "network", "inspect", n)
+	_, err := utils.CommandSubSplitOutput("docker", "network", "inspect", "tokaido_proxy")
 	if err != nil {
 		return false
 	}
@@ -30,4 +28,21 @@ func GetGateway(projectName string) string {
 	gatewayLine := utils.BashStringCmd("docker network inspect " + n + " | grep Gateway")
 
 	return strings.Split(gatewayLine, ": ")[1]
+}
+
+// CreateNetwork creates a Docker network with `name`
+func CreateNetwork(name string) {
+	dcli := GetAPIClient()
+
+	_, err := dcli.NetworkCreate(context.Background(), name, types.NetworkCreate{
+		Labels: map[string]string{
+			"io.tokaido.managed": "local",
+			"io.tokaido.project": conf.GetConfig().Tokaido.Project.Name,
+		},
+	})
+
+	if err != nil {
+		utils.DebugString("silencing error encountered while creating the docker network [" + name + "]:")
+		utils.DebugString(err.Error())
+	}
 }
