@@ -22,6 +22,7 @@ import (
 	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/system/ssh"
+	"github.com/ironstar-io/tokaido/system/tls"
 	"github.com/ironstar-io/tokaido/system/version"
 	"github.com/ironstar-io/tokaido/utils"
 
@@ -55,6 +56,7 @@ func Init(yes, statuscheck, noPullImagesFlag bool) {
 	drupal.CheckSettings(cs)
 	docker.FindOrCreateTokCompose()
 	ssh.GenerateKeys()
+	proxy.CreateProxyNetwork()
 
 	docker.CreateDatabaseVolume()
 	docker.CreateSiteVolume()
@@ -102,6 +104,10 @@ func Init(yes, statuscheck, noPullImagesFlag bool) {
 		docker.PullImages()
 	}
 
+	// Configure TLS
+	fmt.Println("🔐  Configuring TLS Certificates")
+	tls.ConfigureTLS()
+
 	console.Println("🚅  Starting your Drupal environment", "")
 	docker.Up()
 	surveyMessage()
@@ -111,7 +117,7 @@ func Init(yes, statuscheck, noPullImagesFlag bool) {
 
 	if c.Global.Proxy.Enabled {
 		// This step can't be in a spinner because the spinner can't ask for user input during the SSL trust stage.
-		console.Println(`🔐  Setting up HTTPS access...`, "")
+		console.Println(`    Setting up the local.tokaido.io proxy...`, "")
 		proxy.Setup()
 	}
 

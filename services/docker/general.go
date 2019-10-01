@@ -126,6 +126,25 @@ func GetContainerIP(name string) (string, error) {
 	return "", errors.New("Unable to find the internal IP for container " + name + ". Is it currently running?")
 }
 
+// GetContainerIPFromProject returns the container IP for a given containerName in a given projectName
+func GetContainerIPFromProject(containerName, projectName string) (string, error) {
+	fullContainerName := fmt.Sprintf("%s_%s_1", projectName, containerName)
+
+	ia, err := utils.BashStringSplitOutput(`docker inspect ` + fullContainerName + ` | grep "IPAddress\": \"1"`)
+	if err != nil {
+		return "", err
+	}
+
+	for _, s := range strings.Split(ia, `"`) {
+		if strings.Contains(s, "1") {
+			return s, nil
+		}
+	}
+
+	return "", errors.New("Unable to find the internal IP for container " + containerName + ". Is it currently running?")
+
+}
+
 // GetContainerList returns a list of all configured containers in the current project context
 func GetContainerList() []string {
 	// List of containers to be checked when no single container is specifieds

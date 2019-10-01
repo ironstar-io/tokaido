@@ -80,39 +80,6 @@ func buildProxyServiceNetworkAttachments() []string {
 	return nl
 }
 
-// buildProxyExternalNetworkList uses the global project list to create a docker-compose.yml segment with
-// those networks, but only if they still exist
-func buildProxyExternalNetworkList() []byte {
-	utils.DebugString("Creating a list of networks for proxy's docker-compose.yml external network declaration")
-
-	c := conf.GetConfig()
-	n := `networks:
-  proxy:
-`
-
-	for _, v := range c.Global.Projects {
-		nn := docker.GetNetworkName(v.Name)
-		// Verify that this network still exists in Docker
-		ok, err := validateNetwork(nn)
-		if err != nil {
-			log.Fatal(err)
-		}
-		if !ok {
-			// That network no longer exists, don't add it
-			utils.DebugString("network [" + nn + "] no longer exists, not adding it to proxy service")
-			continue
-		}
-
-		utils.DebugString("adding network [" + nn + "] to proxy service")
-		n = n + `  ` + nn + `:
-    external: true
-`
-
-	}
-
-	return []byte(n)
-}
-
 // validateNetwork confirms that a docker network exists
 // and returns false if no match is found
 func validateNetwork(name string) (ok bool, err error) {

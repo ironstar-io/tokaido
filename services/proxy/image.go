@@ -8,8 +8,8 @@ import (
 	homedir "github.com/mitchellh/go-homedir"
 )
 
-// PullImages - Pull all images in compose file
-func PullImages() {
+// pullImages - Pull all images in compose file
+func pullImages() {
 	// Don't pull if the proxy config hasn't been created yet
 	h, err := homedir.Dir()
 	if err != nil {
@@ -21,5 +21,5 @@ func PullImages() {
 		return
 	}
 
-	ComposeStdout("pull")
+	composeStdout("pull")
 }

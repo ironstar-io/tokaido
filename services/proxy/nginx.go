@@ -2,19 +2,20 @@ package proxy
 
 import (
 	"github.com/ironstar-io/tokaido/constants"
+	"github.com/ironstar-io/tokaido/utils"
 )
 
-const proxyNetwork = "proxy_proxy"
+const proxyNetwork = "tokaido_proxy"
 
-// GenerateNginxConf ...
-func GenerateNginxConf(projectName, domain, proxyPassDomain string) []byte {
+// generateNginxConf ...
+func generateNginxConf(projectName, domain, proxyPassDomain string) []byte {
 	return []byte(`server {
   listen          ` + constants.ProxyPort + ` ssl;
   server_name     ` + projectName + `-toktestdb.` + domain + ` ` + projectName + `.` + domain + `;
   server_tokens   off;
 
-  ssl_certificate           /tokaido/proxy/config/client/tls/tokaido.pem;
-  ssl_certificate_key       /tokaido/proxy/config/client/tls/tokaido-key.pem;
+  ssl_certificate           /tokaido/proxy/config/client/tls/wildcard.crt;
+  ssl_certificate_key       /tokaido/proxy/config/client/tls/wildcard.key;
 
   error_page 502 /tokaido-errors/502.html;
   error_page 503 /tokaido-errors/503.html;
@@ -31,4 +32,10 @@ func GenerateNginxConf(projectName, domain, proxyPassDomain string) []byte {
   }
 }
 `)
+}
+
+// restartNginx sends a HUP signal to nginx
+func restartNginx() {
+	utils.DebugString("restarting the proxy container's nginx process")
+	composeStdout("kill", "-s", "HUP", "proxy")
 }

@@ -12,32 +12,27 @@ import (
 	"github.com/ironstar-io/tokaido/system/hostsfile"
 )
 
-const proxyNetworkName = "proxy_proxy_1"
+const proxyNetworkName = "tokaido_proxy_1"
 
 // DestroyProject ...
 func DestroyProject() {
-	if fs.CheckExists(getComposePath()) == true {
-		RemoveProjectFromDockerCompose()
-	}
-
 	RemoveNetwork()
 
 	RemoveNginxConf()
-	RemoveFromHostsfile()
 
 	if conf.GetConfig().Global.Syncservice == "unison" {
 		docker.DeleteVolume("tok_" + conf.GetConfig().Tokaido.Project.Name + "_tokaido_site")
 		unison.UnloadSyncService(conf.GetConfig().Tokaido.Project.Name)
 	}
 
-	RestartContainer("proxy")
+	restartContainer("proxy")
 }
 
 // RemoveNetwork ...
 func RemoveNetwork() {
 	n := docker.GetNetworkName(conf.GetConfig().Tokaido.Project.Name)
 
-	err := DisconnectNetworkEndpoint(n, proxyNetworkName)
+	err := disconnectNetworkEndpoint(n, proxyNetworkName)
 	if err != nil {
 		fmt.Println("There was an issue disconnecting the docker network from the proxy containers. These can be removed manually with the command `docker network disconnect " + n + " " + proxyNetworkName + "`")
 		fmt.Println(err)

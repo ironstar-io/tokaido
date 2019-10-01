@@ -81,5 +81,4 @@ func GetContainer(name, project string) types.Container {
 	}
 
 	return containers[0]
-
 }

@@ -61,6 +61,7 @@ func getComposePath() string {
 }
 
 func buildDirectories() {
+	utils.DebugString("setting up proxy directories")
 	fs.Mkdir(getTokDir())
 	fs.Mkdir(getProxyDir())
 	fs.Mkdir(getProxyClientDir())

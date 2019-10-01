@@ -333,8 +333,11 @@ services:
     networks:
       default:
         aliases:
-          - haproxy
-          - haproxy-test
+        - haproxy
+        - haproxy-test
+        priority: 100
+      tokaido_proxy:
+        priority: 1
   varnish:
     user: "1004"
     image: tokaido/varnish:stable
@@ -465,8 +468,11 @@ services:
     networks:
       default:
         aliases:
-          - haproxy
-          - haproxy-test
+        - haproxy
+        - haproxy-test
+        priority: 100
+      tokaido_proxy:
+        priority: 1
   varnish:
     user: "1004"
     image: tokaido/varnish:stable
@@ -598,8 +604,11 @@ services:
     networks:
       default:
         aliases:
-          - haproxy
-          - haproxy-test
+        - haproxy
+        - haproxy-test
+        priority: 100
+      tokaido_proxy:
+        priority: 1
   varnish:
     user: "1004"
     image: tokaido/varnish:stable
