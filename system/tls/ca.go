@@ -39,7 +39,7 @@ func createCA() (err error) {
 			CommonName:   constants.CommonName,
 		},
 		NotBefore:             time.Now(),
-		NotAfter:              time.Now().AddDate(10, 0, 0), // 10 years
+		NotAfter:              time.Now().AddDate(2, 0, 0), // 10 years
 		IsCA:                  true,
 		ExtKeyUsage:           []x509.ExtKeyUsage{x509.ExtKeyUsageClientAuth, x509.ExtKeyUsageServerAuth},
 		KeyUsage:              x509.KeyUsageDigitalSignature | x509.KeyUsageCertSign,
