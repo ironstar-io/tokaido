@@ -42,6 +42,7 @@ func Init(yes, statuscheck, noPullImagesFlag bool) {
 	// System readiness checks
 	version.Check()
 	docker.CheckClientVersion()
+	proxy.CreateProxyNetwork()
 	checkSyncConfig()
 
 	fmt.Println(aurora.Cyan("\n🚀  Tokaido is starting up!"))
@@ -56,7 +57,6 @@ func Init(yes, statuscheck, noPullImagesFlag bool) {
 	drupal.CheckSettings(cs)
 	docker.FindOrCreateTokCompose()
 	ssh.GenerateKeys()
-	proxy.CreateProxyNetwork()
 
 	docker.CreateDatabaseVolume()
 	docker.CreateSiteVolume()

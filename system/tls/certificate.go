@@ -40,7 +40,7 @@ func createWildcardCertificate() (err error) {
 		},
 		DNSNames:    []string{constants.WildcardHost},
 		NotBefore:   time.Now(),
-		NotAfter:    time.Now().AddDate(10, 0, 0),
+		NotAfter:    time.Now().AddDate(2, 0, 0),
 		ExtKeyUsage: []x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth},
 	}
 
@@ -76,7 +76,7 @@ func createProjectCertificate(projectName, projectPath, commonName string) (err 
 		},
 		DNSNames:    []string{commonName},
 		NotBefore:   time.Now(),
-		NotAfter:    time.Now().AddDate(10, 0, 0),
+		NotAfter:    time.Now().AddDate(2, 0, 0),
 		ExtKeyUsage: []x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth},
 	}
 
