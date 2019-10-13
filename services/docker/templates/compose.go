@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/ironstar-io/tokaido/conf"
+	"github.com/ironstar-io/tokaido/constants"
 	"github.com/ironstar-io/tokaido/system/fs"
 	homedir "github.com/mitchellh/go-homedir"
 )
@@ -56,41 +57,46 @@ func DrupalSettings(drupalRoot string, projectName string) []byte {
         PROJECT_NAME: ` + projectName)
 }
 
-// StabilityLevel ...
-func StabilityLevel(phpVersion, stability string) []byte {
+// ImageVersion ...
+func ImageVersion(phpVersion, stability string) []byte {
 	v := calcPhpVersionString(phpVersion)
+
+	imageVersion := constants.EdgeVersion
+	if stability == "stable" {
+		imageVersion = constants.StableVersion
+	}
 
 	if conf.GetConfig().Global.Syncservice == "fusion" {
 		return []byte(`services:
   sync:
-    image: tokaido/sync:` + stability + `
+    image: tokaido/sync:` + imageVersion + `
   syslog:
-    image: tokaido/syslog:` + stability + `
+    image: tokaido/syslog:` + imageVersion + `
   haproxy:
-    image: tokaido/haproxy:` + stability + `
+    image: tokaido/haproxy:` + imageVersion + `
   varnish:
-    image: tokaido/varnish:` + stability + `
+    image: tokaido/varnish:` + imageVersion + `
   nginx:
-    image: tokaido/nginx:` + stability + `
+    image: tokaido/nginx:` + imageVersion + `
   fpm:
-    image: tokaido/php` + v + `-fpm:` + stability + `
+    image: tokaido/php` + v + `-fpm:` + imageVersion + `
   drush:
-    image: tokaido/admin` + v + `-heavy:` + stability + ``)
+    image: tokaido/admin` + v + `-heavy:` + imageVersion + ``)
 	}
 
 	return []byte(`services:
   syslog:
-    image: tokaido/syslog:` + stability + `
+    image: tokaido/syslog:` + imageVersion + `
   haproxy:
-    image: tokaido/haproxy:` + stability + `
+    image: tokaido/haproxy:` + imageVersion + `
   varnish:
-    image: tokaido/varnish:` + stability + `
+    image: tokaido/varnish:` + imageVersion + `
   nginx:
-    image: tokaido/nginx:` + stability + `
+    image: tokaido/nginx:` + imageVersion + `
   fpm:
-    image: tokaido/php` + v + `-fpm:` + stability + `
+    image: tokaido/php` + v + `-fpm:` + imageVersion + `
   drush:
-    image: tokaido/admin` + v + `-heavy:` + stability + ``)
+    image: tokaido/admin` + v + `-heavy:` + imageVersion + ``)
 }
 
 // EnableSolr ...

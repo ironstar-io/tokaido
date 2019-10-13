@@ -70,7 +70,6 @@ func RootCmd() *cobra.Command {
 	rootCmd.PersistentFlags().BoolP("debug", "d", false, "Enable debug mode, command output is printed to the console")
 
 	OpenCmd.PersistentFlags().BoolVarP(&adminFlag, "admin", "", false, "Create a one-time admin login URL and open")
-	UpCmd.PersistentFlags().BoolVarP(&noPullImagesFlag, "no-pull-images", "", false, "Stop Tokaido from downloaded the latest Docker images")
 	TestCmd.PersistentFlags().BoolVarP(&useExistingDBFlag, "use-existing-db", "", false, "Run the test suite without recreating the database or temporary users. Note: this may cause test flakiness due to database having prior state.")
 	SnapshotNewCmd.PersistentFlags().StringVarP(&nameFlag, "name", "n", "", "Specify a name to be added to the snapshot name. If not specified, Tokaido will only use the current UTC date and time")
 

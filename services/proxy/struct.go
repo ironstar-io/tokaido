@@ -1,6 +1,7 @@
 package proxy
 
 import (
+	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/constants"
 )
 
@@ -42,7 +43,7 @@ func ComposeDefaults() []byte {
 	return []byte(`version: "2"
 services:
   proxy:
-    image: tokaido/proxy:` + constants.ProxyStableVersion + `
+    image: tokaido/proxy:` + conf.GetConfig().Tokaido.Stability + `
     ports:
       - "` + constants.ProxyPort + `:` + constants.ProxyPort + `"
     volumes:
@@ -72,7 +73,7 @@ services:
       - default
       - tokaido_proxy
   proxy:
-    image: tokaido/proxy:` + constants.ProxyStableVersion + `
+    image: tokaido/proxy:` + conf.GetConfig().Tokaido.Stability + `
     ports:
       - "` + constants.ProxyPort + `:` + constants.ProxyPort + `"
     volumes_from:
