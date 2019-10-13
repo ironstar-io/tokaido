@@ -260,7 +260,7 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 	}
 
 	// Set our stability version
-	err = yaml.Unmarshal(dockertmpl.StabilityLevel(phpVersion, conf.GetConfig().Tokaido.Stability), &tokStruct)
+	err = yaml.Unmarshal(dockertmpl.ImageVersion(phpVersion, conf.GetConfig().Tokaido.Stability), &tokStruct)
 	if err != nil {
 		log.Fatalf("Error updating stability version for containers in Compose file: %v", err)
 	}

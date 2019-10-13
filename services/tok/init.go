@@ -30,7 +30,7 @@ import (
 )
 
 // Init - The core run sheet of `tok up`
-func Init(yes, statuscheck, noPullImagesFlag bool) {
+func Init(yes, statuscheck bool) {
 	c := conf.GetConfig()
 	cs := "ASK"
 	if yes {
@@ -95,13 +95,6 @@ func Init(yes, statuscheck, noPullImagesFlag bool) {
 		siteVolName := "tok_" + conf.GetConfig().Tokaido.Project.Name + "_tokaido_site"
 		utils.StdoutStreamCmdDebug("docker", "run", "--rm", "-e", "AUTO_SYNC=false", "-v", conf.GetProjectPath()+":/tokaido/host-volume", "-v", siteVolName+":/tokaido/site", "tokaido/sync:stable")
 		console.SpinPersist(wo, "🚛", "Initial sync completed")
-	}
-
-	if noPullImagesFlag {
-		fmt.Println("    Not downloading the latest Docker images")
-	} else {
-		fmt.Println("🤖  Downloading the latest Docker images")
-		docker.PullImages()
 	}
 
 	// Configure TLS

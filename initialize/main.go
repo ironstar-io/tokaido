@@ -72,7 +72,7 @@ func readProjectConfig(command string) {
 	viper.SetDefault("Tokaido.Debug", viper.GetBool("debug"))
 	viper.SetDefault("Tokaido.Force", viper.GetBool("force"))
 	viper.SetDefault("Tokaido.Yes", viper.GetBool("yes"))
-	viper.SetDefault("Tokaido.Stability", "edge")
+	viper.SetDefault("Tokaido.Stability", constants.EdgeVersion)
 	viper.SetDefault("Tokaido.Dependencychecks", true)
 	viper.SetDefault("Tokaido.Enableemoji", emojiDefaults())
 	viper.SetDefault("Tokaido.Phpversion", "7.2")
