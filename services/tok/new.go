@@ -226,8 +226,7 @@ func New(args []string, requestTemplate string) {
 
 	wo = console.SpinStart("Setting up a new Git repository...")
 	git.AddAll()
-	git.Commit("Initial Tokaido Configuration")
-	console.SpinPersist(wo, "  ", "Saved everything to a new Git repository")
+	console.SpinPersist(wo, "  ", "Staged everything to a new Git repository")
 
 	InitMessage()
 
