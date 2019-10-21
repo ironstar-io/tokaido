@@ -49,7 +49,11 @@ func detectDrupalSettings() (string, string) {
 	var dv string
 	d7 := filepath.Join("includes", "bootstrap.inc")
 	d8 := filepath.Join("core", "lib", "Drupal.php")
+
 	err := filepath.Walk(pr, func(path string, info os.FileInfo, err error) error {
+		if info == nil {
+			return nil
+		}
 		if info.IsDir() {
 			return nil
 		}
