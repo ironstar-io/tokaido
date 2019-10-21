@@ -11,6 +11,8 @@ import (
 	"github.com/docker/docker/client"
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/utils"
+	"github.com/ironstar-io/tokaido/system/wsl"
+
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/viper"
 )
@@ -190,9 +192,20 @@ func DeleteVolume(name string) {
 	utils.StdoutCmd("docker", "volume", "rm", name)
 }
 
+// GetDockerHost - Return the value of the docker host that should be used for this system
+func GetDockerHost() string {
+	if wsl.IsWSL() {
+		return "tcp://localhost:2375"
+	}
+
+	return client.DefaultDockerHost
+}
+
 // GetAPIClient - Returns a Docker API Client
 func GetAPIClient() (dcli *client.Client) {
-	dcli, err := client.NewClientWithOpts(client.WithVersion("1.36"))
+	h := GetDockerHost()
+	
+	dcli, err := client.NewClientWithOpts(client.WithVersion("1.36"), client.WithHost(h))
 	if err != nil {
 		log.Fatalf("Unable to obtain a Docker API client. Is Docker running?: %v", dcli)
 	}
