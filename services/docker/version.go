@@ -2,6 +2,8 @@ package docker
 
 import (
 	"strconv"
+	"fmt"
+	"log"
 
 	"github.com/docker/docker/client"
 )
@@ -10,7 +12,8 @@ import (
 func CheckClientVersion() {
 	cli, err := client.NewEnvClient()
 	if err != nil {
-		panic("Error while checking Docker client version. You must have Docker version 18.02 or higher")
+		fmt.Println("Error while checking Docker client version. You must have Docker version 18.02 or higher")
+		log.Fatal(err)
 	}
 
 	v, _ := strconv.ParseFloat(cli.ClientVersion(), 32)
