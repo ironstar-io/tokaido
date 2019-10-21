@@ -23,9 +23,11 @@ func ReloadServices() {
 }
 
 func StartService(serviceName string) {
-	_, err := utils.CommandSubSplitOutput("systemctl", "--user", "start", serviceName)
+	utils.CommandSubSplitOutput("systemctl", "--user", "start", serviceName)
 	if err != nil {
-		log.Fatal("Unable to start the sync service: ", err)
+		fmt.Println("Unable to start the sync service: ")
+		fmt.Println(err)
+		fmt.Println("Tokaido might not work as expected without this service running")
 	}
 }
 
