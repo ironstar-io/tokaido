@@ -23,7 +23,7 @@ func ReloadServices() {
 }
 
 func StartService(serviceName string) {
-	utils.CommandSubSplitOutput("systemctl", "--user", "start", serviceName)
+	_, err := utils.CommandSubSplitOutput("systemctl", "--user", "start", serviceName)
 	if err != nil {
 		fmt.Println("Unable to start the sync service: ")
 		fmt.Println(err)
