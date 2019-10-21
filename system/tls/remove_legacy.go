@@ -24,6 +24,7 @@ import (
 	"github.com/ironstar-io/tokaido/system"
 	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/utils"
+	"github.com/ironstar-io/tokaido/system/console"
 
 	"fmt"
 	"path/filepath"
@@ -35,7 +36,7 @@ func removeLegacyCertificate() {
 
 	legacyPath := filepath.Join(fs.HomeDir(), ".tok/proxy/client/tls/proxy_ca.pem")
 	if fs.CheckExists(legacyPath) {
-		fmt.Println("🎁  Tokaido 1.11 improves how Tokaido manages local TLS security, and will now reconfigure your system")
+		console.Println("🎁  Tokaido 1.11 improves how Tokaido manages local TLS security, and will now reconfigure your system", "")
 
 		if system.CheckOS() == "osx" {
 			utils.DebugString("removing proxy CA from certificate chain")

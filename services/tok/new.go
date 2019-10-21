@@ -213,7 +213,7 @@ func New(args []string, requestTemplate string) {
 	// Run the post-up custom installation commands
 	l := len(template.PostUpCommands)
 	if l > 0 {
-		fmt.Println("🏃‍♀  Running post-up installation commands...")
+		console.Println("🏃‍♀  Running post-up installation commands...", "")
 		for _, v := range template.PostUpCommands {
 			fmt.Printf("%s", aurora.Blue("    - "))
 			fmt.Printf(v + "\n")

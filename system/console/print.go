@@ -14,7 +14,7 @@ func Println(message string, replacement string) {
 	if viper.Get("Enableemoji") == false {
 		fmt.Println(StripEmoji(message, replacement))
 	} else {
-		fmt.Println(message)
+		fmt.Println(message + "  ")
 	}
 }
 
@@ -23,7 +23,7 @@ func Printf(message string, replacement string) {
 	if viper.Get("Enableemoji") == false {
 		fmt.Printf(StripEmoji(message, replacement))
 	} else {
-		fmt.Printf(message)
+		fmt.Printf(message + "  ")
 	}
 }
 

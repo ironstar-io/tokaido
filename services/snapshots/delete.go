@@ -20,7 +20,7 @@ func Delete(args []string) {
 	// Get a list of all available snapshots
 	all := getSortedSnapshotList(p)
 	if len(all) == 0 {
-		fmt.Println("💢  No snapshots were found")
+		console.Println("💢  No snapshots were found", "×")
 		fmt.Println("")
 		return
 	}
@@ -45,7 +45,7 @@ func Delete(args []string) {
 		log.Fatal(err)
 	}
 	if len(files) == 0 {
-		fmt.Println("💢  No snapshots were found which could be deleted by Tokaido")
+		console.Println("💢  No snapshots were found which could be deleted by Tokaido", "")
 		fmt.Println("")
 		return
 	}

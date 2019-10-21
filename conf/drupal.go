@@ -86,7 +86,7 @@ func detectDrupalSettings() (string, string) {
 		return nil
 	})
 	if err != io.EOF {
-		fmt.Println("\n🤷‍  Tokaido could not auto-detect your Drupal installation. You'll need to tell us about it.")
+		console.Println("\n🤷‍  Tokaido could not auto-detect your Drupal installation. You'll need to tell us about it.", "×")
 		dp, dv = manualDrupalSettings()
 	}
 

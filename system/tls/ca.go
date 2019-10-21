@@ -15,6 +15,7 @@ import (
 	"github.com/ironstar-io/tokaido/constants"
 	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/utils"
+
 	"github.com/logrusorgru/aurora"
 )
 
@@ -49,7 +50,7 @@ func createCA() (err error) {
 	// Generate the CA Certificate and Key
 	cert, key, err := generateCA(req)
 	if err != nil {
-		fmt.Println(aurora.Red("😓  Tokaido was not able to generate a trusted SSL certificate because of the following error:"))
+		fmt.Println(aurora.Red("😓  Tokaido was not able to generate a trusted SSL certificate because of the following error:    "))
 		fmt.Println(err.Error())
 		fmt.Println("    We'd love to help you fix this. Please visit https://docs.tokaido.io/en/docs/support.")
 		return nil // try to carry on even though an error occurred

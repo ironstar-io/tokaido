@@ -22,6 +22,8 @@ func getContainerState(name, project string) (state string, err error) {
 		Filters: filter,
 	})
 	if err != nil {
+		fmt.Println("Docker API failed: ")
+		fmt.Println(err)
 		return "", err
 	}
 

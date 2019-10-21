@@ -98,7 +98,7 @@ func Init(yes, statuscheck bool) {
 	}
 
 	// Configure TLS
-	fmt.Println("🔐  Configuring TLS Certificates")
+	console.Println("🔐  Configuring TLS Certificates", "")
 	tls.ConfigureTLS()
 
 	console.Println("🚅  Starting your Drupal environment", "")
@@ -177,7 +177,7 @@ func surveyMessage() {
 	rand.Seed(time.Now().UnixNano())
 	n := rand.Intn(6-1) + 1
 	if n == 3 {
-		fmt.Println(aurora.Sprintf("🤗  How's Tokaido? Run '%s' to share your feedback.", aurora.Bold("tok survey")))
+		console.Println(aurora.Sprintf("🤗  How's Tokaido? Run '%s' to share your feedback.", aurora.Bold("tok survey")), "")
 	}
 }
 
