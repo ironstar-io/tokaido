@@ -6,6 +6,7 @@ import (
 	"runtime"
 
 	"github.com/ironstar-io/tokaido/system/fs"
+	// "github.com/ironstar-io/tokaido/system/wsl"
 	"github.com/logrusorgru/aurora"
 )
 
@@ -21,11 +22,18 @@ func SystemCompatibilityChecks() {
 			fmt.Println(aurora.Red("Could not find Unison dependency 'unison-fsmonitor' on your system. Please install with `brew install eugenmayer/dockersync/unox"))
 			os.Exit(1)
 		}
-		// case "linux":
-		// 	if c.Global.Syncservice != "unison" {
-		// 		fmt.Println(Sprintf(Yellow("Warning: The syncservice '%s' is not compatible with Linux. Tokaido will automatically be set to use Unison\n\n"), Bold(c.Global.Syncservice)))
-		// 		conf.SetGlobalConfigValueByArgs([]string{"syncservice", "unison"})
-		// 	}
+	case "linux":
+		// w := wsl.IsWSL()
+
+		// // Can't use docker volumes on Linux, except for in WSL
+		// if c.Global.Syncservice != "unison" && !w {
+		// 	fmt.Println(aurora.Sprintf(aurora.Yellow("Warning: The syncservice '%s' is not compatible with Linux. Tokaido will automatically be set to use Unison\n\n"), aurora.Bold(c.Global.Syncservice)))
+		// 	conf.SetGlobalConfigValueByArgs([]string{"syncservice", "unison"})
+		// }
+		// // Must use docker volumes on WSL
+		// if c.Global.Syncservice != "docker" && w {
+		// 	fmt.Println(aurora.Sprintf(aurora.Yellow("Warning: The syncservice '%s' is not compatible with WSL. Tokaido will automatically be set to use Docker Volumes\n\n"), aurora.Bold(c.Global.Syncservice)))
+		// 	conf.SetGlobalConfigValueByArgs([]string{"syncservice", "docker"})
 		// }
 	}
 }
