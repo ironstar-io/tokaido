@@ -215,7 +215,7 @@ func addTestCafeUsers() {
 func npmCI() {
 	nm := filepath.Join(testCafeLocalPath(), "node_modules")
 	if fs.CheckExists(nm) == false {
-		fmt.Println(aurora.Cyan("🦉  Installing TestCafe dependencies"))
+		fmt.Println(aurora.Cyan("🦉  Installing TestCafe dependencies    "))
 		ssh.StreamConnectCommand([]string{"cd", testCafeContainerPath(), "&&", "npm", "ci"})
 	}
 }

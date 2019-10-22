@@ -47,7 +47,7 @@ func createWildcardCertificate() (err error) {
 	// Generate the CA Certificate and Key
 	cert, key, err := generateCertificate(req)
 	if err != nil {
-		fmt.Println(aurora.Red("😓  Tokaido was not able to generate a trusted SSL certificate because of the following error:"))
+		fmt.Println(aurora.Red("😓  Tokaido was not able to generate a trusted SSL certificate because of the following error:     "))
 		fmt.Println(err.Error())
 		fmt.Println("We'd love to help you fix this. Please visit https://docs.tokaido.io/en/docs/support.")
 		return nil // try to carry on even though an error occurred
@@ -83,7 +83,7 @@ func createProjectCertificate(projectName, projectPath, commonName string) (err 
 	// Generate the CA Certificate and Key
 	cert, key, err := generateCertificate(req)
 	if err != nil {
-		fmt.Println(aurora.Red("😓  Tokaido was not able to generate a trusted SSL certificate because of the following error:"))
+		fmt.Println(aurora.Red("😓  Tokaido was not able to generate a trusted SSL certificate because of the following error:    "))
 		fmt.Println(err.Error())
 		fmt.Println("We'd love to help you fix this. Please visit https://docs.tokaido.io/en/docs/support.")
 		return nil // try to carry on even though an error occurred
@@ -103,7 +103,7 @@ func generateCertificate(req *x509.Certificate) (certificate, key []byte, err er
 	caCertPath := filepath.Join(fs.HomeDir(), constants.TLSRoot, constants.CertificateAuthorityCertificatePath)
 	caCertBytes, err := ioutil.ReadFile(caCertPath)
 	if err != nil {
-		fmt.Println(aurora.Red("😓  Unable to generate a new certificate because of the following error while trying to open the CA Certificate at " + caCertPath + ":"))
+		fmt.Println(aurora.Red("😓  Unable to generate a new certificate because of the following error while trying to open the CA Certificate at " + caCertPath + ":    "))
 		fmt.Println(err.Error())
 		fmt.Println("We'd love to help you fix this. Please visit https://docs.tokaido.io/en/docs/support.")
 		return nil, nil, err
@@ -112,7 +112,7 @@ func generateCertificate(req *x509.Certificate) (certificate, key []byte, err er
 	caKeyPath := filepath.Join(fs.HomeDir(), constants.TLSRoot, constants.CertificateAuthorityKeyPath)
 	caKeyBytes, err := ioutil.ReadFile(caKeyPath)
 	if err != nil {
-		fmt.Println(aurora.Red("😓  Unable to open generate a new certificate because of the following error while trying to open the CA Key at " + caKeyPath + ":"))
+		fmt.Println(aurora.Red("😓  Unable to open generate a new certificate because of the following error while trying to open the CA Key at " + caKeyPath + ":    "))
 		fmt.Println(err.Error())
 		fmt.Println("We'd love to help you fix this. Please visit https://docs.tokaido.io/en/docs/support.")
 		return nil, nil, err
@@ -121,7 +121,7 @@ func generateCertificate(req *x509.Certificate) (certificate, key []byte, err er
 	// Decode our caKey PEM into a usable certificate format
 	keyDecode, _ := pem.Decode(caKeyBytes)
 	if keyDecode == nil {
-		fmt.Println(aurora.Red("😓  Unable to open generate a new certificate because of the following error while trying to decode the CA Key:"))
+		fmt.Println(aurora.Red("😓  Unable to open generate a new certificate because of the following error while trying to decode the CA Key:    "))
 		fmt.Println(err.Error())
 		fmt.Println("We'd love to help you fix this. Please visit https://docs.tokaido.io/en/docs/support.")
 		return nil, nil, err
@@ -135,7 +135,7 @@ func generateCertificate(req *x509.Certificate) (certificate, key []byte, err er
 	// Decode our caCertificate PEM into a useable cert
 	certDecode, _ := pem.Decode(caCertBytes)
 	if certDecode == nil {
-		fmt.Println(aurora.Red("😓  Unable to open generate a new certificate because of the following error:"))
+		fmt.Println(aurora.Red("😓  Unable to open generate a new certificate because of the following error:    "))
 		fmt.Println(err.Error())
 		fmt.Println("We'd love to help you fix this. Please visit https://docs.tokaido.io/en/docs/support.")
 		return nil, nil, err

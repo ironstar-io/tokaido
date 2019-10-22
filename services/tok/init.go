@@ -45,7 +45,7 @@ func Init(yes, statuscheck bool) {
 	proxy.CreateProxyNetwork()
 	checkSyncConfig()
 
-	fmt.Println(aurora.Cyan("\n🚀  Tokaido is starting up!"))
+	fmt.Println(aurora.Cyan("\n🚀  Tokaido is starting up!    "))
 
 	// Add this project to the global configuration
 	pr := fs.ProjectRoot()
@@ -63,7 +63,7 @@ func Init(yes, statuscheck bool) {
 	err := snapshots.Init()
 	if err != nil {
 		fmt.Println()
-		fmt.Println(aurora.Red("🙅  Tokaido encountered an unexpected error preparing the database snapshot service"))
+		fmt.Println(aurora.Red("🙅  Tokaido encountered an unexpected error preparing the database snapshot service    "))
 		panic(err)
 	}
 
@@ -118,7 +118,7 @@ func Init(yes, statuscheck bool) {
 	ok := docker.StatusCheck("", conf.GetConfig().Tokaido.Project.Name)
 	if !ok {
 		fmt.Println()
-		fmt.Println(aurora.Red("😓  Tokaido containers are not working properly"))
+		fmt.Println(aurora.Red("😓  Tokaido containers are not working properly    "))
 
 		if !docker.StatusCheck("fpm", conf.GetConfig().Tokaido.Project.Name) {
 			fmt.Println(aurora.Red("    The Tokaido FPM container failed to start up."))
@@ -143,24 +143,24 @@ func Init(yes, statuscheck bool) {
 	}
 
 	fmt.Println()
-	fmt.Println(aurora.Green(`🙂  All containers are running`))
+	fmt.Println(aurora.Green("🙂  All containers are running    "))
 
 	// Final startup checks
 	if statuscheck {
 		ok = ssh.CheckKey()
 		if ok {
-			fmt.Println(aurora.Green("😀  SSH access is configured"))
+			fmt.Println(aurora.Green("😀  SSH access is configured    "))
 		} else {
-			fmt.Println(aurora.Red("😓  SSH access is not configured"))
+			fmt.Println(aurora.Red("😓  SSH access is not configured    "))
 			fmt.Println("  Your SSH access to the Drush container looks broken.")
 			fmt.Println("  You should be able to run 'tok repair' to attempt to fix this automatically")
 		}
 
 		if ok {
-			fmt.Println(aurora.Green(`🍜  Tokaido started up successfully`))
+			fmt.Println(aurora.Green(`🍜  Tokaido started up successfully    `))
 		} else {
 			fmt.Println()
-			console.Println("🙅  Uh oh! It looks like Tokaido didn't start properly.", "")
+			console.Println("🙅  Uh oh! It looks like Tokaido didn't start properly.    ", "")
 			console.Println("    Come find us in #tokaido on the Drupal Slack if you need some help", "")
 			fmt.Println()
 		}
