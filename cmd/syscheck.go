@@ -1,12 +1,15 @@
 package cmd
 
 import (
+	"fmt"
+	
 	"github.com/ironstar-io/tokaido/initialize"
 	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/services/drupal"
 	"github.com/ironstar-io/tokaido/services/telemetry"
 	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/utils"
+
 	"github.com/spf13/cobra"
 )
 
@@ -22,14 +25,13 @@ var SyscheckCmd = &cobra.Command{
 
 		docker.HardCheckTokCompose()
 
-		console.Println(`
-🚅  Checking Drupal for compatibility with Tokaido
-		`, "")
+		fmt.Println()
+		console.Println(`🚅  Checking Drupal for compatibility with Tokaido`, "")
+		fmt.Println()
 
 		drupal.CheckLocal()
 
-		console.Println(`
-🚉  Drupal compatibility checks complete!
-		`, "")
+		console.Println(`🚉  Drupal compatibility checks complete!`, "")
+		fmt.Println()
 	},
 }

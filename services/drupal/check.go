@@ -24,7 +24,9 @@ var checkFailMsg = "\n⚠️  There were some problems detected during the syste
 
 // CheckLocal ...
 func CheckLocal() {
-	if fs.CheckExists(conf.CoreDrupalFile()) {
+	d := filepath.Join(conf.GetProjectPath(), conf.CoreDrupalFile())
+	
+	if !fs.CheckExists(d) {
 		fmt.Println("  ×  A Drupal installation was not found")
 		console.Printf(checkFailMsg, "")
 		return
