@@ -12,7 +12,7 @@ import (
 	"github.com/ironstar-io/tokaido/system/hostsfile"
 )
 
-const proxyNetworkName = "tokaido_proxy_1"
+const proxyNetworkName = "tokaido_proxy"
 
 // DestroyProject ...
 func DestroyProject() {
@@ -30,11 +30,11 @@ func DestroyProject() {
 
 // RemoveNetwork ...
 func RemoveNetwork() {
-	n := docker.GetNetworkName(conf.GetConfig().Tokaido.Project.Name)
+	hc := conf.GetConfig().Tokaido.Project.Name + "_haproxy_1"
 
-	err := disconnectNetworkEndpoint(n, proxyNetworkName)
+	err := disconnectNetworkEndpoint(proxyNetworkName, hc)
 	if err != nil {
-		fmt.Println("There was an issue disconnecting the docker network from the proxy containers. These can be removed manually with the command `docker network disconnect " + n + " " + proxyNetworkName + "`")
+		fmt.Println("There was an issue disconnecting the docker network from the proxy containers. These can be removed manually with the command `docker network disconnect " + proxyNetworkName + " " + hc + "`")
 		fmt.Println(err)
 	}
 }
