@@ -78,6 +78,13 @@ func regenerateGateway(gprj *conf.Project) {
 
 	tokComposeYml = append(tokComposeYml[:], composeVolumeYml[:]...)
 
+	composeNetworksYml := []byte(`
+networks:
+  tokaido_proxy:
+    external: true`)
+
+	tokComposeYml = append(tokComposeYml[:], composeNetworksYml[:]...)
+
 	docker.CreateOrReplaceTokCompose(tokComposeYml)
 
 	docker.KillContainer("fpm")
