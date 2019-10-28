@@ -32,7 +32,6 @@ import (
 
 // Init - The core run sheet of `tok up`
 func Init(yes, statuscheck bool) {
-	c := conf.GetConfig()
 	cs := "ASK"
 	if yes {
 		cs = "FORCE"
@@ -77,6 +76,7 @@ func Init(yes, statuscheck bool) {
 	git.IgnoreDefaults()
 	docker.CreateComposerCacheVolume()
 
+	c := conf.GetConfig()
 	if c.Global.Syncservice == "unison" {
 		unison.DockerUp()
 		unison.CreateOrUpdatePrf(unison.LocalPort(), c.Tokaido.Project.Name, pr)
@@ -202,12 +202,12 @@ func checkSyncConfig() {
 		// Can't use docker volumes on Linux, except for in WSL
 		if c.Global.Syncservice != "unison" && !w {
 			fmt.Println(aurora.Sprintf(aurora.Yellow("Warning: The syncservice '%s' is not compatible with Linux. Tokaido will automatically be set to use Unison\n\n"), aurora.Bold(c.Global.Syncservice)))
-			conf.SetGlobalConfigValueByArgs([]string{"syncservice", "unison"})
+			conf.SetGlobalConfigValueByArgs([]string{"global", "syncservice", "unison"})
 		}
 		// Must use docker volumes on WSL
 		if c.Global.Syncservice != "docker" && w {
 			fmt.Println(aurora.Sprintf(aurora.Yellow("Warning: The syncservice '%s' is not compatible with WSL. Tokaido will automatically be set to use Docker Volumes\n\n"), aurora.Bold(c.Global.Syncservice)))
-			conf.SetGlobalConfigValueByArgs([]string{"syncservice", "docker"})
+			conf.SetGlobalConfigValueByArgs([]string{"global", "syncservice", "docker"})
 		}
 	}
 

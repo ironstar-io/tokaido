@@ -39,6 +39,28 @@ func GetConfig() *Config {
 	return config
 }
 
+// GetGlobalConfig ...
+func GetGlobalConfig() *Global {
+	global := Global{}
+	// Create an empty global config file if on doesn't exist
+	gcPath := getConfigPath("global")
+	if !fs.CheckExists(gcPath) {
+		WriteGlobalConfig(global)
+	}
+
+	// Load the global config in to the config struct without using Viper
+	gcFile, err := ioutil.ReadFile(gcPath)
+	if err != nil {
+		log.Fatalf("There was an issue reading in your global config file\n%v", err)
+	}
+	err = yaml.Unmarshal(gcFile, &global)
+	if err != nil {
+		log.Fatalf("There was an issue unpacking your global config file\n%v", err)
+	}
+
+	return &global
+}
+
 // GetProjectPath returns the full system path to this project as it exists in the global.yml file
 func GetProjectPath() (path string) {
 	// If the path exists in the global config, return it

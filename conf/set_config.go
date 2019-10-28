@@ -67,6 +67,21 @@ func SetGlobalConfigValueByArgs(args []string) (err error) {
 		return fmt.Errorf("Error: too few arguments for global config")
 	}
 
+	if args[1] == "syncservice" {
+		if len(args) < 3 {
+			return fmt.Errorf("Error: too few arguments for global project config. Did you want 'project'?")
+		}
+
+		g := GetGlobalConfig()
+		if err != nil {
+			return err  
+		}
+
+		g.Syncservice = args[2]
+		WriteGlobalConfig(*g)
+		return nil		
+	}
+
 	if args[1] == "project" {
 		if len(args) < 3 {
 			return fmt.Errorf("Error: too few arguments for global project config. Did you want 'xdebug'?")
@@ -140,7 +155,6 @@ func SetGlobalConfigValueByArgs(args []string) (err error) {
 	}
 
 	return fmt.Errorf("requested global config path is not known")
-
 }
 
 // mergeConfigInMemory takes our saved config from disk, the new yaml string, and the running

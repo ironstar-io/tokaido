@@ -11,6 +11,7 @@ import (
 	"github.com/ironstar-io/tokaido/constants"
 	"github.com/ironstar-io/tokaido/system"
 	"github.com/ironstar-io/tokaido/system/fs"
+	"github.com/ironstar-io/tokaido/system/wsl"
 	"github.com/ironstar-io/tokaido/utils"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
@@ -60,7 +61,12 @@ func readProjectConfig(command string) {
 	switch system.CheckOS() {
 	case "osx":
 		viper.SetDefault("Global.Syncservice", "docker")
-
+	case "linux":
+		if wsl.IsWSL() {
+			viper.SetDefault("Global.Syncservice", "docker")
+		} else {
+			viper.SetDefault("Global.Syncservice", "unison")
+		}
 	default:
 		viper.SetDefault("Global.Syncservice", "unison")
 	}
