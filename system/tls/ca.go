@@ -21,8 +21,8 @@ import (
 
 // createCA creates a Certificate Authority and writes it's cert and key to disk
 func createCA() (err error) {
-	fullCertPath := filepath.Join(fs.HomeDir(), constants.TLSRoot, constants.CertificateAuthorityCertificatePath)
-	fullKeyPath := filepath.Join(fs.HomeDir(), constants.TLSRoot, constants.CertificateAuthorityKeyPath)
+	fullCertPath := filepath.Join(GetTLSRootDir(), constants.CertificateAuthorityCertificatePath)
+	fullKeyPath := filepath.Join(GetTLSRootDir(), constants.CertificateAuthorityKeyPath)
 
 	if fs.CheckExists(fullCertPath) {
 		utils.DebugString("skipping creation of CA as one already exists in: " + fullCertPath)
@@ -57,7 +57,7 @@ func createCA() (err error) {
 	}
 
 	// Write the Cert and Key to disk
-	fs.Mkdir(filepath.Join(fs.HomeDir(), constants.TLSRoot, "/ca"))
+	fs.Mkdir(filepath.Join(GetTLSRootDir(), "/ca"))
 	fs.TouchOrReplace(fullCertPath, cert)
 	fs.TouchOrReplace(fullKeyPath, key)
 

@@ -54,9 +54,9 @@ func createWildcardCertificate() (err error) {
 	}
 
 	// Write the Cert and Key to disk
-	fs.Mkdir(filepath.Join(fs.HomeDir(), constants.TLSRoot, "/proxy"))
-	fs.TouchOrReplace(filepath.Join(fs.HomeDir(), constants.TLSRoot, constants.WildcardCertificatePath), cert)
-	fs.TouchOrReplace(filepath.Join(fs.HomeDir(), constants.TLSRoot, constants.WildcardKeyPath), key)
+	fs.Mkdir(filepath.Join(GetTLSRootDir(), "/proxy"))
+	fs.TouchOrReplace(filepath.Join(GetTLSRootDir(), constants.WildcardCertificatePath), cert)
+	fs.TouchOrReplace(filepath.Join(GetTLSRootDir(), constants.WildcardKeyPath), key)
 
 	return nil
 }
@@ -100,7 +100,7 @@ func createProjectCertificate(projectName, projectPath, commonName string) (err 
 // generateCertificate takes a certificate signing request and signs it using the Tokaido CA
 func generateCertificate(req *x509.Certificate) (certificate, key []byte, err error) {
 	// Open the Tokaido CA cert and key from disk
-	caCertPath := filepath.Join(fs.HomeDir(), constants.TLSRoot, constants.CertificateAuthorityCertificatePath)
+	caCertPath := filepath.Join(GetTLSRootDir(), constants.CertificateAuthorityCertificatePath)
 	caCertBytes, err := ioutil.ReadFile(caCertPath)
 	if err != nil {
 		fmt.Println(aurora.Red("😓  Unable to generate a new certificate because of the following error while trying to open the CA Certificate at " + caCertPath + ":    "))
@@ -109,7 +109,7 @@ func generateCertificate(req *x509.Certificate) (certificate, key []byte, err er
 		return nil, nil, err
 	}
 
-	caKeyPath := filepath.Join(fs.HomeDir(), constants.TLSRoot, constants.CertificateAuthorityKeyPath)
+	caKeyPath := filepath.Join(GetTLSRootDir(), constants.CertificateAuthorityKeyPath)
 	caKeyBytes, err := ioutil.ReadFile(caKeyPath)
 	if err != nil {
 		fmt.Println(aurora.Red("😓  Unable to open generate a new certificate because of the following error while trying to open the CA Key at " + caKeyPath + ":    "))
