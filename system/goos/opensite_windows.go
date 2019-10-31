@@ -1,12 +1,10 @@
 package goos
 
-// TODO Windows
-
 import (
 	"github.com/ironstar-io/tokaido/utils"
 )
 
-// OpenSite - OSX Root executable
+// OpenSite - Open a URL using PowerShell
 func OpenSite(url string) {
 	utils.CommandSubstitution("powershell.exe", "start", url)
 }

@@ -1,7 +1,5 @@
 // +build windows
 
-// TODO Windows
-
 package fs
 
 import (
