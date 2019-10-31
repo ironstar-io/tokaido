@@ -8,5 +8,5 @@ import (
 
 // OpenSite - OSX Root executable
 func OpenSite(url string) {
-	utils.CommandSubstitution("powershell.exe", "C:/", "start", url)
+	utils.CommandSubstitution("powershell.exe", "start", url)
 }
