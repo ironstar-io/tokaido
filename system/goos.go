@@ -12,8 +12,10 @@ func CheckOS() string {
 		return "osx"
 	case "linux":
 		return "linux"
+	case "windows":
+		return "windows"
 	default:
-		log.Fatal("Tokaido is currently only compatible with limited Linux distributions and MacOS High Sierra or newer.")
+		log.Fatal("Tokaido is currently only compatible with limited Linux distributions, Windows 10 Pro and MacOS High Sierra or newer.")
 		return ""
 	}
 }

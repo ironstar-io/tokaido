@@ -35,5 +35,12 @@ func SystemCompatibilityChecks() {
 		if c.Global.Syncservice != "docker" && w {
 			conf.SetGlobalConfigValueByArgs([]string{"global", "syncservice", "docker"})
 		}
+	case "windows":
+		c := conf.GetConfig()
+
+		// Must use docker volumes on Windows
+		if c.Global.Syncservice != "docker" {
+			conf.SetGlobalConfigValueByArgs([]string{"global", "syncservice", "docker"})
+		}
 	}
 }

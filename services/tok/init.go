@@ -44,8 +44,9 @@ func Init(yes, statuscheck bool) {
 	docker.CheckClientVersion()
 	proxy.CreateProxyNetwork()
 	checkSyncConfig()
-
-	fmt.Println(aurora.Cyan("\n🚀  Tokaido is starting up!    "))
+	system.CheckDependencies()
+	
+	fmt.Println(aurora.Cyan("\n🚀  Tokaido is starting up!"))
 
 	// Add this project to the global configuration
 	pr := fs.ProjectRoot()
@@ -207,6 +208,11 @@ func checkSyncConfig() {
 		// Must use docker volumes on WSL
 		if c.Global.Syncservice != "docker" && w {
 			fmt.Println(aurora.Sprintf(aurora.Yellow("Warning: The syncservice '%s' is not compatible with WSL. Tokaido will automatically be set to use Docker Volumes\n\n"), aurora.Bold(c.Global.Syncservice)))
+			conf.SetGlobalConfigValueByArgs([]string{"global", "syncservice", "docker"})
+		}
+	case "windows":
+		// Must use docker volumes on Windows
+		if c.Global.Syncservice != "docker" {
 			conf.SetGlobalConfigValueByArgs([]string{"global", "syncservice", "docker"})
 		}
 	}
