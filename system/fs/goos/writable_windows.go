@@ -1,15 +1,22 @@
 // +build windows
 
-// TODO Windows
-
 package goos
 
 import (
-	// "golang.org/x/sys/unix"
+	"os"
 )
 
 // Writable - Check if a file/folder is writable
 func Writable(path string) bool {
-	return true
-	// return unix.Access(path, unix.W_OK) == nil
+    info, err := os.Stat(path)
+    if err != nil {
+        return false
+    }
+
+    // Check if the user bit is enabled in file permission
+    if info.Mode().Perm()&(1<<(uint(7))) == 0 {
+        return false
+    }
+
+    return true
 }
