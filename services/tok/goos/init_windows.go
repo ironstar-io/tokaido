@@ -2,8 +2,6 @@
 
 package goos
 
-// TODO Windows
-
 import (
 	"fmt"
 
