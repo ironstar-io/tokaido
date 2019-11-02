@@ -2,8 +2,6 @@
 
 package fs
 
-// TODO Windows
-
 import (
 	"fmt"
 	"os"
