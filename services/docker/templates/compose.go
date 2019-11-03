@@ -272,16 +272,16 @@ func TokaidoDockerSiteVolumeAttach(path string) []byte {
 
 	// We'll mount the .gitconfig and .drush paths if they exist
 	gp := h + "/.gitconfig"
-	dp := h + "/.drush:/home/tok/.drush"
+	dp := h + "/.drush"
 
 	if fs.CheckExists(gp) {
 		vols = vols + `
-      - ` + h + `/.gitconfig:/home/tok/.gitconfig`
+      - ` + gp + `:/home/tok/.gitconfig`
 	}
 
 	if fs.CheckExists(dp) {
 		vols = vols + `
-      - ` + h + `/.gitconfig:/home/tok/.drush`
+      - ` + dp + `:/home/tok/.drush`
 	}
 
 	return []byte(vols)
