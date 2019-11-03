@@ -19,7 +19,7 @@ func GetRootPath() string {
 	c := GetConfig()
 	dp := c.Drupal.Path
 	if dp != "" {
-		return filepath.Join(GetProjectPath(), dp)
+		return filepath.Join(GetProjectPath(), strings.ReplaceAll(dp, "\\", ""))
 	}
 
 	fmt.Println(aurora.Red("Drupal path setting is missing. Are you in a project directory?"))
