@@ -3,6 +3,8 @@ package version
 import (
 	"fmt"
 	"runtime"
+
+	"github.com/blang/semver"
 )
 
 var (
@@ -34,4 +36,10 @@ func Get() Info {
 		Compiler:  runtime.Compiler,
 		Platform:  fmt.Sprintf("%s/%s", runtime.GOOS, runtime.GOARCH),
 	}
+}
+
+// GetLatest returns the latest available Tokaido version from the Github API
+func GetLatest() (semver.Version, error) {
+	// TODO Replace dummy with data from GH
+	return semver.Parse("1.7.0")
 }
