@@ -3,6 +3,7 @@ package console
 import (
 	"fmt"
 	"os"
+	"runtime"
 
 	"github.com/gernest/wow"
 	"github.com/gernest/wow/spin"
@@ -11,7 +12,7 @@ import (
 
 // Println ...
 func Println(message string, replacement string) {
-	if viper.Get("Enableemoji") == false {
+	if viper.Get("Enableemoji") == false || runtime.GOOS == "windows" {
 		fmt.Println(StripEmoji(message, replacement))
 	} else {
 		fmt.Println(message + "  ")
@@ -20,7 +21,7 @@ func Println(message string, replacement string) {
 
 // Printf ...
 func Printf(message string, replacement string) {
-	if viper.Get("Enableemoji") == false {
+	if viper.Get("Enableemoji") == false || runtime.GOOS == "windows" {
 		fmt.Printf(StripEmoji(message, replacement))
 	} else {
 		fmt.Printf(message + "  ")
@@ -29,7 +30,7 @@ func Printf(message string, replacement string) {
 
 // SpinStart ...
 func SpinStart(message string) *wow.Wow {
-	if viper.Get("Enableemoji") == false {
+	if viper.Get("Enableemoji") == false || runtime.GOOS == "windows" {
 		Println(message, "")
 		return nil
 	}
@@ -42,7 +43,7 @@ func SpinStart(message string) *wow.Wow {
 
 // SpinPersist ...
 func SpinPersist(wo *wow.Wow, emoji string, message string) {
-	if viper.Get("Enableemoji") == false {
+	if viper.Get("Enableemoji") == false || runtime.GOOS == "windows" {
 		Println(message, "")
 	} else {
 		wo.PersistWith(spin.Spinner{Frames: []string{emoji}}, `  `+message)
