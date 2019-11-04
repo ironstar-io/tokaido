@@ -1,11 +1,18 @@
 package version
 
 import (
+	"encoding/json"
 	"fmt"
 	"runtime"
 
-	"github.com/blang/semver"
+	"github.com/ironstar-io/tokaido/services/github"
 )
+
+// LatestResBody - Used properties from the GH API GET call
+type LatestResBody struct {
+	TagName string `json:"tag_name"`
+	HTMLURL string `json:"html_url"`
+}
 
 var (
 	version   string
@@ -38,8 +45,18 @@ func Get() Info {
 	}
 }
 
-// GetLatest returns the latest available Tokaido version from the Github API
-func GetLatest() (semver.Version, error) {
-	// TODO Replace dummy with data from GH
-	return semver.Parse("1.7.0")
+// GetLatest - Hit the GH API to retrieve the latest Tokaido version
+func GetLatest() (*LatestResBody, error) {
+	ghr := LatestResBody{}
+	body, err := github.GetRelease("latest")
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal(body, &ghr)
+	if err != nil {
+		return nil, err
+	}
+
+	return &ghr, nil
 }
