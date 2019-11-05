@@ -39,7 +39,7 @@ func Select(selection string) {
 		return
 	}
 
-	confirmChange := utils.ConfirmationPrompt("This will change your Tokaido version to "+sv.String()+").\n\nAre you sure?", "y")
+	confirmChange := utils.ConfirmationPrompt("This will change your Tokaido version to "+sv.String()+".\n\nAre you sure?", "y")
 	if confirmChange == false {
 		fmt.Println("Exiting...")
 		return

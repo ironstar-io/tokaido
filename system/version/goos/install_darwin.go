@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/utils"
 )
@@ -16,7 +17,7 @@ var binaryName = "tok-macos"
 
 // GetInstallPath - Check if tok version is installed or not
 func GetInstallPath(version string) string {
-	p := filepath.Join(baseInstallPath, version, "bin", "tok")
+	p := filepath.Join(fs.HomeDir(), baseInstallPath, version, "tok")
 	if fs.CheckExists(p) == true {
 		return p
 	}
@@ -36,10 +37,13 @@ func Install(version string) (string, error) {
 		log.Fatal(err)
 	}
 
+	fmt.Println()
+	w := console.SpinStart("Downloading the specified release from GitHub.")
 	err = utils.DownloadFile(b, baseBinaryURL+version+"/"+binaryName)
 	if err != nil {
 		return "", err
 	}
+	console.SpinPersist(w, "🚉", "Download complete!")
 
 	return b, nil
 }

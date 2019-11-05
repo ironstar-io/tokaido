@@ -65,6 +65,9 @@ func Upgrade() {
 			log.Fatal(err)
 		}
 
+		fmt.Println()
+		fmt.Println("Successfully upgraded Tokaido to the latest version (" + lv.String() + ")")
+
 		return
 	}
 
