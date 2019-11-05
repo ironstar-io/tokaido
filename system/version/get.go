@@ -8,12 +8,6 @@ import (
 	"github.com/ironstar-io/tokaido/services/github"
 )
 
-// LatestResBody - Used properties from the GH API GET call
-type LatestResBody struct {
-	TagName string `json:"tag_name"`
-	HTMLURL string `json:"html_url"`
-}
-
 var (
 	version   string
 	buildDate string
@@ -46,9 +40,9 @@ func Get() Info {
 }
 
 // GetLatest - Hit the GH API to retrieve the latest Tokaido version
-func GetLatest() (*LatestResBody, error) {
-	ghr := LatestResBody{}
-	body, err := github.GetRelease("latest")
+func GetLatest() (*github.ReleaseBody, error) {
+	ghr := github.ReleaseBody{}
+	body, err := github.GetLatestRelease()
 	if err != nil {
 		return nil, err
 	}

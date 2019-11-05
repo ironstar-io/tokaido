@@ -14,10 +14,26 @@ import (
 func Upgrade() {
 	v := Get().Version
 	cv := strings.Replace(v, "v", "", 0)
-	cs, _ := semver.Parse(cv)
+	cs, err := semver.Parse(cv)
+	if err != nil {
+		fmt.Println("Tokaido was unable to correctly parse the current version.")
 
-	ls, _ := GetLatest()
+		log.Fatal(err)
+	}
+
+	ls, err := GetLatest()
+	if err != nil {
+		fmt.Println("Tokaido was unable to reach GitHub to determine the latest version")
+
+		log.Fatal(err)
+	}
+
 	lv, _ := semver.Parse(ls.TagName)
+	if err != nil {
+		fmt.Println("Tokaido was unable to correctly parse the latest version.")
+
+		log.Fatal(err)
+	}
 
 	// Checks if the latest version is Greater Than the current version
 	if lv.GT(cs) == true {
@@ -33,7 +49,7 @@ func Upgrade() {
 			// Download latest release from GH
 			p, err := Install(lv.String())
 			if err != nil {
-				fmt.Println("Tokaido was unable to upgrade you to the latest version.")
+				fmt.Println("Tokaido wasn't able to upgrade you to the latest version.")
 
 				log.Fatal(err)
 			}
