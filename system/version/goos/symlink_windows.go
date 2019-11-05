@@ -16,7 +16,7 @@ func CreateSymlink(path string) error {
 		return err
 	}
 	// Create a new symbolic or "soft" link
-	err := os.Symlink(tokBinPath, path)
+	err = os.Symlink(tokBinPath, path)
 	if err != nil {
 		return err
 	}
