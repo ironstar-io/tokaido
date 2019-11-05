@@ -26,7 +26,7 @@ func Select(selection string) {
 
 	// Checks if the current version is Equal to the selected version and exits if so
 	if sv.EQ(cs) == true {
-		log.Fatalf("Selected version (" + sv.String() + ") is the same as the currently installed version. Exiting...")
+		log.Fatalf("Selected version (" + sv.String() + ") is the same as the currently active version. Exiting...")
 
 		return
 	}

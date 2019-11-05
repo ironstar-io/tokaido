@@ -19,12 +19,17 @@ import (
 	"github.com/logrusorgru/aurora"
 )
 
-// TokConfig - loads the config from a file if specified, otherwise from the environment
+// TokConfig - loads the config from a file if specified, otherwise from the environment, also runs validation checks
 func TokConfig(command string) {
 	conf.ValidProjectRoot()
 	createDotTok()
 	createGlobalDotTok()
 
+	LoadConfig(command)
+}
+
+// LoadConfig - loads the config from a file if specified, otherwise from the environment
+func LoadConfig(command string) {
 	viper.SetEnvPrefix("TOK")
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 	viper.AutomaticEnv()

@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/ironstar-io/tokaido/initialize"
 	"github.com/ironstar-io/tokaido/services/telemetry"
 	"github.com/ironstar-io/tokaido/system/version"
 
@@ -19,6 +20,7 @@ var VersionCmd = &cobra.Command{
 			return
 		}
 
+		initialize.LoadConfig("version")
 		telemetry.SendCommand("version select (" + args[0] + ")")
 
 		version.Select(args[0])
