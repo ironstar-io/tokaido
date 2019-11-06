@@ -4,6 +4,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"runtime"
 	"os"
 )
 
@@ -28,10 +29,12 @@ func DownloadFile(filepath string, url string) error {
 		log.Println(err)
 	}
 
-	// Change file ownership.
-	err = os.Chown(filepath, os.Getuid(), os.Getgid())
-	if err != nil {
-		log.Println(err)
+	if runtime.GOOS != "windows" {
+		// Change file ownership.
+		err = os.Chown(filepath, os.Getuid(), os.Getgid())
+		if err != nil {
+			log.Println(err)
+		}
 	}
 
 	// Write the body to file
