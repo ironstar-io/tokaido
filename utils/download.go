@@ -5,7 +5,9 @@ import (
 	"log"
 	"net/http"
 	"runtime"
+	"errors"
 	"os"
+	"strconv"
 )
 
 // DownloadFile - download a url to a local file.
@@ -14,6 +16,13 @@ func DownloadFile(filepath string, url string) error {
 	if err != nil {
 		return err
 	}
+	if resp.StatusCode == 404 {
+		return errors.New("The requested release was not found (404)")
+	}
+	if resp.StatusCode != 200 {
+		return errors.New("GitHub responded with error code " + strconv.Itoa(resp.StatusCode))
+	}
+
 	defer resp.Body.Close()
 
 	// Create the file
