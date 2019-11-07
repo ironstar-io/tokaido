@@ -11,7 +11,7 @@ import (
 	"github.com/ironstar-io/tokaido/utils"
 )
 
-var baseInstallPath = "/ironstar/tokaido/"
+var baseInstallPath = "/AppData/Local/Ironstar/Tokaido"
 var baseBinaryURL = "https://github.com/ironstar-io/tokaido/releases/download/"
 var binaryName = "tok-windows.exe"
 
