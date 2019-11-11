@@ -33,11 +33,6 @@ build-osx:
 	-X $(VERSION_PATH).version=$(VERSION) \
 	" -o ./dist/tok-macos
 
-build-installer:
-	cd installer && make build-osx
-	cd installer && make build-windows
-	cd installer && make build-linux
-
 test:
 	ginkgo test ./...
 

@@ -4,13 +4,13 @@ go 1.12
 
 require (
 	github.com/Azure/go-ansiterm v0.0.0-20170929234023-d6e3b3328b78 // indirect
-	github.com/GeertJohan/go.rice v0.0.0-20170420135705-c02ca9a983da
+	github.com/GeertJohan/go.rice v0.0.0-20170420135705-c02ca9a983da // indirect
 	github.com/Microsoft/go-winio v0.4.12 // indirect
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/chzyer/logex v1.1.10 // indirect
 	github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e // indirect
 	github.com/chzyer/test v0.0.0-20180213035817-a1ea475d72b1 // indirect
-	github.com/cloudflare/cfssl v0.0.0-20180202232422-27b05afbb513
+	github.com/cloudflare/cfssl v0.0.0-20180202232422-27b05afbb513 // indirect
 	github.com/daaku/go.zipexe v0.0.0-20150329023125-a5fe2436ffcb // indirect
 	github.com/docker/distribution v2.7.1+incompatible // indirect
 	github.com/docker/docker v0.0.0-20190509004234-994007dd89fd
@@ -21,27 +21,27 @@ require (
 	github.com/gernest/wow v0.0.0-20171118080535-7e0b2a239898
 	github.com/go-sql-driver/mysql v1.4.0
 	github.com/gogo/protobuf v1.2.1 // indirect
-	github.com/google/certificate-transparency-go v1.0.20
+	github.com/google/certificate-transparency-go v1.0.20 // indirect
 	github.com/google/go-cmp v0.3.1 // indirect
 	github.com/gorilla/mux v1.7.3 // indirect
 	github.com/hashicorp/hcl v0.0.0-20180404174102-ef8a98b0bbce // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/ironstar-io/telemetry v0.0.0-20190520033245-1c15a16e7802
-	github.com/jmhodges/clock v0.0.0-20160418191101-880ee4c33548
-	github.com/jmoiron/sqlx v0.0.0-20180614180643-0dae4fefe7c0
+	github.com/jmhodges/clock v0.0.0-20160418191101-880ee4c33548 // indirect
+	github.com/jmoiron/sqlx v0.0.0-20180614180643-0dae4fefe7c0 // indirect
 	github.com/juju/ansiterm v0.0.0-20180109212912-720a0952cc2a // indirect
 	github.com/kardianos/osext v0.0.0-20170510131534-ae77be60afb1 // indirect
-	github.com/kisielk/sqlstruct v0.0.0-20150923205031-648daed35d49
-	github.com/kisom/goutils v1.1.0
+	github.com/kisielk/sqlstruct v0.0.0-20150923205031-648daed35d49 // indirect
+	github.com/kisom/goutils v1.1.0 // indirect
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
-	github.com/lib/pq v0.0.0-20180523175426-90697d60dd84
+	github.com/lib/pq v0.0.0-20180523175426-90697d60dd84 // indirect
 	github.com/logrusorgru/aurora v0.0.0-20190417123914-21d75270181e
 	github.com/lunixbochs/vtclean v0.0.0-20180621232353-2d01aacdc34a // indirect
 	github.com/magefile/mage v0.0.0-20180411170307-771ebed3d686 // indirect
 	github.com/magiconair/properties v1.8.0 // indirect
 	github.com/manifoldco/promptui v0.3.1
 	github.com/mattn/go-runewidth v0.0.2 // indirect
-	github.com/mattn/go-sqlite3 v1.9.0
+	github.com/mattn/go-sqlite3 v1.9.0 // indirect
 	github.com/mitchellh/go-homedir v1.0.0
 	github.com/mitchellh/mapstructure v0.0.0-20180511142126-bb74f1db0675 // indirect
 	github.com/morikuni/aec v0.0.0-20170113033406-39771216ff4c // indirect
