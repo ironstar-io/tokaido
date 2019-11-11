@@ -45,6 +45,7 @@ func init() {
 	rootCmd.AddCommand(TestPhpcbfCmd)
 	rootCmd.AddCommand(TestPhpcsCmd)
 	rootCmd.AddCommand(UpCmd)
+	rootCmd.AddCommand(UpgradeCmd)
 	rootCmd.AddCommand(VersionCmd)
 	rootCmd.AddCommand(WatchCmd)
 

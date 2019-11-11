@@ -5,7 +5,9 @@ import (
 	"os"
 	"runtime"
 
+	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/system/fs"
+	"github.com/ironstar-io/tokaido/system/wsl"
 	"github.com/logrusorgru/aurora"
 )
 
@@ -21,11 +23,24 @@ func SystemCompatibilityChecks() {
 			fmt.Println(aurora.Red("Could not find Unison dependency 'unison-fsmonitor' on your system. Please install with `brew install eugenmayer/dockersync/unox"))
 			os.Exit(1)
 		}
-		// case "linux":
-		// 	if c.Global.Syncservice != "unison" {
-		// 		fmt.Println(Sprintf(Yellow("Warning: The syncservice '%s' is not compatible with Linux. Tokaido will automatically be set to use Unison\n\n"), Bold(c.Global.Syncservice)))
-		// 		conf.SetGlobalConfigValueByArgs([]string{"syncservice", "unison"})
-		// 	}
-		// }
+	case "linux":
+		w := wsl.IsWSL()
+		c := conf.GetConfig()
+
+		// Can't use docker volumes on Linux, except for in WSL
+		if c.Global.Syncservice != "unison" && !w {
+			conf.SetGlobalConfigValueByArgs([]string{"global", "syncservice", "unison"})
+		}
+		// Must use docker volumes on WSL
+		if c.Global.Syncservice != "docker" && w {
+			conf.SetGlobalConfigValueByArgs([]string{"global", "syncservice", "docker"})
+		}
+	case "windows":
+		c := conf.GetConfig()
+
+		// Must use docker volumes on Windows
+		if c.Global.Syncservice != "docker" {
+			conf.SetGlobalConfigValueByArgs([]string{"global", "syncservice", "docker"})
+		}
 	}
 }

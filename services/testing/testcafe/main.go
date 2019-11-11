@@ -96,7 +96,7 @@ func baseRepoExists() bool {
 
 // Download the base testcafe repo and copy into the Drupal project
 func pullBaseRepo() {
-	fmt.Println("🗃️   Fetching the TestCafe base repo and placing in .tok/testcafe")
+	console.Println("🗃️   Fetching the TestCafe base repo and placing in .tok/testcafe", "")
 
 	utils.CheckCmdHard("wget")
 
@@ -191,13 +191,13 @@ func recreateTokaidoTestDB(db *sql.DB) error {
 }
 
 func clearDrupalCache() {
-	fmt.Println("🗑️   Clearing the Drupal cache")
+	console.Println("🗑️   Clearing the Drupal cache", "")
 
 	ssh.ConnectCommand([]string{"drush", "cache-rebuild", "-d"})
 }
 
 func copyDefaultDB() {
-	fmt.Println("🖨️   Creating a test copy of the database")
+	console.Println("🖨️   Creating a test copy of the database", "")
 	outputPath := filepath.Join(tokLocalContainerPath(), "toktest-dump.sql")
 
 	ssh.ConnectCommand([]string{"drush", "sql-dump", "--result-file=" + outputPath, "-d"})
@@ -205,7 +205,7 @@ func copyDefaultDB() {
 }
 
 func addTestCafeUsers() {
-	fmt.Println("👩‍💻  Adding temporary Drupal user and administrator")
+	console.Println("👩‍💻  Adding temporary Drupal user and administrator", "")
 
 	ssh.ConnectCommand([]string{"drush", "user-create", "testcafe_user", `--password="testcafe_user"`, `--mail="testcafe_user@localhost"`, "-d"})
 	ssh.ConnectCommand([]string{"drush", "user-create", "testcafe_admin", `--password="testcafe_admin"`, `--mail="testcafe_admin@localhost"`, "-d"})
@@ -215,7 +215,7 @@ func addTestCafeUsers() {
 func npmCI() {
 	nm := filepath.Join(testCafeLocalPath(), "node_modules")
 	if fs.CheckExists(nm) == false {
-		fmt.Println(aurora.Cyan("🦉  Installing TestCafe dependencies"))
+		fmt.Println(aurora.Cyan("🦉  Installing TestCafe dependencies    "))
 		ssh.StreamConnectCommand([]string{"cd", testCafeContainerPath(), "&&", "npm", "ci"})
 	}
 }

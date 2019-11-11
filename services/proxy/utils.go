@@ -4,6 +4,7 @@ import (
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/constants"
 	"github.com/ironstar-io/tokaido/system/fs"
+	"github.com/ironstar-io/tokaido/system/wsl"
 	"github.com/ironstar-io/tokaido/utils"
 
 	"path/filepath"
@@ -53,6 +54,10 @@ func getProxyDir() string {
 
 // `~/.tok`
 func getTokDir() string {
+	if wsl.IsWSL() {
+		return filepath.Join("/c", ".tok")
+	}
+
 	return filepath.Join(fs.HomeDir(), ".tok")
 }
 

@@ -20,6 +20,7 @@ func ProjectRoot() string {
 		return wd
 	}
 
+
 	return ScanUp(wd)
 }
 
@@ -47,7 +48,7 @@ func ScanUp(path string) string {
 		return sd
 	}
 
-	if path == "/" {
+	if path == "/" || path == "C:\\" {
 		return constants.ProjectRootNotFound
 	}
 

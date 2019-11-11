@@ -19,7 +19,7 @@ func GetRootPath() string {
 	c := GetConfig()
 	dp := c.Drupal.Path
 	if dp != "" {
-		return filepath.Join(GetProjectPath(), dp)
+		return filepath.Join(GetProjectPath(), strings.ReplaceAll(dp, "\\", ""))
 	}
 
 	fmt.Println(aurora.Red("Drupal path setting is missing. Are you in a project directory?"))
@@ -49,7 +49,11 @@ func detectDrupalSettings() (string, string) {
 	var dv string
 	d7 := filepath.Join("includes", "bootstrap.inc")
 	d8 := filepath.Join("core", "lib", "Drupal.php")
+
 	err := filepath.Walk(pr, func(path string, info os.FileInfo, err error) error {
+		if info == nil {
+			return nil
+		}
 		if info.IsDir() {
 			return nil
 		}
@@ -86,7 +90,7 @@ func detectDrupalSettings() (string, string) {
 		return nil
 	})
 	if err != io.EOF {
-		fmt.Println("\n🤷‍  Tokaido could not auto-detect your Drupal installation. You'll need to tell us about it.")
+		console.Println("\n🤷‍  Tokaido could not auto-detect your Drupal installation. You'll need to tell us about it.", "×")
 		dp, dv = manualDrupalSettings()
 	}
 

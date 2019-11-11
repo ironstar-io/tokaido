@@ -5,7 +5,9 @@ import (
 	"log"
 	"path/filepath"
 	"strings"
-
+	"fmt"
+	
+	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/utils"
 )
 
@@ -34,6 +36,14 @@ func restartContainer(container string) {
 // composeStdout - Convenience method for docker-compose shell commands
 func composeStdout(args ...string) {
 	composeParams := composeArgs(args...)
+
+	// Ensure the proxy docker-compose file exists before trying to run commands against it
+	if !fs.CheckExists(filepath.Join(getProxyDir(), "docker-compose.yml")) {
+		fmt.Println("A proxy compose file was not found prior to running a docker-compose command")
+		fmt.Println("There may be a problem with your proxy service")
+
+		return
+	}
 
 	utils.StdoutCmd("docker-compose", composeParams...)
 }

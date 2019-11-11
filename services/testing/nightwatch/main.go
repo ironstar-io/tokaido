@@ -81,7 +81,7 @@ func configureEnvFile() {
 func yarnInstall() error {
 	cp := conf.CoreDrupal8Path()
 
-	fmt.Println(aurora.Cyan("🦉  Ensuring Nightwatch dependencies are installed"))
+	fmt.Println(aurora.Cyan("🦉  Ensuring Nightwatch dependencies are installed    "))
 	ssh.StreamConnectCommand([]string{"cd", cp, "&&", "yarn", "install"})
 	return nil
 }
@@ -89,7 +89,7 @@ func yarnInstall() error {
 func yarnTestNightwatch() {
 	cp := conf.CoreDrupal8Path()
 
-	fmt.Println(aurora.Cyan("👩‍💻  Tokaido is starting a Nightwatch test run with the command `yarn test:nightwatch`"))
+	fmt.Println(aurora.Cyan("👩‍💻  Tokaido is starting a Nightwatch test run with the command `yarn test:nightwatch`    "))
 	fmt.Println(aurora.Yellow(aurora.Sprintf("    If you want to run this command directly, you need run it from %s", aurora.Bold("inside the Tokaido SSH container"))))
 
 	ssh.StreamConnectCommand([]string{"cd", cp, "&&", "yarn", "test:nightwatch"})
@@ -107,7 +107,7 @@ func enableChromedriver() {
 	}
 
 	if !docker.StatusCheck("chromedriver", conf.GetConfig().Tokaido.Project.Name) {
-		fmt.Println(aurora.Cyan("👾  Restarting Tokaido with Chromedriver enabled"))
+		fmt.Println(aurora.Cyan("👾  Restarting Tokaido with Chromedriver enabled    "))
 		tok.Init(true, false, false)
 
 	}

@@ -12,6 +12,14 @@ server and also to sign the 'haproxy' certificate for each Tokaido instance.
 
 package tls
 
+import (
+	"path/filepath"
+
+	"github.com/ironstar-io/tokaido/constants"
+	"github.com/ironstar-io/tokaido/system/fs"
+	"github.com/ironstar-io/tokaido/system/wsl"
+)
+
 // ConfigureTLS is the principal entry point into the TLS library, and is responsible for the
 // entire TLS security workflow
 func ConfigureTLS() (err error) {
@@ -33,4 +41,13 @@ func ConfigureTLS() (err error) {
 // while also returning both as byte slices
 func SignCertificate(cn string, sans []string) (key, cert []byte, err error) {
 	return nil, nil, nil
+}
+
+// GetTLSRootDir - Get the TLS root dir conditionally of users' OS. 
+func GetTLSRootDir() string {
+	if wsl.IsWSL() {
+		return filepath.Join("/c", constants.TLSRoot)
+	}
+
+	return filepath.Join(fs.HomeDir(), constants.TLSRoot)
 }

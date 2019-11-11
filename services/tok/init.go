@@ -24,6 +24,7 @@ import (
 	"github.com/ironstar-io/tokaido/system/ssh"
 	"github.com/ironstar-io/tokaido/system/tls"
 	"github.com/ironstar-io/tokaido/system/version"
+	"github.com/ironstar-io/tokaido/system/wsl"
 	"github.com/ironstar-io/tokaido/utils"
 
 	"github.com/logrusorgru/aurora"
@@ -31,7 +32,6 @@ import (
 
 // Init - The core run sheet of `tok up`
 func Init(yes, statuscheck bool) {
-	c := conf.GetConfig()
 	cs := "ASK"
 	if yes {
 		cs = "FORCE"
@@ -44,7 +44,8 @@ func Init(yes, statuscheck bool) {
 	docker.CheckClientVersion()
 	proxy.CreateProxyNetwork()
 	checkSyncConfig()
-
+	system.CheckDependencies()
+	
 	fmt.Println(aurora.Cyan("\n🚀  Tokaido is starting up!"))
 
 	// Add this project to the global configuration
@@ -63,7 +64,7 @@ func Init(yes, statuscheck bool) {
 	err := snapshots.Init()
 	if err != nil {
 		fmt.Println()
-		fmt.Println(aurora.Red("🙅  Tokaido encountered an unexpected error preparing the database snapshot service"))
+		fmt.Println(aurora.Red("🙅  Tokaido encountered an unexpected error preparing the database snapshot service    "))
 		panic(err)
 	}
 
@@ -76,6 +77,7 @@ func Init(yes, statuscheck bool) {
 	git.IgnoreDefaults()
 	docker.CreateComposerCacheVolume()
 
+	c := conf.GetConfig()
 	if c.Global.Syncservice == "unison" {
 		unison.DockerUp()
 		unison.CreateOrUpdatePrf(unison.LocalPort(), c.Tokaido.Project.Name, pr)
@@ -98,7 +100,7 @@ func Init(yes, statuscheck bool) {
 	}
 
 	// Configure TLS
-	fmt.Println("🔐  Configuring TLS Certificates")
+	console.Println("🔐  Configuring TLS Certificates", "")
 	tls.ConfigureTLS()
 
 	console.Println("🚅  Starting your Drupal environment", "")
@@ -118,7 +120,7 @@ func Init(yes, statuscheck bool) {
 	ok := docker.StatusCheck("", conf.GetConfig().Tokaido.Project.Name)
 	if !ok {
 		fmt.Println()
-		fmt.Println(aurora.Red("😓  Tokaido containers are not working properly"))
+		fmt.Println(aurora.Red("😓  Tokaido containers are not working properly    "))
 
 		if !docker.StatusCheck("fpm", conf.GetConfig().Tokaido.Project.Name) {
 			fmt.Println(aurora.Red("    The Tokaido FPM container failed to start up."))
@@ -143,24 +145,24 @@ func Init(yes, statuscheck bool) {
 	}
 
 	fmt.Println()
-	fmt.Println(aurora.Green(`🙂  All containers are running`))
+	fmt.Println(aurora.Green("🙂  All containers are running    "))
 
 	// Final startup checks
 	if statuscheck {
 		ok = ssh.CheckKey()
 		if ok {
-			fmt.Println(aurora.Green("😀  SSH access is configured"))
+			fmt.Println(aurora.Green("😀  SSH access is configured    "))
 		} else {
-			fmt.Println(aurora.Red("😓  SSH access is not configured"))
+			fmt.Println(aurora.Red("😓  SSH access is not configured    "))
 			fmt.Println("  Your SSH access to the Drush container looks broken.")
 			fmt.Println("  You should be able to run 'tok repair' to attempt to fix this automatically")
 		}
 
 		if ok {
-			fmt.Println(aurora.Green(`🍜  Tokaido started up successfully`))
+			fmt.Println(aurora.Green(`🍜  Tokaido started up successfully    `))
 		} else {
 			fmt.Println()
-			console.Println("🙅  Uh oh! It looks like Tokaido didn't start properly.", "")
+			console.Println("🙅  Uh oh! It looks like Tokaido didn't start properly.    ", "")
 			console.Println("    Come find us in #tokaido on the Drupal Slack if you need some help", "")
 			fmt.Println()
 		}
@@ -177,7 +179,7 @@ func surveyMessage() {
 	rand.Seed(time.Now().UnixNano())
 	n := rand.Intn(6-1) + 1
 	if n == 3 {
-		fmt.Println(aurora.Sprintf("🤗  How's Tokaido? Run '%s' to share your feedback.", aurora.Bold("tok survey")))
+		console.Println(aurora.Sprintf("🤗  How's Tokaido? Run '%s' to share your feedback.", aurora.Bold("tok survey")), "")
 	}
 }
 
@@ -196,9 +198,22 @@ func checkSyncConfig() {
 			fmt.Println(aurora.Yellow("Warning: The Fusion Sync Service will be removed in Tokaido 1.10. Please migrate to 'docker' or 'unison'"))
 		}
 	case "linux":
-		if c.Global.Syncservice != "unison" {
+		w := wsl.IsWSL()
+
+		// Can't use docker volumes on Linux, except for in WSL
+		if c.Global.Syncservice != "unison" && !w {
 			fmt.Println(aurora.Sprintf(aurora.Yellow("Warning: The syncservice '%s' is not compatible with Linux. Tokaido will automatically be set to use Unison\n\n"), aurora.Bold(c.Global.Syncservice)))
-			conf.SetGlobalConfigValueByArgs([]string{"syncservice", "unison"})
+			conf.SetGlobalConfigValueByArgs([]string{"global", "syncservice", "unison"})
+		}
+		// Must use docker volumes on WSL
+		if c.Global.Syncservice != "docker" && w {
+			fmt.Println(aurora.Sprintf(aurora.Yellow("Warning: The syncservice '%s' is not compatible with WSL. Tokaido will automatically be set to use Docker Volumes\n\n"), aurora.Bold(c.Global.Syncservice)))
+			conf.SetGlobalConfigValueByArgs([]string{"global", "syncservice", "docker"})
+		}
+	case "windows":
+		// Must use docker volumes on Windows
+		if c.Global.Syncservice != "docker" {
+			conf.SetGlobalConfigValueByArgs([]string{"global", "syncservice", "docker"})
 		}
 	}
 

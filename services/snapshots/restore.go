@@ -23,7 +23,7 @@ func Restore(args []string) {
 	// Get a list of all available snapshots
 	list := getSortedSnapshotList(p)
 	if len(list) == 0 {
-		fmt.Println("💢  No snapshots were found")
+		console.Println("💢  No snapshots were found", "×")
 		fmt.Println("")
 		return
 	}

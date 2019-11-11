@@ -39,7 +39,7 @@ var StatusCmd = &cobra.Command{
 			if ok {
 				console.Println(`🙂  Background sync service is running`, "√")
 			} else {
-				fmt.Println(aurora.Red(`😓  The Unison background sync service is not running`))
+				fmt.Println(aurora.Red(`😓  The Unison background sync service is not running    `))
 				fmt.Println()
 				pn := conf.GetConfig().Tokaido.Project.Name
 				switch system.CheckOS() {
@@ -61,7 +61,7 @@ var StatusCmd = &cobra.Command{
 		if ok {
 			console.Println(`😊  All containers are running`, "√")
 		} else {
-			fmt.Println(`😓  Tokaido containers are not running`)
+			console.Println(`😓  Tokaido containers are not running`, "×")
 			fmt.Println(`    It appears that some or all of the Tokaido containers are offline.
 
     View the status of your containers with 'tok ps'
@@ -71,9 +71,9 @@ var StatusCmd = &cobra.Command{
 
 		ok = ssh.CheckKey()
 		if ok {
-			fmt.Println("😀  SSH access is configured")
+			console.Println("😀  SSH access is configured", "√")
 		} else {
-			fmt.Println("😓  SSH access is not configured")
+			console.Println("😓  SSH access is not configured", "×")
 			fmt.Println("    Your SSH access to the Drush container looks broken.")
 			fmt.Println("    You should be able to run 'tok repair' to attempt to fix this automatically")
 		}
@@ -88,7 +88,7 @@ var StatusCmd = &cobra.Command{
 			fmt.Println()
 		} else {
 			fmt.Println()
-			fmt.Println(aurora.Yellow("🙅  Some checks failed! You might be able to fix this by running `tok rebuild`"))
+			fmt.Println(aurora.Yellow("🙅  Some checks failed! You might be able to fix this by running `tok rebuild`    "))
 			fmt.Println()
 		}
 	},

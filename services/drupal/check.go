@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/blang/semver"
+
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/system/console"
@@ -25,7 +26,7 @@ var checkFailMsg = "\n⚠️  There were some problems detected during the syste
 // CheckLocal ...
 func CheckLocal() {
 	d := filepath.Join(conf.GetProjectPath(), conf.CoreDrupalFile())
-	
+
 	if !fs.CheckExists(d) {
 		fmt.Println("  ×  A Drupal installation was not found")
 		console.Printf(checkFailMsg, "")

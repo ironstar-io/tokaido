@@ -67,7 +67,9 @@ func preSnapshotChecks() (err error) {
 }
 
 func createSnapshot(name string) (filename string, err error) {
-	now := time.Now().UTC().Format("2006-01-02T15:04:05-0700")
+	// Need to use quasi ISO8601 format stripping `:` due to limitations in some OS's (namely WSL)
+	// See issue: https://github.com/microsoft/WSL/issues/1514
+	now := time.Now().UTC().Format("2006-01-02T15040506Z")
 	filename = name + "_" + now + ".sql.gz"
 
 	args := []string{

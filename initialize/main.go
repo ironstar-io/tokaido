@@ -11,6 +11,7 @@ import (
 	"github.com/ironstar-io/tokaido/constants"
 	"github.com/ironstar-io/tokaido/system"
 	"github.com/ironstar-io/tokaido/system/fs"
+	"github.com/ironstar-io/tokaido/system/wsl"
 	"github.com/ironstar-io/tokaido/utils"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
@@ -18,12 +19,17 @@ import (
 	"github.com/logrusorgru/aurora"
 )
 
-// TokConfig - loads the config from a file if specified, otherwise from the environment
+// TokConfig - loads the config from a file if specified, otherwise from the environment, also runs validation checks
 func TokConfig(command string) {
 	conf.ValidProjectRoot()
 	createDotTok()
 	createGlobalDotTok()
 
+	LoadConfig(command)
+}
+
+// LoadConfig - loads the config from a file if specified, otherwise from the environment
+func LoadConfig(command string) {
 	viper.SetEnvPrefix("TOK")
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 	viper.AutomaticEnv()
@@ -60,7 +66,12 @@ func readProjectConfig(command string) {
 	switch system.CheckOS() {
 	case "osx":
 		viper.SetDefault("Global.Syncservice", "docker")
-
+	case "linux":
+		if wsl.IsWSL() {
+			viper.SetDefault("Global.Syncservice", "docker")
+		} else {
+			viper.SetDefault("Global.Syncservice", "unison")
+		}
 	default:
 		viper.SetDefault("Global.Syncservice", "unison")
 	}

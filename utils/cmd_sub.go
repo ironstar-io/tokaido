@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/ironstar-io/tokaido/conf"
+	"github.com/ironstar-io/tokaido/system/fs"
 )
 
 // CommandSubstitution - Execute a command and return the output value. No exit on stdErr
@@ -40,7 +41,12 @@ func CommandSubstitutionExitCode(name string, args ...string) (exitCode int) {
 
 // CommandSubSplitOutput - Execute a command and return the output value split into stdout and stderr. No exit on stdErr
 func CommandSubSplitOutput(name string, args ...string) (string, error) {
-	return CommandSubSplitOutputContext(conf.GetProjectPath(), name, args...)
+	p := conf.GetProjectPath()
+	if p == "project-root-not-found" {
+		p = fs.HomeDir()
+	}
+
+	return CommandSubSplitOutputContext(p, name, args...)
 }
 
 // CommandSubSplitOutputContext - Execute a command and return the output value split into stdout and stderr from a directory context. No exit on stdErr
