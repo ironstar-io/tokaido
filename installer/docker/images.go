@@ -44,6 +44,8 @@ func CheckClientVersion() {
 
 // LoadTokImages - Import all Tokaido images from this package into the local image cache
 func LoadTokImages() {
+	fmt.Println("Loading Tokaido Docker images into the local Docker client")
+
 	cli, err := client.NewEnvClient()
 	if err != nil {
 		fmt.Println("Unable to find Docker installed on your system. Have you run the Docker installer included in this package?")

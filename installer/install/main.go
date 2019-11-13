@@ -14,8 +14,10 @@ func Init() {
 	docker.CheckClientVersion()
 
 	fmt.Println(aurora.Cyan("\n🚀  Tokaido installer is starting up!"))
+	fmt.Println("")
 
-	docker.LoadTokImages()
+	// docker.LoadTokImages()
+	docker.RestoreComposerCache()
 
 	switch runtime.GOOS {
 	case "darwin":
@@ -26,5 +28,7 @@ func Init() {
 
 	}
 
-	fmt.Println("Completed!")
+	fmt.Println("")
+	fmt.Println("Tokaido has been successfully installed on your machine!")
+	fmt.Println("")
 }

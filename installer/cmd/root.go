@@ -37,7 +37,6 @@ func RootCmd() *cobra.Command {
 
 func run(cmd *cobra.Command, args []string) {
 	install.Init()
-	fmt.Println("Tokaido Installer")
 }
 
 func initConfig() {
