@@ -30,7 +30,7 @@ func CreateOrReplaceDrupalConfig(path, version string) {
 	viper.Set("drupal.path", path)
 	viper.Set("drupal.majorversion", version)
 
-	configPath := filepath.Join(GetProjectPath(), "/.tok/config.yml")
+	configPath := filepath.Join(GetProjectPath(), ".tok", "config.yml")
 
 	_, err := os.Stat(configPath)
 	if os.IsNotExist(err) {

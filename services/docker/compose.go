@@ -40,7 +40,7 @@ func ComposeExitCode(args ...string) int {
 }
 
 func composeArgs(args ...string) []string {
-	composeFile := []string{"-f", filepath.Join(conf.GetProjectPath(), "/docker-compose.tok.yml")}
+	composeFile := []string{"-f", filepath.Join(conf.GetProjectPath(), "docker-compose.tok.yml")}
 
 	return append(composeFile, args...)
 }

@@ -32,7 +32,7 @@ func CreateOrUpdatePrf(unisonPort, prfName, syncPath string) {
 }
 
 func getPrfPath(filename string) string {
-	return filepath.Join(fs.HomeDir(), "/.unison/", filename+".prf")
+	return filepath.Join(fs.HomeDir(), ".unison", filename+".prf")
 }
 
 // generatePrf - Generate a `.prf` file for unison
@@ -58,7 +58,7 @@ func generatePrf(unisonPort, syncPath, prfPath string) {
 
 // createPrf - Write generated `.prf` file to `~/.unison/`
 func createPrf(body []byte, path string) {
-	fs.Mkdir(filepath.Join(fs.HomeDir(), "/.unison"))
+	fs.Mkdir(filepath.Join(fs.HomeDir(), ".unison"))
 
 	fs.TouchByteArray(path, body)
 }

@@ -21,7 +21,7 @@ import (
 
 // GetTokComposePath ...
 func GetTokComposePath() string {
-	return filepath.Join(conf.GetProjectPath(), "/docker-compose.tok.yml")
+	return filepath.Join(conf.GetProjectPath(), "docker-compose.tok.yml")
 }
 
 // HardCheckTokCompose ...
@@ -331,7 +331,7 @@ func StripModWarning() {
 }
 
 func customTokPath() string {
-	ct := filepath.Join(conf.GetProjectPath(), "/.tok")
+	ct := filepath.Join(conf.GetProjectPath(), ".tok")
 
 	if fs.CheckExists(ct+".yml") == true {
 		return filepath.Join(ct, "compose.tok.yml")

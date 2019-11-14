@@ -74,12 +74,12 @@ func SetGlobalConfigValueByArgs(args []string) (err error) {
 
 		g := GetGlobalConfig()
 		if err != nil {
-			return err  
+			return err
 		}
 
 		g.Syncservice = args[2]
 		WriteGlobalConfig(*g)
-		return nil		
+		return nil
 	}
 
 	if args[1] == "project" {
@@ -338,9 +338,9 @@ func unmarshalConfig(cp string) *Config {
 func getConfigPath(configFile string) string {
 	var cp string
 	if configFile == "project" {
-		cp = filepath.Join(GetProjectPath(), "/.tok/config.yml")
+		cp = filepath.Join(GetProjectPath(), ".tok", "config.yml")
 	} else if configFile == "global" {
-		cp = filepath.Join(fs.HomeDir(), "/.tok/global.yml")
+		cp = filepath.Join(fs.HomeDir(), ".tok", "global.yml")
 	} else {
 		fmt.Println(aurora.Sprintf("The config file %s is unknown", aurora.Bold(configFile)))
 	}

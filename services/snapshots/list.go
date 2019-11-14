@@ -17,7 +17,7 @@ import (
 // IDs will change as more snapshots are added
 func List() {
 	fmt.Println()
-	p := filepath.Join(conf.GetProjectPath(), "/.tok/local/snapshots")
+	p := filepath.Join(conf.GetProjectPath(), ".tok", "local", "snapshots")
 
 	list := getSortedSnapshotList(p)
 	if len(list) == 0 {

@@ -59,7 +59,7 @@ func checkNightwatchConfig() error {
 	pr := conf.GetProjectPath()
 	dr := conf.GetConfig().Drupal.Path
 
-	nightwatchConfPath := filepath.Join(pr, dr, "core/tests/Drupal/Nightwatch/nightwatch.conf.js")
+	nightwatchConfPath := filepath.Join(pr, dr, "core", "tests", "Drupal", "Nightwatch", "nightwatch.conf.js")
 	utils.DebugString("nightwatchConfPath: " + nightwatchConfPath)
 	if !fs.CheckExists(nightwatchConfPath) {
 		fmt.Println(aurora.Red("Expected nightwatch configuration file was not found: "), nightwatchConfPath)
@@ -79,7 +79,7 @@ func checkNightwatchConfig() error {
 		fmt.Println()
 	}
 
-	drupalUserIsLoggedInPath := filepath.Join(pr, dr, "core/tests/Drupal/Nightwatch/Commands/drupalUserIsLoggedIn.js")
+	drupalUserIsLoggedInPath := filepath.Join(pr, dr, "core", "tests", "Drupal", "Nightwatch", "Commands", "drupalUserIsLoggedIn.js")
 	utils.DebugString("drupalUserIsLoggedInPath: " + drupalUserIsLoggedInPath)
 	if !fs.CheckExists(drupalUserIsLoggedInPath) {
 		fmt.Println(aurora.Red("Expected nightwatch command file was not found: "), drupalUserIsLoggedInPath)

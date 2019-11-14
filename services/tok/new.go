@@ -182,6 +182,7 @@ func unpackTemplate(template Template, name string) {
 		panic(err)
 	}
 
+	// Replace CURL with native download
 	utils.CheckCmdHard("curl")
 	utils.StdoutStreamCmdDebugContext(pr, "curl", "-O", "https://downloads.tokaido.io/packages/"+template.PackageFilename)
 	utils.StdoutStreamCmdDebugContext(pr, "tar", "xzf", template.PackageFilename)
@@ -231,7 +232,7 @@ func New(args []string, requestTemplate string) {
 	InitMessage()
 
 	fmt.Println()
-	fmt.Println(aurora.Yellow("You need to move into the project directory before you can these commands: 'cd " + conf.GetConfig().Tokaido.Project.Name + "'"))
+	fmt.Println(aurora.Yellow("You need to move into the project directory before you can use these commands: 'cd " + conf.GetConfig().Tokaido.Project.Name + "'"))
 
 }
 

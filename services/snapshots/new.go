@@ -43,7 +43,7 @@ func New(args []string) {
 
 	}
 	filename, _ := createSnapshot(name)
-	filepath := filepath.Join(conf.GetProjectPath(), "/.tok/local/snapshots/", filename)
+	filepath := filepath.Join(conf.GetProjectPath(), ".tok", "local", "snapshots", filename)
 
 	err := fs.WaitForSync(filepath, 180)
 	if err != nil {
@@ -57,7 +57,7 @@ func New(args []string) {
 }
 
 func preSnapshotChecks() (err error) {
-	p := filepath.Join(conf.GetProjectPath(), "/.tok/local/snapshots")
+	p := filepath.Join(conf.GetProjectPath(), ".tok", "local", "snapshots")
 	_, err = os.Stat(p)
 	if os.IsNotExist(err) {
 		mkSnapshotDir()
@@ -98,7 +98,7 @@ func waitForSync(filename string) (err error) {
 	retries := 180
 
 	for i := 1; i <= retries; i++ {
-		p := filepath.Join(conf.GetProjectPath(), "/.tok/local/snapshots/", filename)
+		p := filepath.Join(conf.GetProjectPath(), ".tok", "local", "snapshots", filename)
 		_, err = os.Stat(p)
 		if err == nil {
 			return nil

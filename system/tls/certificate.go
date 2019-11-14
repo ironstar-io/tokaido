@@ -54,7 +54,7 @@ func createWildcardCertificate() (err error) {
 	}
 
 	// Write the Cert and Key to disk
-	fs.Mkdir(filepath.Join(GetTLSRootDir(), "/proxy"))
+	fs.Mkdir(filepath.Join(GetTLSRootDir(), "proxy"))
 	fs.TouchOrReplace(filepath.Join(GetTLSRootDir(), constants.WildcardCertificatePath), cert)
 	fs.TouchOrReplace(filepath.Join(GetTLSRootDir(), constants.WildcardKeyPath), key)
 
@@ -90,9 +90,9 @@ func createProjectCertificate(projectName, projectPath, commonName string) (err 
 	}
 
 	// Write the Cert and Key to disk
-	fs.Mkdir(filepath.Join(projectPath, ".tok/local/tls"))
-	fs.TouchOrReplace(filepath.Join(projectPath, ".tok/local/tls/", commonName+".crt"), cert)
-	fs.TouchOrReplace(filepath.Join(projectPath, ".tok/local/tls/", commonName+".key"), key)
+	fs.Mkdir(filepath.Join(projectPath, ".tok", "local", "tls"))
+	fs.TouchOrReplace(filepath.Join(projectPath, ".tok", "local", "tls", commonName+".crt"), cert)
+	fs.TouchOrReplace(filepath.Join(projectPath, ".tok", "local", "tls", commonName+".key"), key)
 
 	return nil
 }

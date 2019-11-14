@@ -45,7 +45,7 @@ var StatusCmd = &cobra.Command{
 				switch system.CheckOS() {
 				case "osx":
 					h := fs.HomeDir()
-					lp := filepath.Join(h, "Library/Logs/tokaido.sync."+pn)
+					lp := filepath.Join(h, "Library", "Logs", "tokaido.sync."+pn)
 					fmt.Printf("You can check Unison logs in the...\n%s and \n%s files\n", aurora.Bold(lp+".out"), aurora.Bold(lp+".err"))
 					fmt.Printf("Or you can run %s to reconfigure and restart it\n", "tok up")
 				case "linux":

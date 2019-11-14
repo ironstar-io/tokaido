@@ -18,8 +18,8 @@ import (
 	"golang.org/x/crypto/ssh"
 )
 
-var sshPriv = filepath.Join(fs.HomeDir(), "/.ssh/tok_ssh.key")
-var sshPub = filepath.Join(fs.HomeDir(), "/.ssh/tok_ssh.pub")
+var sshPriv = filepath.Join(fs.HomeDir(), ".ssh", "tok_ssh.key")
+var sshPub = filepath.Join(fs.HomeDir(), ".ssh", "tok_ssh.pub")
 
 // CheckKey ...
 func CheckKey() (ok bool) {
@@ -41,7 +41,7 @@ func GenerateKeys() {
 	// create file if not exists
 	if os.IsNotExist(err) {
 		fmt.Println("Generating a new set of SSH keys")
-		fs.Mkdir(filepath.Join(fs.HomeDir(), "/.ssh"))
+		fs.Mkdir(filepath.Join(fs.HomeDir(), ".ssh"))
 		generateAndCopyPub()
 	} else {
 		copyPub()
@@ -49,12 +49,12 @@ func GenerateKeys() {
 }
 
 func copyPub() {
-	td := filepath.Join(conf.GetProjectPath(), "/.tok")
+	td := filepath.Join(conf.GetProjectPath(), ".tok")
 
 	fs.Mkdir(td)
-	fs.Mkdir(filepath.Join(td, "/local"))
+	fs.Mkdir(filepath.Join(td, "local"))
 
-	fs.Copy(sshPub, filepath.Join(td, "/local/ssh_key.pub"))
+	fs.Copy(sshPub, filepath.Join(td, "local", "ssh_key.pub"))
 }
 
 func generateAndCopyPub() {
