@@ -16,7 +16,7 @@ func Init() {
 	fmt.Println(aurora.Cyan("\n🚀  Tokaido installer is starting up!"))
 	fmt.Println("")
 
-	// docker.LoadTokImages()
+	docker.LoadTokImages()
 	docker.RestoreComposerCache()
 
 	goos.InstallTokBinary("1.12.0")
