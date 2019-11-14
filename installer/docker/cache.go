@@ -60,7 +60,7 @@ func RestoreComposerCache() {
 				ReadOnly: false,
 			},
 		},
-	}, &network.NetworkingConfig{}, "tokaido_bkup_restore")
+	}, &network.NetworkingConfig{}, "")
 	if err != nil {
 		panic(err)
 	}
