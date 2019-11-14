@@ -10,7 +10,7 @@ import (
 
 // CheckDependencies - Root executable
 func CheckDependencies() {
-	CheckBrew()
+	// CheckBrew()
 	// CheckPip()
 	// CheckAndBrewInstall("unison")
 	// CheckAndBrewInstall("unison-fsmonitor")
