@@ -74,6 +74,7 @@ func createSnapshot(name string) (filename string, err error) {
 
 	args := []string{
 		"mysqldump",
+		"--add-drop-database",
 		"-u",
 		"root",
 		"-ptokaido",
