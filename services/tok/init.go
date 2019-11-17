@@ -45,7 +45,7 @@ func Init(yes, statuscheck bool) {
 	proxy.CreateProxyNetwork()
 	checkSyncConfig()
 	system.CheckDependencies()
-	
+
 	fmt.Println(aurora.Cyan("\n🚀  Tokaido is starting up!"))
 
 	// Add this project to the global configuration
