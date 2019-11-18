@@ -41,10 +41,10 @@ func purgeVarnish() {
 func purgeDrush() {
 	var cmd []string
 	if conf.GetConfig().Drupal.Majorversion == "7" {
-		cmd = []string{"drush cache-clear all -y"}
+		cmd = []string{"drush", "cache-clear", "all", "-y"}
 		fmt.Println("    Sending drush cache-clear all request...")
 	} else {
-		cmd = []string{"drush cache-rebuild -y"}
+		cmd = []string{"drush", "cache-rebuild", "-y"}
 		fmt.Println("    Sending drush cache-rebuild request...")
 	}
 

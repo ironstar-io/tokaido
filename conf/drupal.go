@@ -171,7 +171,7 @@ func CoreDrupal8Path() string {
 	c := GetConfig()
 	rp := c.Drupal.Path
 
-	return filepath.Join("/tokaido/site", rp, "core")
+	return filepath.Join("/tokaido", "site", rp, "core")
 }
 
 // GetRootDir - Return the drupal root folder name without workdir

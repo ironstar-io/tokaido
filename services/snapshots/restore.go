@@ -18,7 +18,7 @@ import (
 // Restore restores the specified snapshot (or lists snapshots to be chosen)
 func Restore(args []string) {
 	fmt.Println()
-	p := filepath.Join(conf.GetProjectPath(), "/.tok/local/snapshots")
+	p := filepath.Join(conf.GetProjectPath(), ".tok", "local", "snapshots")
 
 	// Get a list of all available snapshots
 	list := getSortedSnapshotList(p)
@@ -87,7 +87,7 @@ func restoreSnapshot(f string) {
 
 	fmt.Printf("💾  Restoring snapshot: %s\n", f)
 
-	p := "/tokaido/site/.tok/local/snapshots"
+	p := filepath.Join("/tokaido", "site", ".tok", "local", "snapshots")
 	var args []string
 	// Determine if we're restoring a compressed backup or not
 	if strings.Contains(f, "sql.gz") {
@@ -125,6 +125,8 @@ func restoreSnapshot(f string) {
 	fmt.Printf("    Running `tok purge`\n")
 	drupal.Purge()
 
+	fmt.Println("")
+	fmt.Println("Successfully restored snapshot!")
 	fmt.Println("")
 
 	return

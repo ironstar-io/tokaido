@@ -34,7 +34,7 @@ import (
 func removeLegacyCertificate() {
 	utils.DebugString("Checking for presence of legacy 'local.tokaido.io' Certificate Authority. A 'not found' error here is OK")
 
-	legacyPath := filepath.Join(fs.HomeDir(), ".tok/proxy/client/tls/proxy_ca.pem")
+	legacyPath := filepath.Join(fs.HomeDir(), ".tok", "proxy", "client", "tls", "proxy_ca.pem")
 	if fs.CheckExists(legacyPath) {
 		console.Println("🎁  Tokaido 1.11 improves how Tokaido manages local TLS security, and will now reconfigure your system", "")
 

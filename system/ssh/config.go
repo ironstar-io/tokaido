@@ -21,7 +21,7 @@ func processConfig() {
 }
 
 func sshConfigFile() string {
-	return filepath.Join(fs.HomeDir(), "/.ssh/config")
+	return filepath.Join(fs.HomeDir(), ".ssh", "config")
 }
 
 func checkOrCreateSSHConfig() {

@@ -15,7 +15,7 @@ func Init() (err error) {
 }
 
 func mkSnapshotDir() {
-	sd := filepath.Join(conf.GetProjectPath(), "/.tok/local/snapshots")
+	sd := filepath.Join(conf.GetProjectPath(), ".tok", "local", "snapshots")
 
 	fs.Mkdir(sd)
 }

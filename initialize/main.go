@@ -52,7 +52,7 @@ func removeOldGlobalConfig() {
 		log.Fatalln("Unable to resolve home directory so can't initialise Tokaido. Sorry!")
 	}
 
-	oc := filepath.Join(h, ".tok/config.yml")
+	oc := filepath.Join(h, ".tok", "config.yml")
 	if fs.CheckExists(oc) {
 		fs.Remove(oc)
 		fmt.Println(aurora.Magenta("Tokaido has removed your legacy global config file in $HOME/.tok/config.yml. You don't need it anymore"))

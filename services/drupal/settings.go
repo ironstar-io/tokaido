@@ -22,17 +22,17 @@ type fileMasks struct {
 }
 
 func sitesDefault() string {
-	return filepath.Join(conf.GetRootPath(), "/sites/default")
+	return filepath.Join(conf.GetRootPath(), "sites", "default")
 }
 
 // SettingsPath returns the full system path to the Drupal settings file
 func SettingsPath() string {
-	return filepath.Join(sitesDefault(), "/settings.php")
+	return filepath.Join(sitesDefault(), "settings.php")
 }
 
 // SettingsTokPath returns the full system path to the Tokaido settings file
 func SettingsTokPath() string {
-	return filepath.Join(sitesDefault(), "/settings.tok.php")
+	return filepath.Join(sitesDefault(), "settings.tok.php")
 }
 
 // CheckSettings checks that Drupal is ready to run in the Tokaido environment

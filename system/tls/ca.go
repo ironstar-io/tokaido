@@ -57,7 +57,7 @@ func createCA() (err error) {
 	}
 
 	// Write the Cert and Key to disk
-	fs.Mkdir(filepath.Join(GetTLSRootDir(), "/ca"))
+	fs.Mkdir(filepath.Join(GetTLSRootDir(), "ca"))
 	fs.TouchOrReplace(fullCertPath, cert)
 	fs.TouchOrReplace(fullKeyPath, key)
 

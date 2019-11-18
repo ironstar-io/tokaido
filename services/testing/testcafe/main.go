@@ -224,7 +224,7 @@ func npmHeadlessTestCafe() {
 	// Restart the testcafe container to ensure the workdir and volume is bound
 	docker.ComposeStdout("restart", "testcafe")
 
-	utils.StdoutStreamCmd("docker-compose", "-f", filepath.Join(conf.GetProjectPath(), "/docker-compose.tok.yml"), "exec", "-T", "testcafe", "npm", "run", "test")
+	utils.StdoutStreamCmd("docker-compose", "-f", filepath.Join(conf.GetProjectPath(), "docker-compose.tok.yml"), "exec", "-T", "testcafe", "npm", "run", "test")
 }
 
 func checkCompatibility() {

@@ -37,7 +37,7 @@ func configureTrustedCA(certificate string) {
 
 // addTrustedCAToKeychain ...
 func addTrustedCAToKeychain(certificate string) {
-	lc := filepath.Join("/Library/Keychains/System.keychain")
+	lc := filepath.Join("/Library", "Keychains", "System.keychain")
 
 	utils.BashStringCmd("sudo security add-trusted-cert -d -r trustRoot -k " + lc + " " + certificate)
 }

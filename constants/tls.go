@@ -1,5 +1,7 @@
 package constants
 
+import "path/filepath"
+
 // CommonName ...
 const CommonName = "local.tokaido.io"
 
@@ -46,16 +48,16 @@ const CAFilename = "proxy_ca"
 const ClientCertFilename = "tokaido"
 
 // TLSRoot is the root for all TLS certificates in ~/.tok/tls
-const TLSRoot = ".tok/tls"
+var TLSRoot string = filepath.Join(".tok", "tls")
 
 // CertificateAuthorityCertificatePath ...
-const CertificateAuthorityCertificatePath = "ca/ca.crt"
+var CertificateAuthorityCertificatePath string = filepath.Join("ca", "ca.crt")
 
 // CertificateAuthorityKeyPath ...
-const CertificateAuthorityKeyPath = "ca/ca.key"
+var CertificateAuthorityKeyPath string = filepath.Join("ca", "ca.key")
 
 // WildcardCertificatePath ...
-const WildcardCertificatePath = "proxy/wildcard.crt"
+var WildcardCertificatePath string = filepath.Join("proxy", "wildcard.crt")
 
 // WildcardKeyPath ...
-const WildcardKeyPath = "proxy/wildcard.key"
+var WildcardKeyPath string = filepath.Join("proxy", "wildcard.key")
