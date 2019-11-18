@@ -15,30 +15,15 @@ import (
 	"github.com/ironstar-io/tokaido/initialize"
 	"github.com/ironstar-io/tokaido/services/git"
 	"github.com/ironstar-io/tokaido/services/tok/goos"
+	"github.com/ironstar-io/tokaido/services/tok/types"
 	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/system/ssh"
 	"github.com/ironstar-io/tokaido/utils"
 
 	"github.com/logrusorgru/aurora"
-	"github.com/manifoldco/promptui"
 	yaml "gopkg.in/yaml.v2"
 )
-
-// Templates is a list of drupal templates available for download
-type Templates struct {
-	Template []Template `yaml:"templates"`
-}
-
-// Template ...
-type Template struct {
-	Description     string   `yaml:"description"`
-	DrupalVersion   int      `yaml:"drupal_version"`
-	Maintainer      string   `yaml:"maintainer"`
-	Name            string   `yaml:"name"`
-	PackageFilename string   `yaml:"package_filename"`
-	PostUpCommands  []string `yaml:"post_up_commands,omitempty"`
-}
 
 func buildProjectFrame(name string) {
 	if fs.CheckExists(name) == true {
@@ -83,7 +68,7 @@ func resolveProjectName(args []string) (name string) {
 	return name
 }
 
-func marshalTemplates() Templates {
+func marshalTemplates() types.Templates {
 	req, err := http.NewRequest(http.MethodGet, "https://downloads.tokaido.io/templates.yaml", nil)
 	if err != nil {
 		log.Fatalf("Error while trying to retrieve list of available templates: %v", err)
@@ -102,7 +87,7 @@ func marshalTemplates() Templates {
 		log.Fatalf("Error while trying to read list of available templates: %v", err)
 	}
 
-	templates := Templates{}
+	templates := types.Templates{}
 	err = yaml.Unmarshal(body, &templates)
 	if err != nil {
 		log.Fatalf("Error while trying to unmarshal list of available templates: %v", err)
@@ -111,50 +96,11 @@ func marshalTemplates() Templates {
 	return templates
 }
 
-func chooseTemplate(tp *Templates) (template Template) {
-	var templates []Template
-	size := 0
-
-	// Convert our templates struct into a more useable format
-	for _, t := range tp.Template {
-		size = size + 1
-		templates = append(templates, t)
-	}
-
-	// Define the menu's visual template
-	menuTemplate := &promptui.SelectTemplates{
-		Label:    "{{ . }}?",
-		Active:   `🤔 {{ .Name | cyan }}`,
-		Inactive: `   {{ .Name | cyan }}`,
-		Selected: "{{ .Name | blue | cyan }}",
-		Details: `---------
-{{ .Description | faint  }}
-
-Maintainer: {{ .Maintainer | faint }}
-URL: https://downloads.tokaido.io/packages/{{ .PackageFilename | faint }}
-`,
-	}
-
-	fmt.Println("Please choose the Drupal template you'd like to launch")
-
-	prompt := promptui.Select{
-		Label:     "Templates >>",
-		Items:     templates,
-		Templates: menuTemplate,
-		Size:      size,
-	}
-
-	i, _, err := prompt.Run()
-
-	if err != nil {
-		log.Fatalf("Prompt failed %v\n", err)
-
-	}
-
-	return templates[i]
+func chooseTemplate(tp *types.Templates) (template types.Template) {
+	return goos.ChooseTemplate(tp)
 }
 
-func resolveTemplateName(requestTemplate string) (template Template) {
+func resolveTemplateName(requestTemplate string) (template types.Template) {
 	// Get a list of available templates
 	templates := marshalTemplates()
 
@@ -176,7 +122,7 @@ func resolveTemplateName(requestTemplate string) (template Template) {
 	return
 }
 
-func unpackTemplate(template Template, name string) {
+func unpackTemplate(template types.Template, name string) {
 	pr, err := os.Getwd()
 	if err != nil {
 		panic(err)
