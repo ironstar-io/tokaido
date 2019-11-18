@@ -9,6 +9,8 @@ build:
 	-X $(VERSION_PATH).version=$(VERSION) \
 	" -o ./dist/tok
 
+build-all: build-macos build-windows build-linux
+
 build-windows:
 	env GOOS=windows GOARCH=amd64 \
 	go build \
@@ -25,7 +27,7 @@ build-linux:
 	-X $(VERSION_PATH).version=$(VERSION) \
 	" -o ./dist/tok-linux-amd64
 
-build-osx:
+build-macos:
 	env GOOS=darwin GOARCH=amd64 \
 	go build \
 	-ldflags "\
@@ -33,10 +35,20 @@ build-osx:
 	-X $(VERSION_PATH).version=$(VERSION) \
 	" -o ./dist/tok-macos
 
+build-installer:
+	cd installer && make build-macos
+	cd installer && make build-windows
+	cd installer && make build-linux
+	cd installer && make build-docker-images
+	make build-macos && cp -R ./dist/tok-macos ./installer/dist/tokaido/tok-macos
+	make build-linux && cp -R ./dist/tok-linux-amd64 ./installer/dist/tokaido/tok-linux-amd64
+	make build-windows && cp -R ./dist/tok-windows-amd64.exe ./installer/dist/tokaido/tok-windows-amd64.exe
+	cp -R ./installer/README.md ./installer/dist/README.md
+
 test:
 	ginkgo test ./...
 
 clean:
 	rm -rf ./dist/*
 
-.PHONY: build build-windows build-linux build-osx test clean
+.PHONY: build build-windows build-linux build-macos test clean

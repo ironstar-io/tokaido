@@ -13,7 +13,7 @@ jobs:
 
       - run: make build-linux
       - run: sha256sum dist/tok-linux-amd64 > dist/tok-linux-amd64-sha.txt
-      - run: make build-osx
+      - run: make build-macos
       - run: sha256sum dist/tok-macos > dist/tok-macos-sha.txt
       - run: make build-windows
       - run: sha256sum dist/tok-windows-amd64.exe > dist/tok-windows-sha.txt
