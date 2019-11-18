@@ -233,7 +233,17 @@ func checkCompatibility() {
 	// Temporary block for Unison
 	c := conf.GetConfig()
 	if c.Global.Syncservice == "unison" {
-		fmt.Println(aurora.Red("Sorry! `tok test` is currently only supported on MacOS using the 'docker' sync strategy."))
+		fmt.Println(aurora.Red("Sorry! `tok test` is currently only supported on MacOS and Windows using the 'docker' sync strategy."))
+		os.Exit(1)
+	}
+
+	if !utils.CheckCmd("yarn") {
+		fmt.Println(aurora.Red("`tok test` requires NodeJS and Yarn, but we were unable to find Yarn in your system. Please install it and try again"))
+		os.Exit(1)
+	}
+
+	if !utils.CheckCmd("nodejs") {
+		fmt.Println(aurora.Red("`tok test` requires NodeJS, but we were unable to find it in your system. Please install it and try again"))
 		os.Exit(1)
 	}
 }
