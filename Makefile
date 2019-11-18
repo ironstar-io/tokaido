@@ -31,7 +31,7 @@ build-osx:
 	-ldflags "\
 	-X $(VERSION_PATH).buildDate=$(BUILD_DATE) \
 	-X $(VERSION_PATH).version=$(VERSION) \
-	" -o ./dist/tok-macos
+	" -o ./dist/tok-osx
 
 build-installer:
 	cd installer && make build-osx

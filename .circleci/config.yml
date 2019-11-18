@@ -14,7 +14,7 @@ jobs:
       - run: make build-linux
       - run: sha256sum dist/tok-linux-amd64 > dist/tok-linux-amd64-sha.txt
       - run: make build-osx
-      - run: sha256sum dist/tok-macos > dist/tok-macos-sha.txt
+      - run: sha256sum dist/tok-osx > dist/tok-osx-sha.txt
 
       - store_artifacts:
           path: ~/tokaido/dist/

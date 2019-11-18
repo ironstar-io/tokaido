@@ -13,7 +13,7 @@ import (
 
 var baseInstallPath = "/.tok/bin/"
 var baseBinaryURL = "https://github.com/ironstar-io/tokaido/releases/download/"
-var binaryName = "tok-macos"
+var binaryName = "tok-osx"
 
 // GetInstallPath - Check if tok version is installed or not
 func GetInstallPath(version string) string {
