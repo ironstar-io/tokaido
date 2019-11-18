@@ -1,6 +1,8 @@
 package proxy
 
 import (
+	"fmt"
+
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/system/fs"
@@ -37,13 +39,14 @@ func generateProxyDockerCompose() {
 	if conf.GetConfig().Global.Syncservice == "unison" {
 		err := yaml.Unmarshal(ComposeDefaultsUnison(), &dc)
 		if err != nil {
-			log.Fatalf("Error setting Compose file defaults for Proxy service: %v", err)
+			fmt.Println(string(ComposeDefaultsUnison()))
+			log.Fatalf("Error setting Unison's Compose file defaults for Proxy service: %v", err)
 		}
 	} else {
 		// Read in the default docker-compose.yml file for proxy
 		err := yaml.Unmarshal(ComposeDefaults(), &dc)
 		if err != nil {
-			log.Fatalf("Error setting Compose file defaults for Proxy service: %v", err)
+			log.Fatalf("Error setting standard Compose file defaults for Proxy service: %v", err)
 		}
 	}
 

@@ -77,7 +77,7 @@ services:
     ports:
       - "` + constants.ProxyPort + `:` + constants.ProxyPort + `"
     volumes_from:
-	  - unison
+      - unison
     networks:
       - default
       - tokaido_proxy

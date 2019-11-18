@@ -30,12 +30,12 @@ func Setup() {
 	// (re)-generate the nginx configuration for all active projects
 	configureProjectNginx()
 
+	// If the proxy server isn't running, generate a docker-compose.yml file and start it
+	bootstrapProxy()
+
 	if conf.GetConfig().Global.Syncservice == "unison" {
 		configureUnison()
 	}
-
-	// If the proxy server isn't running, generate a docker-compose.yml file and start it
-	bootstrapProxy()
 
 	// Bump the nginx process with a HUP signal
 	restartNginx()
