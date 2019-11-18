@@ -9,6 +9,8 @@ build:
 	-X $(VERSION_PATH).version=$(VERSION) \
 	" -o ./dist/tok
 
+build-all: build-osx build-windows build-linux
+
 build-windows:
 	env GOOS=windows GOARCH=amd64 \
 	go build \
