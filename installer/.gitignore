@@ -18,4 +18,8 @@ vendor
 
 # Other project specific files
 dist/*
+!dist/composer
+!dist/images
+!dist/tokaido
+
 .vscode

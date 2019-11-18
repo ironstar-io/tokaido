@@ -8,6 +8,16 @@ import (
 	"github.com/logrusorgru/aurora"
 )
 
+// These values and populated at build time using ldflags
+var (
+	version    string
+	buildDate  string
+	goVersion  string
+	tokVersion string
+	compiler   string
+	platform   string
+)
+
 // Init - The core run sheet of the tok installer
 func Init() {
 	// System readiness checks
@@ -19,7 +29,7 @@ func Init() {
 	docker.LoadTokImages()
 	docker.RestoreComposerCache()
 
-	goos.InstallTokBinary("1.12.0")
+	goos.InstallTokBinary(tokVersion)
 
 	fmt.Println("")
 	fmt.Println("Tokaido has been successfully installed on your machine!")
