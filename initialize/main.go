@@ -64,7 +64,7 @@ func readProjectConfig(command string) {
 	pr := fs.ProjectRoot()
 
 	switch system.CheckOS() {
-	case "osx":
+	case "macos":
 		viper.SetDefault("Global.Syncservice", "docker")
 	case "linux":
 		if wsl.IsWSL() {

@@ -10,7 +10,7 @@ import (
 )
 
 var baseInstallPath = "/.tok/bin/"
-var binaryName = "tok-osx"
+var binaryName = "tok-macos"
 
 // InstallTokBinary - Install a selected tok version and returns install path
 func InstallTokBinary(version string) (string, error) {

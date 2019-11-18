@@ -10,7 +10,7 @@ At this stage internet connectivity is still required in order to download a few
 
 In this directory, there should be three files corresponding to you OS type
 
-- `tok-osx`: Apple MacOS El Capitan and above
+- `tok-macos`: Apple MacOS El Capitan and above
 - `tok-linux-amd64`: Linux distributions. Tested to this point in time with Ubuntu and Mint
 - `tok-windows-amd64`: Windows 10
 

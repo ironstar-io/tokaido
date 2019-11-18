@@ -45,7 +45,7 @@ xmlrpc.php
 /scripts
 /themes
 
-### OSX template
+### MacOS template
 *.DS_Store
 .AppleDouble
 .LSOverride

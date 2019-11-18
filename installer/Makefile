@@ -29,14 +29,14 @@ build-linux:
 	-X $(INSTALLER_PATH).tokVersion=$(TOK_VERSION) \
 	" -o ./dist/tok-linux-amd64
 
-build-osx:
+build-macos:
 	env GOOS=darwin GOARCH=amd64 \
 	go build \
 	-ldflags "\
 	-X $(INSTALLER_PATH).buildDate=$(BUILD_DATE) \
 	-X $(INSTALLER_PATH).version=$(VERSION) \
 	-X $(INSTALLER_PATH).tokVersion=$(TOK_VERSION) \
-	" -o ./dist/tok-osx
+	" -o ./dist/tok-macos
 
 build-docker-images:
 	docker save loomchild/volume-backup > dist/images/volume-backup.tar
@@ -52,4 +52,4 @@ build-docker-images:
 	docker save tokaido/unison:1.11.0 > dist/images/tokaido-unison.tar
 	docker save tokaido/kishu:1.11.0 > dist/images/tokaido-kishu.tar
 
-.PHONY: build build-windows build-linux build-osx test clean
+.PHONY: build build-windows build-linux build-macos test clean

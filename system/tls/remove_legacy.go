@@ -38,7 +38,7 @@ func removeLegacyCertificate() {
 	if fs.CheckExists(legacyPath) {
 		console.Println("🎁  Tokaido 1.11 improves how Tokaido manages local TLS security, and will now reconfigure your system", "")
 
-		if system.CheckOS() == "osx" {
+		if system.CheckOS() == "macos" {
 			utils.DebugString("removing proxy CA from certificate chain")
 			fmt.Println("    You may prompted for elevated access to allow Tokaido to refresh your macOS Keychain")
 			removeTrustedCAFromKeychain(filepath.Join(legacyPath, "proxy_ca.pem"))

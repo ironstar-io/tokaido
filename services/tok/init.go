@@ -193,7 +193,7 @@ func checkSyncConfig() {
 	c := conf.GetConfig()
 
 	switch system.CheckOS() {
-	case "osx":
+	case "macos":
 		if c.Global.Syncservice == "fusion" {
 			fmt.Println(aurora.Yellow("Warning: The Fusion Sync Service will be removed in Tokaido 1.10. Please migrate to 'docker' or 'unison'"))
 		}

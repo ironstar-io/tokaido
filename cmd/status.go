@@ -43,7 +43,7 @@ var StatusCmd = &cobra.Command{
 				fmt.Println()
 				pn := conf.GetConfig().Tokaido.Project.Name
 				switch system.CheckOS() {
-				case "osx":
+				case "macos":
 					h := fs.HomeDir()
 					lp := filepath.Join(h, "Library/Logs/tokaido.sync."+pn)
 					fmt.Printf("You can check Unison logs in the...\n%s and \n%s files\n", aurora.Bold(lp+".out"), aurora.Bold(lp+".err"))

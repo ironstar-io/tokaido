@@ -9,7 +9,7 @@ import (
 func CheckOS() string {
 	switch os := runtime.GOOS; os {
 	case "darwin":
-		return "osx"
+		return "macos"
 	case "linux":
 		return "linux"
 	case "windows":
