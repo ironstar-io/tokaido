@@ -242,7 +242,7 @@ func checkCompatibility() {
 		os.Exit(1)
 	}
 
-	if !utils.CheckCmd("nodejs") {
+	if !utils.CheckCmd("node") {
 		fmt.Println(aurora.Red("`tok test` requires NodeJS, but we were unable to find it in your system. Please install it and try again"))
 		os.Exit(1)
 	}
