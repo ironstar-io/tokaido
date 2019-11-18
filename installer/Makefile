@@ -52,5 +52,4 @@ build-docker-images:
 	docker save tokaido/unison:1.11.0 > dist/images/tokaido-unison.tar
 	docker save tokaido/kishu:1.11.0 > dist/images/tokaido-kishu.tar
 
-
 .PHONY: build build-windows build-linux build-osx test clean

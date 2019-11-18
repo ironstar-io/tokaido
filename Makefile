@@ -37,11 +37,11 @@ build-installer:
 	cd installer && make build-osx
 	cd installer && make build-windows
 	cd installer && make build-linux
-	# cd installer && make build-docker-images
+	cd installer && make build-docker-images
 	make build-osx && cp -R ./dist/tok-osx ./installer/dist/tokaido/tok-osx
 	make build-linux && cp -R ./dist/tok-linux-amd64 ./installer/dist/tokaido/tok-linux-amd64
 	make build-windows && cp -R ./dist/tok-windows-amd64.exe ./installer/dist/tokaido/tok-windows-amd64.exe
-
+	cp -R ./installer/README.md ./installer/dist/README.md
 
 test:
 	ginkgo test ./...
