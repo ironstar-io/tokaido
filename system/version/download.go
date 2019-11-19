@@ -14,8 +14,8 @@ func GetInstallPath(version string) string {
 	return goos.GetInstallPath(version)
 }
 
-// Install - Install a selected tok version
-func Install(version string) (string, error) {
+// DownloadAndInstall - Download and install a selected tok version
+func DownloadAndInstall(version string) (string, error) {
 	// Check version exists in GH
 	// Get the URL for the version
 	ghr := []github.ReleaseBody{}
@@ -48,5 +48,5 @@ func Install(version string) (string, error) {
 		return "", errors.New("There is no release available for version " + version)
 	}
 
-	return goos.Install(releaseTag)
+	return goos.DownloadTokBinary(releaseTag)
 }

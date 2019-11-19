@@ -24,8 +24,8 @@ func GetInstallPath(version string) string {
 	return ""
 }
 
-// Install - Install a selected tok version and returns install path
-func Install(version string) (string, error) {
+// DownloadTokBinary - Install a selected tok version and returns install path
+func DownloadTokBinary(version string) (string, error) {
 	p := filepath.Join(fs.HomeDir(), "AppData", "Local", "Ironstar", "Tokaido", version)
 	b := filepath.Join(p, "tok")
 

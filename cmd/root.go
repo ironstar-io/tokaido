@@ -86,6 +86,8 @@ func run(cmd *cobra.Command, args []string) {
 		fmt.Printf("Tokaido v%s\n\n", version.Get().Version)
 		fmt.Println("For help with Tokaido run `tok help` or take a look at our documentation at https://tokaido.io/docs")
 	}
+
+	version.SelfInstall()
 }
 
 func initConfig() {
