@@ -21,5 +21,23 @@ func CopyTokBinary(version string) (string, error) {
 		log.Fatal(err)
 	}
 
+	ex, err := os.Executable()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fs.Copy(ex, b)
+	// Change file permission bit
+	err = os.Chmod(b, 0755)
+	if err != nil {
+		panic(err)
+	}
+
+	// Change file ownership.
+	err = os.Chown(b, os.Getuid(), os.Getgid())
+	if err != nil {
+		panic(err)
+	}
+
 	return b, nil
 }

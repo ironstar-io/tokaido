@@ -10,8 +10,8 @@ import (
 	"github.com/blang/semver"
 )
 
-// SelfInstall - Check if update available and auto-upgrade the user
-func SelfInstall() {
+// Upgrade - Check if update available and auto-upgrade the user
+func Upgrade() {
 	v := Get().Version
 	cv := strings.Replace(v, "v", "", 0)
 	cs, err := semver.Parse(cv)

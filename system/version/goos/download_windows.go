@@ -11,12 +11,13 @@ import (
 	"github.com/ironstar-io/tokaido/utils"
 )
 
+var baseInstallPath = filepath.Join("AppData", "Local", "Ironstar", "Tokaido")
 var baseBinaryURL = "https://github.com/ironstar-io/tokaido/releases/download/"
 var binaryName = "tok-windows.exe"
 
 // GetInstallPath - Check if tok version is installed or not
 func GetInstallPath(version string) string {
-	p := filepath.Join(fs.HomeDir(), "AppData", "Local", "Ironstar", "Tokaido", version, "tok")
+	p := filepath.Join(fs.HomeDir(), baseInstallPath, version, "tok")
 	if fs.CheckExists(p) == true {
 		return p
 	}
@@ -26,7 +27,7 @@ func GetInstallPath(version string) string {
 
 // DownloadTokBinary - Install a selected tok version and returns install path
 func DownloadTokBinary(version string) (string, error) {
-	p := filepath.Join(fs.HomeDir(), "AppData", "Local", "Ironstar", "Tokaido", version)
+	p := filepath.Join(fs.HomeDir(), baseInstallPath, version)
 	b := filepath.Join(p, "tok")
 
 	err := os.MkdirAll(p, os.ModePerm)

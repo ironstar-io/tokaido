@@ -26,6 +26,7 @@ func init() {
 	rootCmd.AddCommand(DestroyCmd)
 	rootCmd.AddCommand(ExecCmd)
 	rootCmd.AddCommand(HashCmd)
+	rootCmd.AddCommand(InstallCmd)
 	rootCmd.AddCommand(ListCmd)
 	rootCmd.AddCommand(LogsCmd)
 	rootCmd.AddCommand(NewCmd)
@@ -84,10 +85,9 @@ func run(cmd *cobra.Command, args []string) {
 		fmt.Printf("v%s\n", version.Get().Version)
 	} else {
 		fmt.Printf("Tokaido v%s\n\n", version.Get().Version)
-		fmt.Println("For help with Tokaido run `tok help` or take a look at our documentation at https://tokaido.io/docs")
 	}
 
-	version.SelfInstall()
+	version.SelfInstall(false)
 }
 
 func initConfig() {

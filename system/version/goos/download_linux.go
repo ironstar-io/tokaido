@@ -11,7 +11,7 @@ import (
 	"github.com/ironstar-io/tokaido/utils"
 )
 
-var baseInstallPath = "/.tok/bin/"
+var baseInstallPath = filepath.Join(".tok", "bin")
 var baseBinaryURL = "https://github.com/ironstar-io/tokaido/releases/download/"
 var binaryName = "tok-linux-amd64"
 
