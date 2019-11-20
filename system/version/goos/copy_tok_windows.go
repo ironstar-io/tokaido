@@ -11,7 +11,7 @@ import (
 
 // CopyTokBinary - Copy current binary to the local tok bin directory
 func CopyTokBinary(version string) (string, error) {
-	p := filepath.Join(fs.HomeDir(), baseInstallPath, version)
+	p := filepath.Join(fs.HomeDir(), constants.BaseInstallPathWindows, version)
 	b := filepath.Join(p, "tok")
 
 	err := os.MkdirAll(p, os.ModePerm)

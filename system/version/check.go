@@ -5,7 +5,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"regexp"
-	"runtime"
 	"time"
 
 	"github.com/blang/semver"
@@ -27,7 +26,7 @@ func Check() {
 	match := re.FindStringSubmatch(info.Version)
 	current, _ := semver.Make(match[0])
 
-	latestVersion, latestURL, err := getLatestVersion()
+	latestVersion, _, err := getLatestVersion()
 	if err != nil {
 		utils.DebugErrOutput(err)
 		return
@@ -40,14 +39,9 @@ func Check() {
 
 	if latestSemver.GT(current) {
 		console.Println("\n👵🏻  You're running an old version of Tokaido. Please consider upgrading to Tokaido "+latestVersion+"   ", "")
-
-		if runtime.GOOS == "darwin" {
-			console.Println("    You can upgrade easily by running 'brew upgrade tokaido'", "")
-		} else {
-			console.Println("    You can get the latest version at "+latestURL, "")
-		}
+		console.Println("    You can upgrade easily by running 'tok upgrade'", "")
 	}
-} 
+}
 
 func getLatestVersion() (ver, url string, err error) {
 	req, err := http.NewRequest(http.MethodGet, "https://api.tokaido.io/v1/release/latest", nil)

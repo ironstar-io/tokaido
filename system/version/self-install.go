@@ -16,7 +16,7 @@ import (
 func SelfInstall(forceInstall bool) {
 	if forceInstall == true {
 		// Tokaido not in PATH, confirm install of current bin
-		confirmUpgrade := utils.ConfirmationPrompt("This command will install Tokaido "+Get().Version+" as `tok` on your PATH. Would you like to continue?", "y")
+		confirmUpgrade := utils.ConfirmationPrompt("This command will install Tokaido "+Get().Version+". Would you like to continue?", "y")
 		if confirmUpgrade == false {
 			fmt.Println("Exiting...")
 			return
@@ -30,7 +30,7 @@ func SelfInstall(forceInstall bool) {
 	_, err := exec.LookPath("tok")
 	if err != nil {
 		// Tokaido not in PATH, confirm install of current bin
-		confirmUpgrade := utils.ConfirmationPrompt("It looks like this is your first time running Tokaido.\n\nWould you like for us to install "+Get().Version+" as `tok` on your PATH?", "y")
+		confirmUpgrade := utils.ConfirmationPrompt("It looks like this is your first time running Tokaido.\n\nWould you like for us to install it?"+Get().Version, "y")
 		if confirmUpgrade == false {
 			fmt.Println("Exiting...")
 			return
@@ -42,7 +42,7 @@ func SelfInstall(forceInstall bool) {
 	}
 
 	// Tokaido already in PATH, display help message and exit
-	fmt.Println("For help with Tokaido run `tok help` or take a look at our documentation at https://tokaido.io/docs")
+	fmt.Println("For help with Tokaido run `tok help` or take a look at our documentation at https://docs.tokaido.io")
 }
 
 // installRunningBin - Install runing Tokaido binary to PATH
@@ -73,11 +73,11 @@ func installRunningBin() {
 	// Version is installed, just not active. Create a Symlink to finish
 	err = CreateSymlink(ip)
 	if err != nil {
-		fmt.Println("Tokaido was unable to create a symlink on your PATH.")
+		fmt.Printf("Tokaido was unable to create a symlink at %s", ip)
 
 		log.Fatal(err)
 	}
 
 	fmt.Println()
-	fmt.Println("Successfully installed Tokaido v" + bv)
+	fmt.Println("Success! Tokaido version " + bv + " should now be avaliable as 'tok'")
 }

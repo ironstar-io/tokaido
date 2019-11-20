@@ -10,8 +10,8 @@ import (
 // InstallCmd - `tok install`
 var InstallCmd = &cobra.Command{
 	Use:   "install",
-	Short: "Install the running Tokaido binary to your PATH",
-	Long:  "Install the running Tokaido binary to your PATH",
+	Short: "Install and use this version of Tokaido",
+	Long:  "Install and use this version of Tokaido",
 	Run: func(cmd *cobra.Command, args []string) {
 		telemetry.SendCommand("install")
 

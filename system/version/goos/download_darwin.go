@@ -6,18 +6,15 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/ironstar-io/tokaido/constants"
 	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/utils"
 )
 
-var baseInstallPath = filepath.Join(".tok", "bin")
-var baseBinaryURL = "https://github.com/ironstar-io/tokaido/releases/download/"
-var binaryName = "tok-macos"
-
 // GetInstallPath - Check if tok version is installed or not
 func GetInstallPath(version string) string {
-	p := filepath.Join(fs.HomeDir(), baseInstallPath, version, "tok")
+	p := filepath.Join(fs.HomeDir(), constants.BaseInstallPathDarwin, version, "tok")
 	if fs.CheckExists(p) == true {
 		return p
 	}
@@ -27,7 +24,7 @@ func GetInstallPath(version string) string {
 
 // DownloadTokBinary - Install a selected tok version and returns install path
 func DownloadTokBinary(version string) (string, error) {
-	p := filepath.Join(fs.HomeDir(), baseInstallPath, version)
+	p := filepath.Join(fs.HomeDir(), constants.BaseInstallPathDarwin, version)
 	b := filepath.Join(p, "tok")
 
 	err := os.MkdirAll(p, os.ModePerm)
@@ -39,7 +36,7 @@ func DownloadTokBinary(version string) (string, error) {
 
 	fmt.Println()
 	w := console.SpinStart("Downloading the specified release from GitHub.")
-	err = utils.DownloadFile(b, baseBinaryURL+version+"/"+binaryName)
+	err = utils.DownloadFile(b, constants.BaseBinaryURL+version+"/"+constants.BinaryNameDarwin)
 	if err != nil {
 		return "", err
 	}
