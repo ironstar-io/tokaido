@@ -73,7 +73,7 @@ func installRunningBin() {
 	// Version is installed, just not active. Create a Symlink to finish
 	err = CreateSymlink(ip)
 	if err != nil {
-		fmt.Printf("Tokaido was unable to create a symlink at %s", ip)
+		fmt.Println("Tokaido was unable to create a symlink at " + ip)
 
 		log.Fatal(err)
 	}
