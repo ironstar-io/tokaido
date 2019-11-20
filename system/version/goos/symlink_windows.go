@@ -27,12 +27,12 @@ func CreateSymlink(path string) error {
 		}
 	}
 
-	// os.Symlink requires elevated permissions in Windows, we can avoid that using `ln -s`
-	// This may be flimsy,
+	// os.Symlink requires elevated permissions in Windows, we can avoid that using `ln -s`. https://github.com/golang/go/issues/22874
+	// This may be flimsy on some systems
 	_, err := utils.CommandSubSplitOutput("ln", "-s", p, t)
 	if err != nil {
-		fmt.Println("Unable to create a symlink for the downloaded version of Tokaido.")
-		fmt.Println("You may need to manually add a symbolic link or directly add the downloaded binary to your PATH")
+		fmt.Println("Unable to create a symlink when installing Tokaido.")
+		fmt.Println("You may need to manually add a symbolic link or directly add the Tokaido binary to your PATH\n")
 
 		return err
 	}

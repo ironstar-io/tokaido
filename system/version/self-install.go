@@ -30,7 +30,7 @@ func SelfInstall(forceInstall bool) {
 	_, err := exec.LookPath("tok")
 	if err != nil {
 		// Tokaido not in PATH, confirm install of current bin
-		confirmUpgrade := utils.ConfirmationPrompt("It looks like this is your first time running Tokaido.\n\nWould you like for us to install it?"+Get().Version, "y")
+		confirmUpgrade := utils.ConfirmationPrompt("It looks like this is your first time running Tokaido.\n\nWould you like for us to install it?", "y")
 		if confirmUpgrade == false {
 			fmt.Println("Exiting...")
 			return
