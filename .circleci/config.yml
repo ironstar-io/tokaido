@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/golang:1.12-stretch
+      - image: circleci/golang:1.13-stretch
 
     working_directory: ~/tokaido
 
@@ -29,7 +29,7 @@ jobs:
 
   release-edge:
     docker:
-      - image: circleci/golang:1.12-stretch
+      - image: circleci/golang:1.13-stretch
     environment:
       VERSION: edge
     steps:
@@ -42,7 +42,7 @@ jobs:
 
   release-stable:
     docker:
-      - image: circleci/golang:1.12-stretch
+      - image: circleci/golang:1.13-stretch
     steps:
       - attach_workspace:
           at: ./
