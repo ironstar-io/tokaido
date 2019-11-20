@@ -49,7 +49,7 @@ func Select(selection string) {
 	// Empty string if not installed, in which case, download and symlink
 	if ip == "" {
 		// Download & install selected release from GH
-		p, err := Install(sv.String())
+		p, err := DownloadAndInstall(sv.String())
 		if err != nil {
 			fmt.Println("Tokaido was unable to upgrade you to the selected version.")
 

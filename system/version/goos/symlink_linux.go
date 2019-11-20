@@ -3,25 +3,24 @@ package goos
 import (
 	"os"
 
+	"github.com/ironstar-io/tokaido/constants"
 	"github.com/ironstar-io/tokaido/system/fs"
 )
-
-var tokBinPath = "/usr/local/bin/tok"
 
 // CreateSymlink - Check if a file/folder is writable
 func CreateSymlink(path string) error {
 	// Depending on OS, figure out the correct tok path and create symlink
 
-	if fs.CheckExists(tokBinPath) == true {
+	if fs.CheckExists(constants.GlobalBinaryPathLinux) == true {
 		// Remove any existing soft link
-		err := os.Remove(tokBinPath)
+		err := os.Remove(constants.GlobalBinaryPathLinux)
 		if err != nil {
 			return err
 		}
 	}
 
 	// Create a new symbolic or "soft" link
-	err := os.Symlink(tokBinPath, path)
+	err := os.Symlink(constants.GlobalBinaryPathLinux, path)
 	if err != nil {
 		return err
 	}

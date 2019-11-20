@@ -47,7 +47,7 @@ func Upgrade() {
 		// Empty string if not installed, in which case, download and symlink
 		if ip == "" {
 			// Download latest release from GH
-			p, err := Install(lv.String())
+			p, err := DownloadAndInstall(lv.String())
 			if err != nil {
 				fmt.Println("Tokaido wasn't able to upgrade you to the latest version.")
 
