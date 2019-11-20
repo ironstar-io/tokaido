@@ -5,6 +5,8 @@ import (
 	"os"
 
 	"github.com/ironstar-io/tokaido/system/version"
+	"github.com/ironstar-io/tokaido/initialize"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -87,6 +89,7 @@ func run(cmd *cobra.Command, args []string) {
 		fmt.Printf("Tokaido v%s\n\n", version.Get().Version)
 	}
 
+	initialize.LoadConfig("root")
 	version.SelfInstall(false)
 }
 

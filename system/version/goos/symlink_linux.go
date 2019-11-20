@@ -20,7 +20,7 @@ func CreateSymlink(path string) error {
 	}
 
 	// Create a new symbolic or "soft" link
-	err := os.Symlink(constants.GlobalBinaryPathLinux, path)
+	err := os.Symlink(path, constants.GlobalBinaryPathLinux)
 	if err != nil {
 		return err
 	}

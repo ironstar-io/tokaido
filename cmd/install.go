@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/ironstar-io/tokaido/initialize"
 	"github.com/ironstar-io/tokaido/services/telemetry"
 	"github.com/ironstar-io/tokaido/system/version"
 
@@ -13,6 +14,7 @@ var InstallCmd = &cobra.Command{
 	Short: "Install and use this version of Tokaido",
 	Long:  "Install and use this version of Tokaido",
 	Run: func(cmd *cobra.Command, args []string) {
+		initialize.LoadConfig("install")
 		telemetry.SendCommand("install")
 
 		version.SelfInstall(true)

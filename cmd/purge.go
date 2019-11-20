@@ -14,7 +14,7 @@ var PurgeCmd = &cobra.Command{
 	Short: "Purge Varnish and Drupal cache",
 	Long:  "Purge will purge the Varnish cache and run a drush cache-rebuild operation",
 	Run: func(cmd *cobra.Command, args []string) {
-		initialize.TokConfig("ports")
+		initialize.TokConfig("purge")
 		telemetry.SendCommand("purge")
 		utils.CheckCmdHard("docker-compose")
 
