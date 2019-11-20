@@ -1,10 +1,10 @@
 package goos
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
-	"fmt"
 
 	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/utils"
@@ -14,10 +14,10 @@ import (
 func CreateSymlink(path string) error {
 	// Depending on OS, figure out the correct tok path and create symlink
 	var tokBinPath = filepath.Join(fs.HomeDir(), "bin", "tok")
-	tbp:=strings.ReplaceAll(tokBinPath, "C:\\", "/c/")
-	t:=strings.ReplaceAll(tbp, "\\", "/")
-	pa:=strings.ReplaceAll(path, "C:\\", "/c/")
-	p:=strings.ReplaceAll(pa, "\\", "/")
+	tbp := strings.ReplaceAll(tokBinPath, "C:\\", "/c/")
+	t := strings.ReplaceAll(tbp, "\\", "/")
+	pa := strings.ReplaceAll(path, "C:\\", "/c/")
+	p := strings.ReplaceAll(pa, "\\", "/")
 
 	if fs.CheckExists(tokBinPath) == true {
 		// Remove any existing soft link
@@ -28,7 +28,7 @@ func CreateSymlink(path string) error {
 	}
 
 	// os.Symlink requires elevated permissions in Windows, we can avoid that using `ln -s`
-	// This may be flimsy, 
+	// This may be flimsy,
 	_, err := utils.CommandSubSplitOutput("ln", "-s", p, t)
 	if err != nil {
 		fmt.Println("Unable to create a symlink for the downloaded version of Tokaido.")
@@ -36,6 +36,6 @@ func CreateSymlink(path string) error {
 
 		return err
 	}
-	
+
 	return nil
 }
