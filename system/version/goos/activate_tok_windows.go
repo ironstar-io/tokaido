@@ -19,7 +19,7 @@ func ActivateSavedVersion(version string) bool {
 	savePath := filepath.Join(fs.HomeDir(), constants.BaseInstallPathWindows, version)
 
 	// Check if the requested version is not downloaded already
-	p := filepath.Join(fs.HomeDir(), savePath, "tok")
+	p := filepath.Join(savePath, "tok")
 	if fs.CheckExists(p) != true {
 		utils.DebugString("Tokaido version [" + version + "] was not found at [" + p + "], downloading a new copy...")
 
