@@ -19,21 +19,22 @@ func SaveTokBinary(version string) (string, error) {
 
 	err := os.MkdirAll(p, os.ModePerm)
 	if err != nil {
-		fmt.Println("There was an error creating the install directory")
-
-		log.Fatal(err)
+		fmt.Println("There was an error creating the install directory: ", err.Error())
+		os.Exit(1)
 	}
 
 	ex, err := os.Executable()
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println("Unexpected error obtaining this executable's path: ", err.Error())
+		os.Exit(1)
 	}
 
 	fs.Copy(ex, b)
 	// Change file permission bit
 	err = os.Chmod(b, 0755)
 	if err != nil {
-		panic(err)
+		fmt.Println("Could not ensure correct ownership on ["+b+"]: ", err.Error())
+		os.Exit(1)
 	}
 
 	return b, nil

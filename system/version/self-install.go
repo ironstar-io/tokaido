@@ -2,7 +2,7 @@ package version
 
 import (
 	"fmt"
-	"log"
+	"os"
 	"os/exec"
 	"strings"
 
@@ -51,25 +51,28 @@ func installRunningBin() {
 	cv := strings.Replace(v, "v", "", 0)
 	cs, err := semver.Parse(cv)
 	if err != nil {
-		fmt.Println("Tokaido was unable to correctly parse the current version.")
-		log.Fatal(err)
+		fmt.Println("Tokaido was unable to correctly parse the current version: ", err.Error())
+		os.Exit(1)
 	}
 	bv := cs.String()
 
+	utils.DebugString("Checking for an existing installation of Tokaido version " + bv)
 	ip := GetInstallPath(bv)
 	// Empty string if not installed, in which case, save it
 	if ip == "" {
 		utils.DebugString("This Tokaido version (" + bv + ") is not installed")
 		p, err := goos.SaveTokBinary(bv)
 		if err != nil {
-			fmt.Println("Tokaido wasn't able to install this version correctly.")
-			log.Fatal(err)
+			fmt.Println("Tokaido wasn't able to install this version correctly: ", err.Error())
+			os.Exit(1)
+
 		}
 
 		ip = p
 	}
 
 	// This running instance is saved, now we activate it as the default 'installed' version
+	utils.DebugString("Making Tokaido version [" + bv + "] the default version")
 	goos.ActivateSavedVersion(bv)
 
 	fmt.Println()

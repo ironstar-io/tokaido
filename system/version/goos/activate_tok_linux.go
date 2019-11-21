@@ -25,15 +25,15 @@ func ActivateSavedVersion(version string) bool {
 	}
 
 	// Remove any existing copy of Tokaido at /usr/local/bin/tok
-	fs.Remove(p)
+	fs.Remove(constants.ActiveBinaryPathDarwin)
 
 	// Copy the specified version to /usr/local/bin/tok
-	fs.Copy(p, p)
+	fs.Copy(p, constants.ActiveBinaryPathDarwin)
 
 	// Make sure the version is executable
-	err := os.Chmod(p, 0777)
+	err := os.Chmod(constants.ActiveBinaryPathDarwin, 0777)
 	if err != nil {
-		fmt.Println("Unexpected error granting execute permissions to [" + p + "]: " + err.Error())
+		fmt.Println("Unexpected error granting execute permissions to [" + constants.ActiveBinaryPathDarwin + "]: " + err.Error())
 		os.Exit(1)
 	}
 
