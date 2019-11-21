@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/ironstar-io/tokaido/constants"
 	"github.com/ironstar-io/tokaido/system/fs"
@@ -15,7 +14,6 @@ import (
 func ActivateSavedVersion(version string) bool {
 	// activePath is where the currently active version of Tokaido is found, such as /c/Users/Frank/bin/tok
 	activePath := filepath.Join(fs.HomeDir(), "bin", "tok")
-	tbp := strings.ReplaceAll(activePath, "C:\\", "/c/")
 
 	// savePath is where to save the Tokaido binary, such as /c/Users/Frank/AppData/Local/Ironstar/Tokaido/{version}/tok
 	savePath := filepath.Join(fs.HomeDir(), constants.BaseInstallPathWindows, version)
