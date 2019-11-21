@@ -5,6 +5,7 @@ import (
 	"log"
 	"strings"
 
+	"github.com/ironstar-io/tokaido/system/version/goos"
 	"github.com/ironstar-io/tokaido/utils"
 
 	"github.com/blang/semver"
@@ -58,12 +59,7 @@ func Upgrade() {
 		}
 
 		// Latest version is installed, just not active. Create a Symlink to finish
-		err := CreateSymlink(ip)
-		if err != nil {
-			fmt.Println("Tokaido was unable to upgrade you to the latest version.")
-
-			log.Fatal(err)
-		}
+		goos.ActivateSavedVersion(ip)
 
 		fmt.Println()
 		fmt.Println("Successfully upgraded Tokaido to the latest version (" + lv.String() + ")")

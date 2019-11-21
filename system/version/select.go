@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/blang/semver"
+	"github.com/ironstar-io/tokaido/system/version/goos"
 	"github.com/ironstar-io/tokaido/utils"
 )
 
@@ -59,13 +60,8 @@ func Select(selection string) {
 		ip = p
 	}
 
-	// Selected version is installed, just not active. Create a Symlink to finish
-	err = CreateSymlink(ip)
-	if err != nil {
-		fmt.Println("Tokaido was unable to upgrade you to the selected version.")
-
-		log.Fatal(err)
-	}
+	// This running instance is saved, now we activate it as the default 'installed' version
+	goos.ActivateSavedVersion(sv.String())
 
 	fmt.Println("Successfully changed Tokaido to version " + sv.String())
 }

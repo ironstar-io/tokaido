@@ -11,16 +11,16 @@ import (
 func CreateSymlink(path string) error {
 	// Depending on OS, figure out the correct tok path and create symlink
 
-	if fs.CheckExists(constants.GlobalBinaryPathLinux) == true {
+	if fs.CheckExists(constants.ActiveBinaryPathLinux) == true {
 		// Remove any existing soft link
-		err := os.Remove(constants.GlobalBinaryPathLinux)
+		err := os.Remove(constants.ActiveBinaryPathLinux)
 		if err != nil {
 			return err
 		}
 	}
 
 	// Create a new symbolic or "soft" link
-	err := os.Symlink(path, constants.GlobalBinaryPathLinux)
+	err := os.Symlink(path, constants.ActiveBinaryPathLinux)
 	if err != nil {
 		return err
 	}

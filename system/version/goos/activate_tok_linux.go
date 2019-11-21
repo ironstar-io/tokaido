@@ -13,7 +13,7 @@ import (
 // ActivateSavedVersion - Copies the specified version (which may be downloaded previously) into /usr/local/bin on macOS
 func ActivateSavedVersion(version string) bool {
 	// Check that the version is downloaded already
-	p := filepath.Join(fs.HomeDir(), constants.BaseInstallPathDarwin, version, "tok")
+	p := filepath.Join(fs.HomeDir(), constants.BaseInstallPathLinux, version, "tok")
 	if fs.CheckExists(p) != true {
 		utils.DebugString("Tokaido version [" + version + "] was not found in ~/.tok/bin, downloading a new copy...")
 
