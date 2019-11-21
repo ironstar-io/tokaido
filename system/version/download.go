@@ -2,8 +2,8 @@ package version
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
+	"os"
 
 	"github.com/ironstar-io/tokaido/services/github"
 	"github.com/ironstar-io/tokaido/system/version/goos"
@@ -16,20 +16,27 @@ func GetInstallPath(version string) string {
 
 // DownloadAndInstall - Download and install a selected tok version
 func DownloadAndInstall(version string) (string, error) {
+	releaseTag := GetReleaseTagFromVersion(version)
+	return goos.DownloadTokBinary(releaseTag)
+}
+
+// GetReleaseTagFromVersion returns a githab-ready release tag from a Tokaido version string
+func GetReleaseTagFromVersion(version string) (releaseTag string) {
 	// Check version exists in GH
 	// Get the URL for the version
 	ghr := []github.ReleaseBody{}
 	body, err := github.GetAllReleases()
 	if err != nil {
-		return "", err
+		fmt.Println("Unexpected error retrieving list of available Tokaido releases: " + err.Error())
+		os.Exit(1)
 	}
 
 	err = json.Unmarshal(body, &ghr)
 	if err != nil {
-		return "", err
+		fmt.Println("Unexpected error assembling list of available Tokaido releases: " + err.Error())
+		os.Exit(1)
 	}
 
-	var releaseTag string
 	for _, r := range ghr {
 		if r.TagName == version {
 			if r.Draft == true {
@@ -45,8 +52,9 @@ func DownloadAndInstall(version string) (string, error) {
 	}
 
 	if releaseTag == "" {
-		return "", errors.New("There is no release available for version " + version)
+		fmt.Println("There is no release information available for version [" + version + "]")
+		os.Exit(1)
 	}
 
-	return goos.DownloadTokBinary(releaseTag)
+	return releaseTag
 }

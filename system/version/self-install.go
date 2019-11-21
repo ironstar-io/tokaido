@@ -2,7 +2,7 @@ package version
 
 import (
 	"fmt"
-	"log"
+	"os"
 	"os/exec"
 	"strings"
 
@@ -45,38 +45,35 @@ func SelfInstall(forceInstall bool) {
 	fmt.Println("For help with Tokaido run `tok help` or take a look at our documentation at https://docs.tokaido.io")
 }
 
-// installRunningBin - Install runing Tokaido binary to PATH
+// installRunningBin - Install runing Tokaido binary to the global install path
 func installRunningBin() {
 	v := Get().Version
 	cv := strings.Replace(v, "v", "", 0)
 	cs, err := semver.Parse(cv)
 	if err != nil {
-		fmt.Println("Tokaido was unable to correctly parse the current version.")
-
-		log.Fatal(err)
+		fmt.Println("Tokaido was unable to correctly parse the current version: ", err.Error())
+		os.Exit(1)
 	}
 	bv := cs.String()
 
+	utils.DebugString("Checking for an existing installation of Tokaido version " + bv)
 	ip := GetInstallPath(bv)
-	// Empty string if not installed, in which case, download and symlink
+	// Empty string if not installed, in which case, save it
 	if ip == "" {
-		p, err := goos.CopyTokBinary(bv)
+		utils.DebugString("This Tokaido version (" + bv + ") is not installed")
+		p, err := goos.SaveTokBinary(bv)
 		if err != nil {
-			fmt.Println("Tokaido wasn't able to install this version correctly.")
+			fmt.Println("Tokaido wasn't able to install this version correctly: ", err.Error())
+			os.Exit(1)
 
-			log.Fatal(err)
 		}
 
 		ip = p
 	}
 
-	// Version is installed, just not active. Create a Symlink to finish
-	err = CreateSymlink(ip)
-	if err != nil {
-		fmt.Println("Tokaido was unable to create a symlink at " + ip)
-
-		log.Fatal(err)
-	}
+	// This running instance is saved, now we activate it as the default 'installed' version
+	utils.DebugString("Making Tokaido version [" + bv + "] the default version")
+	goos.ActivateSavedVersion(bv)
 
 	fmt.Println()
 	fmt.Println("Success! Tokaido version " + bv + " should now be avaliable as 'tok'")

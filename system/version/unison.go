@@ -1,7 +1,8 @@
 package version
 
 import (
-	"log"
+	"fmt"
+	"os"
 	"strings"
 
 	"github.com/ironstar-io/tokaido/utils"
@@ -17,7 +18,8 @@ func GetUnisonVersion() string {
 	} else if strings.Contains(v, "2.51.2") {
 		v = "2.51.2"
 	} else {
-		log.Fatalf("Error matching Unison version. You need Unison 2.48.4 or 2.51.2 on your local system.")
+		fmt.Println("Error matching Unison version. You need Unison 2.48.4 or 2.51.2 on your local system.")
+		os.Exit(1)
 	}
 
 	return v

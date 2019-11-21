@@ -2,10 +2,11 @@ package version
 
 import (
 	"fmt"
-	"log"
+	"os"
 	"strings"
 
 	"github.com/blang/semver"
+	"github.com/ironstar-io/tokaido/system/version/goos"
 	"github.com/ironstar-io/tokaido/utils"
 )
 
@@ -19,23 +20,20 @@ func Select(selection string) {
 
 	sv, err := semver.Parse(selection)
 	if err != nil {
-		log.Fatalf("Invalid semver selection supplied. Exiting...")
-
+		fmt.Println("Invalid semver selection supplied. Exiting...")
 		return
 	}
 
 	// Checks if the current version is Equal to the selected version and exits if so
 	if sv.EQ(cs) == true {
-		log.Fatalf("Selected version (" + sv.String() + ") is the same as the currently active version. Exiting...")
-
+		fmt.Println("Selected version (" + sv.String() + ") is the same as the currently active version. Exiting...")
 		return
 	}
 
 	mv, _ := semver.Parse(minimumTokVersion)
 	// Checks if the selected version is Lesser Than the minimum version
 	if sv.LT(mv) == true {
-		log.Fatalf("Selected version (" + sv.String() + ") is less than the minimum allowed version (" + minimumTokVersion + "). Exiting...")
-
+		fmt.Println("Selected version (" + sv.String() + ") is less than the minimum allowed version (" + minimumTokVersion + "). Exiting...")
 		return
 	}
 
@@ -51,21 +49,15 @@ func Select(selection string) {
 		// Download & install selected release from GH
 		p, err := DownloadAndInstall(sv.String())
 		if err != nil {
-			fmt.Println("Tokaido was unable to upgrade you to the selected version.")
-
-			log.Fatal(err)
+			fmt.Println("Tokaido was unable to upgrade you to the selected version: ", err.Error())
+			os.Exit(1)
 		}
 
 		ip = p
 	}
 
-	// Selected version is installed, just not active. Create a Symlink to finish
-	err = CreateSymlink(ip)
-	if err != nil {
-		fmt.Println("Tokaido was unable to upgrade you to the selected version.")
-
-		log.Fatal(err)
-	}
+	// This running instance is saved, now we activate it as the default 'installed' version
+	goos.ActivateSavedVersion(sv.String())
 
 	fmt.Println("Successfully changed Tokaido to version " + sv.String())
 }

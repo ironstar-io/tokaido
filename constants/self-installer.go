@@ -22,9 +22,9 @@ const (
 	// BinaryNameWindows is the name of the Tokaido Windows binary on Github
 	BinaryNameWindows = "tok-windows.exe"
 
-	// GlobalBinaryPathDarwin is the location of of the 'tok' command which is a symlink to the active Tokaido version
-	GlobalBinaryPathDarwin = "/usr/local/bin/tok"
+	// ActiveBinaryPathDarwin is the location of of the 'tok' command which is a symlink to the active Tokaido version
+	ActiveBinaryPathDarwin = "/usr/local/bin/tok"
 
-	// GlobalBinaryPathLinux is the location of of the 'tok' command which is a symlink to the active Tokaido version
-	GlobalBinaryPathLinux = "/usr/local/bin/tok"
+	// ActiveBinaryPathLinux is the location of of the 'tok' command which is a symlink to the active Tokaido version
+	ActiveBinaryPathLinux = "/usr/local/bin/tok"
 )

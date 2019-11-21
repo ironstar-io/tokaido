@@ -2,7 +2,6 @@ package goos
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 
@@ -29,9 +28,8 @@ func DownloadTokBinary(version string) (string, error) {
 
 	err := os.MkdirAll(p, os.ModePerm)
 	if err != nil {
-		fmt.Println("There was an error creating the install directory")
-
-		log.Fatal(err)
+		fmt.Println("There was an error creating the install directory: ", err.Error())
+		os.Exit(1)
 	}
 
 	fmt.Println()
