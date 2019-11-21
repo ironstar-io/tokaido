@@ -10,10 +10,12 @@ import (
 	"github.com/ironstar-io/tokaido/system/fs"
 )
 
-// CopyTokBinary - Copy current binary to the local tok bin directory
-func CopyTokBinary(version string) (string, error) {
+// SaveTokBinary - Saves the running instance of the Tokaido binary to a persistent path in the user's tok/bin folder
+func SaveTokBinary(version string) (string, error) {
 	p := filepath.Join(fs.HomeDir(), constants.BaseInstallPathLinux, version)
 	b := filepath.Join(p, "tok")
+
+	utils.DebugString("Saving the running Tokaido version ["+version"] to ["+p+"]")
 
 	err := os.MkdirAll(p, os.ModePerm)
 	if err != nil {
