@@ -46,7 +46,7 @@ func ActivateSavedVersion(version string) bool {
 	fs.Copy(p, activePath)
 
 	// Make sure the version is executable
-	err := os.Chmod(activePath, 0777)
+	err = os.Chmod(activePath, 0777)
 	if err != nil {
 		fmt.Println("Unexpected error granting execute permissions to [" + activePath + "]: " + err.Error())
 		os.Exit(1)
