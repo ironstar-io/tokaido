@@ -11,6 +11,8 @@ build:
 	-X $(INSTALLER_PATH).tokVersion=$(TOK_VERSION) \
 	" -o ./dist/tok
 
+build-all: build-linux build-macos build-windows
+
 build-windows:
 	env GOOS=windows GOARCH=amd64 \
 	go build \
