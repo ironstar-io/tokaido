@@ -20,7 +20,7 @@ build-windows:
 	-X $(INSTALLER_PATH).buildDate=$(BUILD_DATE) \
 	-X $(INSTALLER_PATH).version=$(VERSION) \
 	-X $(INSTALLER_PATH).tokVersion=$(TOK_VERSION) \
-	" -o ./dist/tok-windows-amd64.exe
+	" -o ./dist/tok-installer-windows-amd64.exe
 
 build-linux:
 	env GOOS=linux GOARCH=amd64 \
@@ -29,7 +29,7 @@ build-linux:
 	-X $(INSTALLER_PATH).buildDate=$(BUILD_DATE) \
 	-X $(INSTALLER_PATH).version=$(VERSION) \
 	-X $(INSTALLER_PATH).tokVersion=$(TOK_VERSION) \
-	" -o ./dist/tok-linux-amd64
+	" -o ./dist/tok-installer-linux-amd64
 
 build-macos:
 	env GOOS=darwin GOARCH=amd64 \
@@ -38,7 +38,7 @@ build-macos:
 	-X $(INSTALLER_PATH).buildDate=$(BUILD_DATE) \
 	-X $(INSTALLER_PATH).version=$(VERSION) \
 	-X $(INSTALLER_PATH).tokVersion=$(TOK_VERSION) \
-	" -o ./dist/tok-macos
+	" -o ./dist/tok-installer-macos
 
 build-docker-images:
 	docker save loomchild/volume-backup > dist/images/volume-backup.tar
