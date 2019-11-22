@@ -13,20 +13,6 @@ import (
 	"github.com/docker/docker/client"
 )
 
-var imageMap = []string{
-	"tokaido/syslog:1.11.0",
-	"tokaido/haproxy:1.11.0",
-	"tokaido/varnish:1.11.0",
-	"tokaido/nginx:1.11.0",
-	"tokaido/php72-fpm:1.11.0",
-	"tokaido/admin72-heavy:1.11.0",
-	"tokaido/kishu:1.11.0",
-	"tokaido/unison:2.51.2",
-	"testcafe/testcafe",
-	"mysql:5.7",
-	"mailhog/mailhog:v1.0.0",
-}
-
 // CheckClientVersion - Ensures that the client running on this system is supported
 func CheckClientVersion() {
 	cli, err := client.NewEnvClient()
