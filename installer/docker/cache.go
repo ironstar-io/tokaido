@@ -18,6 +18,7 @@ import (
 
 // RestoreComposerCache - Create a volume on the local client containing the backup
 func RestoreComposerCache() {
+	fmt.Println()
 	fmt.Println("Building a Tokaido composer cache volume")
 	ctx := context.Background()
 
@@ -35,11 +36,13 @@ func RestoreComposerCache() {
 		log.Fatal(err)
 	}
 
-	pwd, err := os.Getwd()
+	ex, err := os.Executable()
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println("Unable to determine the running binary directory: ", err.Error())
+		os.Exit(1)
 	}
-	cp := filepath.Join(pwd, "composer")
+	exPath := filepath.Dir(ex)
+	cp := filepath.Join(exPath, "composer")
 
 	resp, err := cli.ContainerCreate(ctx, &container.Config{
 		Image: "loomchild/volume-backup",

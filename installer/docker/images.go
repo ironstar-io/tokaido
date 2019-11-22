@@ -38,12 +38,14 @@ func LoadTokImages() {
 		log.Fatal(err)
 	}
 
-	pwd, err := os.Getwd()
+	ex, err := os.Executable()
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println("Unable to determine the running binary directory: ", err.Error())
+		os.Exit(1)
 	}
+	exPath := filepath.Dir(ex)
+	imgPath := filepath.Join(exPath, "images")
 
-	imgPath := filepath.Join(pwd, "images")
 	// Find all tar files in the imgPath
 	var tarFiles []string
 	imgDirectory, err := os.Open(imgPath)

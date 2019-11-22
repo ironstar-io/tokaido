@@ -25,12 +25,13 @@ func SaveTokBinary(version string) (string, error) {
 		os.Exit(1)
 	}
 
-	pwd, err := os.Getwd()
+	ex, err := os.Executable()
 	if err != nil {
-		fmt.Println("Could not determine the current wokring directory", err.Error())
+		fmt.Println("Unable to determine the running binary directory: ", err.Error())
 		os.Exit(1)
 	}
-	ib := filepath.Join(pwd, "tokaido", binaryName)
+	exPath := filepath.Dir(ex)
+	ib := filepath.Join(exPath, "tokaido", binaryName)
 
 	fs.Copy(ib, b)
 	// Change file permission bit
