@@ -1,20 +1,35 @@
 # 🚅 Tokaido Self-Installer
 
-Tokaido is an automation platform for Drupal development environments on MacOS.
+Tokaido is an automation platform for Drupal development environments on MacOS, Linux, and Windows
 
-This installer is generally to be loaded onto a USB device or similar to facilitate an easy and fast install/copy of Tokaido, composer cache and Docker images. Everything you need to get started with a new Tokaido environment.
+This installer is generally to be loaded onto a USB device or similar to facilitate an easy and fast install of Tokaido, composer cache and Docker images. Everything you need to get started with a new Tokaido environment!
 
 At this stage internet connectivity is still required in order to download a few smaller files, however we are planning to make this installer fully offline in a future release.
 
-## Installation
+## Requirements
 
-In this directory, there should be three files corresponding to you OS type
+Before you can use Tokaido, you need to have Docker installed on your systme.
 
-- `tok-macos`: Apple MacOS El Capitan and above
-- `tok-linux-amd64`: Linux distributions. Tested to this point in time with Ubuntu and Mint
-- `tok-windows-amd64`: Windows 10
+### For MacOS
 
-Executing the file that corresponds to your OS should open your default terminal and run the self-installer.
+For MacOS, you need to install "Docker for Mac", which is in the included `Docker.dmg` file. 
+
+### For Windows
+
+Docker on Windows requires Windows Pro edition. Sorry, but Windows Home edition is not supported. 
+
+- Install Docker Desktop by running the `Docker Desktop Installer.exe` included in this USB
+- Install the Git Bash console by running `git-bash.exe`
+
+## Installing Tokaido
+
+In this directory, there should be three files corresponding to your OS type. 
+
+- `tok-installer-macos`: Apple MacOS El Capitan and above
+- `tok-installer-linux-amd64`: Linux distributions. Tested to this point in time with Ubuntu and Mint
+- `tok-installer-windows-amd64`: Windows 10
+
+After installing Docker, Executing the file that corresponds to your OS should open your default terminal and run the self-installer.
 
 ## Next Steps
 

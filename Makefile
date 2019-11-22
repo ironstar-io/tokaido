@@ -35,7 +35,7 @@ build-macos:
 	-X $(VERSION_PATH).version=$(VERSION) \
 	" -o ./dist/tok-macos
 
-build-installer:
+usb-installer:
 	cd installer && make build-macos
 	cd installer && make build-windows
 	cd installer && make build-linux
