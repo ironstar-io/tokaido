@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/ironstar-io/tokaido-installer/docker"
-	"github.com/ironstar-io/tokaido/system/version/goos"
+	"github.com/ironstar-io/tokaido-installer/install/goos"
 	"github.com/logrusorgru/aurora"
 )
 
@@ -30,6 +30,7 @@ func Init() {
 	docker.RestoreComposerCache()
 
 	goos.SaveTokBinary(tokVersion)
+	goos.ActivateSavedVersion(tokVersion)
 
 	fmt.Println("")
 	fmt.Println("Tokaido has been successfully installed on your machine!")
