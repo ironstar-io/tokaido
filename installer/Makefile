@@ -46,12 +46,12 @@ build-docker-images:
 	docker save testcafe/testcafe > dist/images/testcafe.tar
 	docker save mailhog/mailhog > dist/images/mailhog.tar
 	docker save tokaido/unison:2.51.2 > dist/images/tokaido-unison.tar
-	docker save tokaido/syslog:1.11.0 > dist/images/tokaido-syslog.tar
-	docker save tokaido/haproxy:1.11.0 > dist/images/tokaido-haproxy.tar
-	docker save tokaido/varnish:1.11.0 > dist/images/tokaido-varnish.tar
-	docker save tokaido/nginx:1.11.0 > dist/images/tokaido-nginx.tar
-	docker save tokaido/php72-fpm:1.11.0 > dist/images/tokaido-php72-fpm.tar
-	docker save tokaido/admin72-heavy:1.11.0 > dist/images/tokaido-admin72-heavy.tar
-	docker save tokaido/kishu:1.11.0 > dist/images/tokaido-kishu.tar
+	docker save tokaido/syslog:$(TOK_VERSION) > dist/images/tokaido-syslog.tar
+	docker save tokaido/haproxy:$(TOK_VERSION) > dist/images/tokaido-haproxy.tar
+	docker save tokaido/varnish:$(TOK_VERSION) > dist/images/tokaido-varnish.tar
+	docker save tokaido/nginx:$(TOK_VERSION) > dist/images/tokaido-nginx.tar
+	docker save tokaido/php72-fpm:$(TOK_VERSION) > dist/images/tokaido-php72-fpm.tar
+	docker save tokaido/admin72-heavy:$(TOK_VERSION) > dist/images/tokaido-admin72-heavy.tar
+	docker save tokaido/kishu:$(TOK_VERSION) > dist/images/tokaido-kishu.tar
 
 .PHONY: build build-windows build-linux build-macos test clean
