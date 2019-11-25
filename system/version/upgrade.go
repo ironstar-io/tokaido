@@ -55,7 +55,7 @@ func Upgrade() {
 		}
 
 		// Latest version is installed, just not active. Create a Symlink to finish
-		goos.ActivateSavedVersion(ip)
+		goos.ActivateSavedVersion(lv.String())
 
 		fmt.Println()
 		fmt.Println("Successfully upgraded Tokaido to the latest version (" + lv.String() + ")")
