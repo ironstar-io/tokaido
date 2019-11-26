@@ -1,17 +1,18 @@
 package utils
 
 import (
+	"errors"
 	"io"
 	"log"
 	"net/http"
-	"runtime"
-	"errors"
 	"os"
+	"runtime"
 	"strconv"
 )
 
 // DownloadFile - download a url to a local file.
 func DownloadFile(filepath string, url string) error {
+	DebugString("Downloading [" + url + "]")
 	resp, err := http.Get(url)
 	if err != nil {
 		return err
