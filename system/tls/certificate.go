@@ -16,7 +16,6 @@ import (
 	"encoding/pem"
 	"fmt"
 	"io/ioutil"
-	"math/big"
 	"path/filepath"
 	"time"
 
@@ -29,8 +28,9 @@ import (
 // Tokaido proxy service
 func createWildcardCertificate() (err error) {
 	// Create our signing request
+	now := time.Now()
 	req := &x509.Certificate{
-		SerialNumber: big.NewInt(2019),
+		SerialNumber: newSerial(now),
 		Subject: pkix.Name{
 			Organization: []string{"Tokaido Proxy Service"},
 			Country:      []string{constants.PkixCountry},
@@ -65,8 +65,9 @@ func createWildcardCertificate() (err error) {
 // for a single project, and then saves it in that projects .tok/local/tls directory
 func createProjectCertificate(projectName, projectPath, commonName string) (err error) {
 	// Create our signing request
+	now := time.Now()
 	req := &x509.Certificate{
-		SerialNumber: big.NewInt(2019),
+		SerialNumber: newSerial(now),
 		Subject: pkix.Name{
 			Organization: []string{"Tokaido Proxy Service"},
 			Country:      []string{constants.PkixCountry},

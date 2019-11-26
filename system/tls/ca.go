@@ -8,7 +8,6 @@ import (
 	"crypto/x509/pkix"
 	"encoding/pem"
 	"fmt"
-	"math/big"
 	"path/filepath"
 	"time"
 
@@ -30,8 +29,9 @@ func createCA() (err error) {
 	}
 
 	// Create our CA Request
+	now := time.Now()
 	req := &x509.Certificate{
-		SerialNumber: big.NewInt(2019),
+		SerialNumber: newSerial(now),
 		Subject: pkix.Name{
 			Organization: []string{constants.PkixOrganization},
 			Country:      []string{constants.PkixCountry},
