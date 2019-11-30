@@ -5,7 +5,7 @@
 [![GitHub license](https://img.shields.io/badge/license-BSD-blue.svg?style=flat-square)](https://github.com/ironstar-io/tokaido/blob/develop/LICENSE)
 [![Goreportcard](https://goreportcard.com/badge/github.com/ironstar-io/tokaido?style=flat-square)](https://goreportcard.com/report/github.com/ironstar-io/tokaido)
 
-Tokaido is an automation platform for Drupal development environments on MacOS.
+Tokaido is an automation platform for Drupal development environments on MacOS, Linux & Windows.
 
 It streamlines the process of creating, managing, saving, and sharing local Drupal projects using Docker.
 
