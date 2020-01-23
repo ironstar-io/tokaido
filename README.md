@@ -17,7 +17,7 @@ Tokaido provides a useful default configuration that makes it easy to get starte
 
 ## Installation
 
-Installation instructions are available on the [Tokaido website](https://docs.tokaido.io/tokaido/get-tokaido)
+Installation instructions are available on the [Tokaido website](https://docs.tokaido.io/en/docs/installation)
 
 ## Features
 
