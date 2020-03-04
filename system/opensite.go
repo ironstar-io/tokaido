@@ -1,6 +1,10 @@
 package system
 
 import (
+	"fmt"
+
+	"github.com/ironstar-io/tokaido/conf"
+	"github.com/ironstar-io/tokaido/constants"
 	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/services/drush"
 	"github.com/ironstar-io/tokaido/services/proxy"
@@ -9,7 +13,7 @@ import (
 
 // OpenSite - Linux Root executable
 func OpenSite(args []string, admin bool) {
-	var p string
+	var port string
 	services := map[string]string{
 		"haproxy": "8443",
 		"adminer": "8080",
@@ -19,21 +23,28 @@ func OpenSite(args []string, admin bool) {
 		"solr":    "8983",
 	}
 
-	if len(args) >= 1 {
-		for _, arg := range args {
-			if len(services[arg]) > 0 {
-				p = docker.LocalPort(arg, services[arg])
-				if arg == "haproxy" {
-					goos.OpenSite("https://localhost:" + p)
-					return
-				}
-				goos.OpenSite("http://localhost:" + p)
-				return
-			}
+	path := ""
+	// login as admin by getting a drush uli
+	if admin == true {
+		path = drush.GetAdminSignOnPath()
+	}
+
+	url := getProjectURL()
+
+	if len(args) == 0 || args[0] == "haproxy" {
+		port = docker.LocalPort("haproxy", services["haproxy"])
+		goos.OpenSite(fmt.Sprintf("https://%s:%s%s", url, port, path))
+		return
+	}
+
+	for _, arg := range args {
+		if len(services[arg]) > 0 {
+			port = docker.LocalPort(arg, services[arg])
+			goos.OpenSite(fmt.Sprintf("http://%s:%s", url, port))
+			return
 		}
 	}
 
-	OpenTokaidoProxy(admin)
 }
 
 // OpenTokaidoProxy ...
@@ -45,4 +56,11 @@ func OpenTokaidoProxy(admin bool) {
 
 	u := proxy.GetProxyURL()
 	goos.OpenSite(u + path)
+}
+
+// getProjectURL ...
+func getProjectURL() string {
+	pn := conf.GetConfig().Tokaido.Project.Name
+
+	return pn + "." + constants.ProxyDomain
 }

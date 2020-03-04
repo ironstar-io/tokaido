@@ -263,10 +263,17 @@ func TokaidoDockerSiteVolumeAttach(path string) []byte {
 		diskMode = ":cached"
 	}
 
+	// use the tokaido proxy tls wildcard certificate
+	tlsPath := h + "/.tok/tls/proxy/"
+
 	vols := `services:
   nginx:
     volumes:
       - ` + path + `:/tokaido/site` + diskMode + `
+  haproxy:
+    volumes:
+      - ` + tlsPath + `wildcard.crt:/tokaido/config/tls/tls.crt
+      - ` + tlsPath + `wildcard.key:/tokaido/config/tls/tls.key
   fpm:
     volumes:
       - ` + path + `:/tokaido/site` + diskMode + `
@@ -476,6 +483,8 @@ services:
     depends_on:
       - varnish
       - nginx
+    volumes:
+      - waiting
     labels:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
