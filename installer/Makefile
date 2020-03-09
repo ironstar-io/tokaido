@@ -53,5 +53,6 @@ build-docker-images:
 	docker save tokaido/php72-fpm:$(TOK_VERSION) > dist/images/tokaido-php72-fpm.tar
 	docker save tokaido/admin72-heavy:$(TOK_VERSION) > dist/images/tokaido-admin72-heavy.tar
 	docker save tokaido/kishu:$(TOK_VERSION) > dist/images/tokaido-kishu.tar
+	docker save tokaido/proxy:1.11.0 > dist/images/tokaido-proxy.tar
 
 .PHONY: build build-windows build-linux build-macos test clean

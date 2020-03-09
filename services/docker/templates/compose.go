@@ -2,6 +2,7 @@ package dockertmpl
 
 import (
 	"log"
+	"runtime"
 
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/constants"
@@ -255,19 +256,33 @@ func TokaidoDockerSiteVolumeAttach(path string) []byte {
 		log.Fatalf("Could not resolve your home directory: %v", err)
 	}
 
+	// diskMode is set to ":cached" and appended to /tokaido/site mounts
+	// this improves osxfs performance by about 50%
+	diskMode := ""
+	if runtime.GOOS == "darwin" {
+		diskMode = ":cached"
+	}
+
+	// use the tokaido proxy tls wildcard certificate
+	tlsPath := h + "/.tok/tls/proxy/"
+
 	vols := `services:
   nginx:
     volumes:
-      - ` + path + `:/tokaido/site
+      - ` + path + `:/tokaido/site` + diskMode + `
+  haproxy:
+    volumes:
+      - ` + tlsPath + `wildcard.crt:/tokaido/config/tls/tls.crt
+      - ` + tlsPath + `wildcard.key:/tokaido/config/tls/tls.key
   fpm:
     volumes:
-      - ` + path + `:/tokaido/site
+      - ` + path + `:/tokaido/site` + diskMode + `
   testcafe:
     volumes:
-      - ` + path + `/.tok/testcafe:/testcafe
+      - ` + path + `/.tok/testcafe:/testcafe` + diskMode + `
   drush:
     volumes:
-      - ` + path + `:/tokaido/site
+      - ` + path + `:/tokaido/site` + diskMode + `
       - tok_composer_cache:/home/tok/.composer/cache`
 
 	// We'll mount the .gitconfig and .drush paths if they exist
@@ -468,6 +483,8 @@ services:
     depends_on:
       - varnish
       - nginx
+    volumes:
+      - waiting
     labels:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `

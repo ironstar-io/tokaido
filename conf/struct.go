@@ -149,6 +149,7 @@ type Services struct {
 		User        string            `yaml:"user,omitempty"`
 		Command     string            `yaml:"command,omitempty"`
 		Volumesfrom []string          `yaml:"volumes_from,omitempty"`
+		Volumes     []string          `yaml:"volumes,omitempty"`
 		Dependson   []string          `yaml:"depends_on,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`
 		Labels      map[string]string `yaml:"labels,omitempty"`
