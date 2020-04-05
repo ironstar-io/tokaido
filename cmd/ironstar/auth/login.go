@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/ironstar-io/tokaido/ironstar/auth"
@@ -19,12 +18,7 @@ var LoginCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		err := auth.IronstarAPILogin(args, PasswordFlag)
 		if err != nil {
-			fmt.Println("Ironstar API login failed!")
-			fmt.Println(err)
-
 			os.Exit(1)
 		}
-
-		fmt.Println("Ironstar API login succeeded!")
 	},
 }

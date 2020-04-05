@@ -16,13 +16,13 @@ func GetCLIPassword(passwordFlag string) (string, error) {
 			return "", err
 		}
 		password = input
+
+		fmt.Println()
 	} else {
 		color.Yellow("Warning: Supplying the password via the command line is potentially insecure")
 
 		password = passwordFlag
 	}
-
-	fmt.Println()
 
 	return password, nil
 }

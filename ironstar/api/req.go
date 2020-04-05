@@ -9,9 +9,14 @@ import (
 	"os"
 )
 
-type IronstarAPIResponse struct {
+type RawResponse struct {
 	StatusCode int
-	Body       string
+	Body       []byte
+}
+
+type FailureBody struct {
+	Message string `json:"message"`
+	Code    string `json:"code"`
 }
 
 // TODO - Change to real prod domain
@@ -26,7 +31,7 @@ func GetBaseURL() string {
 	return IronstarProductionAPIDomain
 }
 
-func Req(authToken, method, path string, payload map[string]string) (*IronstarAPIResponse, error) {
+func Req(authToken, method, path string, payload map[string]string) (*RawResponse, error) {
 	b, err := json.Marshal(payload)
 	if err != nil {
 		return nil, err
@@ -36,7 +41,7 @@ func Req(authToken, method, path string, payload map[string]string) (*IronstarAP
 }
 
 // ReqBytePayload - Make a HTTP request to the Ironstar
-func ReqBytePayload(authToken, method, path string, payload []byte) (*IronstarAPIResponse, error) {
+func ReqBytePayload(authToken, method, path string, payload []byte) (*RawResponse, error) {
 	url := GetBaseURL() + path
 	req, err := http.NewRequest(method, url, bytes.NewBuffer(payload))
 	if err != nil {
@@ -53,22 +58,22 @@ func ReqBytePayload(authToken, method, path string, payload []byte) (*IronstarAP
 	}
 	resp, err := client.Do(req)
 
-	var bodyString string
+	var bodyBytes []byte
 	if resp != nil && resp.Body != nil {
-		bodyBytes, err := ioutil.ReadAll(resp.Body)
+		body, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
 			return nil, err
 		}
-		bodyString = string(bodyBytes)
+		bodyBytes = body
 	}
 
 	if err != nil {
 		return nil, err
 	}
 
-	ir := &IronstarAPIResponse{
+	ir := &RawResponse{
 		StatusCode: resp.StatusCode,
-		Body:       bodyString,
+		Body:       bodyBytes,
 	}
 
 	defer resp.Body.Close()
