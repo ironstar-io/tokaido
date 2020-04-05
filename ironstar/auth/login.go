@@ -7,20 +7,20 @@ import (
 	"github.com/ironstar-io/tokaido/ironstar/api"
 )
 
-func IronstarAPILogin(args []string) error {
-	email, err := GetUserEmail(args)
+func IronstarAPILogin(args []string, passwordFlag string) error {
+	email, err := GetCLIEmail(args)
 	if err != nil {
 		return err
 	}
 
-	err = ValidateEmail(email)
+	password, err := GetCLIPassword(passwordFlag)
 	if err != nil {
 		return err
 	}
 
 	res, err := api.Req("", "POST", "/auth/login", map[string]string{
 		"email":    email,
-		"password": "hello",
+		"password": password,
 	})
 	if err != nil {
 		return err

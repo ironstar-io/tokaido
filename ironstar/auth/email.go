@@ -4,6 +4,8 @@ import (
 	"errors"
 	"regexp"
 	"strings"
+
+	"github.com/ironstar-io/tokaido/ironstar/utils"
 )
 
 // ValidateEmail - Ensure the supplied email address is valid
@@ -35,10 +37,22 @@ func ValidateEmail(email string) error {
 	return nil
 }
 
-func GetUserEmail(args []string) (string, error) {
+func GetCLIEmail(args []string) (string, error) {
+	var email string
 	if len(args) == 0 {
-		return args[0], nil
+		input, err := utils.StdinPrompt("Email: ")
+		if err != nil {
+			return "", err
+		}
+		email = input
+	} else {
+		email = args[0]
 	}
 
-	return args[0], nil
+	err := ValidateEmail(email)
+	if err != nil {
+		return "", err
+	}
+
+	return email, nil
 }

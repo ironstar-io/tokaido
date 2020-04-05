@@ -80,6 +80,8 @@ func RootCmd() *cobra.Command {
 	TestCmd.PersistentFlags().BoolVarP(&useExistingDBFlag, "use-existing-db", "", false, "Run the test suite without recreating the database or temporary users. Note: this may cause test flakiness due to database having prior state.")
 	SnapshotNewCmd.PersistentFlags().StringVarP(&nameFlag, "name", "n", "", "Specify a name to be added to the snapshot name. If not specified, Tokaido will only use the current UTC date and time")
 
+	auth.LoginCmd.PersistentFlags().StringVarP(&auth.PasswordFlag, "password", "p", "", "Supply a password via the command line. Warning: Supplying the password via the command line is potentially insecure")
+
 	NewCmd.PersistentFlags().StringVarP(&templateFlag, "template", "t", "", "Specify a template to use such as drupal8-standard. See templates at: https://github.com/ironstar-io/tokaido-drupal-package-builder")
 
 	return &rootCmd
