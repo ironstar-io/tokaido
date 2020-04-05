@@ -41,6 +41,7 @@ require (
 	github.com/opencontainers/image-spec v1.0.1 // indirect
 	github.com/pelletier/go-toml v1.1.0 // indirect
 	github.com/pkg/errors v0.8.1 // indirect
+	github.com/rs/zerolog v1.18.0
 	github.com/ryanuber/columnize v0.0.0-20190319233515-9e6335e58db3
 	github.com/sanity-io/litter v1.1.0
 	github.com/satori/go.uuid v1.2.0
@@ -53,7 +54,7 @@ require (
 	github.com/spf13/viper v1.0.2
 	github.com/stretchr/testify v1.2.2
 	golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2
-	golang.org/x/net v0.0.0-20190311183353-d8887717615a
+	golang.org/x/net v0.0.0-20200202094626-16171245cfb2
 	golang.org/x/sys v0.0.0-20190215142949-d0b11bdaac8a
 	golang.org/x/time v0.0.0-20190308202827-9d24e82272b4 // indirect
 	google.golang.org/genproto v0.0.0-20190508193815-b515fa19cec8 // indirect

@@ -4,8 +4,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/ironstar-io/tokaido/system/version"
+	"github.com/ironstar-io/tokaido/cmd/ironstar/auth"
 	"github.com/ironstar-io/tokaido/initialize"
+	"github.com/ironstar-io/tokaido/system/version"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -44,13 +45,15 @@ func init() {
 	rootCmd.AddCommand(SyncCmd)
 	rootCmd.AddCommand(SyscheckCmd)
 	rootCmd.AddCommand(TestCmd)
-	// rootCmd.AddCommand(TestNightwatchCmd)
 	rootCmd.AddCommand(TestPhpcbfCmd)
 	rootCmd.AddCommand(TestPhpcsCmd)
 	rootCmd.AddCommand(UpCmd)
 	rootCmd.AddCommand(UpgradeCmd)
 	rootCmd.AddCommand(VersionCmd)
 	rootCmd.AddCommand(WatchCmd)
+
+	rootCmd.AddCommand(auth.AuthCmd)
+	auth.AuthCmd.AddCommand(auth.LoginCmd)
 
 	SnapshotCmd.AddCommand(SnapshotNewCmd)
 	SnapshotCmd.AddCommand(SnapshotDeleteCmd)

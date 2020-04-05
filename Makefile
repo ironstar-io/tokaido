@@ -3,6 +3,7 @@ BUILD_DATE ?= $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 VERSION ?= $(shell git describe --tags)
 
 build:
+	time \
 	go build \
 	-ldflags "\
 	-X $(VERSION_PATH).buildDate=$(BUILD_DATE) \
