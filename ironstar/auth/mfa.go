@@ -51,20 +51,7 @@ func ValidateMFAPasscode(logResBody *AuthLoginBody) (*AuthLoginBody, error) {
 	}
 
 	if res.StatusCode != 200 {
-		f := &api.FailureBody{}
-		err = json.Unmarshal(res.Body, f)
-		if err != nil {
-			return nil, err
-		}
-
-		fmt.Println()
-		color.Red("Ironstar API authentication failed!")
-		fmt.Println()
-		fmt.Printf("Status Code: %+v\n", res.StatusCode)
-		fmt.Println("Ironstar Code: " + f.Code)
-		fmt.Println(f.Message)
-
-		return nil, errors.New("Unsuccessful!")
+		return nil, api.HandleFailure(res)
 	}
 
 	return m, nil

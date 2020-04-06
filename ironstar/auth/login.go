@@ -2,7 +2,6 @@ package auth
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"math"
 	"strconv"
@@ -40,20 +39,7 @@ func IronstarAPILogin(args []string, passwordFlag string) error {
 	}
 
 	if res.StatusCode != 200 {
-		f := &api.FailureBody{}
-		err = json.Unmarshal(res.Body, f)
-		if err != nil {
-			return err
-		}
-
-		fmt.Println()
-		color.Red("Ironstar API authentication failed!")
-		fmt.Println()
-		fmt.Printf("Status Code: %+v\n", res.StatusCode)
-		fmt.Println("Ironstar Code: " + f.Code)
-		fmt.Println(f.Message)
-
-		return errors.New("Unsuccessful!")
+		return api.HandleFailure(res)
 	}
 
 	c, err := mfaCredentialCheck(res.Body, email)
@@ -75,6 +61,11 @@ func IronstarAPILogin(args []string, passwordFlag string) error {
 	fmt.Println()
 	color.Green("User: ")
 	fmt.Println(email)
+
+	if c.Expiry.IsZero() {
+		return nil
+	}
+
 	fmt.Println()
 	color.Green("Expiry: ")
 
