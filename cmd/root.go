@@ -54,6 +54,9 @@ func init() {
 
 	rootCmd.AddCommand(auth.AuthCmd)
 	auth.AuthCmd.AddCommand(auth.LoginCmd)
+	auth.AuthCmd.AddCommand(auth.ShowCmd)
+	auth.AuthCmd.AddCommand(auth.SetProjectCredentialsCmd)
+	auth.AuthCmd.AddCommand(auth.SetDefaultCredentials)
 
 	SnapshotCmd.AddCommand(SnapshotNewCmd)
 	SnapshotCmd.AddCommand(SnapshotDeleteCmd)
