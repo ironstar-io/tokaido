@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"math"
+	"strconv"
 	"time"
 
 	"github.com/ironstar-io/tokaido/ironstar/api"
@@ -31,6 +33,7 @@ func IronstarAPILogin(args []string, passwordFlag string) error {
 	res, err := api.Req("", "POST", "/auth/login", map[string]string{
 		"email":    email,
 		"password": password,
+		"expiry":   time.Now().AddDate(0, 0, 14).UTC().Format(time.RFC3339),
 	})
 	if err != nil {
 		return err
@@ -70,8 +73,13 @@ func IronstarAPILogin(args []string, passwordFlag string) error {
 	fmt.Println()
 	color.Green("Ironstar API authentication succeeded!")
 	fmt.Println()
-	color.Green("Authentication Token: ")
-	fmt.Println(c.IDToken)
+	color.Green("User: ")
+	fmt.Println(email)
+	fmt.Println()
+	color.Green("Expiry: ")
+
+	expDiff := strconv.Itoa(int(math.RoundToEven(c.Expiry.Sub(time.Now().UTC()).Hours() / 24)))
+	fmt.Println(c.Expiry.String() + " (" + expDiff + " days)")
 
 	return nil
 }
