@@ -12,8 +12,9 @@ import (
 )
 
 type AuthLoginBody struct {
-	IDToken string    `json:"id_token"`
-	Expiry  time.Time `json:"expiry"`
+	IDToken          string    `json:"id_token"`
+	RedirectEndpoint string    `json:"redirect_endpoint"`
+	Expiry           time.Time `json:"expiry"`
 }
 
 func IronstarAPILogin(args []string, passwordFlag string) error {
@@ -52,16 +53,15 @@ func IronstarAPILogin(args []string, passwordFlag string) error {
 		return errors.New("Unsuccessful!")
 	}
 
-	b := &AuthLoginBody{}
-	err = json.Unmarshal(res.Body, b)
+	c, err := mfaCredentialCheck(res.Body, email)
 	if err != nil {
 		return err
 	}
 
 	err = UpdateCredentialsFile(Credentials{
 		Login:     email,
-		AuthToken: b.IDToken,
-		Expiry:    b.Expiry,
+		AuthToken: c.IDToken,
+		Expiry:    c.Expiry,
 	})
 	if err != nil {
 		return err
@@ -71,7 +71,27 @@ func IronstarAPILogin(args []string, passwordFlag string) error {
 	color.Green("Ironstar API authentication succeeded!")
 	fmt.Println()
 	color.Green("Authentication Token: ")
-	fmt.Println(b.IDToken)
+	fmt.Println(c.IDToken)
 
 	return nil
+}
+
+func mfaCredentialCheck(body []byte, email string) (*AuthLoginBody, error) {
+	b := &AuthLoginBody{}
+	err := json.Unmarshal(body, b)
+	if err != nil {
+		return nil, err
+	}
+
+	// If this is set, user is an MFA user
+	if b.RedirectEndpoint != "" {
+		c, err := ValidateMFAPasscode(b)
+		if err != nil {
+			return nil, err
+		}
+
+		return c, nil
+	}
+
+	return b, nil
 }
