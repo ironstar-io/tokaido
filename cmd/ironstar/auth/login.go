@@ -1,10 +1,13 @@
 package auth
 
 import (
+	"fmt"
 	"os"
 
+	"github.com/ironstar-io/tokaido/ironstar/api"
 	"github.com/ironstar-io/tokaido/ironstar/auth"
 
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
@@ -18,6 +21,11 @@ var LoginCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		err := auth.IronstarAPILogin(args, PasswordFlag)
 		if err != nil {
+			if err != api.ErrIronstarAPICall {
+				fmt.Println()
+				color.Red(err.Error())
+			}
+
 			os.Exit(1)
 		}
 	},

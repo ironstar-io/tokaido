@@ -19,7 +19,7 @@ func GetCLIPassword(passwordFlag string) (string, error) {
 
 		fmt.Println()
 	} else {
-		color.Yellow("Warning: Supplying the password via the command line is potentially insecure")
+		color.Yellow("Warning: Supplying a password via the command line flag is potentially insecure")
 
 		password = passwordFlag
 	}

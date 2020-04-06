@@ -40,7 +40,7 @@ require (
 	github.com/opencontainers/go-digest v1.0.0-rc1 // indirect
 	github.com/opencontainers/image-spec v1.0.1 // indirect
 	github.com/pelletier/go-toml v1.1.0 // indirect
-	github.com/pkg/errors v0.8.1 // indirect
+	github.com/pkg/errors v0.8.1
 	github.com/rs/zerolog v1.18.0
 	github.com/ryanuber/columnize v0.0.0-20190319233515-9e6335e58db3
 	github.com/sanity-io/litter v1.1.0

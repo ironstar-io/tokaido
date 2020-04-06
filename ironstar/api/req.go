@@ -9,14 +9,17 @@ import (
 	"os"
 )
 
+type Request struct {
+	AuthToken        string
+	Method           string
+	Path             string
+	MapStringPayload map[string]string
+	BytePayload      []byte
+}
+
 type RawResponse struct {
 	StatusCode int
 	Body       []byte
-}
-
-type FailureBody struct {
-	Message string `json:"message"`
-	Code    string `json:"code"`
 }
 
 // TODO - Change to real prod domain
@@ -31,25 +34,34 @@ func GetBaseURL() string {
 	return IronstarProductionAPIDomain
 }
 
-func Req(authToken, method, path string, payload map[string]string) (*RawResponse, error) {
-	b, err := json.Marshal(payload)
+func (r *Request) BuildBytePayload() error {
+	if r.MapStringPayload != nil {
+		b, err := json.Marshal(r.MapStringPayload)
+		if err != nil {
+			return err
+		}
+
+		r.BytePayload = b
+	}
+
+	return nil
+}
+
+// Send - Make a HTTP request to the Ironstar API
+func (r *Request) Send() (*RawResponse, error) {
+	err := r.BuildBytePayload()
 	if err != nil {
 		return nil, err
 	}
 
-	return ReqBytePayload(authToken, method, path, b)
-}
-
-// ReqBytePayload - Make a HTTP request to the Ironstar
-func ReqBytePayload(authToken, method, path string, payload []byte) (*RawResponse, error) {
-	url := GetBaseURL() + path
-	req, err := http.NewRequest(method, url, bytes.NewBuffer(payload))
+	url := GetBaseURL() + r.Path
+	req, err := http.NewRequest(r.Method, url, bytes.NewBuffer(r.BytePayload))
 	if err != nil {
 		return nil, err
 	}
 
 	req.Header.Add("content-type", "application/json")
-	req.Header.Add("authorization", "Bearer "+authToken)
+	req.Header.Add("authorization", "Bearer "+r.AuthToken)
 
 	client := &http.Client{
 		Transport: &http.Transport{

@@ -36,10 +36,17 @@ func ValidateMFAPasscode(logResBody *AuthLoginBody) (*AuthLoginBody, error) {
 		return nil, err
 	}
 
-	res, err := api.Req(logResBody.IDToken, "POST", "/auth/mfa/validate", map[string]string{
-		"passcode": passcode,
-		"expiry":   time.Now().AddDate(0, 0, 14).UTC().Format(time.RFC3339),
-	})
+	req := &api.Request{
+		AuthToken: logResBody.IDToken,
+		Method:    "POST",
+		Path:      "/auth/mfa/validate",
+		MapStringPayload: map[string]string{
+			"passcode": passcode,
+			"expiry":   time.Now().AddDate(0, 0, 14).UTC().Format(time.RFC3339),
+		},
+	}
+
+	res, err := req.Send()
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +58,7 @@ func ValidateMFAPasscode(logResBody *AuthLoginBody) (*AuthLoginBody, error) {
 	}
 
 	if res.StatusCode != 200 {
-		return nil, api.HandleFailure(res)
+		return nil, res.HandleFailure()
 	}
 
 	return m, nil
