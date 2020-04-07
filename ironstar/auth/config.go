@@ -14,7 +14,7 @@ func ReadInGlobals() (conf.Global, error) {
 	globals := conf.Global{}
 	gp := filepath.Join(fs.HomeDir(), ".tok", "global.yml")
 
-	err := SafeTouchGlobalConfigYAML("global")
+	err := SafeTouchConfigYAML("global")
 	if err != nil {
 		return globals, err
 	}

@@ -20,7 +20,7 @@ type Credentials struct {
 	Expiry    time.Time `json:"expiry"`
 }
 
-func SafeTouchGlobalConfigYAML(name string) error {
+func SafeTouchConfigYAML(name string) error {
 	cp := filepath.Join(fs.HomeDir(), ".tok", name+".yml")
 
 	// Initialise the config file if it doesn't exist
@@ -43,7 +43,7 @@ func SafeTouchGlobalConfigYAML(name string) error {
 func ReadInCredentials() ([]Credentials, error) {
 	cp := filepath.Join(fs.HomeDir(), ".tok", "credentials.yml")
 
-	err := SafeTouchGlobalConfigYAML("credentials")
+	err := SafeTouchConfigYAML("credentials")
 	if err != nil {
 		return nil, err
 	}
