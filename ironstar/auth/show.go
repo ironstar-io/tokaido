@@ -5,29 +5,13 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"time"
 
+	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/system/fs"
 
 	"github.com/olekukonko/tablewriter"
 	yaml "gopkg.in/yaml.v2"
 )
-
-type ProjectCredential struct {
-	Name  string `yaml:"name,omitempty"`
-	Path  string `yaml:"path,omitempty"`
-	Login string `yaml:"login,omitempty"`
-}
-
-type AvailableCredential struct {
-	Login  string    `yaml:"login,omitempty"`
-	Expiry time.Time `yaml:"expiry,omitempty"`
-}
-
-type Global struct {
-	DefaultLogin string              `yaml:"defaultlogin,omitempty"`
-	Projects     []ProjectCredential `yaml:"projects,omitempty"`
-}
 
 var ShowCredentialsErrorMsg = "Unable to display credentials"
 
@@ -84,8 +68,8 @@ func IronstarShowCredentials(args []string) error {
 	return nil
 }
 
-func ReadInGlobals() (Global, error) {
-	globals := Global{}
+func ReadInGlobals() (conf.Global, error) {
+	globals := conf.Global{}
 	gp := filepath.Join(fs.HomeDir(), ".tok", "global.yml")
 
 	err := SafeTouchGlobalConfigYAML("global")
