@@ -2,15 +2,9 @@ package auth
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
-	"path/filepath"
-
-	"github.com/ironstar-io/tokaido/conf"
-	"github.com/ironstar-io/tokaido/system/fs"
 
 	"github.com/olekukonko/tablewriter"
-	yaml "gopkg.in/yaml.v2"
 )
 
 var ShowCredentialsErrorMsg = "Unable to display credentials"
@@ -66,26 +60,4 @@ func IronstarShowCredentials(args []string) error {
 	table.Render()
 
 	return nil
-}
-
-func ReadInGlobals() (conf.Global, error) {
-	globals := conf.Global{}
-	gp := filepath.Join(fs.HomeDir(), ".tok", "global.yml")
-
-	err := SafeTouchGlobalConfigYAML("global")
-	if err != nil {
-		return globals, err
-	}
-
-	gBytes, err := ioutil.ReadFile(gp)
-	if err != nil {
-		return globals, err
-	}
-
-	err = yaml.Unmarshal(gBytes, &globals)
-	if err != nil {
-		return globals, err
-	}
-
-	return globals, nil
 }

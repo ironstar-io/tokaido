@@ -31,6 +31,7 @@ func GetConfig() *Config {
 	if err != nil {
 		log.Fatalf("There was an issue reading in your global config file\n%v", err)
 	}
+
 	err = yaml.Unmarshal(gcFile, &config.Global)
 	if err != nil {
 		log.Fatalf("There was an issue unpacking your global config file\n%v", err)
