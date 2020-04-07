@@ -7,7 +7,9 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/ironstar-io/tokaido/constants"
 	"github.com/ironstar-io/tokaido/ironstar/api"
+	"github.com/ironstar-io/tokaido/system/fs"
 
 	"github.com/fatih/color"
 	"github.com/pkg/errors"
@@ -64,6 +66,15 @@ func IronstarAPILogin(args []string, passwordFlag string) error {
 	})
 	if err != nil {
 		return errors.Wrap(err, APILoginErrorMsg)
+	}
+
+	pr := fs.ProjectRoot()
+	if pr != constants.ProjectRootNotFound {
+		err = UpdateGlobalProjectLogin(pr, email)
+		if err != nil {
+			fmt.Println()
+			color.Yellow("Authentication succeeded, but Tokaido was unable to update global credentials: ", err.Error())
+		}
 	}
 
 	fmt.Println()

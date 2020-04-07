@@ -4,10 +4,13 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
+	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/system/fs"
 
+	"github.com/pkg/errors"
 	yaml "gopkg.in/yaml.v2"
 )
 
@@ -84,6 +87,56 @@ func UpdateCredentialsFile(newCreds Credentials) error {
 	}
 
 	fs.Replace(cp, newMarhsalled)
+
+	return nil
+}
+
+func UpdateGlobalProjectLogin(projectRoot, login string) error {
+	globals, err := ReadInGlobals()
+	if err != nil {
+		return errors.Wrap(err, SetCredentialsErrorMsg)
+	}
+
+	var newProjects []conf.Project
+	var projMatch bool = false
+	for _, proj := range globals.Projects {
+		if proj.Path == projectRoot {
+			newProjects = append(newProjects, conf.Project{
+				Name:  proj.Name,
+				Path:  proj.Path,
+				Login: login,
+			})
+
+			projMatch = true
+			continue
+		}
+
+		newProjects = append(newProjects, proj)
+	}
+
+	if !projMatch {
+		prs := strings.Split(projectRoot, "/")
+		if len(prs) == 0 {
+			return errors.New("An unexpected error occurred, exiting...")
+		}
+
+		name := prs[len(prs)-1]
+		newProjects = append(newProjects, conf.Project{
+			Name:  name,
+			Path:  projectRoot,
+			Login: login,
+		})
+	}
+
+	globals.Projects = newProjects
+
+	gp := filepath.Join(fs.HomeDir(), ".tok", "global.yml")
+	newMarhsalled, err := yaml.Marshal(globals)
+	if err != nil {
+		return err
+	}
+
+	fs.Replace(gp, newMarhsalled)
 
 	return nil
 }

@@ -23,5 +23,8 @@ var SetProjectCredentialsCmd = &cobra.Command{
 
 			os.Exit(1)
 		}
+
+		fmt.Println()
+		color.Green("Project credentials successfully updated!")
 	},
 }
