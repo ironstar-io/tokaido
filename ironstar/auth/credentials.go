@@ -29,7 +29,7 @@ func SafeTouchGlobalConfigYAML(name string) error {
 		// The global .tok path requires appropriate permissions
 		gp := filepath.Dir(cp)
 		if !fs.CheckExists(gp) {
-			err := os.MkdirAll(gp, 0700)
+			err := os.MkdirAll(gp, 0600)
 			if err != nil {
 				return err
 			}

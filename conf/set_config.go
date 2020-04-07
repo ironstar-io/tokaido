@@ -351,7 +351,7 @@ func getConfigPath(configFile string) string {
 		// The global .tok path requires appropriate permissions
 		gp := filepath.Dir(cp)
 		if configFile == "global" && !fs.CheckExists(gp) {
-			err := os.MkdirAll(gp, 0700)
+			err := os.MkdirAll(gp, 0600)
 			if err != nil {
 				log.Fatalf("Unexpected error creating global config directory")
 			}
