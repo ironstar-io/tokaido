@@ -26,7 +26,7 @@ type RawResponse struct {
 const IronstarProductionAPIDomain = "https://localhost:8080"
 
 func GetBaseURL() string {
-	ipa := os.Getenv("IRONSTAR_PRODUCTION_API_DOMAIN")
+	ipa := os.Getenv("IRONSTAR_API_ADDRESS")
 	if ipa != "" {
 		return ipa
 	}
