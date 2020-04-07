@@ -17,8 +17,8 @@ type Credentials struct {
 	Expiry    time.Time `json:"expiry"`
 }
 
-func TouchCredentialsFile() error {
-	cp := filepath.Join(fs.HomeDir(), ".tok", "credentials.yml")
+func SafeTouchGlobalConfigYAML(name string) error {
+	cp := filepath.Join(fs.HomeDir(), ".tok", name+".yml")
 
 	// Initialise the config file if it doesn't exist
 	var _, errf = os.Stat(cp)
@@ -40,7 +40,7 @@ func TouchCredentialsFile() error {
 func ReadInCredentials() ([]Credentials, error) {
 	cp := filepath.Join(fs.HomeDir(), ".tok", "credentials.yml")
 
-	err := TouchCredentialsFile()
+	err := SafeTouchGlobalConfigYAML("credentials")
 	if err != nil {
 		return nil, err
 	}

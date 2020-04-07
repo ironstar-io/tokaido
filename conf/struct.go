@@ -4,6 +4,7 @@ package conf
 type Project struct {
 	Name     string `yaml:"name,omitempty"`
 	Path     string `yaml:"path,omitempty"`
+	Login    string `yaml:"login,omitempty"`
 	Database struct {
 		Port int `yaml:"port,omitempty"`
 	} `yaml:"database,omitempty"`
@@ -21,10 +22,11 @@ type Telemetry struct {
 
 // Global contains all our global config settings that are saved in ~/.tok/global.yml
 type Global struct {
-	Syncservice string    `yaml:"syncservice,omitempty"`
-	Projects    []Project `yaml:"projects,omitempty"`
-	Telemetry   Telemetry `yaml:"telemetry,omitempty"`
-	Proxy       struct {
+	Syncservice  string    `yaml:"syncservice,omitempty"`
+	DefaultLogin string    `yaml:"defaultlogin,omitempty"`
+	Projects     []Project `yaml:"projects,omitempty"`
+	Telemetry    Telemetry `yaml:"telemetry,omitempty"`
+	Proxy        struct {
 		Enabled bool `yaml:"enabled"`
 	} `yaml:"proxy,omitempty"`
 }
