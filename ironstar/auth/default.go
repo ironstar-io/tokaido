@@ -1,14 +1,16 @@
 package auth
 
 import (
-	"fmt"
+	"github.com/pkg/errors"
 )
 
 var DefaultCredentialsErrorMsg = "Unable to set default credentials"
 
 func SetDefaultCredentials(args []string) error {
-	fmt.Println(args)
-	fmt.Println("TODO - set default credentials")
+	email, err := GetCLIEmail(args)
+	if err != nil {
+		return errors.Wrap(err, SetCredentialsErrorMsg)
+	}
 
-	return nil
+	return UpdateGlobalDefaultLogin(email)
 }

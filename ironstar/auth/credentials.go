@@ -140,3 +140,22 @@ func UpdateGlobalProjectLogin(projectRoot, login string) error {
 
 	return nil
 }
+
+func UpdateGlobalDefaultLogin(login string) error {
+	globals, err := ReadInGlobals()
+	if err != nil {
+		return errors.Wrap(err, SetCredentialsErrorMsg)
+	}
+
+	globals.DefaultLogin = login
+
+	gp := filepath.Join(fs.HomeDir(), ".tok", "global.yml")
+	newMarhsalled, err := yaml.Marshal(globals)
+	if err != nil {
+		return err
+	}
+
+	fs.Replace(gp, newMarhsalled)
+
+	return nil
+}
