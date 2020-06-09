@@ -9,7 +9,6 @@ import (
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/services/database"
 	"github.com/ironstar-io/tokaido/services/docker"
-	"github.com/ironstar-io/tokaido/services/proxy"
 	"github.com/ironstar-io/tokaido/services/testing/nightwatch/goos"
 	"github.com/ironstar-io/tokaido/services/tok"
 	"github.com/ironstar-io/tokaido/system/console"
@@ -60,10 +59,6 @@ func RunDrupalTests() error {
 }
 
 func calcSiteURL() string {
-	if proxy.CheckProxyUp() == true {
-		return proxy.GetProxyURL()
-	}
-
 	return "https://localhost:" + docker.LocalPort("haproxy", "8443")
 }
 
@@ -108,7 +103,7 @@ func enableChromedriver() {
 
 	if !docker.StatusCheck("chromedriver", conf.GetConfig().Tokaido.Project.Name) {
 		fmt.Println(aurora.Cyan("👾  Restarting Tokaido with Chromedriver enabled    "))
-		tok.Init(true, false, false)
+		tok.Init(true, false)
 
 	}
 }

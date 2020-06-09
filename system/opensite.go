@@ -7,7 +7,6 @@ import (
 	"github.com/ironstar-io/tokaido/constants"
 	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/services/drush"
-	"github.com/ironstar-io/tokaido/services/proxy"
 	"github.com/ironstar-io/tokaido/system/goos"
 )
 
@@ -45,17 +44,6 @@ func OpenSite(args []string, admin bool) {
 		}
 	}
 
-}
-
-// OpenTokaidoProxy ...
-func OpenTokaidoProxy(admin bool) {
-	var path string
-	if admin == true {
-		path = drush.GetAdminSignOnPath()
-	}
-
-	u := proxy.GetProxyURL()
-	goos.OpenSite(u + path)
 }
 
 // getProjectURL ...

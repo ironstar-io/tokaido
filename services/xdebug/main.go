@@ -30,17 +30,12 @@ func Configure() {
 // regenerateGateway - Regenerate the docker-compose.tok.yml file and change the IP value in
 func regenerateGateway(gprj *conf.Project) {
 	docker.HardCheckTokCompose()
-	networkUp := docker.CheckNetworkUp()
 	fpmPort := "9000"
 	if gprj.Xdebug.FpmPort != 0 {
 		fpmPort = strconv.Itoa(gprj.Xdebug.FpmPort)
 	}
 
 	fmt.Printf("🧐   Enabling PHP FPM XDebug Support on port %s\n", aurora.Cyan(fpmPort))
-
-	if networkUp == false {
-		docker.Up()
-	}
 
 	var networkGateway string
 	if runtime.GOOS == "darwin" {
@@ -77,13 +72,6 @@ func regenerateGateway(gprj *conf.Project) {
     external: true`)
 
 	tokComposeYml = append(tokComposeYml[:], composeVolumeYml[:]...)
-
-	composeNetworksYml := []byte(`
-networks:
-  tokaido_proxy:
-    external: true`)
-
-	tokComposeYml = append(tokComposeYml[:], composeNetworksYml[:]...)
 
 	docker.CreateOrReplaceTokCompose(tokComposeYml)
 

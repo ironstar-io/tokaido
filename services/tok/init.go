@@ -42,7 +42,7 @@ func Init(yes, statuscheck bool) {
 	// System readiness checks
 	version.Check()
 	docker.CheckClientVersion()
-	proxy.CreateProxyNetwork()
+	proxy.DecommissionProxy()
 	checkSyncConfig()
 	system.CheckDependencies()
 
@@ -109,12 +109,6 @@ func Init(yes, statuscheck bool) {
 	// Perform post-launch configuration
 	drupal.ConfigureSSH()
 	xdebug.Configure()
-
-	if c.Global.Proxy.Enabled {
-		// This step can't be in a spinner because the spinner can't ask for user input during the SSL trust stage.
-		console.Println(`    Setting up the local.tokaido.io proxy...`, "")
-		proxy.Setup()
-	}
 
 	// Check docker containers
 	ok := docker.StatusCheck("", conf.GetConfig().Tokaido.Project.Name)

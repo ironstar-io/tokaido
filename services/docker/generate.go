@@ -89,14 +89,6 @@ func MarshalledDefaults() []byte {
 
 	tokComposeYml = append(tokComposeYml[:], composeVolumeYml[:]...)
 
-	// Append the network setting for proxy on docker-compose directly, also
-	composeNetworkYml := []byte(`
-networks:
-  tokaido_proxy:
-    external: true`)
-
-	tokComposeYml = append(tokComposeYml[:], composeNetworkYml[:]...)
-
 	return tokComposeYml
 }
 
