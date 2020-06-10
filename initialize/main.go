@@ -86,7 +86,7 @@ func readProjectConfig(command string) {
 	viper.SetDefault("Tokaido.Stability", constants.EdgeVersion)
 	viper.SetDefault("Tokaido.Dependencychecks", true)
 	viper.SetDefault("Tokaido.Enableemoji", emojiDefaults())
-	viper.SetDefault("Tokaido.Phpversion", "7.2")
+	viper.SetDefault("Tokaido.Phpversion", "7.3")
 	viper.SetDefault("Tokaido.Xdebug", false)
 	viper.SetDefault("Tokaido.Project.Name", strings.Replace(filepath.Base(pr), ".", "", -1))
 	viper.SetDefault("Drupal.FilePublicPath", "")

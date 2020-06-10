@@ -77,7 +77,7 @@ func detectDrupalSettings() (string, string) {
 			}
 		}
 		if strings.Contains(path, d8) == true {
-			console.Println("🚇  Found a Drupal 8 site", "")
+			console.Println("🚇  Found a Drupal 8 or Drupal 9 site", "")
 			// Strip the Drupal component from the full path
 			dp = strings.Replace(path, d8, "", -1)
 			// Strip the work dir from the remainder
@@ -100,7 +100,7 @@ func detectDrupalSettings() (string, string) {
 func manualDrupalSettings() (string, string) {
 	vPrompt := promptui.Select{
 		Label: "What major version of Drupal are you running?",
-		Items: []string{"Drupal 8", "Drupal 7"},
+		Items: []string{"Drupal 9", "Drupal 8", "Drupal 7"},
 	}
 
 	_, dv, vErr := vPrompt.Run()
@@ -137,7 +137,7 @@ func manualDrupalSettings() (string, string) {
 	// Convert the human-friendly values to something Tokaido can use
 	var version string
 	switch dv {
-	case "Drupal 8":
+	case "Drupal 8", "Drupal 9":
 		version = "8"
 	case "Drupal 7":
 		version = "7"

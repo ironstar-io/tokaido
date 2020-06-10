@@ -188,7 +188,7 @@ func TokaidoMenu() {
 		},
 		{
 			Name:    "PHP Version",
-			Default: "7.2",
+			Default: "7.3",
 			Type:    "value",
 			Current: GetConfig().Tokaido.Phpversion,
 			Detail:  "Use the latest version of PHP 7.1, 7.2, or 7.3",
