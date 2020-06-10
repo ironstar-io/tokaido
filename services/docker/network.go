@@ -10,16 +10,6 @@ import (
 	"golang.org/x/net/context"
 )
 
-// CheckNetworkUp ...
-func CheckNetworkUp() bool {
-	_, err := utils.CommandSubSplitOutput("docker", "network", "inspect", "tokaido_proxy")
-	if err != nil {
-		return false
-	}
-
-	return true
-}
-
 // GetGateway - Get the Gateway IP adress of the docker network
 func GetGateway(projectName string) string {
 	// Periods being replaced in recent versions of Docker for network names

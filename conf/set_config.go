@@ -45,7 +45,6 @@ func SetConfigValueByArgs(args []string, configType string) {
 	if configType == "project" {
 		// These values must not be written to the project config file so we reset them to nil or empty
 		runningConfig.Global.Syncservice = ""
-		runningConfig.Global.Proxy.Enabled = false
 		runningConfig.Global.Projects = nil
 		runningConfig.Global.Telemetry = Telemetry{}
 

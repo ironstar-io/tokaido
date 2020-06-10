@@ -351,14 +351,6 @@ services:
     labels:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
-    networks:
-      default:
-        aliases:
-        - haproxy
-        - haproxy-test
-        priority: 100
-      tokaido_proxy:
-        priority: 1
   varnish:
     user: "1004"
     image: tokaido/varnish:stable
@@ -426,12 +418,13 @@ services:
       - waiting
     ports:
       - "3306"
-    command: --max_allowed_packet=1073741824 --ignore-db-dir=lost+found
+    command: --max_allowed_packet=1073741824 --ignore-db-dir=lost+found --bind-address=0.0.0.0
     environment:
       MYSQL_DATABASE: tokaido
       MYSQL_USER: tokaido
       MYSQL_PASSWORD: tokaido
       MYSQL_ROOT_PASSWORD: tokaido
+      MYSQL_ROOT_HOST: "%"
     labels:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
@@ -488,14 +481,6 @@ services:
     labels:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
-    networks:
-      default:
-        aliases:
-        - haproxy
-        - haproxy-test
-        priority: 100
-      tokaido_proxy:
-        priority: 1
   varnish:
     user: "1004"
     image: tokaido/varnish:stable
@@ -563,12 +548,13 @@ services:
       - waiting
     ports:
       - "3306"
-    command: --max_allowed_packet=1073741824 --ignore-db-dir=lost+found
+    command: --max_allowed_packet=1073741824 --ignore-db-dir=lost+found --bind-address=0.0.0.0
     environment:
       MYSQL_DATABASE: tokaido
       MYSQL_USER: tokaido
       MYSQL_PASSWORD: tokaido
       MYSQL_ROOT_PASSWORD: tokaido
+      MYSQL_ROOT_HOST: "%"
     labels:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
@@ -624,14 +610,6 @@ services:
     labels:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
-    networks:
-      default:
-        aliases:
-        - haproxy
-        - haproxy-test
-        priority: 100
-      tokaido_proxy:
-        priority: 1
   varnish:
     user: "1004"
     image: tokaido/varnish:stable
@@ -697,12 +675,13 @@ services:
       - waiting
     ports:
       - "3306"
-    command: --max_allowed_packet=1073741824 --ignore-db-dir=lost+found
+    command: --max_allowed_packet=1073741824 --ignore-db-dir=lost+found --bind-address=0.0.0.0
     environment:
       MYSQL_DATABASE: tokaido
       MYSQL_USER: tokaido
       MYSQL_PASSWORD: tokaido
       MYSQL_ROOT_PASSWORD: tokaido
+      MYSQL_ROOT_HOST: "%"
     labels:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
