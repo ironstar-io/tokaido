@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/ironstar-io/tokaido/system/version"
 	"github.com/ironstar-io/tokaido/initialize"
+	"github.com/ironstar-io/tokaido/system/version"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"

@@ -11,6 +11,7 @@ type Template struct {
 	DrupalVersion   int      `yaml:"drupal_version"`
 	Maintainer      string   `yaml:"maintainer"`
 	Name            string   `yaml:"name"`
-	PackageFilename string   `yaml:"package_filename"`
+	PackageFilename string   `yaml:"package_filename,omitempty"`
+	PackageURL      string   `yaml:"package_url,omitempty"`
 	PostUpCommands  []string `yaml:"post_up_commands,omitempty"`
 }
