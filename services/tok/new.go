@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path"
 	"regexp"
 	"strings"
 	"time"
@@ -69,28 +70,45 @@ func resolveProjectName(args []string) (name string) {
 }
 
 func marshalTemplates() types.Templates {
-	req, err := http.NewRequest(http.MethodGet, "https://downloads.tokaido.io/templates.yaml", nil)
-	if err != nil {
-		log.Fatalf("Error while trying to retrieve list of available templates: %v", err)
-	}
+	templateUrls := []string{"https://downloads.tokaido.io/templates.yaml"}
 
-	client := http.Client{
-		Timeout: time.Second * 15,
-	}
-	res, err := client.Do(req)
-	if err != nil {
-		log.Fatalf("Error while trying to retrieve list of available templates: %v", err)
-	}
-
-	body, readErr := ioutil.ReadAll(res.Body)
-	if readErr != nil {
-		log.Fatalf("Error while trying to read list of available templates: %v", err)
+	// If the customer has a custom templates url in their global config, use that
+	c := conf.GetConfig()
+	if strings.Contains(c.Global.CustomTemplates, "http") {
+		templateUrls = append(templateUrls, c.Global.CustomTemplates)
 	}
 
 	templates := types.Templates{}
-	err = yaml.Unmarshal(body, &templates)
-	if err != nil {
-		log.Fatalf("Error while trying to unmarshal list of available templates: %v", err)
+
+	for _, url := range templateUrls {
+		req, err := http.NewRequest(http.MethodGet, url, nil)
+		if err != nil {
+			log.Fatalf("Error while trying to retrieve list of available templates: %v", err)
+		}
+
+		client := http.Client{
+			Timeout: time.Second * 15,
+		}
+		res, err := client.Do(req)
+		if err != nil {
+			log.Fatalf("Error while trying to retrieve list of available templates: %v", err)
+		}
+		if res.StatusCode != 200 {
+			log.Fatalf("Unable to download template list from [%s]. Received response code [%d] but want [200]", url, res.StatusCode)
+		}
+
+		body, readErr := ioutil.ReadAll(res.Body)
+		if readErr != nil {
+			log.Fatalf("Error while trying to read list of available templates: %v", err)
+		}
+
+		t := types.Templates{}
+		err = yaml.Unmarshal(body, &t)
+		if err != nil {
+			log.Fatalf("Error while trying to unmarshal list of available templates from [%s]: %v", url, err)
+		}
+
+		templates.Template = append(templates.Template, t.Template...)
 	}
 
 	return templates
@@ -130,9 +148,17 @@ func unpackTemplate(template types.Template, name string) {
 
 	// Replace CURL with native download
 	utils.CheckCmdHard("curl")
-	utils.StdoutStreamCmdDebugContext(pr, "curl", "-O", "https://downloads.tokaido.io/packages/"+template.PackageFilename)
-	utils.StdoutStreamCmdDebugContext(pr, "tar", "xzf", template.PackageFilename)
-	utils.StdoutStreamCmdDebugContext(pr, "rm", template.PackageFilename)
+	var packageURL string
+	if strings.Contains(template.PackageURL, "http") {
+		packageURL = template.PackageURL
+	} else {
+		packageURL = fmt.Sprintf("https://downloads.tokaido.io/packages/%s", template.PackageFilename)
+	}
+
+	fmt.Printf("downloading package from [%s]\n", packageURL)
+	utils.StdoutStreamCmdDebugContext(pr, "curl", "-O", packageURL)
+	utils.StdoutStreamCmdDebugContext(pr, "tar", "xzf", path.Base(packageURL))
+	utils.StdoutStreamCmdDebugContext(pr, "rm", path.Base(packageURL))
 }
 
 // New - The core run sheet of `tok new {project}`

@@ -32,7 +32,6 @@ func ChooseTemplate(tp *types.Templates) (template types.Template) {
 {{ .Description | faint  }}
 
 Maintainer: {{ .Maintainer | faint }}
-URL: https://downloads.tokaido.io/packages/{{ .PackageFilename | faint }}
 `,
 	}
 

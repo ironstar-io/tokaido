@@ -10,8 +10,8 @@ import (
 
 	"github.com/docker/docker/client"
 	"github.com/ironstar-io/tokaido/conf"
-	"github.com/ironstar-io/tokaido/utils"
 	"github.com/ironstar-io/tokaido/system/wsl"
+	"github.com/ironstar-io/tokaido/utils"
 
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/viper"

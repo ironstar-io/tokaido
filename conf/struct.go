@@ -21,9 +21,10 @@ type Telemetry struct {
 
 // Global contains all our global config settings that are saved in ~/.tok/global.yml
 type Global struct {
-	Syncservice string    `yaml:"syncservice,omitempty"`
-	Projects    []Project `yaml:"projects,omitempty"`
-	Telemetry   Telemetry `yaml:"telemetry,omitempty"`
+	Syncservice     string    `yaml:"syncservice,omitempty"`
+	Projects        []Project `yaml:"projects,omitempty"`
+	Telemetry       Telemetry `yaml:"telemetry,omitempty"`
+	CustomTemplates string    `yaml:"customTemplates,omitempty"`
 }
 
 // Config the application's configuration
