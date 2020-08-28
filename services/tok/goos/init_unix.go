@@ -19,7 +19,7 @@ func InitMessage() {
 
 	fmt.Printf("💻  Run '%s' to ssh into the environment\n", aurora.Bold("ssh "+n+".tok"))
 	fmt.Printf("🌎  Run '%s' to open the environment in your browser\n", aurora.Bold("tok open"))
-	fmt.Printf("👀  Run '%s' to run one-time commands like '%s'\n", aurora.Bold("tok exec"), aurora.Bold("tok exec drush status    "))
+	fmt.Printf("👀  Run '%s' to run one-time commands like '%s'\n", aurora.Bold("tok exec"), aurora.Bold("tok exec drush status"))
 	fmt.Printf("🤔  Run '%s' to check the status of your environment\n", aurora.Bold("tok status"))
 	fmt.Println()
 	fmt.Printf("Come join us in the %s channel in the Drupal Slack community!\n", aurora.Bold("#Tokaido"))

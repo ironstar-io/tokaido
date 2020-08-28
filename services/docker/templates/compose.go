@@ -13,14 +13,14 @@ import (
 func calcPhpVersionString(version string) string {
 	var v string
 	switch version {
-	case "7.1":
-		v = "71"
 	case "7.2":
 		v = "72"
 	case "7.3":
 		v = "73"
+	case "7.4":
+		v = "74"
 	default:
-		log.Fatalf("PHP version %s is not supported. Must use '7.1', '7.2', or '7.3'", version)
+		log.Fatalf("PHP version %s is not supported. Must use 7.2, 7.3, or 7.4", version)
 	}
 
 	return v
@@ -80,7 +80,7 @@ func ImageVersion(phpVersion, stability string) []byte {
   nginx:
     image: tokaido/nginx:` + imageVersion + `
   fpm:
-    image: tokaido/php` + v + `-fpm:` + imageVersion + `
+    image: tokaido/php` + v + `:` + imageVersion + `
   drush:
     image: tokaido/admin` + v + `-heavy:` + imageVersion + ``)
 	}
@@ -95,7 +95,7 @@ func ImageVersion(phpVersion, stability string) []byte {
   nginx:
     image: tokaido/nginx:` + imageVersion + `
   fpm:
-    image: tokaido/php` + v + `-fpm:` + imageVersion + `
+    image: tokaido/php` + v + `:` + imageVersion + `
   drush:
     image: tokaido/admin` + v + `-heavy:` + imageVersion + ``)
 }

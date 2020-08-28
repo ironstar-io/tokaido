@@ -188,10 +188,10 @@ func TokaidoMenu() {
 		},
 		{
 			Name:    "PHP Version",
-			Default: "7.3",
+			Default: "7.4",
 			Type:    "value",
 			Current: GetConfig().Tokaido.Phpversion,
-			Detail:  "Use the latest version of PHP 7.1, 7.2, or 7.3",
+			Detail:  "Use the latest version of PHP 7.2, 7.3, or 7.4",
 		},
 		{
 			Name:    "PHP XDebug Support",
@@ -390,11 +390,6 @@ func TokaidoStabilityMenu() {
 func TokaidoPhpversionMenu() {
 	menu := []ConfigGenericString{
 		{
-			Name:   "PHP 7.1",
-			Type:   "value",
-			Detail: "Enable the latest PHP 7.1 release at the time that this version of Tokaido was created",
-		},
-		{
 			Name:   "PHP 7.2",
 			Type:   "value",
 			Detail: "Enable the latest PHP 7.2 release at the time that this version of Tokaido was created",
@@ -403,6 +398,11 @@ func TokaidoPhpversionMenu() {
 			Name:   "PHP 7.3",
 			Type:   "value",
 			Detail: "Enable the latest PHP 7.3 release at the time that this version of Tokaido was created",
+		},
+		{
+			Name:   "PHP 7.4",
+			Type:   "value",
+			Detail: "Enable the latest PHP 7.4 release at the time that this version of Tokaido was created",
 		},
 		{
 			Name:   "« Tokaido Config",
@@ -440,15 +440,15 @@ func TokaidoPhpversionMenu() {
 
 	switch i {
 	case 0:
-		SetConfigValueByArgs([]string{"tokaido", "phpversion", "7.1"}, "project")
-		reloadConfig()
-		TokaidoMenu()
-	case 1:
 		SetConfigValueByArgs([]string{"tokaido", "phpversion", "7.2"}, "project")
 		reloadConfig()
 		TokaidoMenu()
-	case 2:
+	case 1:
 		SetConfigValueByArgs([]string{"tokaido", "phpversion", "7.3"}, "project")
+		reloadConfig()
+		TokaidoMenu()
+	case 2:
+		SetConfigValueByArgs([]string{"tokaido", "phpversion", "7.4"}, "project")
 		reloadConfig()
 		TokaidoMenu()
 	case 3:
