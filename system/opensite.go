@@ -14,10 +14,9 @@ import (
 func OpenSite(args []string, admin bool) {
 	var port string
 	services := map[string]string{
-		"haproxy": "8443",
 		"adminer": "8080",
 		"mailhog": "8025",
-		"nginx":   "8082",
+		"nginx":   "8443",
 		"varnish": "8081",
 		"solr":    "8983",
 	}
@@ -30,8 +29,8 @@ func OpenSite(args []string, admin bool) {
 
 	url := getProjectURL()
 
-	if len(args) == 0 || args[0] == "haproxy" {
-		port = docker.LocalPort("haproxy", services["haproxy"])
+	if len(args) == 0 || args[0] == "nginx" {
+		port = docker.LocalPort("nginx", services["nginx"])
 		goos.OpenSite(fmt.Sprintf("https://%s:%s%s", url, port, path))
 		return
 	}

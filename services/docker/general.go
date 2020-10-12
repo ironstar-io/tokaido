@@ -18,12 +18,10 @@ import (
 )
 
 var defaultContainers = map[string]string{
-	"drush":   "22",
-	"fpm":     "9000",
-	"haproxy": "8443",
-	"mysql":   "3306",
-	"nginx":   "8082",
-	"varnish": "8081",
+	"drush": "22",
+	"fpm":   "9000",
+	"mysql": "3306",
+	"nginx": "8443",
 }
 
 var optionalContainers = map[string]string{
@@ -150,7 +148,7 @@ func GetContainerIPFromProject(containerName, projectName string) (string, error
 // GetContainerList returns a list of all configured containers in the current project context
 func GetContainerList() []string {
 	// List of containers to be checked when no single container is specifieds
-	cl := []string{"fpm", "nginx", "varnish", "haproxy", "syslog", "drush", "mysql"}
+	cl := []string{"fpm", "nginx", "syslog", "drush", "mysql"}
 
 	// Add additional optional containers to the checklist if they are in use
 	if conf.GetConfig().Services.Kishu.Enabled {

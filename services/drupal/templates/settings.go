@@ -104,7 +104,7 @@ $databases['test']['default'] = [
   'prefix' => '',
 ];
 
-if ($_SERVER['HTTP_HOST'] == "` + s.ProjectName + `-toktestdb.local.tokaido.io:5154" || $_SERVER['HTTP_HOST'] == "haproxy-test:8443") {
+if ($_SERVER['HTTP_HOST'] == "` + s.ProjectName + `-toktestdb.local.tokaido.io:5154" || $_SERVER['HTTP_HOST'] == "nginx-test:8443") {
   Database::addConnectionInfo('test', 'default', $databases['test']['default']);
   Database::setActiveConnection('test');
 }

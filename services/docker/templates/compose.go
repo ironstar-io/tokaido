@@ -73,10 +73,6 @@ func ImageVersion(phpVersion, stability string) []byte {
     image: tokaido/sync:` + imageVersion + `
   syslog:
     image: tokaido/syslog:` + imageVersion + `
-  haproxy:
-    image: tokaido/haproxy:` + imageVersion + `
-  varnish:
-    image: tokaido/varnish:` + imageVersion + `
   nginx:
     image: tokaido/nginx:` + imageVersion + `
   fpm:
@@ -88,10 +84,6 @@ func ImageVersion(phpVersion, stability string) []byte {
 	return []byte(`services:
   syslog:
     image: tokaido/syslog:` + imageVersion + `
-  haproxy:
-    image: tokaido/haproxy:` + imageVersion + `
-  varnish:
-    image: tokaido/varnish:` + imageVersion + `
   nginx:
     image: tokaido/nginx:` + imageVersion + `
   fpm:
@@ -228,24 +220,24 @@ func TokaidoFusionSiteVolumeAttach(path, name string) []byte {
 	return []byte(`services:
   sync:
     volumes:
-      - ` + path + `:/tokaido/host-volume
-      - ` + name + `:/tokaido/site
+      - ` + path + `:/app/host-volume
+      - ` + name + `:/app/site
   drush:
     volumes:
-      - ` + name + `:/tokaido/site
+      - ` + name + `:/app/site
       - tok_composer_cache:/home/tok/.composer/cache
   nginx:
     volumes:
-      - ` + name + `:/tokaido/site
+      - ` + name + `:/app/site
   testcafe:
     volumes:
       - ` + path + `/.tok/testcafe:/testcafe
   fpm:
     volumes:
-      - ` + name + `:/tokaido/site
+      - ` + name + `:/app/site
   kishu:
     volumes:
-      - ` + name + `:/tokaido/site
+      - ` + name + `:/app/site
 `)
 }
 
@@ -256,7 +248,7 @@ func TokaidoDockerSiteVolumeAttach(path string) []byte {
 		log.Fatalf("Could not resolve your home directory: %v", err)
 	}
 
-	// diskMode is set to ":cached" and appended to /tokaido/site mounts
+	// diskMode is set to ":cached" and appended to /app/site mounts
 	// this improves osxfs performance by about 50%
 	diskMode := ""
 	if runtime.GOOS == "darwin" {
@@ -269,20 +261,18 @@ func TokaidoDockerSiteVolumeAttach(path string) []byte {
 	vols := `services:
   nginx:
     volumes:
-      - ` + path + `:/tokaido/site` + diskMode + `
-  haproxy:
-    volumes:
-      - ` + tlsPath + `wildcard.crt:/tokaido/config/tls/tls.crt
-      - ` + tlsPath + `wildcard.key:/tokaido/config/tls/tls.key
+      - ` + path + `:/app/site` + diskMode + `
+      - ` + tlsPath + `wildcard.crt:/app/config/nginx/runtime/tls/default.crt
+      - ` + tlsPath + `wildcard.key:/app/config/nginx/runtime/tls/default.key
   fpm:
     volumes:
-      - ` + path + `:/tokaido/site` + diskMode + `
+      - ` + path + `:/app/site` + diskMode + `
   testcafe:
     volumes:
       - ` + path + `/.tok/testcafe:/testcafe` + diskMode + `
   drush:
     volumes:
-      - ` + path + `:/tokaido/site` + diskMode + `
+      - ` + path + `:/app/site` + diskMode + `
       - tok_composer_cache:/home/tok/.composer/cache`
 
 	// We'll mount the .gitconfig and .drush paths if they exist
@@ -335,31 +325,7 @@ services:
   syslog:
     image: tokaido/syslog:stable
     volumes:
-      - /tokaido/logs
-    labels:
-      io.tokaido.managed: local
-      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
-  haproxy:
-    user: "1005"
-    image: tokaido/haproxy:stable
-    ports:
-      - "8080"
-      - "8443"
-    depends_on:
-      - varnish
-      - nginx
-    labels:
-      io.tokaido.managed: local
-      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
-  varnish:
-    user: "1004"
-    image: tokaido/varnish:stable
-    ports:
-      - "8081"
-    depends_on:
-      - nginx
-    volumes_from:
-      - syslog
+      - /app/logs
     labels:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
@@ -374,6 +340,7 @@ services:
       - fpm
     ports:
       - "8082"
+      - "8443"
     environment:
       DRUPAL_ROOT: docroot
     labels:
@@ -396,7 +363,7 @@ services:
   fpm:
     user: "1001"
     image: tokaido/php71-fpm:stable
-    working_dir: /tokaido/site/
+    working_dir: /app/site/
     volumes:
       - waiting
     volumes_from:
@@ -433,7 +400,7 @@ services:
     hostname: 'tokaido'
     ports:
       - "22"
-    working_dir: /tokaido/site
+    working_dir: /app/site
     volumes:
       - waiting
     volumes_from:
@@ -463,33 +430,7 @@ services:
   syslog:
     image: tokaido/syslog:stable
     volumes:
-      - /tokaido/logs
-    labels:
-      io.tokaido.managed: local
-      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
-  haproxy:
-    user: "1005"
-    image: tokaido/haproxy:stable
-    ports:
-      - "8080"
-      - "8443"
-    depends_on:
-      - varnish
-      - nginx
-    volumes:
-      - waiting
-    labels:
-      io.tokaido.managed: local
-      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
-  varnish:
-    user: "1004"
-    image: tokaido/varnish:stable
-    ports:
-      - "8081"
-    depends_on:
-      - nginx
-    volumes_from:
-      - syslog
+      - /app/logs
     labels:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
@@ -504,6 +445,7 @@ services:
       - fpm
     ports:
       - "8082"
+      - "8443"
     environment:
       DRUPAL_ROOT: docroot
     labels:
@@ -526,7 +468,7 @@ services:
   fpm:
     user: "1001"
     image: tokaido/php71-fpm:stable
-    working_dir: /tokaido/site/
+    working_dir: /app/site/
     volumes:
       - waiting
     volumes_from:
@@ -563,7 +505,7 @@ services:
     hostname: 'tokaido'
     ports:
       - "22"
-    working_dir: /tokaido/site
+    working_dir: /app/site
     volumes:
       - waiting
     volumes_from:
@@ -584,41 +526,17 @@ services:
   unison:
     image: tokaido/unison:2.51.2
     environment:
-      - UNISON_DIR=/tokaido/site
+      - UNISON_DIR=/app/site
       - UNISON_UID=1001
       - UNISON_GID=1001
     ports:
       - "5000"
     volumes:
-      - /tokaido/site
+      - /app/site
   syslog:
     image: tokaido/syslog:stable
     volumes:
-      - /tokaido/logs
-    labels:
-      io.tokaido.managed: local
-      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
-  haproxy:
-    user: "1005"
-    image: tokaido/haproxy:stable
-    ports:
-      - "8080"
-      - "8443"
-    depends_on:
-      - varnish
-      - nginx
-    labels:
-      io.tokaido.managed: local
-      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
-  varnish:
-    user: "1004"
-    image: tokaido/varnish:stable
-    ports:
-      - "8081"
-    depends_on:
-      - nginx
-    volumes_from:
-      - syslog
+      - /app/logs
     labels:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
@@ -632,6 +550,7 @@ services:
       - fpm
     ports:
       - "8082"
+      - "8443"
     environment:
       DRUPAL_ROOT: docroot
     labels:
@@ -654,7 +573,7 @@ services:
   fpm:
     user: "1001"
     image: tokaido/php71-fpm:stable
-    working_dir: /tokaido/site/
+    working_dir: /app/site/
     volumes_from:
       - syslog
       - unison
@@ -690,7 +609,7 @@ services:
     hostname: 'tokaido'
     ports:
       - "22"
-    working_dir: /tokaido/site
+    working_dir: /app/site
     volumes:
       - waiting
     volumes_from:

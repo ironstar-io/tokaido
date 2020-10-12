@@ -59,7 +59,7 @@ func RunDrupalTests() error {
 }
 
 func calcSiteURL() string {
-	return "https://localhost:" + docker.LocalPort("haproxy", "8443")
+	return "https://localhost:" + docker.LocalPort("nginx", "8443")
 }
 
 // Copy and amend .env file if it doesn't already exist

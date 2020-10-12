@@ -47,11 +47,9 @@ build-docker-images:
 	docker save mailhog/mailhog > dist/images/mailhog.tar
 	docker save tokaido/unison:2.51.2 > dist/images/tokaido-unison.tar
 	docker save tokaido/syslog:$(TOK_VERSION) > dist/images/tokaido-syslog.tar
-	docker save tokaido/haproxy:$(TOK_VERSION) > dist/images/tokaido-haproxy.tar
-	docker save tokaido/varnish:$(TOK_VERSION) > dist/images/tokaido-varnish.tar
 	docker save tokaido/nginx:$(TOK_VERSION) > dist/images/tokaido-nginx.tar
-	docker save tokaido/php72-fpm:$(TOK_VERSION) > dist/images/tokaido-php72-fpm.tar
-	docker save tokaido/admin72-heavy:$(TOK_VERSION) > dist/images/tokaido-admin72-heavy.tar
+	docker save tokaido/php74-fpm:$(TOK_VERSION) > dist/images/tokaido-php74-fpm.tar
+	docker save tokaido/admin74-heavy:$(TOK_VERSION) > dist/images/tokaido-admin74-heavy.tar
 	docker save tokaido/kishu:$(TOK_VERSION) > dist/images/tokaido-kishu.tar
 	docker save tokaido/proxy:1.11.0 > dist/images/tokaido-proxy.tar
 
