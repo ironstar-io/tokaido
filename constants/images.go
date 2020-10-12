@@ -5,5 +5,5 @@ const (
 	StableVersion string = "1.13.1"
 
 	// EdgeVersion is the tag for all Tokaido images that are running in Ironstar Non-Production environments at the time of this Tokaido release
-	EdgeVersion string = "1.14.0"
+	EdgeVersion string = "1.14.6"
 )
