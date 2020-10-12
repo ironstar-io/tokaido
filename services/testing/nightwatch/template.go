@@ -16,7 +16,7 @@ func buildEnvFileContents() []byte {
 # don't already have one running, e.g. Apache, you can use PHP's built-in web
 # server by running the following command in your Drupal root folder:
 # php -S localhost:8888 .ht.router.php
-DRUPAL_TEST_BASE_URL=https://haproxy:8443
+DRUPAL_TEST_BASE_URL=https://nginx:8443
 
 # Tests need to be executed with a user in the same group as the web server
 # user.

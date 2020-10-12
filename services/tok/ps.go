@@ -56,37 +56,6 @@ func Ps() {
 		failure = true
 	}
 
-	// Output Haproxy status
-	haproxy := docker.GetContainer("haproxy", pn)
-	if haproxy.State == "running" {
-		port := 0
-		for _, v := range haproxy.Ports {
-			if v.PrivatePort == uint16(constants.HaproxyInternalPort) {
-				port = int(v.PublicPort)
-			}
-		}
-		o = append(o, aurora.Sprintf("haproxy|https://localhost:%d|tok open haproxy|%s", port, aurora.Green(haproxy.State)))
-	} else {
-		o = append(o, aurora.Sprintf("haproxy|-|-|%s", aurora.Yellow("offline")))
-		failure = true
-
-	}
-
-	// Output Varnish status
-	varnish := docker.GetContainer("varnish", pn)
-	if varnish.State == "running" {
-		port := 0
-		for _, v := range varnish.Ports {
-			if v.PrivatePort == uint16(constants.VarnishInternalPort) {
-				port = int(v.PublicPort)
-			}
-		}
-		o = append(o, aurora.Sprintf("varnish|http://localhost:%d|tok open varnish|%s", port, aurora.Green(varnish.State)))
-	} else {
-		o = append(o, aurora.Sprintf("varnish|-|-|%s", aurora.Yellow("offline")))
-		failure = true
-	}
-
 	// Output Nginx status
 	nginx := docker.GetContainer("nginx", pn)
 	if nginx.State == "running" {

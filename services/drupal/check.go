@@ -40,9 +40,9 @@ func CheckLocal() {
 
 // CheckContainer ...
 func CheckContainer() error {
-	haproxyPort := docker.LocalPort("haproxy", "8443")
+	nginxPort := docker.LocalPort("nginx", "8443")
 
-	drupalStatus := utils.BashStringCmd(`curl -sko /dev/null -I -w"%{http_code}" https://localhost:` + haproxyPort + ` | grep 200`)
+	drupalStatus := utils.BashStringCmd(`curl -sko /dev/null -I -w"%{http_code}" https://localhost:` + nginxPort + ` | grep 200`)
 	if drupalStatus == "200" || drupalStatus == "302" || drupalStatus == "301" {
 		console.Println("😁  Drupal is ready on HTTPS", "√")
 		return nil
