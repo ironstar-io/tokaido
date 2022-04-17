@@ -25,26 +25,6 @@ func Ps() {
 	o := []string{}
 	o = append(o, "Container|Local Endpoint|Shortcut|Status")
 	o = append(o, "--------|--------|--------|--------")
-	// Output Unison status if relevant
-	if c.Global.Syncservice == "unison" {
-		unison := docker.GetContainer("unison", pn)
-		if unison.State == "running" {
-			o = append(o, aurora.Sprintf("unison(sync)|-|-|%s", aurora.Green(unison.State)))
-		} else {
-			o = append(o, aurora.Sprintf("unison(sync)|-|-|%s", aurora.Yellow("offline")))
-			failure = true
-		}
-	}
-
-	if conf.GetConfig().Services.Chromedriver.Enabled {
-		chromedriver := docker.GetContainer("chromedriver", pn)
-		if chromedriver.State == "running" {
-			o = append(o, aurora.Sprintf("chromedriver|-|-|%s", aurora.Green(chromedriver.State)))
-		} else {
-			o = append(o, aurora.Sprintf("chromedriver|-|-|%s", aurora.Yellow("offline")))
-			failure = true
-		}
-	}
 
 	// Output Drush status
 	admin := docker.GetContainer("drush", pn)

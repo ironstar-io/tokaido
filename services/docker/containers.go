@@ -16,7 +16,10 @@ func getContainerState(name, project string) (state string, err error) {
 	project = strings.ToLower(project)
 
 	filter := filters.NewArgs()
-	filter.Add("name", project+"_"+name)
+	cn := fmt.Sprintf("%s-%s", project, name)
+	filter.Add("name", cn)
+
+	utils.DebugString(fmt.Sprintf("looking for container name: %s", cn))
 
 	containers, err := dcli.ContainerList(context.Background(), types.ContainerListOptions{
 		Filters: filter,
@@ -67,7 +70,7 @@ func GetContainer(name, project string) types.Container {
 	project = strings.ToLower(project)
 
 	filter := filters.NewArgs()
-	cn := project + "_" + name
+	cn := project + "-" + name
 	filter.Add("name", cn)
 
 	containers, err := dcli.ContainerList(context.Background(), types.ContainerListOptions{

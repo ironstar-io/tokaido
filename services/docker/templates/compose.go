@@ -97,6 +97,7 @@ func EnableSolr(version string) []byte {
 	return []byte(`services:
   solr:
     image: tokaido/solr:` + version + `
+    platform: linux/amd64
     ports:
       - "8983"
     entrypoint:
@@ -112,6 +113,7 @@ func EnableSolr(version string) []byte {
 func EnableRedis(version string) []byte {
 	return []byte(`services:
   redis:
+    platform: linux/amd64
     image: redis:` + version + `
     ports:
       - "6379"
@@ -124,6 +126,7 @@ func EnableRedis(version string) []byte {
 func EnableMailhog(version string) []byte {
 	return []byte(`services:
   mailhog:
+    platform: linux/amd64
     image: mailhog/mailhog:` + version + `
     ports:
       - "1025"
@@ -137,6 +140,7 @@ func EnableMailhog(version string) []byte {
 func EnableAdminer(version string) []byte {
 	return []byte(`services:
   adminer:
+    platform: linux/amd64
     image: adminer:` + version + `
     ports:
       - "8080"
@@ -149,6 +153,7 @@ func EnableAdminer(version string) []byte {
 func EnableMemcache(version string) []byte {
 	return []byte(`services:
   memcache:
+    platform: linux/amd64
     labels:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
@@ -159,6 +164,7 @@ func EnableMemcache(version string) []byte {
 func EnableChromedriver() []byte {
 	return []byte(`services:
   chromedriver:
+    platform: linux/amd64
     labels:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
@@ -212,6 +218,7 @@ func SetDatabasePort(port string) []byte {
 func SetUnisonVersion(version string) []byte {
 	return []byte(`services:
   unison:
+    platform: linux/amd64
     image: tokaido/unison:` + version)
 }
 
@@ -313,6 +320,8 @@ var ComposeTokDefaultsFusionSync = []byte(`
 version: "2"
 services:
   sync:
+    platform: linux/amd64
+    platform: linux/amd64
     image: tokaido/sync:stable
     volumes:
       - waiting
@@ -323,6 +332,7 @@ services:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
   syslog:
+    platform: linux/amd64
     image: tokaido/syslog:stable
     volumes:
       - /app/logs
@@ -330,6 +340,7 @@ services:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
   nginx:
+    platform: linux/amd64
     user: "1002"
     image: tokaido/nginx:stable
     volumes:
@@ -347,6 +358,7 @@ services:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
   testcafe:
+    platform: linux/amd64
     image: testcafe/testcafe
     working_dir: /testcafe
     command: tail -f /dev/null
@@ -361,6 +373,7 @@ services:
     ports:
       - "1337"
   fpm:
+    platform: linux/amd64
     user: "1001"
     image: tokaido/php71-fpm:stable
     working_dir: /app/site/
@@ -378,6 +391,7 @@ services:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
   mysql:
+    platform: linux/amd64
     image: mysql:5.7
     volumes_from:
       - syslog
@@ -396,6 +410,7 @@ services:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
   drush:
+    platform: linux/amd64
     image: tokaido/admin71-heavy:stable
     hostname: 'tokaido'
     ports:
@@ -413,6 +428,7 @@ services:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
   kishu:
+    platform: linux/amd64
     image: tokaido/kishu:stable
     volumes:
       - waiting
@@ -428,6 +444,7 @@ var ComposeTokDefaultsDockerVolume = []byte(`
 version: "2"
 services:
   syslog:
+    platform: linux/amd64
     image: tokaido/syslog:stable
     volumes:
       - /app/logs
@@ -435,6 +452,7 @@ services:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
   nginx:
+    platform: linux/amd64
     user: "1002"
     image: tokaido/nginx:stable
     volumes:
@@ -452,6 +470,7 @@ services:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
   testcafe:
+    platform: linux/amd64
     image: testcafe/testcafe
     working_dir: /testcafe
     command: tail -f /dev/null
@@ -466,6 +485,7 @@ services:
     ports:
       - "1337"
   fpm:
+    platform: linux/amd64
     user: "1001"
     image: tokaido/php71-fpm:stable
     working_dir: /app/site/
@@ -484,6 +504,7 @@ services:
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
   mysql:
     image: mysql:5.7
+    platform: linux/amd64
     volumes_from:
       - syslog
     volumes:
@@ -501,6 +522,7 @@ services:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
   drush:
+    platform: linux/amd64
     image: tokaido/admin71-heavy:stable
     hostname: 'tokaido'
     ports:
@@ -524,6 +546,7 @@ var ComposeTokDefaultsUnison = []byte(`
 version: "2"
 services:
   unison:
+    platform: linux/amd64
     image: tokaido/unison:2.51.2
     environment:
       - UNISON_DIR=/app/site
@@ -534,6 +557,7 @@ services:
     volumes:
       - /app/site
   syslog:
+    platform: linux/amd64
     image: tokaido/syslog:stable
     volumes:
       - /app/logs
@@ -541,6 +565,8 @@ services:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
   nginx:
+    platform: linux/amd64
+    platform: linux/amd64
     user: "1002"
     image: tokaido/nginx:stable
     volumes_from:
@@ -557,8 +583,10 @@ services:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
   testcafe:
+    platform: linux/amd64
     image: testcafe/testcafe
     working_dir: /testcafe
+    platform: linux/amd64
     command: tail -f /dev/null
     entrypoint:
       - tail
@@ -571,7 +599,9 @@ services:
     ports:
       - "1337"
   fpm:
+    platform: linux/amd64
     user: "1001"
+    platform: linux/amd64
     image: tokaido/php71-fpm:stable
     working_dir: /app/site/
     volumes_from:
@@ -587,7 +617,9 @@ services:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
   mysql:
+    platform: linux/amd64
     image: mysql:5.7
+    platform: linux/amd64
     volumes_from:
       - syslog
     volumes:
@@ -605,7 +637,9 @@ services:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
   drush:
+    platform: linux/amd64
     image: tokaido/admin71-heavy:stable
+    platform: linux/amd64
     hostname: 'tokaido'
     ports:
       - "22"

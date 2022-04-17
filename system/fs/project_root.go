@@ -20,7 +20,6 @@ func ProjectRoot() string {
 		return wd
 	}
 
-
 	return ScanUp(wd)
 }
 

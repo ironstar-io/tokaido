@@ -1,11 +1,12 @@
+//go:build windows
 // +build windows
 
 package fs
 
 import (
 	"fmt"
-	"os"
 	"io/ioutil"
+	"os"
 )
 
 // Replace ...

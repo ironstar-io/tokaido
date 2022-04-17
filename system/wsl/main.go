@@ -1,9 +1,9 @@
 package wsl
 
 import (
-	"strings"
 	"io/ioutil"
-	
+	"strings"
+
 	"github.com/ironstar-io/tokaido/system/fs"
 )
 
@@ -14,10 +14,10 @@ func IsWSL() bool {
 	}
 
 	b, err := ioutil.ReadFile("/proc/version")
-    if err != nil {
+	if err != nil {
 		return false
-    }
+	}
 	s := string(b)
-		
+
 	return strings.Contains(s, "Microsoft")
 }
