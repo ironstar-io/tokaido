@@ -17,23 +17,22 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Prepare
-        id: prep
-        run: |
-          VERSION=experimental
+      id: prep
+      run: |
+        VERSION=experimental
 
-          # If this belongs to a release branch, create an experimental release for that minor version
-          if [[ $GITHUB_REF_TYPE == "branch" && $GITHUB_REF == "release*" ]]; then
-            VERSION="${GITHUB_REF#*-}-experimental"
-          fi
+        # If this belongs to a release branch, create an experimental release for that minor version
+        if [[ $GITHUB_REF_TYPE == "branch" && $GITHUB_REF == "release*" ]]; then
+          VERSION="${GITHUB_REF#*-}-experimental"
+        fi
 
-          # If this is git tag, use the tag name as a docker tag
-          if [[ $GITHUB_REF == refs/tags/* ]]; then
-            VERSION=${GITHUB_REF#refs/tags/v}
-          fi
+        # If this is git tag, use the tag name as a docker tag
+        if [[ $GITHUB_REF == refs/tags/* ]]; then
+          VERSION=${GITHUB_REF#refs/tags/v}
+        fi
 
-          # Set output parameters.
-          echo ::set-output name=version::${VERSION}
-
+        # Set output parameters.
+        echo ::set-output name=version::${VERSION}
 
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v1
