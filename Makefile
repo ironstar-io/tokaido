@@ -89,11 +89,11 @@ php74: ## Build and release the php74 image
 
 .PHONY: build-php74
 build-php74:
-	cd images/php74 && docker build . ${DOCKER_CLI_FLAGS} --build-arg TOK_VERSION=${TOK_VERSION} -t tokaido/php74:${TOK_VERSION}
+	cd images/php74 && docker buildx build --platform linux/arm64/v8,linux/amd64 . ${DOCKER_CLI_FLAGS} --build-arg TOK_VERSION=${TOK_VERSION} -t tokaido/php74:${TOK_VERSION}
 
-.PHONY: push-base
+.PHONY: push-php74
 push-base:
-	docker push tokaido/base:${TOK_VERSION}
+	docker push tokaido/php74:${TOK_VERSION}
 
 
 
