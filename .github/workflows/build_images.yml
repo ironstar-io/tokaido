@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    run-on: ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
 
     - name: Checkout
@@ -42,11 +42,11 @@ jobs:
       uses: docker/setup-buildx-action@v1
 
     - name: Login to DockerHub
-        if: github.event_name != 'pull_request'
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+      if: github.event_name != 'pull_request'
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Build Base
       uses: docker/build-push-action@v2
@@ -57,6 +57,7 @@ jobs:
         platforms: linux/amd64,linux/arm64
         push: true
         tags: tokaido/base:${{ steps.prep.outputs.version }}
+
 
 
 
