@@ -58,6 +58,33 @@ jobs:
         push: true
         tags: tokaido/base:${{ steps.prep.outputs.version }}
 
+    - name: Build php7.4
+      uses: docker/build-push-action@v2
+      with:
+        builder: ${{ steps.buildx.outputs.name }}
+        context: images/php74/
+        file: images/php74/Dockerfile
+        platforms: linux/amd64,linux/arm64
+        push: true
+        tags: tokaido/php74:${{ steps.prep.outputs.version }}
 
+    - name: Build php8.0
+      uses: docker/build-push-action@v2
+      with:
+        builder: ${{ steps.buildx.outputs.name }}
+        context: images/php80/
+        file: images/php80/Dockerfile
+        platforms: linux/amd64,linux/arm64
+        push: true
+        tags: tokaido/php80:${{ steps.prep.outputs.version }}
 
+    - name: Build php8.1
+      uses: docker/build-push-action@v2
+      with:
+        builder: ${{ steps.buildx.outputs.name }}
+        context: images/php81/
+        file: images/php81/Dockerfile
+        platforms: linux/amd64,linux/arm64
+        push: true
+        tags: tokaido/php81:${{ steps.prep.outputs.version }}
 
