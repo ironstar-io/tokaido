@@ -67,6 +67,7 @@ jobs:
         platforms: linux/amd64,linux/arm64
         push: true
         tags: tokaido/php74:${{ steps.prep.outputs.version }}
+        build-args: TOK_VERSION=${{ steps.prep.outputs.version }}
 
     - name: Build php8.0
       uses: docker/build-push-action@v2
@@ -77,6 +78,7 @@ jobs:
         platforms: linux/amd64,linux/arm64
         push: true
         tags: tokaido/php80:${{ steps.prep.outputs.version }}
+        build-args: TOK_VERSION=${{ steps.prep.outputs.version }}
 
     - name: Build php8.1
       uses: docker/build-push-action@v2
@@ -87,4 +89,5 @@ jobs:
         platforms: linux/amd64,linux/arm64
         push: true
         tags: tokaido/php81:${{ steps.prep.outputs.version }}
+        build-args: TOK_VERSION=${{ steps.prep.outputs.version }}
 
