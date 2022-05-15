@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: [self-hosted, arm64, linux]
+    runs-on: [self-hosted, x86, linux]
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -48,7 +48,7 @@ jobs:
         builder: ${{ steps.buildx.outputs.name }}
         context: images/base/
         file: images/base/Dockerfile
-        platforms: linux/arm64
+        platforms: linux/amd64
         push: true
         tags: tokaido/base:${{ steps.prep.outputs.version }}
         cache-from: type=local,src=/tmp/.buildx-cache
@@ -66,4 +66,3 @@ jobs:
         cache-to: type=local,dest=/tmp/.buildx-cache
         build-args: |
           TOK_VERSION=${{ steps.prep.outputs.version }}
-          LIBRARY_PATH=/usr/lib/arm64-linux-gnu

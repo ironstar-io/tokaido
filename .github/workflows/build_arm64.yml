@@ -1,0 +1,68 @@
+---
+name: 'build images'
+
+on:
+  push:
+    branches:
+    - 'release-*'
+    tags:
+    - 'v*.*.*'
+
+jobs:
+  build:
+    runs-on: [self-hosted, arm64, linux]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Prepare
+      id: prep
+      run: |
+        VERSION=experimental
+        echo "GITHUB_REF=${GITHUB_REF}"
+        echo "GITHUB_REF_TYPE=${GITHUB_REF_TYPE}"
+
+        # If this belongs to a release branch, create an experimental release for that minor version
+        if [[ $GITHUB_REF_TYPE == "branch" && $GITHUB_REF == "release*" ]]; then
+          VERSION="${GITHUB_REF#*-}-experimental"
+        fi
+
+        # If this is git tag, use the tag name as a docker tag
+        if [[ $GITHUB_REF == refs/tags/* ]]; then
+          VERSION=${GITHUB_REF#refs/tags/v}
+        fi
+
+        # Set output parameters.
+        echo ::set-output name=version::${VERSION}
+    - name: Set up Docker Buildx
+      id: buildx
+      uses: docker/setup-buildx-action@v1
+    - name: Login to DockerHub
+      if: github.event_name != 'pull_request'
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+    - name: Build Base
+      uses: docker/build-push-action@v2
+      with:
+        builder: ${{ steps.buildx.outputs.name }}
+        context: images/base/
+        file: images/base/Dockerfile
+        platforms: linux/arm64
+        push: true
+        tags: tokaido/base:${{ steps.prep.outputs.version }}
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,dest=/tmp/.buildx-cache
+    - name: Build php7.4
+      uses: docker/build-push-action@v2
+      with:
+        builder: ${{ steps.buildx.outputs.name }}
+        context: images/php74/
+        file: images/php74/Dockerfile
+        platforms: linux/arm64
+        push: true
+        tags: tokaido/php74:${{ steps.prep.outputs.version }}
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,dest=/tmp/.buildx-cache
+        build-args: |
+          TOK_VERSION=${{ steps.prep.outputs.version }}
