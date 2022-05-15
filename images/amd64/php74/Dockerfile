@@ -135,15 +135,8 @@ RUN mkdir -p /usr/local/etc/php/ \
 RUN curl -s https://getcomposer.org/installer > composer-setup.php && /usr/local/bin/php composer-setup.php && mv composer.phar /usr/local/bin/composer && rm composer-setup.php  \
     && su - app -s /bin/bash -c "/usr/local/bin/composer global require \"drush/drush\""  \
     && curl -sSLo /usr/local/bin/drush https://github.com/drush-ops/drush-launcher/releases/download/0.10.1/drush.phar \
-    && curl -sSLo /tmp/gs.tgz https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs9561/ghostscript-9.56.1-linux-x86_64.tgz \
-    && tar xzf gs.tgz \
-    && cp ghostscript-9.56.1-linux-x86_64/gs-9561-linux-x86_64 /usr/bin/gs \
-    && curl -sLO https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.buster_amd64.deb \
-    && dpkg -i wkhtmltox_0.12.6-1.buster_amd64.deb \
-    && cp /usr/local/bin/wkhtmltopdf /usr/bin \
-    && cp /usr/local/bin/wkhtmltoimage /usr/bin \
-    && chmod ug+x /usr/local/bin/drush /usr/bin/gs /usr/local/bin/wkhtmltopdf /usr/local/bin/wkhtmltoimage \
-    && chown app:app /usr/local/bin/drush /usr/bin/gs /usr/local/bin/wkhtmltopdf /usr/local/bin/wkhtmltoimage \
+    && chmod ug+x /usr/local/bin/drush \
+    && chown app:app /usr/local/bin/drush \
     && ln -sf /usr/bin/msmtp /usr/sbin/sendmail \
     && ln -sf /app/config/msmtp/msmtprc /etc/msmtprc
 

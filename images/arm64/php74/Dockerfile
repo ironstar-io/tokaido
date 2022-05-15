@@ -135,7 +135,6 @@ RUN mkdir -p /usr/local/etc/php/ \
 RUN curl -s https://getcomposer.org/installer > composer-setup.php && /usr/local/bin/php composer-setup.php && mv composer.phar /usr/local/bin/composer && rm composer-setup.php  \
     && su - app -s /bin/bash -c "/usr/local/bin/composer global require \"drush/drush\""  \
     && curl -sSLo /usr/local/bin/drush https://github.com/drush-ops/drush-launcher/releases/download/0.10.1/drush.phar \
-    && tar xzf gs.tgz \
     && chmod ug+x /usr/local/bin/drush \
     && chown app:app /usr/local/bin/drush \
     && ln -sf /usr/bin/msmtp /usr/sbin/sendmail \
