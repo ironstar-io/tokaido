@@ -50,7 +50,7 @@ jobs:
         file: images/amd64/base/Dockerfile
         platforms: linux/amd64
         push: true
-        tags: tokaido/base:${{ steps.prep.outputs.version }}
+        tags: tokaido/base:${{ steps.prep.outputs.version }}-amd64
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,dest=/tmp/.buildx-cache
     - name: Build php7.4
@@ -61,7 +61,7 @@ jobs:
         file: images/amd64/php74/Dockerfile
         platforms: linux/amd64
         push: true
-        tags: tokaido/php74:${{ steps.prep.outputs.version }}
+        tags: tokaido/php74:${{ steps.prep.outputs.version }}-amd64
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,dest=/tmp/.buildx-cache
         build-args: |
