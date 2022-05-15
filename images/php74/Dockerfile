@@ -1,4 +1,5 @@
 ARG TOK_VERSION
+ARG LIBRARY_PATH
 FROM php:7.4-fpm AS php
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
@@ -98,7 +99,8 @@ COPY --from=php /usr/local/bin/php /usr/local/bin/php
 COPY --from=php /usr/local/php/php /usr/local/php/php
 COPY --from=php /usr/local/lib/php /usr/local/lib/php
 COPY --from=php /usr/lib /usr/lib
-COPY --from=php /usr/lib/x86_64-linux-gnu /usr/lib/x86_64-linux-gnu
+#COPY --from=php /usr/lib/x86_64-linux-gnu /usr/lib/x86_64-linux-gnu
+COPY --from=php $LIBRARY_PATH $LIBRARY_PATH
 COPY --from=php /tmp/version.txt /app/config/php/version.txt
 COPY --from=php /usr/local/etc/php/conf.d /app/config/php/conf.d
 

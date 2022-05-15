@@ -10,16 +10,16 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
-
     - name: Checkout
       uses: actions/checkout@v2
-
     - name: Prepare
       id: prep
       run: |
         VERSION=experimental
+        echo "GITHUB_REF=${GITHUB_REF}"
+        echo "GITHUB_REF_TYPE=${GITHUB_REF_TYPE}"
 
         # If this belongs to a release branch, create an experimental release for that minor version
         if [[ $GITHUB_REF_TYPE == "branch" && $GITHUB_REF == "release*" ]]; then
@@ -33,21 +33,15 @@ jobs:
 
         # Set output parameters.
         echo ::set-output name=version::${VERSION}
-
-    - name: Set up QEMU
-      uses: docker/setup-qemu-action@v1
-
     - name: Set up Docker Buildx
       id: buildx
       uses: docker/setup-buildx-action@v1
-
     - name: Login to DockerHub
       if: github.event_name != 'pull_request'
       uses: docker/login-action@v1
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
-
     - name: Build Base
       uses: docker/build-push-action@v2
       with:
@@ -57,37 +51,13 @@ jobs:
         platforms: linux/amd64,linux/arm64
         push: true
         tags: tokaido/base:${{ steps.prep.outputs.version }}
-
     - name: Build php7.4
       uses: docker/build-push-action@v2
       with:
+        arch: arm64
         builder: ${{ steps.buildx.outputs.name }}
         context: images/php74/
         file: images/php74/Dockerfile
-        platforms: linux/amd64,linux/arm64
+        platforms: linux/amd64
         push: true
         tags: tokaido/php74:${{ steps.prep.outputs.version }}
-        build-args: TOK_VERSION=${{ steps.prep.outputs.version }}
-
-    - name: Build php8.0
-      uses: docker/build-push-action@v2
-      with:
-        builder: ${{ steps.buildx.outputs.name }}
-        context: images/php80/
-        file: images/php80/Dockerfile
-        platforms: linux/amd64,linux/arm64
-        push: true
-        tags: tokaido/php80:${{ steps.prep.outputs.version }}
-        build-args: TOK_VERSION=${{ steps.prep.outputs.version }}
-
-    - name: Build php8.1
-      uses: docker/build-push-action@v2
-      with:
-        builder: ${{ steps.buildx.outputs.name }}
-        context: images/php81/
-        file: images/php81/Dockerfile
-        platforms: linux/amd64,linux/arm64
-        push: true
-        tags: tokaido/php81:${{ steps.prep.outputs.version }}
-        build-args: TOK_VERSION=${{ steps.prep.outputs.version }}
-

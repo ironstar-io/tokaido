@@ -89,7 +89,8 @@ php74: ## Build and release the php74 image
 
 .PHONY: build-php74
 build-php74:
-	cd images/php74 && docker buildx build --platform linux/arm64/v8,linux/amd64 . ${DOCKER_CLI_FLAGS} --build-arg TOK_VERSION=${TOK_VERSION} -t tokaido/php74:${TOK_VERSION}
+	cd images/php74 && docker buildx build --platform linux/amd64 . ${DOCKER_CLI_FLAGS} --build-arg TOK_VERSION=${TOK_VERSION} --build-arg LIBRAY_PATH=/usr/lib/x86_64-linux-gnu -t tokaido/php74:${TOK_VERSION}
+	cd images/php74 && docker buildx build --platform linux/amd64 . ${DOCKER_CLI_FLAGS} --build-arg TOK_VERSION=${TOK_VERSION} --build-arg LIBRAY_PATH=/usr/lib/arm64-linux-gnu -t tokaido/php74:${TOK_VERSION}
 
 .PHONY: push-php74
 push-base:
