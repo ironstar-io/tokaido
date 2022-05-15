@@ -46,8 +46,8 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         builder: ${{ steps.buildx.outputs.name }}
-        context: images/universal/base/
-        file: images/universal/base/Dockerfile
+        context: images/arm64/base/
+        file: images/arm64/base/Dockerfile
         platforms: linux/arm64
         push: true
         tags: tokaido/base:${{ steps.prep.outputs.version }}
