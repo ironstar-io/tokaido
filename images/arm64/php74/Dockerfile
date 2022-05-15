@@ -1,6 +1,6 @@
 ARG TOK_VERSION
 
-FROM php:7.4-fpm AS php
+FROM --platform=linux/arm64 php:7.4-fpm AS php
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
