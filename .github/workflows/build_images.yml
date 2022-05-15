@@ -64,3 +64,6 @@ jobs:
         tags: tokaido/php74:${{ steps.prep.outputs.version }}
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,dest=/tmp/.buildx-cache
+        build-args: |
+          --TOK_VERSION=${{ steps.prep.outputs.version }}
+          --LIBRARY_PATH=/usr/lib/arm64-linux-gnu
