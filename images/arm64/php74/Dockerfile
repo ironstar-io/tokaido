@@ -83,7 +83,7 @@ RUN apt-get update \
  && docker-php-source delete \
  && echo $PHP_VERSION > /tmp/version.txt
 
-FROM tokaido/base:${TOK_VERSION} 
+FROM --platform=linux/arm64 tokaido/base:${TOK_VERSION} 
 ARG TOK_VERSION
 ARG LIBRARY_PATH
 LABEL io.ironstar.platform=tokaido

@@ -1,5 +1,5 @@
 ---
-name: 'build images'
+name: 'build x86 images'
 
 on:
   push:
@@ -59,7 +59,7 @@ jobs:
         builder: ${{ steps.buildx.outputs.name }}
         context: images/amd64/php74/
         file: images/amd64/php74/Dockerfile
-        platforms: linux/arm64
+        platforms: linux/amd64
         push: true
         tags: tokaido/php74:${{ steps.prep.outputs.version }}
         cache-from: type=local,src=/tmp/.buildx-cache

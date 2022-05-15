@@ -1,5 +1,5 @@
 ---
-name: 'build images'
+name: 'build arm64 images'
 
 on:
   push:
