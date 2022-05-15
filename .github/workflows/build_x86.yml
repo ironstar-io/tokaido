@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: [self-hosted, x86, linux]
+    runs-on: [self-hosted, x64, linux]
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -22,7 +22,7 @@ jobs:
         echo "GITHUB_REF_TYPE=${GITHUB_REF_TYPE}"
 
         # If this belongs to a release branch, create an experimental release for that minor version
-        if [[ $GITHUB_REF_TYPE == "branch" && $GITHUB_REF == "release*" ]]; then
+        if [[ $GITHUB_REF_TYPE == "branch" && $GITHUB_REF == "refs/heads/release-*" ]]; then
           VERSION="${GITHUB_REF#*-}-experimental"
         fi
 
@@ -46,8 +46,8 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         builder: ${{ steps.buildx.outputs.name }}
-        context: images/base/
-        file: images/base/Dockerfile
+        context: images/universal/base/
+        file: images/universal/base/Dockerfile
         platforms: linux/amd64
         push: true
         tags: tokaido/base:${{ steps.prep.outputs.version }}
@@ -57,8 +57,8 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         builder: ${{ steps.buildx.outputs.name }}
-        context: images/php74/
-        file: images/php74/Dockerfile
+        context: images/amd64/php74/
+        file: images/amd64/php74/Dockerfile
         platforms: linux/arm64
         push: true
         tags: tokaido/php74:${{ steps.prep.outputs.version }}
