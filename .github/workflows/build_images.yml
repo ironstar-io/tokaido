@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: self-hosted
+    runs-on: [self-hosted, arm64, linux]
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -45,7 +45,6 @@ jobs:
     - name: Build Base
       uses: docker/build-push-action@v2
       with:
-        arch: arm64
         builder: ${{ steps.buildx.outputs.name }}
         context: images/base/
         file: images/base/Dockerfile
@@ -57,7 +56,6 @@ jobs:
     - name: Build php7.4
       uses: docker/build-push-action@v2
       with:
-        arch: arm64
         builder: ${{ steps.buildx.outputs.name }}
         context: images/php74/
         file: images/php74/Dockerfile
