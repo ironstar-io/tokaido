@@ -1,3 +1,5 @@
+ARG TOK_VERSION
+ARG LIBRARY_PATH
 FROM php:7.4-fpm AS php
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
