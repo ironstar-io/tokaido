@@ -1,5 +1,6 @@
 ARG TOK_VERSION
 ARG LIBRARY_PATH
+
 FROM php:7.4-fpm AS php
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
@@ -83,9 +84,9 @@ RUN apt-get update \
  && docker-php-source delete \
  && echo $PHP_VERSION > /tmp/version.txt
 
+FROM tokaido/base:${TOK_VERSION} 
 ARG TOK_VERSION
 ARG LIBRARY_PATH
-FROM tokaido/base:${TOK_VERSION} 
 LABEL io.ironstar.platform=tokaido
 LABEL maintainers="tokaido@ironstar.io"
 LABEL security="security@ironstar.io"
