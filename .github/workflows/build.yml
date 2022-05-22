@@ -33,11 +33,6 @@ jobs:
 
         # Set output parameters.
         echo ::set-output name=version::${VERSION}
-    - name: Cache 
-      uses: actions/cache@v3
-      with:
-        path: ~/cache
-        key: ${{ runner.arch }}-docker
     - name: Set up Docker Buildx
       id: buildx
       uses: docker/setup-buildx-action@v1
@@ -71,11 +66,6 @@ jobs:
         cache-to: type=local,dest=/tmp/cache
         build-args: |
           TOK_VERSION=${{ steps.prep.outputs.version }}
-    - name: Cache 
-      uses: actions/cache@v3
-      with:
-        path: /tmp/cache
-        key: ${{ runner.arch }}-docker
   build-arm64:
     runs-on: [self-hosted, arm64, linux]
     steps:
@@ -100,11 +90,6 @@ jobs:
 
         # Set output parameters.
         echo ::set-output name=version::${VERSION}
-    - name: Cache 
-      uses: actions/cache@v3
-      with:
-        path: /tmp/cache
-        key: ${{ runner.arch }}-docker
     - name: Set up Docker Buildx
       id: buildx
       uses: docker/setup-buildx-action@v1
@@ -138,11 +123,6 @@ jobs:
         cache-to: type=local,dest=/tmp/cache
         build-args: |
           TOK_VERSION=${{ steps.prep.outputs.version }}
-    - name: Cache 
-      uses: actions/cache@v3
-      with:
-        path: ~/cache
-        key: ${{ runner.arch }}-docker
   combine:
     runs-on: [self-hosted, linux]
     needs: [build-arm64, build-amd64]
