@@ -11,8 +11,8 @@ RUN apt-get update  \
         ca-certificates \
 		bash \
         wget \
-        python \
-        python-pip \
+        python3 \
+        python3-pip \
         rsync \
         vim \
         curl \
