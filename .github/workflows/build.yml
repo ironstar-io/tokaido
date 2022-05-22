@@ -68,7 +68,6 @@ jobs:
         tags: tokaido/base:${{ steps.prep.outputs.version }}-amd64
         cache-from: type=local,src=/tmp/.buildx-base-cache
         cache-to: type=local,mode=max,dest=/tmp/.buildx-base-cache-new
-        target: base
 
     - name: Build PHP 7.4
       uses: docker/build-push-action@v3
@@ -81,7 +80,6 @@ jobs:
         tags: tokaido/php74:${{ steps.prep.outputs.version }}-amd64
         cache-from: type=local,src=/tmp/.buildx-php74-cache
         cache-to: type=local,mode=max,dest=/tmp/.buildx-php74-cache-new
-        target: php74
         build-args: |
           TOK_VERSION=${{ steps.prep.outputs.version }}
 
