@@ -14,6 +14,20 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+    - name: Get build cache base
+      uses: actions/cache@v2
+      with:
+        path: /tmp/.buildx-base-cache
+        key: buildx-base-${{ hashFiles('images/amd64/base/Dockerfile') }}
+        restore-keys: |
+          buildx-base-
+    - name: Get build cache php74
+      uses: actions/cache@v2
+      with:
+        path: /tmp/.buildx-php74-cache
+        key: buildx-php74-${{ hashFiles('images/amd64/php74/Dockerfile') }}
+        restore-keys: |
+          buildx-php74-
     - name: Prepare
       id: prep
       run: |
@@ -52,8 +66,9 @@ jobs:
         platforms: linux/amd64
         push: true
         tags: tokaido/base:${{ steps.prep.outputs.version }}-amd64
-        cache-from: type=local,src=/tmp/.buildx-cache
-        cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
+        cache-from: type=local,src=/tmp/.buildx-base-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-base-cache-new
+        target: base
 
     - name: Build PHP 7.4
       uses: docker/build-push-action@v3
@@ -64,8 +79,9 @@ jobs:
         platforms: linux/amd64
         push: true
         tags: tokaido/php74:${{ steps.prep.outputs.version }}-amd64
-        cache-from: type=local,src=/tmp/.buildx-cache
-        cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
+        cache-from: type=local,src=/tmp/.buildx-php74-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-php74-cache-new
+        target: php74
         build-args: |
           TOK_VERSION=${{ steps.prep.outputs.version }}
 
