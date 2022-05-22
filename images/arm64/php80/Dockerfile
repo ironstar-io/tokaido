@@ -82,7 +82,7 @@ RUN apt-get update \
  && docker-php-source delete \
  && echo $PHP_VERSION > /tmp/version.txt
 
-FROM tokaido/base:${TOK_VERSION} 
+FROM --platform=linux/arm64 tokaido/base:${TOK_VERSION}-arm64
 LABEL io.ironstar.platform=tokaido
 LABEL maintainers="tokaido@ironstar.io"
 LABEL security="security@ironstar.io"
@@ -98,7 +98,6 @@ COPY --from=php /usr/local/bin/php /usr/local/bin/php
 COPY --from=php /usr/local/php/php /usr/local/php/php
 COPY --from=php /usr/local/lib/php /usr/local/lib/php
 COPY --from=php /usr/lib /usr/lib
-COPY --from=php /usr/lib/x86_64-linux-gnu /usr/lib/x86_64-linux-gnu
 COPY --from=php /tmp/version.txt /app/config/php/version.txt
 COPY --from=php /usr/local/etc/php/conf.d /app/config/php/conf.d
 
@@ -131,24 +130,16 @@ RUN mkdir -p /usr/local/etc/php/ \
  && ln -s /app/config/php/conf.d /usr/local/etc/php/conf.d
 
 RUN curl -s https://getcomposer.org/installer > composer-setup.php && /usr/local/bin/php composer-setup.php && mv composer.phar /usr/local/bin/composer && rm composer-setup.php  \
-    && su - app -s /bin/bash -c "/usr/local/bin/composer global require \"drush/drush\""  \
-    && curl -sSLo /usr/local/bin/drush https://github.com/drush-ops/drush-launcher/releases/download/0.10.1/drush.phar \
-    && curl -sSLo /tmp/gs.tgz https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs9561/ghostscript-9.56.1-linux-x86_64.tgz \
-    && tar xzf gs.tgz \
-    && cp ghostscript-9.56.1-linux-x86_64/gs-9561-linux-x86_64 /usr/bin/gs \
-    && curl -sLO https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.buster_amd64.deb \
-    && dpkg -i wkhtmltox_0.12.6-1.buster_amd64.deb \
-    && cp /usr/local/bin/wkhtmltopdf /usr/bin \
-    && cp /usr/local/bin/wkhtmltoimage /usr/bin \
-    && chmod ug+x /usr/local/bin/drush /usr/bin/gs /usr/local/bin/wkhtmltopdf /usr/local/bin/wkhtmltoimage \
-    && chown app:app /usr/local/bin/drush /usr/bin/gs /usr/local/bin/wkhtmltopdf /usr/local/bin/wkhtmltoimage \
-    && ln -sf /usr/bin/msmtp /usr/sbin/sendmail \
-    && ln -sf /app/config/msmtp/msmtprc /etc/msmtprc
-
+ && su - app -s /bin/bash -c "/usr/local/bin/composer global require \"drush/drush\""  \
+ && curl -sSLo /usr/local/bin/drush https://github.com/drush-ops/drush-launcher/releases/download/0.10.1/drush.phar \
+ && chmod ug+x /usr/local/bin/drush \
+ && chown app:app /usr/local/bin/drush \
+ && ln -sf /usr/bin/msmtp /usr/sbin/sendmail \
+ && ln -sf /app/config/msmtp/msmtprc /etc/msmtprc
 RUN ep /app/config/php/php.ini \
  && ep /app/config/php/www.conf
 
-RUN curl -sSLo /tmp/fnm.zip https://github.com/Schniz/fnm/releases/download/v1.31.0/fnm-linux.zip \
+RUN curl -sSLo /tmp/fnm.zip https://github.com/Schniz/fnm/releases/download/v1.31.0/fnm-arm64.zip \
  && unzip /tmp/fnm.zip -d /usr/local/bin/ \
  && chmod +x /usr/local/bin/fnm \
  && chown app:app /usr/local/bin/fnm \
