@@ -133,3 +133,42 @@ jobs:
         cache-to: type=local,dest=~/cache/buildx-cache
         build-args: |
           TOK_VERSION=${{ steps.prep.outputs.version }}
+  combine:
+    runs-on: [self-hosted, linux]
+    needs: [build-arm64, build-amd64]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Prepare
+      id: prep
+      run: |
+        VERSION=experimental
+        echo "GITHUB_REF=${GITHUB_REF}"
+        echo "GITHUB_REF_TYPE=${GITHUB_REF_TYPE}"
+
+        # If this belongs to a release branch, create an experimental release for that minor version
+        if [[ $GITHUB_REF_TYPE == "branch" && $GITHUB_REF == "refs/heads/release-*" ]]; then
+          VERSION="${GITHUB_REF#*-}-experimental"
+        fi
+
+        # If this is git tag, use the tag name as a docker tag
+        if [[ $GITHUB_REF == refs/tags/* ]]; then
+          VERSION=${GITHUB_REF#refs/tags/v}
+        fi
+
+        # Set output parameters.
+        echo ::set-output name=version::${VERSION}
+    - name: combine-base
+      run: | 
+        docker manifest create tokaido/base\:${{ steps.prep.outputs.version }} \
+          --amend tokaido/base\:${{ steps.prep.outputs.version }}-arm64 \
+          --amend tokaido/base\:${{ steps.prep.outputs.version }}-amd64
+          docker manifest annotate --arch arm64 tokaido/base:${{ steps.prep.outputs.version }} tokaido/base\:${{ steps.prep.outputs.version }}-arm64 
+        docker manifest push tokaido/base:${{ steps.prep.outputs.version }}
+    - name: combine-php74
+      run: | 
+        docker manifest create tokaido/php74\:${{ steps.prep.outputs.version }} \
+          --amend tokaido/php74\:${{ steps.prep.outputs.version }}-arm64 \
+          --amend tokaido/php74\:${{ steps.prep.outputs.version }}-amd64
+          docker manifest annotate --arch arm64 tokaido/php74:${{ steps.prep.outputs.version }} tokaido/php74\:${{ steps.prep.outputs.version }}-arm64 
+        docker manifest push tokaido/php74:${{ steps.prep.outputs.version }}
