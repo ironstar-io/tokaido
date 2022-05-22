@@ -176,7 +176,9 @@ jobs:
     - name: Move cache
       run: |
         rm -rf /tmp/.buildx-cache
-        mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+        mv /tmp/.buildx-base-cache-new /tmp/.buildx-base-cache
+        mv /tmp/.buildx-php74-cache-new /tmp/.buildx-php74-cache
+
 
   build-arm64:
     runs-on: [self-hosted, arm64, linux]
