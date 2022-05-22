@@ -30,9 +30,7 @@ RUN apt-get update \
  && docker-php-ext-enable raphf \
  && printf "\n" | pecl install imagick \
  && docker-php-ext-enable imagick \
- && printf "\n" | pecl install propro \
- && docker-php-ext-enable propro \
- && printf "\n" | pecl install pecl_http-3.2.4 \
+ && printf "\n" | pecl install pecl_http \
  && docker-php-ext-enable http \
  && printf "\n" | pecl install gnupg \
  && docker-php-ext-enable gnupg \
