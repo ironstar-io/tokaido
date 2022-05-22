@@ -80,7 +80,7 @@ RUN apt-get update \
  && docker-php-source delete \
  && echo $PHP_VERSION > /tmp/version.txt
 
-FROM --platform=linux/arm64 tokaido/base:${TOK_VERSION}-arm64
+FROM --platform=linux/amd64 tokaido/base:${TOK_VERSION}-amd64
 LABEL io.ironstar.platform=tokaido
 LABEL maintainers="tokaido@ironstar.io"
 LABEL security="security@ironstar.io"

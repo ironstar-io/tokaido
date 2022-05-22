@@ -89,6 +89,11 @@ jobs:
         build-args: |
           TOK_VERSION=${{ steps.prep.outputs.version }}
 
+    - name: Move cache
+      run: |
+        rm -rf /tmp/.buildx-cache
+        mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
   build-arm64:
     runs-on: [self-hosted, arm64, linux]
     steps:
@@ -168,6 +173,11 @@ jobs:
         cache-to: type=local,dest=/tmp/.buildx-cache-new
         build-args: |
           TOK_VERSION=${{ steps.prep.outputs.version }}
+
+    - name: Move cache
+      run: |
+        rm -rf /tmp/.buildx-cache
+        mv /tmp/.buildx-cache-new /tmp/.buildx-cache
   combine:
     runs-on: [self-hosted, linux]
     needs: [build-arm64, build-amd64]
