@@ -103,6 +103,20 @@ jobs:
         build-args: |
           TOK_VERSION=${{ steps.prep.outputs.version }}
 
+    - name: Build Nginx
+      uses: docker/build-push-action@v2
+      with:
+        builder: ${{ steps.buildx.outputs.name }}
+        context: images/amd64/nginx/
+        file: images/amd64/nginx/Dockerfile
+        platforms: linux/amd64
+        push: true
+        tags: tokaido/nginx:${{ steps.prep.outputs.version }}-amd64
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,dest=/tmp/.buildx-cache-new
+        build-args: |
+          TOK_VERSION=${{ steps.prep.outputs.version }}
+
     - name: Move cache
       run: |
         rm -rf /tmp/.buildx-cache
@@ -197,6 +211,20 @@ jobs:
         platforms: linux/arm64
         push: true
         tags: tokaido/php81:${{ steps.prep.outputs.version }}-arm64
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,dest=/tmp/.buildx-cache-new
+        build-args: |
+          TOK_VERSION=${{ steps.prep.outputs.version }}
+
+    - name: Build Nginx
+      uses: docker/build-push-action@v2
+      with:
+        builder: ${{ steps.buildx.outputs.name }}
+        context: images/arm64/nginx/
+        file: images/arm64/nginx/Dockerfile
+        platforms: linux/arm64
+        push: true
+        tags: tokaido/nginx:${{ steps.prep.outputs.version }}-arm64
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,dest=/tmp/.buildx-cache-new
         build-args: |
