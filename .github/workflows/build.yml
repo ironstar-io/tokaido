@@ -20,7 +20,7 @@ jobs:
         path: /tmp/.buildx-cache
         key: ${{ runner.arch }}-buildx
         restore-keys: |
-          ${{ runner.os }}-buildx-
+          ${{ runner.arch }}-buildx-${{ github.sha }}
     - name: Prepare
       id: prep
       run: |
@@ -100,7 +100,7 @@ jobs:
         path: /tmp/.buildx-cache
         key: ${{ runner.arch }}-buildx
         restore-keys: |
-          ${{ runner.os }}-buildx-
+          ${{ runner.arch }}-buildx-${{ github.sha }}
     - name: Prepare
       id: prep
       run: |
