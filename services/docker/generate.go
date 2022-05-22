@@ -176,19 +176,12 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 	}
 
 	// Set database engine and parameters
-	dbImage := "mysql"
-	dbVersion := "5.7"
-	if conf.GetConfig().Database.Engine == "mariadb" {
-		dbImage = "mariadb"
-		if len(conf.GetConfig().Database.Mariadbconfig.Version) > 1 {
-			dbVersion = conf.GetConfig().Database.Mariadbconfig.Version
-		} else {
-			dbVersion = "10.4"
-		}
+	dbImage := "mariadb"
+	dbVersion := "10.4"
+	if len(conf.GetConfig().Database.Mariadbconfig.Version) > 1 {
+		dbVersion = conf.GetConfig().Database.Mariadbconfig.Version
 	} else {
-		if len(conf.GetConfig().Database.Mysqlconfig.Version) > 1 {
-			dbVersion = conf.GetConfig().Database.Mysqlconfig.Version
-		}
+		dbVersion = "10.4"
 	}
 	err = yaml.Unmarshal(dockertmpl.SetDatabase(dbImage, dbVersion), &tokStruct)
 	if err != nil {

@@ -58,8 +58,8 @@ jobs:
         platforms: linux/amd64
         push: true
         tags: tokaido/base:${{ steps.prep.outputs.version }}-amd64
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
 
     - name: Build PHP 7.4
       uses: docker/build-push-action@v3
@@ -70,8 +70,8 @@ jobs:
         platforms: linux/amd64
         push: true
         tags: tokaido/php74:${{ steps.prep.outputs.version }}-amd64
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
         build-args: |
           TOK_VERSION=${{ steps.prep.outputs.version }}
 
@@ -84,8 +84,8 @@ jobs:
         platforms: linux/amd64
         push: true
         tags: tokaido/php80:${{ steps.prep.outputs.version }}-amd64
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
         build-args: |
           TOK_VERSION=${{ steps.prep.outputs.version }}
 
@@ -98,8 +98,8 @@ jobs:
         platforms: linux/amd64
         push: true
         tags: tokaido/php81:${{ steps.prep.outputs.version }}-amd64
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
         build-args: |
           TOK_VERSION=${{ steps.prep.outputs.version }}
 
@@ -112,8 +112,8 @@ jobs:
         platforms: linux/amd64
         push: true
         tags: tokaido/nginx:${{ steps.prep.outputs.version }}-amd64
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
         build-args: |
           TOK_VERSION=${{ steps.prep.outputs.version }}
 
@@ -126,8 +126,8 @@ jobs:
         platforms: linux/amd64
         push: true
         tags: tokaido/ssh74:${{ steps.prep.outputs.version }}-amd64
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
         build-args: |
           TOK_VERSION=${{ steps.prep.outputs.version }}
           PHP_VERSION=74
@@ -141,8 +141,8 @@ jobs:
         platforms: linux/amd64
         push: true
         tags: tokaido/ssh80:${{ steps.prep.outputs.version }}-amd64
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
         build-args: |
           TOK_VERSION=${{ steps.prep.outputs.version }}
           PHP_VERSION=80
@@ -157,11 +157,16 @@ jobs:
         platforms: linux/amd64
         push: true
         tags: tokaido/ssh81:${{ steps.prep.outputs.version }}-amd64
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
         build-args: |
           TOK_VERSION=${{ steps.prep.outputs.version }}
           PHP_VERSION=81
+
+    - name: Move cache
+      run: |
+        rm -rf /tmp/.buildx-cache
+        mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
   build-arm64:
     runs-on: [self-hosted, arm64, linux]
@@ -212,8 +217,8 @@ jobs:
         platforms: linux/arm64
         push: true
         tags: tokaido/base:${{ steps.prep.outputs.version }}-arm64
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
 
     - name: Build PHP 7.4
       uses: docker/build-push-action@v3
@@ -224,8 +229,8 @@ jobs:
         platforms: linux/arm64
         push: true
         tags: tokaido/php74:${{ steps.prep.outputs.version }}-arm64
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
         build-args: |
           TOK_VERSION=${{ steps.prep.outputs.version }}
 
@@ -238,8 +243,8 @@ jobs:
         platforms: linux/arm64
         push: true
         tags: tokaido/php80:${{ steps.prep.outputs.version }}-arm64
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
         build-args: |
           TOK_VERSION=${{ steps.prep.outputs.version }}
 
@@ -252,8 +257,8 @@ jobs:
         platforms: linux/arm64
         push: true
         tags: tokaido/php81:${{ steps.prep.outputs.version }}-arm64
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
         build-args: |
           TOK_VERSION=${{ steps.prep.outputs.version }}
 
@@ -266,8 +271,8 @@ jobs:
         platforms: linux/arm64
         push: true
         tags: tokaido/nginx:${{ steps.prep.outputs.version }}-arm64
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
         build-args: |
           TOK_VERSION=${{ steps.prep.outputs.version }}
 
@@ -280,8 +285,8 @@ jobs:
         platforms: linux/arm64
         push: true
         tags: tokaido/ssh74:${{ steps.prep.outputs.version }}-arm64
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
         build-args: |
           TOK_VERSION=${{ steps.prep.outputs.version }}
           PHP_VERSION=74
@@ -295,12 +300,11 @@ jobs:
         platforms: linux/arm64
         push: true
         tags: tokaido/ssh80:${{ steps.prep.outputs.version }}-arm64
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
         build-args: |
           TOK_VERSION=${{ steps.prep.outputs.version }}
           PHP_VERSION=80
-
 
     - name: Build SSH 8.1
       uses: docker/build-push-action@v3
@@ -311,12 +315,17 @@ jobs:
         platforms: linux/arm64
         push: true
         tags: tokaido/ssh81:${{ steps.prep.outputs.version }}-arm64
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
         build-args: |
           TOK_VERSION=${{ steps.prep.outputs.version }}
           PHP_VERSION=81
 
+    - name: Move cache
+      run: |
+        rm -rf /tmp/.buildx-cache
+        mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+        
   combine:
     runs-on: [self-hosted, linux]
     needs: [build-arm64, build-amd64]
@@ -362,3 +371,45 @@ jobs:
           --amend tokaido/php74\:${{ steps.prep.outputs.version }}-amd64
           docker manifest annotate --arch arm64 tokaido/php74:${{ steps.prep.outputs.version }} tokaido/php74\:${{ steps.prep.outputs.version }}-arm64 
         docker manifest push tokaido/php74:${{ steps.prep.outputs.version }}
+    - name: combine-php80
+      run: | 
+        docker manifest create tokaido/php80\:${{ steps.prep.outputs.version }} \
+          --amend tokaido/php80\:${{ steps.prep.outputs.version }}-arm64 \
+          --amend tokaido/php80\:${{ steps.prep.outputs.version }}-amd64
+          docker manifest annotate --arch arm64 tokaido/php80:${{ steps.prep.outputs.version }} tokaido/php80\:${{ steps.prep.outputs.version }}-arm64 
+        docker manifest push tokaido/php80:${{ steps.prep.outputs.version }}
+    - name: combine-php81
+      run: | 
+        docker manifest create tokaido/php81\:${{ steps.prep.outputs.version }} \
+          --amend tokaido/php81\:${{ steps.prep.outputs.version }}-arm64 \
+          --amend tokaido/php81\:${{ steps.prep.outputs.version }}-amd64
+          docker manifest annotate --arch arm64 tokaido/php81:${{ steps.prep.outputs.version }} tokaido/php81\:${{ steps.prep.outputs.version }}-arm64 
+        docker manifest push tokaido/php81:${{ steps.prep.outputs.version }}
+    - name: combine-nginx
+      run: | 
+        docker manifest create tokaido/nginx\:${{ steps.prep.outputs.version }} \
+          --amend tokaido/nginx\:${{ steps.prep.outputs.version }}-arm64 \
+          --amend tokaido/nginx\:${{ steps.prep.outputs.version }}-amd64
+          docker manifest annotate --arch arm64 tokaido/nginx:${{ steps.prep.outputs.version }} tokaido/nginx\:${{ steps.prep.outputs.version }}-arm64 
+        docker manifest push tokaido/nginx:${{ steps.prep.outputs.version }}
+    - name: combine-ssh74
+      run: | 
+        docker manifest create tokaido/ssh74\:${{ steps.prep.outputs.version }} \
+          --amend tokaido/ssh74\:${{ steps.prep.outputs.version }}-arm64 \
+          --amend tokaido/ssh74\:${{ steps.prep.outputs.version }}-amd64
+          docker manifest annotate --arch arm64 tokaido/ssh74:${{ steps.prep.outputs.version }} tokaido/ssh74\:${{ steps.prep.outputs.version }}-arm64 
+        docker manifest push tokaido/ssh74:${{ steps.prep.outputs.version }}
+    - name: combine-ssh81
+      run: | 
+        docker manifest create tokaido/ssh81\:${{ steps.prep.outputs.version }} \
+          --amend tokaido/ssh81\:${{ steps.prep.outputs.version }}-arm64 \
+          --amend tokaido/ssh81\:${{ steps.prep.outputs.version }}-amd64
+          docker manifest annotate --arch arm64 tokaido/ssh81:${{ steps.prep.outputs.version }} tokaido/ssh81\:${{ steps.prep.outputs.version }}-arm64 
+        docker manifest push tokaido/ssh81:${{ steps.prep.outputs.version }}
+    - name: combine-ssh80
+      run: | 
+        docker manifest create tokaido/ssh80\:${{ steps.prep.outputs.version }} \
+          --amend tokaido/ssh80\:${{ steps.prep.outputs.version }}-arm64 \
+          --amend tokaido/ssh80\:${{ steps.prep.outputs.version }}-amd64
+          docker manifest annotate --arch arm64 tokaido/ssh80:${{ steps.prep.outputs.version }} tokaido/ssh80\:${{ steps.prep.outputs.version }}-arm64 
+        docker manifest push tokaido/ssh80:${{ steps.prep.outputs.version }}

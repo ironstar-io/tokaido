@@ -1,7 +1,7 @@
 ARG TOK_VERSION
 ARG PHP_VERSION
 
-FROM --platform=linux/amd64 tokaido/${PHP_VERSION}:${TOK_VERSION}-amd64
+FROM --platform=linux/amd64 tokaido/php${PHP_VERSION}:${TOK_VERSION}-amd64
 ENV DEBIAN_FRONTEND noninteractive
 ENV SHELL /bin/bash
 COPY configs/.bash_profile /etc/skel/.bash_profile

@@ -13,14 +13,14 @@ import (
 func calcPhpVersionString(version string) string {
 	var v string
 	switch version {
-	case "7.2":
-		v = "72"
-	case "7.3":
-		v = "73"
 	case "7.4":
 		v = "74"
+	case "8.0":
+		v = "80"
+	case "8.1":
+		v = "81"
 	default:
-		log.Fatalf("PHP version %s is not supported. Must use 7.2, 7.3, or 7.4", version)
+		log.Fatalf("PHP version '%s' is not supported. Must use 7.4, 8.0, 8.1", version)
 	}
 
 	return v

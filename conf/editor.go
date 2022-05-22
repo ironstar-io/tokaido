@@ -188,10 +188,10 @@ func TokaidoMenu() {
 		},
 		{
 			Name:    "PHP Version",
-			Default: "7.4",
+			Default: "8.1",
 			Type:    "value",
 			Current: GetConfig().Tokaido.Phpversion,
-			Detail:  "Use the latest version of PHP 7.2, 7.3, or 7.4",
+			Detail:  "Use the latest version of PHP 7.4, 8.0, 8.1",
 		},
 		{
 			Name:    "PHP XDebug Support",
@@ -390,19 +390,19 @@ func TokaidoStabilityMenu() {
 func TokaidoPhpversionMenu() {
 	menu := []ConfigGenericString{
 		{
-			Name:   "PHP 7.2",
-			Type:   "value",
-			Detail: "Enable the latest PHP 7.2 release at the time that this version of Tokaido was created",
-		},
-		{
-			Name:   "PHP 7.3",
-			Type:   "value",
-			Detail: "Enable the latest PHP 7.3 release at the time that this version of Tokaido was created",
-		},
-		{
 			Name:   "PHP 7.4",
 			Type:   "value",
 			Detail: "Enable the latest PHP 7.4 release at the time that this version of Tokaido was created",
+		},
+		{
+			Name:   "PHP 8.0",
+			Type:   "value",
+			Detail: "Enable the latest PHP 8.0 release at the time that this version of Tokaido was created",
+		},
+		{
+			Name:   "PHP 8.1",
+			Type:   "value",
+			Detail: "Enable the latest PHP 8.1 release at the time that this version of Tokaido was created",
 		},
 		{
 			Name:   "« Tokaido Config",
@@ -440,15 +440,15 @@ func TokaidoPhpversionMenu() {
 
 	switch i {
 	case 0:
-		SetConfigValueByArgs([]string{"tokaido", "phpversion", "7.2"}, "project")
+		SetConfigValueByArgs([]string{"tokaido", "phpversion", "7.4"}, "project")
 		reloadConfig()
 		TokaidoMenu()
 	case 1:
-		SetConfigValueByArgs([]string{"tokaido", "phpversion", "7.3"}, "project")
+		SetConfigValueByArgs([]string{"tokaido", "phpversion", "8.0"}, "project")
 		reloadConfig()
 		TokaidoMenu()
 	case 2:
-		SetConfigValueByArgs([]string{"tokaido", "phpversion", "7.4"}, "project")
+		SetConfigValueByArgs([]string{"tokaido", "phpversion", "8.1"}, "project")
 		reloadConfig()
 		TokaidoMenu()
 	case 3:
@@ -467,20 +467,6 @@ func DatabaseMenu() {
 	fmt.Println(aurora.BgRed(aurora.White("!! WARNING !!")))
 	fmt.Println()
 	menu := []ConfigGenericString{
-		{
-			Name:    "Database Engine",
-			Type:    "menu",
-			Current: GetConfig().Database.Engine,
-			Default: "mysql",
-			Detail:  "This is the current database engine. Wherever possible, you should set this to match what you're running in Production",
-		},
-		{
-			Name:    "MySQL Version",
-			Type:    "menu",
-			Current: GetConfig().Database.Mysqlconfig.Version,
-			Default: "5.7",
-			Detail:  "Set the MySQL Version if MySQL is used",
-		},
 		{
 			Name:    "MariaDB Version",
 			Type:    "menu",
