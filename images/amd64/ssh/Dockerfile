@@ -1,10 +1,10 @@
 ARG TOK_VERSION
 ARG PHP_VERSION
 
-USER root
 FROM --platform=linux/amd64 tokaido/php${PHP_VERSION}:${TOK_VERSION}-amd64
 ENV DEBIAN_FRONTEND noninteractive
 ENV SHELL /bin/bash
+USER root
 COPY configs/.bash_profile /etc/skel/.bash_profile
 COPY configs/.bashrc /etc/skel/.bashrc
 COPY configs/sudoers /etc/sudoers
