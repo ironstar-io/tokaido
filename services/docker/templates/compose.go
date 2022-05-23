@@ -78,7 +78,7 @@ func ImageVersion(phpVersion, stability string) []byte {
   fpm:
     image: tokaido/php` + v + `:` + imageVersion + `
   drush:
-    image: tokaido/admin` + v + `-heavy:` + imageVersion + ``)
+    image: tokaido/ssh` + v + `:` + imageVersion + ``)
 	}
 
 	return []byte(`services:
@@ -89,7 +89,7 @@ func ImageVersion(phpVersion, stability string) []byte {
   fpm:
     image: tokaido/php` + v + `:` + imageVersion + `
   drush:
-    image: tokaido/admin` + v + `-heavy:` + imageVersion + ``)
+    image: tokaido/ssh` + v + `:` + imageVersion + ``)
 }
 
 // EnableSolr ...
@@ -411,7 +411,7 @@ services:
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
   drush:
     platform: linux/amd64
-    image: tokaido/admin71-heavy:stable
+    image: tokaido/ssh74:stable
     hostname: 'tokaido'
     ports:
       - "22"
@@ -523,7 +523,7 @@ services:
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
   drush:
     platform: linux/amd64
-    image: tokaido/admin71-heavy:stable
+    image: tokaido/ssh74:stable
     hostname: 'tokaido'
     ports:
       - "22"
@@ -638,7 +638,7 @@ services:
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
   drush:
     platform: linux/amd64
-    image: tokaido/admin71-heavy:stable
+    image: tokaido/ssh74:stable
     platform: linux/amd64
     hostname: 'tokaido'
     ports:
