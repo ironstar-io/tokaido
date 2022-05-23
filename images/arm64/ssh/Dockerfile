@@ -26,15 +26,15 @@ RUN apt-get update  \
  && chmod 600 /etc/skel/.bash* \
  && cp /etc/skel/.bash_profile /home/tok/.bash_profile \
  && cp /etc/skel/.bashrc /home/tok/.bashrc \
- && chown tok:web /home/tok/.bash* \
+ && chown app:app /home/tok/.bash* \
  && chmod 600 /home/tok/.bash* \
  && mkdir /run/sshd  \
  && rm -rf /tmp/*
 
 RUN git clone --depth 1 https://github.com/junegunn/fzf.git /home/tok/.fzf \
  && cd /home/tok && ./.fzf/install \
- && chown tok:web /home/tok/.fzf -R \
- && chown tok:web /home/tok/.fzf.bash \
+ && chown app:app /home/tok/.fzf -R \
+ && chown app:app /home/tok/.fzf.bash \
  && echo "" >> /home/tok/.bash_profile \
  && echo "source /home/tok/.fzf.bash" >> /home/tok/.bash_profile \
  && find /home/tok -type d -a -print0 | xargs -0 chmod 2700 \
