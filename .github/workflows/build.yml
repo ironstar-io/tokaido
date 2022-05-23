@@ -28,6 +28,48 @@ jobs:
         key: buildx-php74-${{ hashFiles('images/amd64/php74/Dockerfile') }}
         restore-keys: |
           buildx-php74-
+    - name: Get build cache php80
+      uses: actions/cache@v2
+      with:
+        path: /tmp/.buildx-php80-cache
+        key: buildx-php80-${{ hashFiles('images/amd64/php80/Dockerfile') }}
+        restore-keys: |
+          buildx-php80-
+    - name: Get build cache php81
+      uses: actions/cache@v2
+      with:
+        path: /tmp/.buildx-php81-cache
+        key: buildx-php81-${{ hashFiles('images/amd64/php81/Dockerfile') }}
+        restore-keys: |
+          buildx-php81-
+    - name: Get build cache nginx
+      uses: actions/cache@v2
+      with:
+        path: /tmp/.buildx-nginx-cache
+        key: buildx-nginx-${{ hashFiles('images/amd64/nginx/Dockerfile') }}
+        restore-keys: |
+          buildx-nginx-
+    - name: Get build cache ssh74
+      uses: actions/cache@v2
+      with:
+        path: /tmp/.buildx-ssh74-cache
+        key: buildx-ssh74-${{ hashFiles('images/amd64/ssh74/Dockerfile') }}
+        restore-keys: |
+          buildx-ssh74-
+    - name: Get build cache ssh80
+      uses: actions/cache@v2
+      with:
+        path: /tmp/.buildx-ssh80-cache
+        key: buildx-ssh80-${{ hashFiles('images/amd64/ssh80/Dockerfile') }}
+        restore-keys: |
+          buildx-ssh80-
+    - name: Get build cache ssh81
+      uses: actions/cache@v2
+      with:
+        path: /tmp/.buildx-ssh81-cache
+        key: buildx-ssh81-${{ hashFiles('images/amd64/ssh81/Dockerfile') }}
+        restore-keys: |
+          buildx-ssh81-
     - name: Prepare
       id: prep
       run: |
@@ -83,93 +125,93 @@ jobs:
         build-args: |
           TOK_VERSION=${{ steps.prep.outputs.version }}
     
-          #    - name: Build PHP 8.0
-          #      uses: docker/build-push-action@v3
-          #      with:
-          #        builder: ${{ steps.buildx.outputs.name }}
-          #        context: images/amd64/php80/
-          #        file: images/amd64/php80/Dockerfile
-          #        platforms: linux/amd64
-          #        push: true
-          #        tags: tokaido/php80:${{ steps.prep.outputs.version }}-amd64
-          #        cache-from: type=local,src=/tmp/.buildx-cache
-          #        cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
-          #        build-args: |
-          #          TOK_VERSION=${{ steps.prep.outputs.version }}
-          #
-          #    - name: Build PHP 8.1
-          #      uses: docker/build-push-action@v3
-          #      with:
-          #        builder: ${{ steps.buildx.outputs.name }}
-          #        context: images/amd64/php81/
-          #        file: images/amd64/php81/Dockerfile
-          #        platforms: linux/amd64
-          #        push: true
-          #        tags: tokaido/php81:${{ steps.prep.outputs.version }}-amd64
-          #        cache-from: type=local,src=/tmp/.buildx-cache
-          #        cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
-          #        build-args: |
-          #          TOK_VERSION=${{ steps.prep.outputs.version }}
-          #
-          #    - name: Build Nginx
-          #      uses: docker/build-push-action@v3
-          #      with:
-          #        builder: ${{ steps.buildx.outputs.name }}
-          #        context: images/amd64/nginx/
-          #        file: images/amd64/nginx/Dockerfile
-          #        platforms: linux/amd64
-          #        push: true
-          #        tags: tokaido/nginx:${{ steps.prep.outputs.version }}-amd64
-          #        cache-from: type=local,src=/tmp/.buildx-cache
-          #        cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
-          #        build-args: |
-          #          TOK_VERSION=${{ steps.prep.outputs.version }}
-          #
-          #    - name: Build SSH 7.4
-          #      uses: docker/build-push-action@v3
-          #      with:
-          #        builder: ${{ steps.buildx.outputs.name }}
-          #        context: images/amd64/ssh/
-          #        file: images/amd64/ssh/Dockerfile
-          #        platforms: linux/amd64
-          #        push: true
-          #        tags: tokaido/ssh74:${{ steps.prep.outputs.version }}-amd64
-          #        cache-from: type=local,src=/tmp/.buildx-cache
-          #        cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
-          #        build-args: |
-          #          TOK_VERSION=${{ steps.prep.outputs.version }}
-          #          PHP_VERSION=74
-          #
-          #    - name: Build SSH 8.0
-          #      uses: docker/build-push-action@v3
-          #      with:
-          #        builder: ${{ steps.buildx.outputs.name }}
-          #        context: images/amd64/ssh/
-          #        file: images/amd64/ssh/Dockerfile
-          #        platforms: linux/amd64
-          #        push: true
-          #        tags: tokaido/ssh80:${{ steps.prep.outputs.version }}-amd64
-          #        cache-from: type=local,src=/tmp/.buildx-cache
-          #        cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
-          #        build-args: |
-          #          TOK_VERSION=${{ steps.prep.outputs.version }}
-          #          PHP_VERSION=80
-          #
-          #
-          #    - name: Build SSH 8.1
-          #      uses: docker/build-push-action@v3
-          #      with:
-          #        builder: ${{ steps.buildx.outputs.name }}
-          #        context: images/amd64/ssh/
-          #        file: images/amd64/ssh/Dockerfile
-          #        platforms: linux/amd64
-          #        push: true
-          #        tags: tokaido/ssh81:${{ steps.prep.outputs.version }}-amd64
-          #        cache-from: type=local,src=/tmp/.buildx-cache
-          #        cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
-          #        build-args: |
-          #          TOK_VERSION=${{ steps.prep.outputs.version }}
-          #          PHP_VERSION=81
+    - name: Build PHP 8.0
+      uses: docker/build-push-action@v3
+      with:
+        builder: ${{ steps.buildx.outputs.name }}
+        context: images/amd64/php80/
+        file: images/amd64/php80/Dockerfile
+        platforms: linux/amd64
+        push: true
+        tags: tokaido/php80:${{ steps.prep.outputs.version }}-amd64
+        cache-from: type=local,src=/tmp/.buildx-php80-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-php80-cache-new
+        build-args: |
+          TOK_VERSION=${{ steps.prep.outputs.version }}
+
+    - name: Build PHP 8.1
+      uses: docker/build-push-action@v3
+      with:
+        builder: ${{ steps.buildx.outputs.name }}
+        context: images/amd64/php81/
+        file: images/amd64/php81/Dockerfile
+        platforms: linux/amd64
+        push: true
+        tags: tokaido/php81:${{ steps.prep.outputs.version }}-amd64
+        cache-from: type=local,src=/tmp/.buildx-php81-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-php81-cache-new
+        build-args: |
+          TOK_VERSION=${{ steps.prep.outputs.version }}
+
+    - name: Build Nginx
+      uses: docker/build-push-action@v3
+      with:
+        builder: ${{ steps.buildx.outputs.name }}
+        context: images/amd64/nginx/
+        file: images/amd64/nginx/Dockerfile
+        platforms: linux/amd64
+        push: true
+        tags: tokaido/nginx:${{ steps.prep.outputs.version }}-amd64
+        cache-from: type=local,src=/tmp/.buildx-nginx-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-nginx-cache-new
+        build-args: |
+          TOK_VERSION=${{ steps.prep.outputs.version }}
+
+    - name: Build SSH 7.4
+      uses: docker/build-push-action@v3
+      with:
+        builder: ${{ steps.buildx.outputs.name }}
+        context: images/amd64/ssh/
+        file: images/amd64/ssh/Dockerfile
+        platforms: linux/amd64
+        push: true
+        tags: tokaido/ssh74:${{ steps.prep.outputs.version }}-amd64
+        cache-from: type=local,src=/tmp/.buildx-ssh74-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-ssh74-cache-new
+        build-args: |
+          TOK_VERSION=${{ steps.prep.outputs.version }}
+          PHP_VERSION=74
+
+    - name: Build SSH 8.0
+      uses: docker/build-push-action@v3
+      with:
+        builder: ${{ steps.buildx.outputs.name }}
+        context: images/amd64/ssh/
+        file: images/amd64/ssh/Dockerfile
+        platforms: linux/amd64
+        push: true
+        tags: tokaido/ssh80:${{ steps.prep.outputs.version }}-amd64
+        cache-from: type=local,src=/tmp/.buildx-ssh80-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-ssh80-cache-new
+        build-args: |
+          TOK_VERSION=${{ steps.prep.outputs.version }}
+          PHP_VERSION=80
+
+
+    - name: Build SSH 8.1
+      uses: docker/build-push-action@v3
+      with:
+        builder: ${{ steps.buildx.outputs.name }}
+        context: images/amd64/ssh/
+        file: images/amd64/ssh/Dockerfile
+        platforms: linux/amd64
+        push: true
+        tags: tokaido/ssh81:${{ steps.prep.outputs.version }}-amd64
+        cache-from: type=local,src=/tmp/.buildx-ssh81-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-ssh81-cache-new
+        build-args: |
+          TOK_VERSION=${{ steps.prep.outputs.version }}
+          PHP_VERSION=81
 
     - name: Move cache
       run: |
@@ -177,6 +219,12 @@ jobs:
         rm -rf /tmp/.buildx-php74-cache
         mv /tmp/.buildx-base-cache-new /tmp/.buildx-base-cache
         mv /tmp/.buildx-php74-cache-new /tmp/.buildx-php74-cache
+        mv /tmp/.buildx-php80-cache-new /tmp/.buildx-php80-cache
+        mv /tmp/.buildx-php81-cache-new /tmp/.buildx-php81-cache
+        mv /tmp/.buildx-nginx-cache-new /tmp/.buildx-nginx-cache
+        mv /tmp/.buildx-ssh74-cache-new /tmp/.buildx-ssh74-cache
+        mv /tmp/.buildx-ssh80-cache-new /tmp/.buildx-ssh80-cache
+        mv /tmp/.buildx-ssh81-cache-new /tmp/.buildx-ssh81-cache
 
 
         #  build-arm64:
