@@ -176,6 +176,7 @@ jobs:
         rm -rf /tmp/.buildx-base-cache
         rm -rf /tmp/.buildx-php74-cache
         mv /tmp/.buildx-base-cache-new /tmp/.buildx-base-cache
+        mv /tmp/.buildx-php74-cache-new /tmp/.buildx-php74-cache
 
 
         #  build-arm64:
