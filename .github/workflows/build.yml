@@ -254,7 +254,7 @@ jobs:
         mv /tmp/.buildx-ssh81-cache-new /tmp/.buildx-php81-cache
 
   build-arm64:
-    runs-on: [self-hosted, x64, linux]
+    runs-on: [self-hosted, arm64, linux]
     steps:
     - name: Checkout
       uses: actions/checkout@v2
