@@ -1,6 +1,7 @@
 ARG TOK_VERSION
 ARG PHP_VERSION
 
+USER root
 FROM --platform=linux/arm64 tokaido/php${PHP_VERSION}:${TOK_VERSION}-arm64
 ENV DEBIAN_FRONTEND noninteractive
 ENV SHELL /bin/bash
@@ -47,6 +48,7 @@ RUN chmod 700 /usr/local/bin/entrypoint.sh \
     && chmod 755 /etc/motd.sh  \
     && rm /etc/motd
 
+USER app
 WORKDIR /app/site
 EXPOSE 22
 CMD ["/usr/local/bin/entrypoint.sh"]

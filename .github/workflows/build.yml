@@ -111,6 +111,11 @@ jobs:
         cache-from: type=local,src=/tmp/.buildx-base-cache
         cache-to: type=local,mode=max,dest=/tmp/.buildx-base-cache-new
 
+    - name: Move base cache
+      run: |
+        rm -rf /tmp/.buildx-base-cache
+        mv /tmp/.buildx-base-cache-new /tmp/.buildx-base-cache
+
     - name: Build PHP 7.4
       uses: docker/build-push-action@v3
       with:
@@ -124,6 +129,12 @@ jobs:
         cache-to: type=local,mode=max,dest=/tmp/.buildx-php74-cache-new
         build-args: |
           TOK_VERSION=${{ steps.prep.outputs.version }}
+
+    - name: Move PHP 7.4 cache
+      run: |
+        rm -rf /tmp/.buildx-php74-cache
+        mv /tmp/.buildx-php74-cache-new /tmp/.buildx-php74-cache
+
     
     - name: Build PHP 8.0
       uses: docker/build-push-action@v3
@@ -139,6 +150,11 @@ jobs:
         build-args: |
           TOK_VERSION=${{ steps.prep.outputs.version }}
 
+    - name: Move PHP 8.0 cache
+      run: |
+        rm -rf /tmp/.buildx-php80-cache
+        mv /tmp/.buildx-php80-cache-new /tmp/.buildx-php80-cache
+
     - name: Build PHP 8.1
       uses: docker/build-push-action@v3
       with:
@@ -153,6 +169,11 @@ jobs:
         build-args: |
           TOK_VERSION=${{ steps.prep.outputs.version }}
 
+    - name: Move PHP 8.1 cache
+      run: |
+        rm -rf /tmp/.buildx-php81-cache
+        mv /tmp/.buildx-php81-cache-new /tmp/.buildx-php81-cache
+
     - name: Build Nginx
       uses: docker/build-push-action@v3
       with:
@@ -166,6 +187,11 @@ jobs:
         cache-to: type=local,mode=max,dest=/tmp/.buildx-nginx-cache-new
         build-args: |
           TOK_VERSION=${{ steps.prep.outputs.version }}
+
+    - name: Move Nginx cache
+      run: |
+        rm -rf /tmp/.buildx-nginx-cache
+        mv /tmp/.buildx-nginx-cache-new /tmp/.buildx-php74-cache
 
     - name: Build SSH 7.4
       uses: docker/build-push-action@v3
@@ -182,6 +208,11 @@ jobs:
           TOK_VERSION=${{ steps.prep.outputs.version }}
           PHP_VERSION=74
 
+    - name: Move SSH 7.4 cache
+      run: |
+        rm -rf /tmp/.buildx-ssh74-cache
+        mv /tmp/.buildx-ssh74-cache-new /tmp/.buildx-php74-cache
+
     - name: Build SSH 8.0
       uses: docker/build-push-action@v3
       with:
@@ -197,6 +228,10 @@ jobs:
           TOK_VERSION=${{ steps.prep.outputs.version }}
           PHP_VERSION=80
 
+    - name: Move SSH 8.0 cache
+      run: |
+        rm -rf /tmp/.buildx-ssh80-cache
+        mv /tmp/.buildx-ssh80-cache-new /tmp/.buildx-php80-cache
 
     - name: Build SSH 8.1
       uses: docker/build-push-action@v3
@@ -213,19 +248,10 @@ jobs:
           TOK_VERSION=${{ steps.prep.outputs.version }}
           PHP_VERSION=81
 
-    - name: Move cache
+    - name: Move SSH 8.1 cache
       run: |
-        rm -rf /tmp/.buildx-base-cache
-        rm -rf /tmp/.buildx-php74-cache
-        mv /tmp/.buildx-base-cache-new /tmp/.buildx-base-cache
-        mv /tmp/.buildx-php74-cache-new /tmp/.buildx-php74-cache
-        mv /tmp/.buildx-php80-cache-new /tmp/.buildx-php80-cache
-        mv /tmp/.buildx-php81-cache-new /tmp/.buildx-php81-cache
-        mv /tmp/.buildx-nginx-cache-new /tmp/.buildx-nginx-cache
-        mv /tmp/.buildx-ssh74-cache-new /tmp/.buildx-ssh74-cache
-        mv /tmp/.buildx-ssh80-cache-new /tmp/.buildx-ssh80-cache
-        mv /tmp/.buildx-ssh81-cache-new /tmp/.buildx-ssh81-cache
-
+        rm -rf /tmp/.buildx-ssh81-cache
+        mv /tmp/.buildx-ssh81-cache-new /tmp/.buildx-php81-cache
 
         #  build-arm64:
         #    runs-on: [self-hosted, arm64, linux]
