@@ -160,6 +160,10 @@ RUN apt-get clean \
  && chown app:app /home/app -R \
  && chmod o-rwx /home/app -R
 
+COPY start.sh /usr/local/bin/start.sh
+RUN chmod 700 /usr/local/bin/start.sh \
+ && chown app:root /usr/local/bin/start.sh
+
 USER app
 WORKDIR /app/site
 RUN eval $(fnm env) \
@@ -167,3 +171,5 @@ RUN eval $(fnm env) \
  && fnm install v14 \
  && fnm install v16 \
  && fnm default system #disables node
+
+ENTRYPOINT /usr/local/bin/start.sh

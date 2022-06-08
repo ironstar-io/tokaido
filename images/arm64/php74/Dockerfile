@@ -171,4 +171,4 @@ RUN eval $(fnm env) \
  && fnm install v16 \
  && fnm default system #disables node
 
-RUN /usr/local/bin/start.sh
+ENTRYPOINT /usr/local/bin/start.sh
