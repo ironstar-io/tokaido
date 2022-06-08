@@ -153,7 +153,9 @@ RUN apt-get clean \
 
 COPY start.sh /usr/local/bin/start.sh
 RUN chmod 700 /usr/local/bin/start.sh \
- && chown app:root /usr/local/bin/start.sh
+ && chown -R app:app /usr/local/bin/start.sh /app/config /app/logs \
+ && find /app/config -type d -print0 | xargs -P0 -0 --no-run-if-empty chmod 2771 \
+ && find /app/site -type d -print0 | xargs -P0 -0 --no-run-if-empty chmod 2771
 
 USER app
 WORKDIR /app/site
