@@ -48,7 +48,7 @@ RUN chmod 700 /usr/local/bin/entrypoint.sh \
     && chmod 755 /etc/motd.sh  \
     && rm /etc/motd
 
-USER app
+USER root
 WORKDIR /app/site
 EXPOSE 22
 CMD ["/usr/local/bin/entrypoint.sh"]

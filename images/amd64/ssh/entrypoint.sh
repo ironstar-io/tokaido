@@ -3,7 +3,6 @@ set -euxo pipefail
 
 drupal_root=${DRUPAL_ROOT:-web}
 
-
 # Invoke the environment variables into this sshd process
 while read -r line; do
   export "${line?}"

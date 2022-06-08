@@ -98,6 +98,7 @@ COPY config/www.conf-template /app/config/php/www.conf-template
 COPY config/www.conf-template /app/config/php/www.conf
 COPY --from=php /usr/local/bin/phar /usr/local/bin/php
 COPY --from=php /usr/local/bin/php /usr/local/bin/php
+COPY --from=php /usr/local/sbin/php /usr/local/sbin/php
 COPY --from=php /usr/local/php/php /usr/local/php/php
 COPY --from=php /usr/local/lib/php /usr/local/lib/php
 COPY --from=php /usr/lib /usr/lib
@@ -150,6 +151,7 @@ RUN curl -sSLo /tmp/fnm.zip https://github.com/Schniz/fnm/releases/download/v1.3
  && chmod 770 /usr/local/bin/fnm \
  && mkdir -p /home/app/.fnm \
  && chmod 2770 /home/app/.fnm 
+
 COPY config/.bashrc /home/app/.bashrc
 COPY config/.bash_profile /home/app/.bash_profile
 

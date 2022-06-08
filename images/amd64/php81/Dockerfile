@@ -93,6 +93,7 @@ COPY config/www.conf-template /app/config/php/www.conf-template
 COPY config/www.conf-template /app/config/php/www.conf
 COPY --from=php /usr/local/bin/phar /usr/local/bin/php
 COPY --from=php /usr/local/bin/php /usr/local/bin/php
+COPY --from=php /usr/local/sbin/php /usr/local/sbin/php
 COPY --from=php /usr/local/php/php /usr/local/php/php
 COPY --from=php /usr/local/lib/php /usr/local/lib/php
 COPY --from=php /usr/lib /usr/lib
@@ -122,7 +123,7 @@ RUN apt-get update \
         libatk-bridge2.0-0 \
         libgtk-3-0 \
         libgbm-dev \
-        libatk1.0-0 
+        libatk1.0-0
 
 RUN mkdir -p /usr/local/etc/php/ \
  && ln -s /app/config/php/conf.d /usr/local/etc/php/conf.d
@@ -144,14 +145,14 @@ RUN curl -sSLo /tmp/fnm.zip https://github.com/Schniz/fnm/releases/download/v1.3
  && chown app:app /usr/local/bin/fnm \
  && chmod 770 /usr/local/bin/fnm \
  && mkdir -p /home/app/.fnm \
- && chmod 2770 /home/app/.fnm 
+ && chmod 2770 /home/app/.fnm
 COPY config/.bashrc /home/app/.bashrc
 COPY config/.bash_profile /home/app/.bash_profile
 
 RUN apt-get clean \
  && rm -rf /tmp/* \
  && chown app:app /home/app -R \
- && chmod o-rwx /home/app -R 
+ && chmod o-rwx /home/app -R
 
 USER app
 WORKDIR /app/site
