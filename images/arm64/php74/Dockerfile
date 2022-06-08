@@ -141,9 +141,6 @@ RUN curl -s https://getcomposer.org/installer > composer-setup.php && /usr/local
  && ln -sf /usr/bin/msmtp /usr/sbin/sendmail \
  && ln -sf /app/config/msmtp/msmtprc /etc/msmtprc
 
-RUN ep /app/config/php/php.ini \
- && ep /app/config/php/www.conf
-
 RUN curl -sSLo /tmp/fnm.zip https://github.com/Schniz/fnm/releases/download/v1.31.0/fnm-arm64.zip \
  && unzip /tmp/fnm.zip -d /usr/local/bin/ \
  && chmod +x /usr/local/bin/fnm \

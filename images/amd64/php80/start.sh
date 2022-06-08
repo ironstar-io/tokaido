@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e -o pipefail -o errexit
 
 if [[ -f /app/site/.env ]]; then
     printf "Importing environment variables from /app/site/.env\n"
@@ -7,4 +8,7 @@ if [[ -f /app/site/.env ]]; then
     set +o allexport
 fi
 
-/usr/local/php/sbin/php-fpm -F -c /app/config/php/runtime/php.ini --fpm-config /app/config/php/runtime/php-fpm.conf
+ep /app/config/php/php.ini
+ep /app/config/php/www.conf
+
+/usr/local/php/sbin/php-fpm -F -c /app/config/php/php.ini --fpm-config /app/config/php/www.conf
