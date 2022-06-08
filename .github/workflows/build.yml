@@ -530,6 +530,7 @@ jobs:
         echo ::set-output name=version::${VERSION}
     - name: combine-base
       run: |
+        docker manifest rm tokaido/base\:${{ steps.prep.outputs.version }} || true
         docker manifest create tokaido/base\:${{ steps.prep.outputs.version }} \
           tokaido/base\:${{ steps.prep.outputs.version }}-arm64 \
           tokaido/base\:${{ steps.prep.outputs.version }}-amd64
@@ -538,6 +539,7 @@ jobs:
         docker manifest push tokaido/base:${{ steps.prep.outputs.version }}
     - name: combine-php74
       run: |
+        docker manifest rm tokaido/php74\:${{ steps.prep.outputs.version }} || true
         docker manifest create tokaido/php74\:${{ steps.prep.outputs.version }} \
           tokaido/php74\:${{ steps.prep.outputs.version }}-arm64 \
           tokaido/php74\:${{ steps.prep.outputs.version }}-amd64
@@ -546,6 +548,7 @@ jobs:
         docker manifest push tokaido/php74:${{ steps.prep.outputs.version }}
     - name: combine-php80
       run: |
+        docker manifest rm tokaido/php80\:${{ steps.prep.outputs.version }} || true
         docker manifest create tokaido/php80\:${{ steps.prep.outputs.version }} \
           tokaido/php80\:${{ steps.prep.outputs.version }}-arm64 \
           tokaido/php80\:${{ steps.prep.outputs.version }}-amd64
@@ -554,6 +557,7 @@ jobs:
         docker manifest push tokaido/php80:${{ steps.prep.outputs.version }}
     - name: combine-php81
       run: |
+        docker manifest rm tokaido/php81\:${{ steps.prep.outputs.version }} || true
         docker manifest create tokaido/php81\:${{ steps.prep.outputs.version }} \
           tokaido/php81\:${{ steps.prep.outputs.version }}-arm64 \
           tokaido/php81\:${{ steps.prep.outputs.version }}-amd64
@@ -562,6 +566,7 @@ jobs:
         docker manifest push tokaido/php81:${{ steps.prep.outputs.version }}
     - name: combine-nginx
       run: |
+        docker manifest rm tokaido/nginx\:${{ steps.prep.outputs.version }} || true
         docker manifest create tokaido/nginx\:${{ steps.prep.outputs.version }} \
           tokaido/nginx\:${{ steps.prep.outputs.version }}-arm64 \
           tokaido/nginx\:${{ steps.prep.outputs.version }}-amd64
@@ -570,6 +575,7 @@ jobs:
         docker manifest push tokaido/nginx:${{ steps.prep.outputs.version }}
     - name: combine-ssh74
       run: |
+        docker manifest rm tokaido/ssh74\:${{ steps.prep.outputs.version }} || true
         docker manifest create tokaido/ssh74\:${{ steps.prep.outputs.version }} \
           tokaido/ssh74\:${{ steps.prep.outputs.version }}-arm64 \
           tokaido/ssh74\:${{ steps.prep.outputs.version }}-amd64
@@ -578,6 +584,7 @@ jobs:
         docker manifest push tokaido/ssh74:${{ steps.prep.outputs.version }}
     - name: combine-ssh81
       run: |
+        docker manifest rm tokaido/ssh81\:${{ steps.prep.outputs.version }} || true
         docker manifest create tokaido/ssh81\:${{ steps.prep.outputs.version }} \
           tokaido/ssh81\:${{ steps.prep.outputs.version }}-arm64 \
           tokaido/ssh81\:${{ steps.prep.outputs.version }}-amd64
@@ -586,6 +593,7 @@ jobs:
         docker manifest push tokaido/ssh81:${{ steps.prep.outputs.version }}
     - name: combine-ssh80
       run: |
+        docker manifest rm tokaido/ssh80\:${{ steps.prep.outputs.version }} || true
         docker manifest create tokaido/ssh80\:${{ steps.prep.outputs.version }} \
           tokaido/ssh80\:${{ steps.prep.outputs.version }}-arm64 \
           tokaido/ssh80\:${{ steps.prep.outputs.version }}-amd64
