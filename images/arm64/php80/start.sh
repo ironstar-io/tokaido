@@ -11,4 +11,4 @@ fi
 ep /app/config/php/php.ini
 ep /app/config/php/www.conf
 
-/usr/local/php/sbin/php-fpm -F -c /app/config/php/php.ini --fpm-config /app/config/php/www.conf
+/usr/local/sbin/php-fpm -F -c /app/config/php/php.ini --fpm-config /app/config/php/www.conf
