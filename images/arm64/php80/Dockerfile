@@ -93,7 +93,7 @@ COPY config/www.conf-template /app/config/php/www.conf-template
 COPY config/www.conf-template /app/config/php/www.conf
 COPY --from=php /usr/local/bin/phar /usr/local/bin/php
 COPY --from=php /usr/local/bin/php /usr/local/bin/php
-COPY --from=php /usr/local/sbin/php /usr/local/sbin/php
+COPY --from=php /usr/local/sbin /usr/local/sbin
 COPY --from=php /usr/local/php/php /usr/local/php/php
 COPY --from=php /usr/local/lib/php /usr/local/lib/php
 COPY --from=php /usr/lib /usr/lib
