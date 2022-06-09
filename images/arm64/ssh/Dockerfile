@@ -10,7 +10,7 @@ COPY configs/.bashrc /etc/skel/.bashrc
 COPY configs/sudoers /etc/sudoers
 COPY configs/sshd_config /etc/ssh/sshd_config
 COPY configs/motd.sh /etc/motd.sh
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY start.sh /app/bin/start.sh
 COPY configs/fzf.bash /home/tok/.fzf.bash
 RUN apt-get update  \
  && apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
@@ -44,11 +44,11 @@ RUN git clone --depth 1 https://github.com/junegunn/fzf.git /home/tok/.fzf \
  && ln -s /usr/share/bash-completion/completions/git /etc/bash_completion.d/git-completion.bash \
  && chmod 700 /home/tok/.fzf/bin/fzf
 
-RUN chmod 700 /usr/local/bin/entrypoint.sh \
+RUN chmod 700 /app/bin/start.sh \
     && chmod 755 /etc/motd.sh  \
     && rm /etc/motd
 
 USER root
 WORKDIR /app/site
 EXPOSE 22
-CMD ["/usr/local/bin/entrypoint.sh"]
+CMD ["/app/bin/start.sh"]
