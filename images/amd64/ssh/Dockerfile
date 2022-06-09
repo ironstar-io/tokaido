@@ -11,7 +11,7 @@ COPY configs/sudoers /etc/sudoers
 COPY configs/sshd_config /etc/ssh/sshd_config
 COPY configs/motd.sh /etc/motd.sh
 COPY start.sh /app/bin/start.sh
-COPY configs/fzf.bash /home/tok/.fzf.bash
+COPY configs/fzf.bash /home/app/.fzf.bash
 RUN apt-get update  \
  && apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
       openssh-server \
@@ -24,25 +24,25 @@ RUN apt-get update  \
       nano \
  && /usr/bin/ssh-keygen -A  \
  && chmod 600 /etc/skel/.bash* \
- && cp /etc/skel/.bash_profile /home/tok/.bash_profile \
- && cp /etc/skel/.bashrc /home/tok/.bashrc \
- && chown app:app /home/tok/.bash* \
- && chmod 600 /home/tok/.bash* \
+ && cp /etc/skel/.bash_profile /home/app/.bash_profile \
+ && cp /etc/skel/.bashrc /home/app/.bashrc \
+ && chown app:app /home/app/.bash* \
+ && chmod 600 /home/app/.bash* \
  && mkdir /run/sshd  \
  && rm -rf /tmp/*
 
-RUN git clone --depth 1 https://github.com/junegunn/fzf.git /home/tok/.fzf \
- && cd /home/tok && ./.fzf/install \
- && chown app:app /home/tok/.fzf -R \
- && chown app:app /home/tok/.fzf.bash \
- && echo "" >> /home/tok/.bash_profile \
- && echo "source /home/tok/.fzf.bash" >> /home/tok/.bash_profile \
- && find /home/tok -type d -a -print0 | xargs -0 chmod 2700 \
- && find /home/tok -type d -iname ".*" -a -print0 | xargs -0 chmod 2700 \
- && find /home/tok -type f -a -print0 | xargs -0 chmod 600 \
- && find /home/tok -type f -iname ".*" -a -print0 | xargs -0 chmod 600 \
+RUN git clone --depth 1 https://github.com/junegunn/fzf.git /home/app/.fzf \
+ && cd /home/app && ./.fzf/install \
+ && chown app:app /home/app/.fzf -R \
+ && chown app:app /home/app/.fzf.bash \
+ && echo "" >> /home/app/.bash_profile \
+ && echo "source /home/app/.fzf.bash" >> /home/app/.bash_profile \
+ && find /home/app -type d -a -print0 | xargs -0 chmod 2700 \
+ && find /home/app -type d -iname ".*" -a -print0 | xargs -0 chmod 2700 \
+ && find /home/app -type f -a -print0 | xargs -0 chmod 600 \
+ && find /home/app -type f -iname ".*" -a -print0 | xargs -0 chmod 600 \
  && ln -s /usr/share/bash-completion/completions/git /etc/bash_completion.d/git-completion.bash \
- && chmod 700 /home/tok/.fzf/bin/fzf
+ && chmod 700 /home/app/.fzf/bin/fzf
 
 RUN chmod 700 /app/bin/start.sh \
     && chmod 755 /etc/motd.sh  \
