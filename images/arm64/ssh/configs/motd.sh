@@ -17,8 +17,8 @@ fi
 tok_provider=${TOK_PROVIDER:-}
 php_version=$(php -v 2> /dev/null| head -n 1 | awk -F ' ' '{print $2}' | awk -F '-' '{print $1}')
 composer_version=$(composer --version 2> /dev/null | awk -F ' ' '{print $3}')
-drush_version=$(cd /tokaido/site/${drupal_root} 2> /dev/null && drush version 2> /dev/null | awk -F ' ' '{print $4}')
-database_status=$(cd /tokaido/site/${drupal_root} 2> /dev/null && drush status 2> /dev/null | grep "Database" | grep "Connected" | awk -F ' ' '{print $3}')
+drush_version=$(cd /app/site/${drupal_root} 2> /dev/null && drush version 2> /dev/null | awk -F ' ' '{print $4}')
+database_status=$(cd /app/site/${drupal_root} 2> /dev/null && drush status 2> /dev/null | grep "Database" | grep "Connected" | awk -F ' ' '{print $3}')
 
 echo "${blue}"
 cat <<"EOF"
@@ -74,8 +74,8 @@ EOF
 else
   cat <<"EOF"
 
-In Tokaido, the /tokaido/site folder is synchronised between this environment
-and your local system. Content not saved in the /tokaido/site may be lost
+In Tokaido, the /app/site folder is synchronised between this environment
+and your local system. Content not saved in the /app/site may be lost
 each time the Tokaido environment is restarted.
 
 Be sure to check out https://docs.tokaido.io for help, or come and talk to

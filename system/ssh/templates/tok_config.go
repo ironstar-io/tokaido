@@ -3,7 +3,7 @@ package sshtmpl
 var TokConfTmplStr = `Host {{.ProjectName}}.tok
     HostName localhost
     Port {{.DrushPort}}
-    User tok
+    User app
     IdentityFile ~/.ssh/tok_ssh.key
     IdentitiesOnly yes
     ForwardAgent yes

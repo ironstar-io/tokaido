@@ -4,11 +4,7 @@ set -euxo pipefail
 drupal_root=${DRUPAL_ROOT:-web}
 
 if [[ -f /app/site/.env ]]; then
-    printf "Importing environment variables from /app/site/.env\n"
-    set -o allexport
-    source /app/site/.env || true
     cat /app/site/.env >> /home/app/.ssh/environment || true
-    set +o allexport
 fi
 
 ep /app/config/php/php.ini

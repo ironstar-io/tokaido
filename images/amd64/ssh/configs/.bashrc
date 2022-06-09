@@ -3,14 +3,19 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
-drupal_root=${DRUPAL_ROOT:-docroot}
+drupal_root=${DRUPAL_ROOT:-web}
 export PATH=$PATH:$HOME/.composer/vendor/bin
 export DRUSH_LAUNCHER_FALLBACK=/usr/local/drush/global/bin/drush
-if [ -f /tokaido/config/.env ]; then
-    source /tokaido/config/.env
+
+if [ -d /app/site/${drupal_root} ]; then
+    cd /app/site/${drupal_root}
 fi
-if [ -d /tokaido/site/${drupal_root} ]; then
-    cd /tokaido/site/${drupal_root}
+
+if [[ -f /app/site/.env ]]; then
+    printf "Importing environment variables from /app/site/.env\n"
+    set -o allexport
+    source /app/site/.env || true
+    set +o allexport
 fi
 
 
