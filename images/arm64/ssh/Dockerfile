@@ -41,6 +41,7 @@ RUN git clone --depth 1 https://github.com/junegunn/fzf.git /home/app/.fzf \
  && find /home/app -type d -iname ".*" -a -print0 | xargs -0 chmod 2700 \
  && find /home/app -type f -a -print0 | xargs -0 chmod 600 \
  && find /home/app -type f -iname ".*" -a -print0 | xargs -0 chmod 600 \
+ && usermod -s /bin/bash app \
  && ln -s /usr/share/bash-completion/completions/git /etc/bash_completion.d/git-completion.bash \
  && chmod 700 /home/app/.fzf/bin/fzf
 

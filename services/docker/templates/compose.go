@@ -232,7 +232,7 @@ func TokaidoFusionSiteVolumeAttach(path, name string) []byte {
   drush:
     volumes:
       - ` + name + `:/app/site
-      - tok_composer_cache:/home/tok/.composer/cache
+      - tok_composer_cache:/home/app/.composer/cache
   nginx:
     volumes:
       - ` + name + `:/app/site
@@ -280,7 +280,7 @@ func TokaidoDockerSiteVolumeAttach(path string) []byte {
   drush:
     volumes:
       - ` + path + `:/app/site` + diskMode + `
-      - tok_composer_cache:/home/tok/.composer/cache`
+      - tok_composer_cache:/home/app/.composer/cache`
 
 	// We'll mount the .gitconfig and .drush paths if they exist
 	gp := h + "/.gitconfig"
@@ -288,12 +288,12 @@ func TokaidoDockerSiteVolumeAttach(path string) []byte {
 
 	if fs.CheckExists(gp) {
 		vols = vols + `
-      - ` + gp + `:/home/tok/.gitconfig`
+      - ` + gp + `:/home/app/.gitconfig`
 	}
 
 	if fs.CheckExists(dp) {
 		vols = vols + `
-      - ` + dp + `:/home/tok/.drush`
+      - ` + dp + `:/home/app/.drush`
 	}
 
 	return []byte(vols)
@@ -304,7 +304,7 @@ func ComposerCacheVolumeAttach() []byte {
 	return []byte(`services:
   drush:
     volumes:
-      - tok_composer_cache:/home/tok/.composer/cache
+      - tok_composer_cache:/home/app/.composer/cache
 `)
 }
 
