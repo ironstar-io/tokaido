@@ -21,9 +21,9 @@ echo "APP_ENV=${APP_ENV:-unknown}" >> /home/"$username"/.ssh/environment
 echo "PROJECT_NAME=${PROJECT_NAME:-}" >> /home/"$username"/.ssh/environment
 echo "DRUPAL_ROOT=${drupal_root}" >> /home/"$username"/.ssh/environment
 echo "VARNISH_PURGE_KEY=${VARNISH_PURGE_KEY:-}" >> /home/"$username"/.ssh/environment
-chmod 600 /home/"$username"/.ssh/environment        
+chmod 600 /home/"$username"/.ssh/environment
 chmod 600 /home/"$username"/.ssh/authorized_keys
-chown "$username":root /home/"$username"/.ssh -R 
+chown "$username":root /home/"$username"/.ssh -R
 
 # If we're running in a Tokaido production environment, we'll create multiple users
 # and also set up some additional configuration that they'll need
