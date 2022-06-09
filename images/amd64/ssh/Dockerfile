@@ -51,4 +51,4 @@ RUN chmod 700 /app/bin/start.sh \
 USER root
 WORKDIR /app/site
 EXPOSE 22
-CMD ["/app/bin/start.sh"]
+ENTRYPOINT ["/app/bin/start.sh"]

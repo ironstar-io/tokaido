@@ -157,9 +157,9 @@ RUN apt-get clean \
  && chown app:app /home/app -R \
  && chmod o-rwx /home/app -R
 
-COPY start.sh /usr/local/bin/start.sh
-RUN chmod 700 /usr/local/bin/start.sh \
- && chown -R app:app /usr/local/bin/start.sh /app/config /app/logs \
+COPY start.sh /app/bin/start.sh
+RUN chmod 700 /app/bin/start.sh \
+ && chown -R app:app /app/bin/start.sh /app/config /app/logs \
  && find /app/config -type d -print0 | xargs -P0 -0 --no-run-if-empty chmod 2771 \
  && find /app/site -type d -print0 | xargs -P0 -0 --no-run-if-empty chmod 2771
 
@@ -172,4 +172,4 @@ RUN eval $(fnm env) \
  && fnm install v16 \
  && fnm default system #disables node
 
-ENTRYPOINT /usr/local/bin/start.sh
+ENTRYPOINT /app/bin/start.sh
