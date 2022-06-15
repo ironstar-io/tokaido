@@ -55,15 +55,15 @@ tokaidoSettings[FASTCGI_BUFFER_SIZE]="null"
 tokaidoSettings[DRUPAL_ROOT]="null"
 
 # If there is a tokaido config, look up any values
-if [ -f /tokaido/site/.tok/config.yml ]; then
-    tokaidoSettings[WORKER_CONNECTIONS]="$(yq r /tokaido/site/.tok/config.yml nginx.workerconnections)"
-    tokaidoSettings[TYPES_HASH_MAX_SIZE]="$(yq r /tokaido/site/.tok/config.yml nginx.hashmaxsize)"
-    tokaidoSettings[CLIENT_MAX_BODY_SIZE]="$(yq r /tokaido/site/.tok/config.yml nginx.clientmaxbodysize)"
-    tokaidoSettings[KEEPALIVE_TIMEOUT]="$(yq r /tokaido/site/.tok/config.yml nginx.keepalivetimeout)"
-    tokaidoSettings[FASTCGI_READ_TIMEOUT]="$(yq r /tokaido/site/.tok/config.yml nginx.fastcgireadtimeout)"
-    tokaidoSettings[FASTCGI_BUFFERS]="$(yq r /tokaido/site/.tok/config.yml nginx.fastcgibuffers)"
-    tokaidoSettings[FASTCGI_BUFFER_SIZE]="$(yq r /tokaido/site/.tok/config.yml nginx.fastcgibuffersize)"
-    tokaidoSettings[DRUPAL_ROOT]="$(yq r /tokaido/site/.tok/config.yml drupal.path)"
+if [ -f /app/site/.tok/config.yml ]; then
+    tokaidoSettings[WORKER_CONNECTIONS]="$(yq r /app/site/.tok/config.yml nginx.workerconnections)"
+    tokaidoSettings[TYPES_HASH_MAX_SIZE]="$(yq r /app/site/.tok/config.yml nginx.hashmaxsize)"
+    tokaidoSettings[CLIENT_MAX_BODY_SIZE]="$(yq r /app/site/.tok/config.yml nginx.clientmaxbodysize)"
+    tokaidoSettings[KEEPALIVE_TIMEOUT]="$(yq r /app/site/.tok/config.yml nginx.keepalivetimeout)"
+    tokaidoSettings[FASTCGI_READ_TIMEOUT]="$(yq r /app/site/.tok/config.yml nginx.fastcgireadtimeout)"
+    tokaidoSettings[FASTCGI_BUFFERS]="$(yq r /app/site/.tok/config.yml nginx.fastcgibuffers)"
+    tokaidoSettings[FASTCGI_BUFFER_SIZE]="$(yq r /app/site/.tok/config.yml nginx.fastcgibuffersize)"
+    tokaidoSettings[DRUPAL_ROOT]="$(yq r /app/site/.tok/config.yml drupal.path)"
 fi
 
 printf "${BLUE}NGINX will run with the following configuration values and sources:${NC}\n"
@@ -138,16 +138,13 @@ REDIRECTS_CONFIG_FILE="redirects.conf"
 ADDITIONAL_CONFIG_FILE="additional.conf"
 SECURITY_CONFIG_FILE="security.conf"
 
-DEFAULT_CONFIG_PATH="/tokaido/config/nginx"
-CUSTOM_CONFIG_PATH="/tokaido/site/.tok/nginx"
+DEFAULT_CONFIG_PATH="/app/config/nginx"
+CUSTOM_CONFIG_PATH="/app/site/.tok/nginx"
 
 declare -A configFiles
 configFiles[NGINX_CONFIG]="$DEFAULT_CONFIG_PATH/$NGINX_CONFIG_FILE"
 configFiles[HOST_CONFIG]="$DEFAULT_CONFIG_PATH/$HOST_CONFIG_FILE"
 configFiles[MIMETYPES_CONFIG]="$DEFAULT_CONFIG_PATH/$MIMETYPES_CONFIG_FILE"
-configFiles[REDIRECTS_CONFIG]="$DEFAULT_CONFIG_PATH/$REDIRECTS_CONFIG_FILE"
-configFiles[ADDITIONAL_CONFIG]="$DEFAULT_CONFIG_PATH/$ADDITIONAL_CONFIG_FILE"
-configFiles[SECURITY_CONFIG]="$DEFAULT_CONFIG_PATH/$SECURITY_CONFIG_FILE"
 
 printf "${BLUE}Discovering any custom NGINX configuration files...${NC}\n"
 if [ -f "${CUSTOM_CONFIG_PATH}/${NGINX_CONFIG_FILE}" ]; then
@@ -192,16 +189,6 @@ sed -i "s/{{.BLOCK_UNKNOWN_HOSTS}}/${settings[BLOCK_UNKNOWN_HOSTS]}/g" "${config
 
 sed -i "s/{{.HOST_CONFIG}}/${configFiles[HOST_CONFIG]//\//\\\/}/g" "${configFiles[NGINX_CONFIG]}"
 sed -i "s/{{.MIMETYPES_CONFIG}}/${configFiles[MIMETYPES_CONFIG]//\//\\\/}/g" "${configFiles[NGINX_CONFIG]}"
-sed -i "s/{{.REDIRECTS_CONFIG}}/${configFiles[REDIRECTS_CONFIG]//\//\\\/}/g" "${configFiles[HOST_CONFIG]}"
-sed -i "s/{{.ADDITIONAL_CONFIG}}/${configFiles[ADDITIONAL_CONFIG]//\//\\\/}/g" "${configFiles[HOST_CONFIG]}"
-
-# In production environments, we'll load the security config in to block access to sensitive files
-# We intend to expand this functionality in the future to rapidly respond to new security annoucements
-if [ ${TOK_PROVIDER+x} ]; then
-    sed -i "s/{{.SECURITY_CONFIG}}/include ${configFiles[SECURITY_CONFIG]//\//\\\/};/g" "${configFiles[HOST_CONFIG]}"
-else
-    sed -i "s/{{.SECURITY_CONFIG}}//g" "${configFiles[HOST_CONFIG]}"
-fi
 
 printf "${GREEN}Starting NGINX...${NC}\n"
 nginx -c "${configFiles[NGINX_CONFIG]}"

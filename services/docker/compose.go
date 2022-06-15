@@ -68,6 +68,12 @@ func CreateSiteVolume() {
 	CreateVolume(n)
 }
 
+// CreateLogsVolume ...
+func CreateLogsVolume() {
+	n := "tok_" + conf.GetConfig().Tokaido.Project.Name + "_logs"
+	CreateVolume(n)
+}
+
 // CreateComposerCacheVolume will create a composer cache volume if it doesn't already exist
 func CreateComposerCacheVolume() {
 	n := "tok_composer_cache"

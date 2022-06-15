@@ -26,13 +26,13 @@ func Ps() {
 	o = append(o, "Container|Local Endpoint|Shortcut|Status")
 	o = append(o, "--------|--------|--------|--------")
 
-	// Output Drush status
-	admin := docker.GetContainer("drush", pn)
+	// Output SSH status
+	admin := docker.GetContainer("ssh", pn)
 	if admin.State == "running" {
 		port := strconv.Itoa(int(admin.Ports[0].PublicPort))
-		o = append(o, aurora.Sprintf("admin(drush/ssh)|ssh://localhost:%s|ssh %s.tok|%s", port, pn, aurora.Green(admin.State)))
+		o = append(o, aurora.Sprintf("ssh|ssh://localhost:%s|ssh %s.tok|%s", port, pn, aurora.Green(admin.State)))
 	} else {
-		o = append(o, aurora.Sprintf("admin(drush/ssh)|-|-|%s", aurora.Yellow("offline")))
+		o = append(o, aurora.Sprintf("ssh|-|-|%s", aurora.Yellow("offline")))
 		failure = true
 	}
 
@@ -142,15 +142,6 @@ func Ps() {
 			o = append(o, aurora.Sprintf("memcache|-|-|%s", aurora.Yellow("offline")))
 			failure = true
 		}
-	}
-
-	// Output Syslog Status
-	syslog := docker.GetContainer("syslog", pn)
-	if syslog.State == "running" {
-		o = append(o, aurora.Sprintf("logging|-|-|%s", aurora.Green(syslog.State)))
-	} else {
-		o = append(o, aurora.Sprintf("logging|-|-|%s", aurora.Yellow("offline")))
-		failure = true
 	}
 
 	fmt.Println()

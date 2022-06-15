@@ -1,12 +1,10 @@
 package cmd
 
 import (
-	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/initialize"
 	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/services/telemetry"
 	"github.com/ironstar-io/tokaido/services/tok"
-	"github.com/ironstar-io/tokaido/services/unison"
 	"github.com/ironstar-io/tokaido/utils"
 	"github.com/spf13/cobra"
 )
@@ -22,7 +20,6 @@ var RebuildCmd = &cobra.Command{
 		utils.CheckCmdHard("docker-compose")
 
 		docker.Stop()
-		unison.UnloadSyncService(conf.GetConfig().Tokaido.Project.Name)
 
 		tok.Init(true, false)
 

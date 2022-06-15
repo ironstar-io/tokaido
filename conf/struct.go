@@ -230,7 +230,7 @@ type Services struct {
 		Environment map[string]string `yaml:"environment,omitempty"`
 		Volumes     []string          `yaml:"volumes,omitempty"`
 		Labels      map[string]string `yaml:"labels,omitempty"`
-	} `yaml:"drush,omitempty"`
+	} `yaml:"ssh,omitempty"`
 	Solr struct {
 		Platform    string            `yaml:"platform,omitempty"`
 		Enabled     bool              `yaml:"enabled,omitempty"`
