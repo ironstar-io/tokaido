@@ -18,16 +18,17 @@ RUN apt-get update  \
         curl \
         telnet \
 	    netcat \
-	&& mkdir -p /tokaido/config/nginx/conf.d/sites /tokaido/config/nginx/conf.d/redirects \
-	&& mkdir -p /tokaido/logs/nginx \
-	&& mkdir -p /tokaido/site/docroot \
+    && ln -s /app /tokaido \
+	&& mkdir -p /app/config/nginx/conf.d/sites /app/config/nginx/conf.d/redirects \
+	&& mkdir -p /app/logs/nginx \
+	&& mkdir -p /app/site/docroot \
 	&& mkdir -p /var/cache/nginx \
 	&& groupadd -g 1001 web  \
 	&& userdel nginx \
 	&& useradd -s /sbin/nologin -g web -u 1001 tok  \
     && useradd -s /sbin/nologin -d /var/cache/nginx -g web -u 1002 nginx  \
-	&& chown tok:web /tokaido -R \
-	&& chown nginx:web /tokaido/logs/nginx \
+	&& chown tok:web /app -R \
+	&& chown nginx:web /app/logs/nginx \
 	&& chown nginx:web /var/cache/nginx \
 	&& chmod 740 /var/cache/nginx \
 	&& touch /var/run/nginx.pid \
@@ -37,19 +38,19 @@ RUN apt-get update  \
 	&& apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-COPY config/nginx.conf /tokaido/config/nginx/nginx.conf
-COPY config/host.conf /tokaido/config/nginx/host.conf
-COPY config/redirects.conf /tokaido/config/nginx/redirects.conf
-COPY config/mimetypes.conf /tokaido/config/nginx/mimetypes.conf
-COPY config/additional.conf /tokaido/config/nginx/additional.conf
-COPY config/security.conf /tokaido/config/nginx/security.conf
-COPY config/phpinfo.php /tokaido/site/docroot/phpinfo.php
+COPY config/nginx.conf /app/config/nginx/nginx.conf
+COPY config/host.conf /app/config/nginx/host.conf
+COPY config/redirects.conf /app/config/nginx/redirects.conf
+COPY config/mimetypes.conf /app/config/nginx/mimetypes.conf
+COPY config/additional.conf /app/config/nginx/additional.conf
+COPY config/security.conf /app/config/nginx/security.conf
+COPY config/phpinfo.php /app/site/docroot/phpinfo.php
 COPY config/fastcgi_params /etc/nginx/fastcgi_params
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 
-RUN chown nginx:web /tokaido/config/nginx -R \
-	&& chmod 600 /tokaido/config/nginx/*.conf \
-	&& chmod 700 /tokaido/config/nginx \
+RUN chown nginx:web /app/config/nginx -R \
+	&& chmod 600 /app/config/nginx/*.conf \
+	&& chmod 700 /app/config/nginx \
 	&& chown nginx:web /usr/local/bin/entrypoint.sh \
 	&& chmod 750 /usr/local/bin/entrypoint.sh
 

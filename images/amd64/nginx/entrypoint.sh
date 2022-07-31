@@ -56,14 +56,14 @@ tokaidoSettings[DRUPAL_ROOT]="null"
 
 # If there is a tokaido config, look up any values
 if [ -f /app/site/.tok/config.yml ]; then
-    tokaidoSettings[WORKER_CONNECTIONS]="$(yq r /app/site/.tok/config.yml nginx.workerconnections)"
-    tokaidoSettings[TYPES_HASH_MAX_SIZE]="$(yq r /app/site/.tok/config.yml nginx.hashmaxsize)"
-    tokaidoSettings[CLIENT_MAX_BODY_SIZE]="$(yq r /app/site/.tok/config.yml nginx.clientmaxbodysize)"
-    tokaidoSettings[KEEPALIVE_TIMEOUT]="$(yq r /app/site/.tok/config.yml nginx.keepalivetimeout)"
-    tokaidoSettings[FASTCGI_READ_TIMEOUT]="$(yq r /app/site/.tok/config.yml nginx.fastcgireadtimeout)"
-    tokaidoSettings[FASTCGI_BUFFERS]="$(yq r /app/site/.tok/config.yml nginx.fastcgibuffers)"
-    tokaidoSettings[FASTCGI_BUFFER_SIZE]="$(yq r /app/site/.tok/config.yml nginx.fastcgibuffersize)"
-    tokaidoSettings[DRUPAL_ROOT]="$(yq r /app/site/.tok/config.yml drupal.path)"
+    tokaidoSettings[WORKER_CONNECTIONS]="$(yq '.nginx.workerconnections' /app/site/.tok/config.yml)"
+    tokaidoSettings[TYPES_HASH_MAX_SIZE]="$(yq '.nginx.hashmaxsize' /app/site/.tok/config.yml)"
+    tokaidoSettings[CLIENT_MAX_BODY_SIZE]="$(yq '.nginx.clientmaxbodysize' /app/site/.tok/config.yml)"
+    tokaidoSettings[KEEPALIVE_TIMEOUT]="$(yq '.nginx.keepalivetimeout' /app/site/.tok/config.yml)"
+    tokaidoSettings[FASTCGI_READ_TIMEOUT]="$(yq '.nginx.fastcgireadtimeout' /app/site/.tok/config.yml)"
+    tokaidoSettings[FASTCGI_BUFFERS]="$(yq '.nginx.fastcgibuffers' /app/site/.tok/config.yml)"
+    tokaidoSettings[FASTCGI_BUFFER_SIZE]="$(yq '.nginx.fastcgibuffersize' /app/site/.tok/config.yml)"
+    tokaidoSettings[DRUPAL_ROOT]="$(yq '.drupal.path' /app/site/.tok/config.yml)"
 fi
 
 printf "${BLUE}NGINX will run with the following configuration values and sources:${NC}\n"

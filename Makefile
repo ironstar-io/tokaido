@@ -52,3 +52,133 @@ test:
 
 clean:
 	rm -rf ./dist/*
+
+######################################################
+## DOCKER IMAGES
+## Official Tokaido docker images should be built by GitHub Actions
+## These commands are for convenience of building and testing locally
+## for a shorter iteration time.
+######################################################
+
+##################
+# BASE
+##################
+
+.PHONY: base
+base: ## Build and release the base image
+	@$(MAKE) build-base
+	@$(MAKE) push-base
+
+.PHONY: build-base
+build-base: ## Build and release the base image
+	@$(MAKE) build-base-amd64
+
+.PHONY: build-base-amd64
+build-base-amd64:
+	cd images/amd64/base && docker buildx build --platform linux/amd64 . ${DOCKER_CLI_FLAGS} --build-arg TOK_VERSION=${TOK_VERSION} -t tokaido/base:${TOK_VERSION}-amd64
+
+.PHONY: push-base
+push-base: ## push and release the base image
+	@$(MAKE) push-base-amd64
+
+.PHONY: push-base-amd64
+push-base-amd64:
+	docker push tokaido/base:${TOK_VERSION}-amd64
+
+##################
+# PHP
+##################
+
+.PHONY: php
+php: ## Build and release the php images
+	@$(MAKE) build-php
+	@$(MAKE) push-php
+
+.PHONY: build-php
+build-php: ## Build and release the base image
+	@$(MAKE) build-php74-amd64
+	@$(MAKE) build-php80-amd64
+	@$(MAKE) build-php81-amd64
+
+.PHONY: build-php74-amd64
+build-php74-amd64:
+	cd images/amd64/php74 && docker buildx build --push --platform linux/amd64 . ${DOCKER_CLI_FLAGS} --build-arg TOK_VERSION=${TOK_VERSION} -t tokaido/php74:${TOK_VERSION}-amd64
+
+.PHONY: build-php80-amd64
+build-php80-amd64:
+	cd images/amd64/php80 && docker buildx build --push --platform linux/amd64 . ${DOCKER_CLI_FLAGS} --build-arg TOK_VERSION=${TOK_VERSION} -t tokaido/php80:${TOK_VERSION}-amd64
+
+.PHONY: build-php81-amd64
+build-php81-amd64:
+	cd images/amd64/php81 && docker buildx build --push --platform linux/amd64 . ${DOCKER_CLI_FLAGS} --build-arg TOK_VERSION=${TOK_VERSION} -t tokaido/php81:${TOK_VERSION}-amd64
+
+.PHONY: push-php
+push-php: ## push and release the php image
+	@$(MAKE) push-php74-amd64
+	@$(MAKE) push-php80-amd64
+	@$(MAKE) push-php81-amd64
+
+.PHONY: push-php74-amd64
+push-php74-amd64:
+	docker push tokaido/php74:${TOK_VERSION}-amd64
+
+.PHONY: push-php80-amd64
+push-php80-amd64:
+	docker push tokaido/php80:${TOK_VERSION}-amd64
+
+.PHONY: push-php81-amd64
+push-php81-amd64:
+	docker push tokaido/php81:${TOK_VERSION}-amd64
+
+##################
+# NGINX
+##################
+
+.PHONY: nginx
+nginx: ## Build and release the nginx image
+	@$(MAKE) build-nginx
+	@$(MAKE) push-nginxw
+
+.PHONY: build-nginx
+build-nginx: ## Build and release the nginx image
+	@$(MAKE) build-nginx-amd64
+
+.PHONY: build-nginx-amd64
+build-nginx-amd64:
+	echo "Building tokaido/nginx:${TOK_VERSION}-amd64"
+	cd images/amd64/nginx && docker buildx build --push --platform linux/amd64 . ${DOCKER_CLI_FLAGS} --build-arg TOK_VERSION=${TOK_VERSION} -t tokaido/nginx:${TOK_VERSION}-amd64
+
+.PHONY: push-nginx
+push-nginx: ## push and release the nginx image
+	@$(MAKE) push-nginx-amd64
+
+.PHONY: push-nginx-amd64
+push-nginx-amd64:
+	docker push tokaido/nginx:${TOK_VERSION}-amd64
+
+##################
+# SSH
+##################
+
+.PHONY: ssh
+ssh: ## Build and release the ssh images
+	@$(MAKE) build-ssh
+	@$(MAKE) push-ssh
+
+.PHONY: build-ssh
+build-ssh: ## Build and release the base image
+	@$(MAKE) build-ssh74-amd64
+	@$(MAKE) build-ssh80-amd64
+	@$(MAKE) build-ssh81-amd64
+
+.PHONY: build-ssh74-amd64
+build-ssh74-amd64:
+	cd images/amd64/ssh && docker buildx build --platform linux/amd64 --push . ${DOCKER_CLI_FLAGS} --build-arg TOK_VERSION=${TOK_VERSION} --build-arg PHP_VERSION=74 -t tokaido/ssh74:${TOK_VERSION}-amd64
+
+.PHONY: build-ssh80-amd64
+build-ssh80-amd64:
+	cd images/amd64/ssh && docker buildx build --platform linux/amd64 --push . ${DOCKER_CLI_FLAGS} --build-arg TOK_VERSION=${TOK_VERSION} --build-arg PHP_VERSION=80 -t tokaido/ssh80:${TOK_VERSION}-amd64
+
+.PHONY: build-ssh81-amd64
+build-ssh81-amd64:
+	cd images/amd64/ssh && docker buildx build --platform linux/amd64 --push . ${DOCKER_CLI_FLAGS} --build-arg TOK_VERSION=${TOK_VERSION} --build-arg PHP_VERSION=81 -t tokaido/ssh81:${TOK_VERSION}-amd64
