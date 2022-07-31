@@ -72,7 +72,7 @@ base: ## Build and release the base image
 build-base: ## Build and release the base image
 	@$(MAKE) build-base-arm64
 
-.PHONY: build-base-amd64
+.PHONY: build-base-arm64
 build-base-arm64:
 	cd images/arm64/base && docker buildx build --platform linux/arm64 . ${DOCKER_CLI_FLAGS} --build-arg TOK_VERSION=${TOK_VERSION} -t tokaido/base:${TOK_VERSION}-arm64
 
@@ -80,8 +80,8 @@ build-base-arm64:
 push-base: ## push and release the base image
 	@$(MAKE) push-base-arm64
 
-.PHONY: push-base-amd64
-push-base-amd64:
+.PHONY: push-base-arm64
+push-base-arm64:
 	docker push tokaido/base:${TOK_VERSION}-arm64
 
 ##################

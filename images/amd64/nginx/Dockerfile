@@ -45,7 +45,7 @@ COPY config/mimetypes.conf /app/config/nginx/mimetypes.conf
 COPY config/additional.conf /app/config/nginx/additional.conf
 COPY config/security.conf /app/config/nginx/security.conf
 COPY config/phpinfo.php /app/site/docroot/phpinfo.php
-COPY config/fastcgi_params /etc/nginx/fastcgi_params
+COPY config/fastcgi_params /app/config/nginx/fastcgi.conf
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 
 RUN chown nginx:web /app/config/nginx -R \

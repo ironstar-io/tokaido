@@ -2,8 +2,10 @@ ARG TOK_VERSION
 
 FROM --platform=linux/amd64 php:7.4-fpm AS php
 ARG DEBIAN_FRONTEND=noninteractive
+COPY ZscalerRootCertificate-2048-SHA256.crt /usr/local/share/ca-certificates/ZscalerRootCertificate-2048-SHA256.crt
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
+        ca-certificates \
         libbz2-dev \
         zlib1g-dev \
         libpng-dev \
@@ -24,6 +26,7 @@ RUN apt-get update \
         libmemcached-dev \
         libzip-dev \
         libwebp-dev \
+ && update-ca-certificates \
  && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
  && docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
  && pecl update-channels \
