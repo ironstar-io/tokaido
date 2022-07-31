@@ -2,7 +2,7 @@
 #
 # The path follows a pattern
 # ./dist/BUILD-ID_TARGET/BINARY-NAME
-source = ["./dist/tok-macos_darwin_all/tok-macos"]
+source = ["./dist/tokaido_darwin_all/tok-macos"]
 bundle_id = "io.tokaido"
 
 apple_id {
