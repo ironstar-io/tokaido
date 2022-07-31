@@ -95,10 +95,6 @@ done
 # Strip any forward-slashes out of our resolve drupal root, just in case
 settings[DRUPAL_ROOT]=$(echo ${settings[DRUPAL_ROOT]} | sed -e 's/\///g')
 
-# FPM_HOSTNAME is a special value that can only be provided
-# as environment variables, not via the .tok/config.yml file.
-settings[FPM_HOSTNAME]=${FPM_HOSTNAME:-fpm}
-
 # ALLOWED_HOSTS can only be provided via a base64 encoded environment variable
 # this value can be anything matching the nginx server_name directive, including wildcards
 if [ ! -z "$ALLOWED_HOSTS" ]; then
@@ -191,4 +187,5 @@ sed -i "s/{{.HOST_CONFIG}}/${configFiles[HOST_CONFIG]//\//\\\/}/g" "${configFile
 sed -i "s/{{.MIMETYPES_CONFIG}}/${configFiles[MIMETYPES_CONFIG]//\//\\\/}/g" "${configFiles[NGINX_CONFIG]}"
 
 printf "${GREEN}Starting NGINX...${NC}\n"
+sleep 5 # if fpm isn't up before nginx, nginx will crash so we wait slightly
 nginx -c "${configFiles[NGINX_CONFIG]}"
