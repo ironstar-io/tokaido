@@ -10,6 +10,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 # hadolint ignore=DL3008
 ENV TOK_VERSION=${TOK_VERSION}
 WORKDIR /tmp
+COPY ZscalerRootCertificate-2048-SHA256.crt /usr/local/share/ca-certificates/ZscalerRootCertificate-2048-SHA256.crt
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         apt-transport-https \
@@ -38,26 +39,8 @@ RUN apt-get update \
         traceroute \
         unzip \
         vim \
-        wget
-
-RUN ln -sf /usr/bin/python3 /usr/bin/python \
-    && curl -sSLo ep.tgz https://github.com/kreuzwerker/envplate/releases/download/v1.0.2/envplate_1.0.2_Linux_x86_64.tar.gz \
-    && tar xzf ep.tgz \
-    && mv /tmp/envplate /bin/ep \
-    && chmod +x /bin/ep \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
-# Configure user accounts and default permissions
-RUN mkdir /etc/skel/.ssh \
-    && find /etc/skel -type d -a -print0 | xargs -0 chmod 700 \
-    && find /etc/skel -type d -name ".*" -a -print0 | xargs -0 chmod 700 \
-    && find /etc/skel -type f -a -print0 | xargs -0 chmod 600 \
-    && find /etc/skel -type f -name ".*" -a -print0 | xargs -0 chmod 600 \
-    && echo "umask 002" > /etc/profile \
-    && groupadd -g 1001 app \
-    && useradd -m -s /bin/false -g app  -K UMASK=002 -u 1001 app \
-    && usermod -p '*' app \
+        wget \
+    && update-ca-certificates RUN ln -sf /usr/bin/python3 /usr/bin/python \ && curl -sSLo ep.tgz https://github.com/kreuzwerker/envplate/releases/download/v1.0.2/envplate_1.0.2_Linux_x86_64.tar.gz \ && tar xzf ep.tgz \ && mv /tmp/envplate /bin/ep \ && chmod +x /bin/ep \ && apt-get clean \ && rm -rf /var/lib/apt/lists/* # Configure user accounts and default permissions RUN mkdir /etc/skel/.ssh \ && find /etc/skel -type d -a -print0 | xargs -0 chmod 700 \ && find /etc/skel -type d -name ".*" -a -print0 | xargs -0 chmod 700 \ && find /etc/skel -type f -a -print0 | xargs -0 chmod 600 \ && find /etc/skel -type f -name ".*" -a -print0 | xargs -0 chmod 600 \ && echo "umask 002" > /etc/profile \ && groupadd -g 1001 app \ && useradd -m -s /bin/false -g app  -K UMASK=002 -u 1001 app \ && usermod -p '*' app \
     && chown app:root /home/app -R \
     && find /home/ -type d -a -print0 | xargs -0 chmod 700 \
     && find /home/ -type f -a -print0 | xargs -0 chmod 600 \

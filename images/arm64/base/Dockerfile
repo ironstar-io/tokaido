@@ -10,6 +10,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 # hadolint ignore=DL3008
 ENV TOK_VERSION=${TOK_VERSION}
 WORKDIR /tmp
+COPY ZscalerRootCertificate-2048-SHA256.crt /usr/local/share/ca-certificates/ZscalerRootCertificate-2048-SHA256.crt
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         apt-transport-https \
@@ -38,7 +39,8 @@ RUN apt-get update \
         traceroute \
         unzip \
         vim \
-        wget
+        wget \
+    && update-ca-certificates
 
 RUN ln -sf /usr/bin/python3 /usr/bin/python \
     && curl -sSLo ep.tgz https://github.com/kreuzwerker/envplate/releases/download/v1.0.2/envplate_1.0.2_Linux_arm64.tar.gz \
