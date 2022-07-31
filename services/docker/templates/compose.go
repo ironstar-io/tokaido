@@ -67,13 +67,18 @@ func ImageVersion(phpVersion, stability string) []byte {
 		imageVersion = constants.StableVersion
 	}
 
+	imageArch := "amd64"
+	if runtime.GOARCH == "arm64" {
+		imageArch = "arm64"
+	}
+
 	return []byte(`services:
   nginx:
-    image: tokaido/nginx:` + imageVersion + `
+    image: tokaido/nginx:` + imageVersion + `-` + imageArch + `
   fpm:
-    image: tokaido/php` + v + `:` + imageVersion + `
+    image: tokaido/php` + v + `:` + imageVersion + `-` + imageArch + `
   ssh:
-    image: tokaido/ssh` + v + `:` + imageVersion + ``)
+    image: tokaido/ssh` + v + `:` + imageVersion + `-` + imageArch)
 }
 
 // EnableSolr ...
