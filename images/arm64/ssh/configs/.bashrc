@@ -11,6 +11,8 @@ if [ -d /app/site/${drupal_root} ]; then
     cd /app/site/${drupal_root}
 fi
 
+eval $(fnm env)
+
 if [[ -f /app/site/.env ]]; then
     printf "Importing environment variables from /app/site/.env\n"
     set -o allexport

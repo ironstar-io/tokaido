@@ -139,33 +139,33 @@ RUN curl -s https://getcomposer.org/installer > composer-setup.php && /usr/local
  && ln -sf /usr/bin/msmtp /usr/sbin/sendmail \
  && ln -sf /app/config/msmtp/msmtprc /etc/msmtprc
 
-RUN curl -sSLo /tmp/fnm.zip https://github.com/Schniz/fnm/releases/download/v1.31.0/fnm-linux.zip \
- && unzip /tmp/fnm.zip -d /usr/local/bin/ \
- && chmod +x /usr/local/bin/fnm \
- && chown app:app /usr/local/bin/fnm \
- && chmod 770 /usr/local/bin/fnm \
- && mkdir -p /home/app/.fnm \
- && chmod 2770 /home/app/.fnm
-COPY config/.bashrc /home/app/.bashrc
-COPY config/.bash_profile /home/app/.bash_profile
-
-RUN apt-get clean \
- && rm -rf /tmp/* \
- && chown app:app /home/app -R \
- && chmod o-rwx /home/app -R
-
 COPY start.sh /app/bin/start.sh
 RUN chmod 700 /app/bin/start.sh \
  && chown -R app:app /app/bin/start.sh /app/config /app/logs \
  && find /app/config -type d -print0 | xargs -P0 -0 --no-run-if-empty chmod 2771 \
  && find /app/site -type d -print0 | xargs -P0 -0 --no-run-if-empty chmod 2771
 
-USER app
+COPY config/.bashrc /home/app/.bashrc
+COPY config/.bash_profile /home/app/.bash_profile
+RUN apt-get clean \
+ && rm -rf /tmp/* \
+ && chown app:app /home/app -R \
+ && chmod o-rwx /home/app -R
+
 WORKDIR /app/site
+RUN curl -sSLo /tmp/fnm.zip https://github.com/Schniz/fnm/releases/download/v1.31.0/fnm-arm64.zip \
+ && unzip /tmp/fnm.zip -d /usr/local/bin/ \
+ && chmod +x /usr/local/bin/fnm \
+ && chown app:app /usr/local/bin/fnm \
+ && chmod 770 /usr/local/bin/fnm \
+ && mkdir -p /home/app/.fnm \
+ && chmod 2770 /home/app/.fnm \
+ && chown app:root /home/app/.fnm
+USER app
 RUN eval $(fnm env) \
- && fnm install v12 \
  && fnm install v14 \
  && fnm install v16 \
+ && fnm install v18 \
  && fnm default system #disables node
 
 ENTRYPOINT /app/bin/start.sh

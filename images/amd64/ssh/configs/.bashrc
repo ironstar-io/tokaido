@@ -7,6 +7,8 @@ drupal_root=${DRUPAL_ROOT:-web}
 export PATH=$PATH:$HOME/.composer/vendor/bin
 export DRUSH_LAUNCHER_FALLBACK=/usr/local/drush/global/bin/drush
 
+eval $(fnm env)
+
 if [ -d /app/site/${drupal_root} ]; then
     cd /app/site/${drupal_root}
 fi

@@ -10,6 +10,8 @@ if [[ -f /app/site/.env ]]; then
     set +o allexport
 fi
 
+eval $(fnm env)
+
 # If not running interactively, don't do anything
 case $- in
     *i*) ;;
