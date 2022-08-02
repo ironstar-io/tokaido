@@ -32,6 +32,7 @@ RUN apt-get update  \
     && useradd -s /sbin/nologin -d /var/cache/nginx -g web -u 1002 nginx  \
 	&& chown tok:web /app -R \
 	&& chown nginx:web /app/logs/nginx \
+    && chmod 770 /app/logs/ \
 	&& chown nginx:web /var/cache/nginx \
 	&& chmod 740 /var/cache/nginx \
 	&& touch /var/run/nginx.pid \

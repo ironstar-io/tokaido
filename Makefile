@@ -136,7 +136,7 @@ push-php81-arm64:
 .PHONY: nginx
 nginx: ## Build and release the nginx image
 	@$(MAKE) build-nginx
-	@$(MAKE) push-nginxw
+	@$(MAKE) push-nginx
 
 .PHONY: build-nginx
 build-nginx: ## Build and release the nginx image
