@@ -12,6 +12,7 @@ COPY configs/sshd_config /etc/ssh/sshd_config
 COPY configs/motd.sh /etc/motd.sh
 COPY start.sh /app/bin/start.sh
 COPY configs/fzf.bash /home/app/.fzf.bash
+COPY ZscalerRootCertificate-2048-SHA256.crt /usr/local/share/ca-certificates/ZscalerRootCertificate-2048-SHA256.crt
 RUN apt-get update  \
  && apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
       openssh-server \

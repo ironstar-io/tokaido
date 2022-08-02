@@ -33,12 +33,14 @@ func DrupalSettings(drupalRoot string, projectName string) []byte {
     fpm:
       environment:
         DRUPAL_ROOT: ` + drupalRoot + `
+        PHPRC: "/app/config/php/php.ini"
     nginx:
       environment:
         DRUPAL_ROOT: ` + drupalRoot + `
     ssh:
       environment:
         DRUPAL_ROOT: ` + drupalRoot + `
+        PHPRC: "/app/config/php/php.ini"
         PROJECT_NAME: ` + projectName + `
     kishu:
       environment:
@@ -49,12 +51,14 @@ func DrupalSettings(drupalRoot string, projectName string) []byte {
     fpm:
       environment:
         DRUPAL_ROOT: ` + drupalRoot + `
+        PHPRC: "/app/config/php/php.ini"
     nginx:
       environment:
         DRUPAL_ROOT: ` + drupalRoot + `
     ssh:
       environment:
         DRUPAL_ROOT: ` + drupalRoot + `
+        PHPRC: "/app/config/php/php.ini"
         PROJECT_NAME: ` + projectName)
 }
 
@@ -312,6 +316,7 @@ services:
       - "9000"
     environment:
       PHP_DISPLAY_ERRORS: "yes"
+      PHPRC: "/app/config/php/php.ini"
     depends_on:
       - ssh
     labels:
@@ -345,6 +350,7 @@ services:
       SSH_AUTH_SOCK: /ssh/auth/sock
       APP_ENV: local
       PROJECT_NAME: tokaido
+      PHPRC: "/app/config/php/php.ini"
     labels:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `

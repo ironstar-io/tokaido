@@ -5,12 +5,11 @@ emergency_restart_interval = 1m
 process_control_timeout = 20s
 
 [www]
-listen = 127.0.0.1:9000
-listen.allowed_clients = 127.0.0.1
+listen = 0.0.0.0:9000
 php_admin_value[error_log] = /app/logs/fpm.pool.log
 pm = dynamic
 pm.start_servers = ${PHP_PM_START_SERVERS:-8}
-pm.max_children = ${PHP_PM_MAX_CHILDREN:-64} 
+pm.max_children = ${PHP_PM_MAX_CHILDREN:-64}
 pm.min_spare_servers = ${PHP_PM_MIN_SPARE_SERVERS:-8}
 pm.max_spare_servers = ${PHP_PM_MAX_SPARE_SERVERS:-24}
 pm.process_idle_timeout = ${PHP_PM_PROCESS_IDLE_TIMEOUT:-600}

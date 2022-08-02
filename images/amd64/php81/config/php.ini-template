@@ -182,8 +182,10 @@ opcache.revalidate_freq=60
 
 [openssl]
 
-[APC]
-apc.shm_size = 32m
+[APCu]
 apc.enabled = 1
+apc.enable_cli = 0
+apc.shm_size = 32m
+apc.ttl = 30
 
 include=/app/config/php/conf.d/*.ini
