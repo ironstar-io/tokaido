@@ -21,7 +21,7 @@ RUN apt-get update  \
     && ln -s /app /tokaido \
 	&& mkdir -p /app/config/nginx/conf.d/sites /app/config/nginx/conf.d/redirects \
 	&& mkdir -p /app/logs/nginx \
-    && chmod 770 /app/logs/ \
+    && chmod 777 /app/logs/ \
 	&& mkdir -p /app/site/docroot \
 	&& mkdir -p /var/cache/nginx \
 	&& groupadd -g 1001 web  \

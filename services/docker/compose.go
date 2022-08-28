@@ -146,6 +146,8 @@ func ExecWithExitCode(args []string) (err error) {
 // If one container is specified and true if that container is 'running'
 // If no container is specified, all containers must be 'running' or will return false
 func StatusCheck(container, project string) (ok bool) {
+	utils.DebugString(fmt.Sprintf("checking status of %d containers", len(container)))
+
 	cl := GetContainerList()
 
 	// If the user specified a single container to check, only go for that one

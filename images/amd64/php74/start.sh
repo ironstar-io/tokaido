@@ -8,6 +8,8 @@ if [[ -f /app/site/.env ]]; then
     set +o allexport
 fi
 
+chmod 777 /app/logs
+
 ep /app/config/php/php.ini
 ep /app/config/php/www.conf
 

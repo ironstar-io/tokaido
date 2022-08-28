@@ -120,7 +120,7 @@ RUN apt-get update \
         xfonts-base \
         xfonts-75dpi \
         postfix \
-        mariadb-client-core-10.5 \
+        mariadb-client-10.5 \
         msmtp \
         qpdf \
         poppler-utils \
