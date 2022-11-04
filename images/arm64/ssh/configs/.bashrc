@@ -5,6 +5,7 @@
 
 drupal_root=${DRUPAL_ROOT:-web}
 export PATH=$PATH:$HOME/.composer/vendor/bin
+export PHPRC=/app/config/php/php.ini
 export DRUSH_LAUNCHER_FALLBACK=/usr/local/drush/global/bin/drush
 
 if [ -d /app/site/${drupal_root} ]; then

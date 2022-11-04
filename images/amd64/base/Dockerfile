@@ -11,8 +11,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 ENV TOK_VERSION=${TOK_VERSION}
 WORKDIR /tmp
 COPY ZscalerRootCertificate-2048-SHA256.crt /usr/local/share/ca-certificates/ZscalerRootCertificate-2048-SHA256.crt
-RUN update-ca-certificates \
-    && apt-get update \
+RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         apt-transport-https \
         build-essential \

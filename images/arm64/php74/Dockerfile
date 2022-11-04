@@ -168,9 +168,16 @@ RUN curl -sSLo /tmp/fnm.zip https://github.com/Schniz/fnm/releases/download/v1.3
  && chown app:root /home/app/.fnm
 USER app
 RUN eval $(fnm env) \
+ && fnm install v12 \
  && fnm install v14 \
  && fnm install v16 \
  && fnm install v18 \
- && fnm default system #disables node
+ && fnm default v18
+USER root
+RUN chown app:app /home/app -R \
+ && find /home/app -type d -print0 | xargs -P0 -0 chmod 2770 -f \
+ && find /home/app -wholename \*installation/bin/node -print0 | xargs -P0 -0 chmod u+x \
+ && find /home/app -name npm-cli.js -print0 | xargs -P0 -0 chmod u+x
+USER app
 
 ENTRYPOINT /app/bin/start.sh

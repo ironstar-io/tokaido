@@ -3,6 +3,7 @@
 # for examples
 
 export PATH=$PATH:/app/site/vendor/bin:$HOME/.fnm
+export PHPRC=/app/config/php/php.ini
 if [[ -f /usr/local/bin/fnm ]]; then
     eval $(fnm env)
 fi
@@ -119,4 +120,3 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
-

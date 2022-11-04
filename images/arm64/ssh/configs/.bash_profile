@@ -1,6 +1,7 @@
 # Vars we want to see in both interactive and non-interactive shells
 drupal_root=${DRUPAL_ROOT:-docroot}
 export PATH=$PATH:$HOME/.composer/vendor/bin
+export PHPRC=/app/config/php/php.ini
 export DRUSH_LAUNCHER_FALLBACK=/usr/local/drush/global/bin/drush
 
 if [[ -f /app/site/.env ]]; then

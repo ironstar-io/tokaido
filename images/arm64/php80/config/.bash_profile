@@ -1,5 +1,6 @@
 # Vars we want to see in both interactive and non-interactive shells
 export PATH=$PATH:/app/site/vendor/bin
+export PHPRC=/app/config/php/php.ini
 cd /app/site
 
 if [[ -f /usr/local/bin/fnm ]]; then
@@ -121,4 +122,3 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
-
