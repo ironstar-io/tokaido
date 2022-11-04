@@ -11,6 +11,7 @@ COPY configs/sudoers /etc/sudoers
 COPY configs/sshd_config /etc/ssh/sshd_config
 COPY configs/motd.sh /etc/motd.sh
 COPY start.sh /app/bin/start.sh
+COPY bootstrap.sh /app/bin/bootstrap.sh
 COPY configs/fzf.bash /home/app/.fzf.bash
 COPY ZscalerRootCertificate-2048-SHA256.crt /usr/local/share/ca-certificates/ZscalerRootCertificate-2048-SHA256.crt
 RUN apt-get update  \
@@ -46,7 +47,7 @@ RUN git clone --depth 1 https://github.com/junegunn/fzf.git /home/app/.fzf \
  && ln -s /usr/share/bash-completion/completions/git /etc/bash_completion.d/git-completion.bash \
  && chmod 700 /home/app/.fzf/bin/fzf
 
-RUN chmod 700 /app/bin/start.sh \
+RUN chmod 755 /app/bin/*.sh \
     && chmod 755 /etc/motd.sh  \
     && rm /etc/motd
 

@@ -130,7 +130,8 @@ RUN apt-get update \
         libatk1.0-0
 
 RUN mkdir -p /usr/local/etc/php/ \
- && ln -s /app/config/php/conf.d /usr/local/etc/php/conf.d
+ && ln -s /app/config/php/conf.d /usr/local/etc/php/conf.d \
+ && ln -s /app/config/php/php.ini /usr/local/etc/php/php.ini
 
 RUN curl -s https://getcomposer.org/installer > composer-setup.php && /usr/local/bin/php composer-setup.php && mv composer.phar /usr/local/bin/composer && rm composer-setup.php  \
  && su - app -s /bin/bash -c "/usr/local/bin/composer global require \"drush/drush\""  \
