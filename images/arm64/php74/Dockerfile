@@ -159,7 +159,7 @@ RUN apt-get clean \
  && chmod o-rwx /home/app -R
 
 WORKDIR /app/site
-RUN curl -sSLo /tmp/fnm.zip https://github.com/Schniz/fnm/releases/download/v1.31.0/fnm-linux.zip \
+RUN curl -sSLo /tmp/fnm.zip https://github.com/Schniz/fnm/releases/download/v1.31.0/fnm-arm64.zip \
  && unzip /tmp/fnm.zip -d /usr/local/bin/ \
  && chmod +x /usr/local/bin/fnm \
  && chown app:app /usr/local/bin/fnm \
