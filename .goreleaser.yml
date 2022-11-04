@@ -34,5 +34,3 @@ archives:
   - id: binaries
     builds: ["macos"]
     format: binary
-
-
