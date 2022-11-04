@@ -135,44 +135,43 @@ jobs:
         rm -rf /tmp/.buildx-php74-cache
         mv /tmp/.buildx-php74-cache-new /tmp/.buildx-php74-cache
 
+    - name: Build PHP 8.0
+      uses: docker/build-push-action@v3
+      with:
+        builder: ${{ steps.buildx.outputs.name }}
+        context: images/amd64/php80/
+        file: images/amd64/php80/Dockerfile
+        platforms: linux/amd64
+        push: true
+        tags: tokaido/php80:${{ steps.prep.outputs.version }}-amd64
+        cache-from: type=local,src=/tmp/.buildx-php80-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-php80-cache-new
+        build-args: |
+          TOK_VERSION=${{ steps.prep.outputs.version }}
 
-    # - name: Build PHP 8.0
-    #   uses: docker/build-push-action@v3
-    #   with:
-    #     builder: ${{ steps.buildx.outputs.name }}
-    #     context: images/amd64/php80/
-    #     file: images/amd64/php80/Dockerfile
-    #     platforms: linux/amd64
-    #     push: true
-    #     tags: tokaido/php80:${{ steps.prep.outputs.version }}-amd64
-    #     cache-from: type=local,src=/tmp/.buildx-php80-cache
-    #     cache-to: type=local,mode=max,dest=/tmp/.buildx-php80-cache-new
-    #     build-args: |
-    #       TOK_VERSION=${{ steps.prep.outputs.version }}
+    - name: Move PHP 8.0 cache
+      run: |
+        rm -rf /tmp/.buildx-php80-cache
+        mv /tmp/.buildx-php80-cache-new /tmp/.buildx-php80-cache
 
-    # - name: Move PHP 8.0 cache
-    #   run: |
-    #     rm -rf /tmp/.buildx-php80-cache
-    #     mv /tmp/.buildx-php80-cache-new /tmp/.buildx-php80-cache
+    - name: Build PHP 8.1
+      uses: docker/build-push-action@v3
+      with:
+        builder: ${{ steps.buildx.outputs.name }}
+        context: images/amd64/php81/
+        file: images/amd64/php81/Dockerfile
+        platforms: linux/amd64
+        push: true
+        tags: tokaido/php81:${{ steps.prep.outputs.version }}-amd64
+        cache-from: type=local,src=/tmp/.buildx-php81-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-php81-cache-new
+        build-args: |
+          TOK_VERSION=${{ steps.prep.outputs.version }}
 
-    # - name: Build PHP 8.1
-    #   uses: docker/build-push-action@v3
-    #   with:
-    #     builder: ${{ steps.buildx.outputs.name }}
-    #     context: images/amd64/php81/
-    #     file: images/amd64/php81/Dockerfile
-    #     platforms: linux/amd64
-    #     push: true
-    #     tags: tokaido/php81:${{ steps.prep.outputs.version }}-amd64
-    #     cache-from: type=local,src=/tmp/.buildx-php81-cache
-    #     cache-to: type=local,mode=max,dest=/tmp/.buildx-php81-cache-new
-    #     build-args: |
-    #       TOK_VERSION=${{ steps.prep.outputs.version }}
-
-    # - name: Move PHP 8.1 cache
-    #   run: |
-    #     rm -rf /tmp/.buildx-php81-cache
-    #     mv /tmp/.buildx-php81-cache-new /tmp/.buildx-php81-cache
+    - name: Move PHP 8.1 cache
+      run: |
+        rm -rf /tmp/.buildx-php81-cache
+        mv /tmp/.buildx-php81-cache-new /tmp/.buildx-php81-cache
 
     - name: Build Nginx
       uses: docker/build-push-action@v3
@@ -213,45 +212,45 @@ jobs:
         rm -rf /tmp/.buildx-ssh74-cache
         mv /tmp/.buildx-ssh74-cache-new /tmp/.buildx-php74-cache
 
-    # - name: Build SSH 8.0
-    #   uses: docker/build-push-action@v3
-    #   with:
-    #     builder: ${{ steps.buildx.outputs.name }}
-    #     context: images/amd64/ssh/
-    #     file: images/amd64/ssh/Dockerfile
-    #     platforms: linux/amd64
-    #     push: true
-    #     tags: tokaido/ssh80:${{ steps.prep.outputs.version }}-amd64
-    #     cache-from: type=local,src=/tmp/.buildx-ssh80-cache
-    #     cache-to: type=local,mode=max,dest=/tmp/.buildx-ssh80-cache-new
-    #     build-args: |
-    #       TOK_VERSION=${{ steps.prep.outputs.version }}
-    #       PHP_VERSION=80
+    - name: Build SSH 8.0
+      uses: docker/build-push-action@v3
+      with:
+        builder: ${{ steps.buildx.outputs.name }}
+        context: images/amd64/ssh/
+        file: images/amd64/ssh/Dockerfile
+        platforms: linux/amd64
+        push: true
+        tags: tokaido/ssh80:${{ steps.prep.outputs.version }}-amd64
+        cache-from: type=local,src=/tmp/.buildx-ssh80-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-ssh80-cache-new
+        build-args: |
+          TOK_VERSION=${{ steps.prep.outputs.version }}
+          PHP_VERSION=80
 
-    # - name: Move SSH 8.0 cache
-    #   run: |
-    #     rm -rf /tmp/.buildx-ssh80-cache
-    #     mv /tmp/.buildx-ssh80-cache-new /tmp/.buildx-php80-cache
+    - name: Move SSH 8.0 cache
+      run: |
+        rm -rf /tmp/.buildx-ssh80-cache
+        mv /tmp/.buildx-ssh80-cache-new /tmp/.buildx-php80-cache
 
-    # - name: Build SSH 8.1
-    #   uses: docker/build-push-action@v3
-    #   with:
-    #     builder: ${{ steps.buildx.outputs.name }}
-    #     context: images/amd64/ssh/
-    #     file: images/amd64/ssh/Dockerfile
-    #     platforms: linux/amd64
-    #     push: true
-    #     tags: tokaido/ssh81:${{ steps.prep.outputs.version }}-amd64
-    #     cache-from: type=local,src=/tmp/.buildx-ssh81-cache
-    #     cache-to: type=local,mode=max,dest=/tmp/.buildx-ssh81-cache-new
-    #     build-args: |
-    #       TOK_VERSION=${{ steps.prep.outputs.version }}
-    #       PHP_VERSION=81
+    - name: Build SSH 8.1
+      uses: docker/build-push-action@v3
+      with:
+        builder: ${{ steps.buildx.outputs.name }}
+        context: images/amd64/ssh/
+        file: images/amd64/ssh/Dockerfile
+        platforms: linux/amd64
+        push: true
+        tags: tokaido/ssh81:${{ steps.prep.outputs.version }}-amd64
+        cache-from: type=local,src=/tmp/.buildx-ssh81-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-ssh81-cache-new
+        build-args: |
+          TOK_VERSION=${{ steps.prep.outputs.version }}
+          PHP_VERSION=81
 
-    # - name: Move SSH 8.1 cache
-    #   run: |
-    #     rm -rf /tmp/.buildx-ssh81-cache
-    #     mv /tmp/.buildx-ssh81-cache-new /tmp/.buildx-php81-cache
+    - name: Move SSH 8.1 cache
+      run: |
+        rm -rf /tmp/.buildx-ssh81-cache
+        mv /tmp/.buildx-ssh81-cache-new /tmp/.buildx-php81-cache
 
   build-arm64:
     runs-on: [self-hosted, arm64, linux]
@@ -379,44 +378,43 @@ jobs:
         rm -rf /tmp/.buildx-php74-cache
         mv /tmp/.buildx-php74-cache-new /tmp/.buildx-php74-cache
 
+    - name: Build PHP 8.0
+      uses: docker/build-push-action@v3
+      with:
+        builder: ${{ steps.buildx.outputs.name }}
+        context: images/arm64/php80/
+        file: images/arm64/php80/Dockerfile
+        platforms: linux/arm64
+        push: true
+        tags: tokaido/php80:${{ steps.prep.outputs.version }}-arm64
+        cache-from: type=local,src=/tmp/.buildx-php80-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-php80-cache-new
+        build-args: |
+          TOK_VERSION=${{ steps.prep.outputs.version }}
 
-    # - name: Build PHP 8.0
-    #   uses: docker/build-push-action@v3
-    #   with:
-    #     builder: ${{ steps.buildx.outputs.name }}
-    #     context: images/arm64/php80/
-    #     file: images/arm64/php80/Dockerfile
-    #     platforms: linux/arm64
-    #     push: true
-    #     tags: tokaido/php80:${{ steps.prep.outputs.version }}-arm64
-    #     cache-from: type=local,src=/tmp/.buildx-php80-cache
-    #     cache-to: type=local,mode=max,dest=/tmp/.buildx-php80-cache-new
-    #     build-args: |
-    #       TOK_VERSION=${{ steps.prep.outputs.version }}
+    - name: Move PHP 8.0 cache
+      run: |
+        rm -rf /tmp/.buildx-php80-cache
+        mv /tmp/.buildx-php80-cache-new /tmp/.buildx-php80-cache
 
-    # - name: Move PHP 8.0 cache
-    #   run: |
-    #     rm -rf /tmp/.buildx-php80-cache
-    #     mv /tmp/.buildx-php80-cache-new /tmp/.buildx-php80-cache
+    - name: Build PHP 8.1
+      uses: docker/build-push-action@v3
+      with:
+        builder: ${{ steps.buildx.outputs.name }}
+        context: images/arm64/php81/
+        file: images/arm64/php81/Dockerfile
+        platforms: linux/arm64
+        push: true
+        tags: tokaido/php81:${{ steps.prep.outputs.version }}-arm64
+        cache-from: type=local,src=/tmp/.buildx-php81-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-php81-cache-new
+        build-args: |
+          TOK_VERSION=${{ steps.prep.outputs.version }}
 
-    # - name: Build PHP 8.1
-    #   uses: docker/build-push-action@v3
-    #   with:
-    #     builder: ${{ steps.buildx.outputs.name }}
-    #     context: images/arm64/php81/
-    #     file: images/arm64/php81/Dockerfile
-    #     platforms: linux/arm64
-    #     push: true
-    #     tags: tokaido/php81:${{ steps.prep.outputs.version }}-arm64
-    #     cache-from: type=local,src=/tmp/.buildx-php81-cache
-    #     cache-to: type=local,mode=max,dest=/tmp/.buildx-php81-cache-new
-    #     build-args: |
-    #       TOK_VERSION=${{ steps.prep.outputs.version }}
-
-    # - name: Move PHP 8.1 cache
-    #   run: |
-    #     rm -rf /tmp/.buildx-php81-cache
-    #     mv /tmp/.buildx-php81-cache-new /tmp/.buildx-php81-cache
+    - name: Move PHP 8.1 cache
+      run: |
+        rm -rf /tmp/.buildx-php81-cache
+        mv /tmp/.buildx-php81-cache-new /tmp/.buildx-php81-cache
 
     - name: Build Nginx
       uses: docker/build-push-action@v3
@@ -457,146 +455,146 @@ jobs:
         rm -rf /tmp/.buildx-ssh74-cache
         mv /tmp/.buildx-ssh74-cache-new /tmp/.buildx-php74-cache
 
-    # - name: Build SSH 8.0
-    #   uses: docker/build-push-action@v3
-    #   with:
-    #     builder: ${{ steps.buildx.outputs.name }}
-    #     context: images/arm64/ssh/
-    #     file: images/arm64/ssh/Dockerfile
-    #     platforms: linux/arm64
-    #     push: true
-    #     tags: tokaido/ssh80:${{ steps.prep.outputs.version }}-arm64
-    #     cache-from: type=local,src=/tmp/.buildx-ssh80-cache
-    #     cache-to: type=local,mode=max,dest=/tmp/.buildx-ssh80-cache-new
-    #     build-args: |
-    #       TOK_VERSION=${{ steps.prep.outputs.version }}
-    #       PHP_VERSION=80
-
-    # - name: Move SSH 8.0 cache
-    #   run: |
-    #     rm -rf /tmp/.buildx-ssh80-cache
-    #     mv /tmp/.buildx-ssh80-cache-new /tmp/.buildx-php80-cache
-
-    # - name: Build SSH 8.1
-    #   uses: docker/build-push-action@v3
-    #   with:
-    #     builder: ${{ steps.buildx.outputs.name }}
-    #     context: images/arm64/ssh/
-    #     file: images/arm64/ssh/Dockerfile
-    #     platforms: linux/arm64
-    #     push: true
-    #     tags: tokaido/ssh81:${{ steps.prep.outputs.version }}-arm64
-    #     cache-from: type=local,src=/tmp/.buildx-ssh81-cache
-    #     cache-to: type=local,mode=max,dest=/tmp/.buildx-ssh81-cache-new
-    #     build-args: |
-    #       TOK_VERSION=${{ steps.prep.outputs.version }}
-    #       PHP_VERSION=81
-
-    # - name: Move SSH 8.1 cache
-    #   run: |
-    #     rm -rf /tmp/.buildx-ssh81-cache
-    #     mv /tmp/.buildx-ssh81-cache-new /tmp/.buildx-php81-cache
-
-  combine:
-    runs-on: [self-hosted, linux]
-    needs: [build-arm64, build-amd64]
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: Login to DockerHub
-      if: github.event_name != 'pull_request'
-      uses: docker/login-action@v1
+    - name: Build SSH 8.0
+      uses: docker/build-push-action@v3
       with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-    - name: Prepare
-      id: prep
-      run: |
-        VERSION=experimental
-        echo "GITHUB_REF=${GITHUB_REF}"
-        echo "GITHUB_REF_TYPE=${GITHUB_REF_TYPE}"
+        builder: ${{ steps.buildx.outputs.name }}
+        context: images/arm64/ssh/
+        file: images/arm64/ssh/Dockerfile
+        platforms: linux/arm64
+        push: true
+        tags: tokaido/ssh80:${{ steps.prep.outputs.version }}-arm64
+        cache-from: type=local,src=/tmp/.buildx-ssh80-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-ssh80-cache-new
+        build-args: |
+          TOK_VERSION=${{ steps.prep.outputs.version }}
+          PHP_VERSION=80
 
-        # If this belongs to a release branch, create an experimental release for that minor version
-        if [[ $GITHUB_REF_TYPE == "branch" && $GITHUB_REF == "refs/heads/release-*" ]]; then
-          VERSION="${GITHUB_REF#*-}-experimental"
-        fi
+    - name: Move SSH 8.0 cache
+      run: |
+        rm -rf /tmp/.buildx-ssh80-cache
+        mv /tmp/.buildx-ssh80-cache-new /tmp/.buildx-php80-cache
 
-        # If this is git tag, use the tag name as a docker tag
-        if [[ $GITHUB_REF == refs/tags/* ]]; then
-          VERSION=${GITHUB_REF#refs/tags/v}
-        fi
+    - name: Build SSH 8.1
+      uses: docker/build-push-action@v3
+      with:
+        builder: ${{ steps.buildx.outputs.name }}
+        context: images/arm64/ssh/
+        file: images/arm64/ssh/Dockerfile
+        platforms: linux/arm64
+        push: true
+        tags: tokaido/ssh81:${{ steps.prep.outputs.version }}-arm64
+        cache-from: type=local,src=/tmp/.buildx-ssh81-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-ssh81-cache-new
+        build-args: |
+          TOK_VERSION=${{ steps.prep.outputs.version }}
+          PHP_VERSION=81
 
-        # Set output parameters.
-        echo ::set-output name=version::${VERSION}
-    - name: combine-base
+    - name: Move SSH 8.1 cache
       run: |
-        docker manifest rm tokaido/base\:${{ steps.prep.outputs.version }} || true
-        docker manifest create tokaido/base\:${{ steps.prep.outputs.version }} \
-          tokaido/base\:${{ steps.prep.outputs.version }}-arm64 \
-          tokaido/base\:${{ steps.prep.outputs.version }}-amd64
-        docker manifest annotate --arch arm64 tokaido/base:${{ steps.prep.outputs.version }} tokaido/base\:${{ steps.prep.outputs.version }}-arm64
-        docker manifest annotate --arch amd64 tokaido/base:${{ steps.prep.outputs.version }} tokaido/base\:${{ steps.prep.outputs.version }}-amd64
-        docker manifest push tokaido/base:${{ steps.prep.outputs.version }}
-    - name: combine-php74
-      run: |
-        docker manifest rm tokaido/php74\:${{ steps.prep.outputs.version }} || true
-        docker manifest create tokaido/php74\:${{ steps.prep.outputs.version }} \
-          tokaido/php74\:${{ steps.prep.outputs.version }}-arm64 \
-          tokaido/php74\:${{ steps.prep.outputs.version }}-amd64
-        docker manifest annotate --arch arm64 tokaido/php74:${{ steps.prep.outputs.version }} tokaido/php74\:${{ steps.prep.outputs.version }}-arm64
-        docker manifest annotate --arch amd64 tokaido/php74:${{ steps.prep.outputs.version }} tokaido/php74\:${{ steps.prep.outputs.version }}-amd64
-        docker manifest push tokaido/php74:${{ steps.prep.outputs.version }}
-    # - name: combine-php80
-    #   run: |
-    #     docker manifest rm tokaido/php80\:${{ steps.prep.outputs.version }} || true
-    #     docker manifest create tokaido/php80\:${{ steps.prep.outputs.version }} \
-    #       tokaido/php80\:${{ steps.prep.outputs.version }}-arm64 \
-    #       tokaido/php80\:${{ steps.prep.outputs.version }}-amd64
-    #     docker manifest annotate --arch arm64 tokaido/php80:${{ steps.prep.outputs.version }} tokaido/php80\:${{ steps.prep.outputs.version }}-arm64
-    #     docker manifest annotate --arch amd64 tokaido/php80:${{ steps.prep.outputs.version }} tokaido/php80\:${{ steps.prep.outputs.version }}-amd64
-    #     docker manifest push tokaido/php80:${{ steps.prep.outputs.version }}
-    # - name: combine-php81
-    #   run: |
-    #     docker manifest rm tokaido/php81\:${{ steps.prep.outputs.version }} || true
-    #     docker manifest create tokaido/php81\:${{ steps.prep.outputs.version }} \
-    #       tokaido/php81\:${{ steps.prep.outputs.version }}-arm64 \
-    #       tokaido/php81\:${{ steps.prep.outputs.version }}-amd64
-    #     docker manifest annotate --arch arm64 tokaido/php81:${{ steps.prep.outputs.version }} tokaido/php81\:${{ steps.prep.outputs.version }}-arm64
-    #     docker manifest annotate --arch amd64 tokaido/php81:${{ steps.prep.outputs.version }} tokaido/php81\:${{ steps.prep.outputs.version }}-amd64
-    #     docker manifest push tokaido/php81:${{ steps.prep.outputs.version }}
-    - name: combine-nginx
-      run: |
-        docker manifest rm tokaido/nginx\:${{ steps.prep.outputs.version }} || true
-        docker manifest create tokaido/nginx\:${{ steps.prep.outputs.version }} \
-          tokaido/nginx\:${{ steps.prep.outputs.version }}-arm64 \
-          tokaido/nginx\:${{ steps.prep.outputs.version }}-amd64
-        docker manifest annotate --arch arm64 tokaido/nginx:${{ steps.prep.outputs.version }} tokaido/nginx\:${{ steps.prep.outputs.version }}-arm64
-        docker manifest annotate --arch amd64 tokaido/nginx:${{ steps.prep.outputs.version }} tokaido/nginx\:${{ steps.prep.outputs.version }}-amd64
-        docker manifest push tokaido/nginx:${{ steps.prep.outputs.version }}
-    - name: combine-ssh74
-      run: |
-        docker manifest rm tokaido/ssh74\:${{ steps.prep.outputs.version }} || true
-        docker manifest create tokaido/ssh74\:${{ steps.prep.outputs.version }} \
-          tokaido/ssh74\:${{ steps.prep.outputs.version }}-arm64 \
-          tokaido/ssh74\:${{ steps.prep.outputs.version }}-amd64
-        docker manifest annotate --arch arm64 tokaido/ssh74:${{ steps.prep.outputs.version }} tokaido/ssh74\:${{ steps.prep.outputs.version }}-arm64
-        docker manifest annotate --arch amd64 tokaido/ssh74:${{ steps.prep.outputs.version }} tokaido/ssh74\:${{ steps.prep.outputs.version }}-amd64
-        docker manifest push tokaido/ssh74:${{ steps.prep.outputs.version }}
-    # - name: combine-ssh81
-    #   run: |
-    #     docker manifest rm tokaido/ssh81\:${{ steps.prep.outputs.version }} || true
-    #     docker manifest create tokaido/ssh81\:${{ steps.prep.outputs.version }} \
-    #       tokaido/ssh81\:${{ steps.prep.outputs.version }}-arm64 \
-    #       tokaido/ssh81\:${{ steps.prep.outputs.version }}-amd64
-    #     docker manifest annotate --arch arm64 tokaido/ssh81:${{ steps.prep.outputs.version }} tokaido/ssh81\:${{ steps.prep.outputs.version }}-arm64
-    #     docker manifest annotate --arch amd64 tokaido/ssh81:${{ steps.prep.outputs.version }} tokaido/ssh81\:${{ steps.prep.outputs.version }}-amd64
-    #     docker manifest push tokaido/ssh81:${{ steps.prep.outputs.version }}
-    # - name: combine-ssh80
-    #   run: |
-    #     docker manifest rm tokaido/ssh80\:${{ steps.prep.outputs.version }} || true
-    #     docker manifest create tokaido/ssh80\:${{ steps.prep.outputs.version }} \
-    #       tokaido/ssh80\:${{ steps.prep.outputs.version }}-arm64 \
-    #       tokaido/ssh80\:${{ steps.prep.outputs.version }}-amd64
-    #     docker manifest annotate --arch arm64 tokaido/ssh80:${{ steps.prep.outputs.version }} tokaido/ssh80\:${{ steps.prep.outputs.version }}-arm64
-    #     docker manifest annotate --arch amd64 tokaido/ssh80:${{ steps.prep.outputs.version }} tokaido/ssh80\:${{ steps.prep.outputs.version }}-amd64
-    #     docker manifest push tokaido/ssh80:${{ steps.prep.outputs.version }}
+        rm -rf /tmp/.buildx-ssh81-cache
+        mv /tmp/.buildx-ssh81-cache-new /tmp/.buildx-php81-cache
+
+  # combine:
+  #   runs-on: [self-hosted, linux]
+  #   needs: [build-arm64, build-amd64]
+  #   steps:
+  #   - name: Checkout
+  #     uses: actions/checkout@v2
+  #   - name: Login to DockerHub
+  #     if: github.event_name != 'pull_request'
+  #     uses: docker/login-action@v1
+  #     with:
+  #       username: ${{ secrets.DOCKER_USERNAME }}
+  #       password: ${{ secrets.DOCKER_PASSWORD }}
+  #   - name: Prepare
+  #     id: prep
+  #     run: |
+  #       VERSION=experimental
+  #       echo "GITHUB_REF=${GITHUB_REF}"
+  #       echo "GITHUB_REF_TYPE=${GITHUB_REF_TYPE}"
+
+  #       # If this belongs to a release branch, create an experimental release for that minor version
+  #       if [[ $GITHUB_REF_TYPE == "branch" && $GITHUB_REF == "refs/heads/release-*" ]]; then
+  #         VERSION="${GITHUB_REF#*-}-experimental"
+  #       fi
+
+  #       # If this is git tag, use the tag name as a docker tag
+  #       if [[ $GITHUB_REF == refs/tags/* ]]; then
+  #         VERSION=${GITHUB_REF#refs/tags/v}
+  #       fi
+
+  #       # Set output parameters.
+  #       echo ::set-output name=version::${VERSION}
+  #   - name: combine-base
+  #     run: |
+  #       docker manifest rm tokaido/base\:${{ steps.prep.outputs.version }} || true
+  #       docker manifest create tokaido/base\:${{ steps.prep.outputs.version }} \
+  #         tokaido/base\:${{ steps.prep.outputs.version }}-arm64 \
+  #         tokaido/base\:${{ steps.prep.outputs.version }}-amd64
+  #       docker manifest annotate --arch arm64 tokaido/base:${{ steps.prep.outputs.version }} tokaido/base\:${{ steps.prep.outputs.version }}-arm64
+  #       docker manifest annotate --arch amd64 tokaido/base:${{ steps.prep.outputs.version }} tokaido/base\:${{ steps.prep.outputs.version }}-amd64
+  #       docker manifest push tokaido/base:${{ steps.prep.outputs.version }}
+  #   - name: combine-php74
+  #     run: |
+  #       docker manifest rm tokaido/php74\:${{ steps.prep.outputs.version }} || true
+  #       docker manifest create tokaido/php74\:${{ steps.prep.outputs.version }} \
+  #         tokaido/php74\:${{ steps.prep.outputs.version }}-arm64 \
+  #         tokaido/php74\:${{ steps.prep.outputs.version }}-amd64
+  #       docker manifest annotate --arch arm64 tokaido/php74:${{ steps.prep.outputs.version }} tokaido/php74\:${{ steps.prep.outputs.version }}-arm64
+  #       docker manifest annotate --arch amd64 tokaido/php74:${{ steps.prep.outputs.version }} tokaido/php74\:${{ steps.prep.outputs.version }}-amd64
+  #       docker manifest push tokaido/php74:${{ steps.prep.outputs.version }}
+  #   # - name: combine-php80
+  #   #   run: |
+  #   #     docker manifest rm tokaido/php80\:${{ steps.prep.outputs.version }} || true
+  #   #     docker manifest create tokaido/php80\:${{ steps.prep.outputs.version }} \
+  #   #       tokaido/php80\:${{ steps.prep.outputs.version }}-arm64 \
+  #   #       tokaido/php80\:${{ steps.prep.outputs.version }}-amd64
+  #   #     docker manifest annotate --arch arm64 tokaido/php80:${{ steps.prep.outputs.version }} tokaido/php80\:${{ steps.prep.outputs.version }}-arm64
+  #   #     docker manifest annotate --arch amd64 tokaido/php80:${{ steps.prep.outputs.version }} tokaido/php80\:${{ steps.prep.outputs.version }}-amd64
+  #   #     docker manifest push tokaido/php80:${{ steps.prep.outputs.version }}
+  #   # - name: combine-php81
+  #   #   run: |
+  #   #     docker manifest rm tokaido/php81\:${{ steps.prep.outputs.version }} || true
+  #   #     docker manifest create tokaido/php81\:${{ steps.prep.outputs.version }} \
+  #   #       tokaido/php81\:${{ steps.prep.outputs.version }}-arm64 \
+  #   #       tokaido/php81\:${{ steps.prep.outputs.version }}-amd64
+  #   #     docker manifest annotate --arch arm64 tokaido/php81:${{ steps.prep.outputs.version }} tokaido/php81\:${{ steps.prep.outputs.version }}-arm64
+  #   #     docker manifest annotate --arch amd64 tokaido/php81:${{ steps.prep.outputs.version }} tokaido/php81\:${{ steps.prep.outputs.version }}-amd64
+  #   #     docker manifest push tokaido/php81:${{ steps.prep.outputs.version }}
+  #   - name: combine-nginx
+  #     run: |
+  #       docker manifest rm tokaido/nginx\:${{ steps.prep.outputs.version }} || true
+  #       docker manifest create tokaido/nginx\:${{ steps.prep.outputs.version }} \
+  #         tokaido/nginx\:${{ steps.prep.outputs.version }}-arm64 \
+  #         tokaido/nginx\:${{ steps.prep.outputs.version }}-amd64
+  #       docker manifest annotate --arch arm64 tokaido/nginx:${{ steps.prep.outputs.version }} tokaido/nginx\:${{ steps.prep.outputs.version }}-arm64
+  #       docker manifest annotate --arch amd64 tokaido/nginx:${{ steps.prep.outputs.version }} tokaido/nginx\:${{ steps.prep.outputs.version }}-amd64
+  #       docker manifest push tokaido/nginx:${{ steps.prep.outputs.version }}
+  #   - name: combine-ssh74
+  #     run: |
+  #       docker manifest rm tokaido/ssh74\:${{ steps.prep.outputs.version }} || true
+  #       docker manifest create tokaido/ssh74\:${{ steps.prep.outputs.version }} \
+  #         tokaido/ssh74\:${{ steps.prep.outputs.version }}-arm64 \
+  #         tokaido/ssh74\:${{ steps.prep.outputs.version }}-amd64
+  #       docker manifest annotate --arch arm64 tokaido/ssh74:${{ steps.prep.outputs.version }} tokaido/ssh74\:${{ steps.prep.outputs.version }}-arm64
+  #       docker manifest annotate --arch amd64 tokaido/ssh74:${{ steps.prep.outputs.version }} tokaido/ssh74\:${{ steps.prep.outputs.version }}-amd64
+  #       docker manifest push tokaido/ssh74:${{ steps.prep.outputs.version }}
+  #   # - name: combine-ssh81
+  #   #   run: |
+  #   #     docker manifest rm tokaido/ssh81\:${{ steps.prep.outputs.version }} || true
+  #   #     docker manifest create tokaido/ssh81\:${{ steps.prep.outputs.version }} \
+  #   #       tokaido/ssh81\:${{ steps.prep.outputs.version }}-arm64 \
+  #   #       tokaido/ssh81\:${{ steps.prep.outputs.version }}-amd64
+  #   #     docker manifest annotate --arch arm64 tokaido/ssh81:${{ steps.prep.outputs.version }} tokaido/ssh81\:${{ steps.prep.outputs.version }}-arm64
+  #   #     docker manifest annotate --arch amd64 tokaido/ssh81:${{ steps.prep.outputs.version }} tokaido/ssh81\:${{ steps.prep.outputs.version }}-amd64
+  #   #     docker manifest push tokaido/ssh81:${{ steps.prep.outputs.version }}
+  #   # - name: combine-ssh80
+  #   #   run: |
+  #   #     docker manifest rm tokaido/ssh80\:${{ steps.prep.outputs.version }} || true
+  #   #     docker manifest create tokaido/ssh80\:${{ steps.prep.outputs.version }} \
+  #   #       tokaido/ssh80\:${{ steps.prep.outputs.version }}-arm64 \
+  #   #       tokaido/ssh80\:${{ steps.prep.outputs.version }}-amd64
+  #   #     docker manifest annotate --arch arm64 tokaido/ssh80:${{ steps.prep.outputs.version }} tokaido/ssh80\:${{ steps.prep.outputs.version }}-arm64
+  #   #     docker manifest annotate --arch amd64 tokaido/ssh80:${{ steps.prep.outputs.version }} tokaido/ssh80\:${{ steps.prep.outputs.version }}-amd64
+  #   #     docker manifest push tokaido/ssh80:${{ steps.prep.outputs.version }}
