@@ -135,16 +135,16 @@ RUN apt-get update \
         libatk1.0-0
 
 RUN mkdir -p /usr/local/etc/php/ \
- && ln -s /app/config/php/conf.d /usr/local/etc/php/conf.d \
- && ln -s /app/config/php/php.ini /usr/local/etc/php/php.ini
+ && ln -s /app/config/php/conf.d /usr/local/etc/php/conf.d
 
 RUN curl -s https://getcomposer.org/installer > composer-setup.php && /usr/local/bin/php composer-setup.php && mv composer.phar /usr/local/bin/composer && rm composer-setup.php  \
-    && su - app -s /bin/bash -c "/usr/local/bin/composer global require \"drush/drush\""  \
-    && curl -sSLo /usr/local/bin/drush https://github.com/drush-ops/drush-launcher/releases/download/0.10.1/drush.phar \
-    && chmod ug+x /usr/local/bin/drush \
-    && chown app:app /usr/local/bin/drush \
-    && ln -sf /usr/bin/msmtp /usr/sbin/sendmail \
-    && ln -sf /app/config/msmtp/msmtprc /etc/msmtprc
+ && su - app -s /bin/bash -c "/usr/local/bin/composer global require \"drush/drush\""  \
+ && curl -sSLo /usr/local/bin/drush https://github.com/drush-ops/drush-launcher/releases/download/0.10.1/drush.phar \
+ && chmod ug+x /usr/local/bin/drush \
+ && chown app:app /usr/local/bin/drush \
+ && ln -sf /usr/bin/msmtp /usr/sbin/sendmail \
+ && ln -sf /app/config/msmtp/msmtprc /etc/msmtprc \
+ && ln -s /app/config/php/php.ini /usr/local/etc/php/php.ini
 
 COPY start.sh /app/bin/start.sh
 RUN chmod 700 /app/bin/start.sh \
