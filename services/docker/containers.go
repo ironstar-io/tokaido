@@ -16,7 +16,7 @@ func getContainerState(name, project string) (state string, err error) {
 	project = strings.ToLower(project)
 
 	filter := filters.NewArgs()
-	cn := fmt.Sprintf("%s_%s", project, name)
+	cn := fmt.Sprintf("%s-%s", project, name)
 	filter.Add("name", cn)
 
 	utils.DebugString(fmt.Sprintf("looking for container name: %s", cn))

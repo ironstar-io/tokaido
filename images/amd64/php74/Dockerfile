@@ -78,6 +78,7 @@ RUN apt-get update \
         pspell \
         shmop \
         soap \
+        sockets \
         sysvmsg \
         sysvsem \
         sysvshm \

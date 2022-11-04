@@ -19,9 +19,13 @@ echo "APP_ENV=${APP_ENV:-unknown}" >> /home/app/.ssh/environment
 echo "PROJECT_NAME=${PROJECT_NAME:-}" >> /home/app/.ssh/environment
 echo "DRUPAL_ROOT=${drupal_root}" >> /home/app/.ssh/environment
 
+chown app:app /home/app -R
+find /home/app -type d -print0 | xargs -P0 -0 chmod 2770 -f
+find /home/app -wholename \*installation/bin/node -print0 | xargs -P0 -0 chmod u+x
+find /home/app -name npm-cli.js -print0 | xargs -P0 -0 chmod u+x
+chown app:root /home/app/.ssh -R
 chmod 600 /home/app/.ssh/environment
 chmod 600 /home/app/.ssh/authorized_keys
-chown app:root /home/app/.ssh -R
 
 # Start SSH server
 /usr/sbin/sshd -D -e

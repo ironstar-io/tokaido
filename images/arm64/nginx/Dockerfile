@@ -63,6 +63,5 @@ EXPOSE 8082
 STOPSIGNAL SIGTERM
 
 USER nginx
-VOLUME /tokaido/site
 
 CMD ["/usr/local/bin/entrypoint.sh"]

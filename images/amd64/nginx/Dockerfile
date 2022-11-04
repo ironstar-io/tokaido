@@ -60,6 +60,5 @@ EXPOSE 8082
 STOPSIGNAL SIGTERM
 
 USER nginx
-VOLUME /app/site
 
 CMD ["/usr/local/bin/entrypoint.sh"]
