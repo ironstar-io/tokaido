@@ -48,7 +48,7 @@ RUN git clone --depth 1 https://github.com/junegunn/fzf.git /home/app/.fzf \
  && ln -s /usr/share/bash-completion/completions/git /etc/bash_completion.d/git-completion.bash \
  && chmod 700 /home/app/.fzf/bin/fzf \
  && curl -sLo /usr/local/bin/iron https://github.com/ironstar-io/ironstar-cli/releases/download/${IRONSTAR_CLI_VERSION}/iron-linux \
- && chown app:web /usr/local/bin/iron \
+ && chown app:app /usr/local/bin/iron \
  && chmod 760 /usr/local/bin/iron
 
 RUN chmod 755 /app/bin/*.sh \
