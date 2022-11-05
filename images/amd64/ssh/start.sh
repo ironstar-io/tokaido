@@ -21,7 +21,7 @@ echo "PROJECT_NAME=${PROJECT_NAME:-}" >> /home/app/.ssh/environment
 echo "DRUPAL_ROOT=${drupal_root}" >> /home/app/.ssh/environment
 
 chown app:root /home/app/.ssh -R
-chmod 400 /home/app/.ssh
+chmod 700 /home/app/.ssh
 chmod 600 /home/app/.ssh/environment
 chmod 600 /home/app/.ssh/authorized_keys
 
