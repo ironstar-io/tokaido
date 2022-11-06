@@ -1,8 +1,8 @@
 package goos
 
 import (
-	"github.com/ironstar-io/tokaido/utils"
 	"github.com/ironstar-io/tokaido/system/wsl"
+	"github.com/ironstar-io/tokaido/utils"
 )
 
 // OpenSite - Linux Root executable

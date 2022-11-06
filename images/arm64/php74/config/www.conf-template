@@ -1,0 +1,25 @@
+pid = /tmp/php-fpm.pid
+error_log = /app/logs/fpm.error.log
+emergency_restart_threshold = 10
+emergency_restart_interval = 1m
+process_control_timeout = 20s
+
+[www]
+listen = 0.0.0.0:9000
+php_admin_value[error_log] = /app/logs/fpm.error.log
+pm = dynamic
+pm.start_servers = ${PHP_PM_START_SERVERS:-8}
+pm.max_children = ${PHP_PM_MAX_CHILDREN:-64}
+pm.min_spare_servers = ${PHP_PM_MIN_SPARE_SERVERS:-8}
+pm.max_spare_servers = ${PHP_PM_MAX_SPARE_SERVERS:-24}
+pm.process_idle_timeout = ${PHP_PM_PROCESS_IDLE_TIMEOUT:-600}
+pm.max_requests = ${PHP_PM_MAX_REQUESTS:-250}
+pm.status_path = /.fpm/status.php
+ping.path = /.fpm/ping.php
+ping.response = OK
+access.log = /app/logs/php.access.log
+access.format = "%{%Y-%m-%dT%H:%M:%S%z}t addr=%{REMOTE_ADDR}e rqid=%{HTTP_X_REQUEST_ID}e stat=%s meth=%m ruri=%{HTTP_HOST}e%{REQUEST_URI}e user=%{HTTP_X_USER}e plen=%l dura=%{seconds}d pmem=%{megabytes}M tcpu=%{total}C%"
+slowlog = /app/logs/fpm.slow.log
+request_slowlog_timeout = 10s
+catch_workers_output = yes
+clear_env = no

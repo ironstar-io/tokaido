@@ -18,7 +18,7 @@ import (
 )
 
 var defaultContainers = map[string]string{
-	"drush": "22",
+	"ssh":   "22",
 	"fpm":   "9000",
 	"mysql": "3306",
 	"nginx": "8443",
@@ -148,13 +148,9 @@ func GetContainerIPFromProject(containerName, projectName string) (string, error
 // GetContainerList returns a list of all configured containers in the current project context
 func GetContainerList() []string {
 	// List of containers to be checked when no single container is specifieds
-	cl := []string{"fpm", "nginx", "syslog", "drush", "mysql"}
+	cl := []string{"fpm", "nginx", "ssh", "mysql"}
 
 	// Add additional optional containers to the checklist if they are in use
-	if conf.GetConfig().Services.Kishu.Enabled {
-		cl = append(cl, "kishu")
-	}
-
 	if conf.GetConfig().Services.Memcache.Enabled {
 		cl = append(cl, "memcache")
 	}
@@ -165,10 +161,6 @@ func GetContainerList() []string {
 
 	if conf.GetConfig().Services.Solr.Enabled {
 		cl = append(cl, "solr")
-	}
-
-	if conf.GetConfig().Global.Syncservice == "fusion" {
-		cl = append(cl, "sync")
 	}
 
 	return cl

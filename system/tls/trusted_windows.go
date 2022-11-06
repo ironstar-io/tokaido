@@ -1,3 +1,4 @@
+//go:build windows
 // +build windows
 
 package tls
@@ -5,11 +6,11 @@ package tls
 // TODO Windows
 
 import (
-	// "github.com/ironstar-io/tokaido/utils"
+// "github.com/ironstar-io/tokaido/utils"
 
-	// "fmt"
-	// "path/filepath"
-	// "strings"
+// "fmt"
+// "path/filepath"
+// "strings"
 )
 
 // configureTrustedCA ...

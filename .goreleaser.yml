@@ -1,0 +1,36 @@
+project_name: tokaido
+builds:
+  - binary: macos-intel
+    id: macos-intel
+    goos:
+      - darwin
+    goarch:
+      - amd64
+  - binary: macos-silicon
+    id: macos-silicon
+    goos:
+      - darwin
+    goarch:
+      - arm64
+
+universal_binaries:
+-
+  ids:
+  - macos-intel
+  - macos-silicon
+  replace: true
+  name_template: 'tok-macos'
+  hooks:
+    post: gon gon.hcl
+
+signs:
+  - signature: "${artifact}.dmg"
+    ids: ["macos-silicon", "macos-intel"]
+    cmd: gon
+    args: ["gon.hcl"]
+    artifacts: all
+
+archives:
+  - id: binaries
+    builds: ["macos"]
+    format: binary

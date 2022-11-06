@@ -13,7 +13,6 @@ import (
 	dockertmpl "github.com/ironstar-io/tokaido/services/docker/templates"
 	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/fs"
-	"github.com/ironstar-io/tokaido/system/version"
 	"github.com/ironstar-io/tokaido/utils"
 	"github.com/logrusorgru/aurora"
 	yaml "gopkg.in/yaml.v2"
@@ -79,10 +78,13 @@ func MarshalledDefaults() []byte {
 	// Append the volume setting on to the docker-compose setting directly
 	mysqlVolName := "tok_" + conf.GetConfig().Tokaido.Project.Name + "_mysql_database"
 	siteVolName := "tok_" + conf.GetConfig().Tokaido.Project.Name + "_tokaido_site"
+	logsVolName := "tok_" + conf.GetConfig().Tokaido.Project.Name + "_logs"
 	composeVolumeYml := []byte(`volumes:
   ` + siteVolName + `:
     external: true
   ` + mysqlVolName + `:
+    external: true
+  ` + logsVolName + `:
     external: true
   tok_composer_cache:
     external: true`)
@@ -97,65 +99,25 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 	tokStruct := conf.ComposeDotTok{}
 	phpVersion := conf.GetConfig().Tokaido.Phpversion
 	syncservice := conf.GetConfig().Global.Syncservice
+	if syncservice != "docker" {
+		log.Fatalf("Sorry, sync service %s is no longer support", syncservice)
+	}
 
 	gprj, err := conf.GetGlobalProjectSettings()
 	if err != nil {
 		panic(err)
 	}
 
-	switch syncservice {
-	case "docker":
-		utils.DebugString("attaching repo to /tokaido/site folder using direct Docker mount")
+	utils.DebugString("attaching repo to /app/site folder using direct Docker mount")
 
-		err := yaml.Unmarshal(dockertmpl.ComposeTokDefaultsDockerVolume, &tokStruct)
-		if err != nil {
-			log.Fatalf("Error marshalling Docker Volumes Composer template: %v", err)
-		}
+	err = yaml.Unmarshal(dockertmpl.ComposeTokDefaultsDockerVolume, &tokStruct)
+	if err != nil {
+		log.Fatalf("Error marshalling Docker Volumes Composer template: %v", err)
+	}
 
-		err = yaml.Unmarshal(dockertmpl.TokaidoDockerSiteVolumeAttach(conf.GetProjectPath()), &tokStruct)
-		if err != nil {
-			log.Fatalf("Error attaching persistent /tokaido/site volume: %v", err)
-		}
-
-	case "fusion":
-		utils.DebugString("attaching repo to /tokaido/site folder using Fusion sync")
-		err := yaml.Unmarshal(dockertmpl.ComposeTokDefaultsFusionSync, &tokStruct)
-		if err != nil {
-			log.Fatalf("Error marshalling Fusion Composer template: %v", err)
-		}
-
-		// Configure Fusion Sync volumes
-		siteVolName := "tok_" + conf.GetConfig().Tokaido.Project.Name + "_tokaido_site"
-		err = yaml.Unmarshal(dockertmpl.ExternalVolumeDeclare(siteVolName), &tokStruct)
-		if err != nil {
-			log.Fatalf("Error declaring persistent /tokaido/site volume: %v", err)
-		}
-
-		err = yaml.Unmarshal(dockertmpl.TokaidoFusionSiteVolumeAttach(conf.GetProjectPath(), siteVolName), &tokStruct)
-		if err != nil {
-			log.Fatalf("Error attaching persistent /tokaido/site volume: %v", err)
-		}
-
-	case "unison":
-		unisonVersion := version.GetUnisonVersion()
-
-		// Use Unison Compose Template
-		err := yaml.Unmarshal(dockertmpl.ComposeTokDefaultsUnison, &tokStruct)
-		if err != nil {
-			log.Fatalf("Error marshalling Unison Composer template: %v", err)
-		}
-
-		// Attach the Composer cache volume
-		err = yaml.Unmarshal(dockertmpl.ComposerCacheVolumeAttach(), &tokStruct)
-		if err != nil {
-			log.Fatalf("Error attaching persistent Composer cache volume: %v", err)
-		}
-
-		// Set Unison Version
-		err = yaml.Unmarshal(dockertmpl.SetUnisonVersion(unisonVersion), &tokStruct)
-		if err != nil {
-			log.Fatalf("Error setting Unison version: %v", err)
-		}
+	err = yaml.Unmarshal(dockertmpl.TokaidoDockerSiteVolumeAttach(conf.GetProjectPath()), &tokStruct)
+	if err != nil {
+		log.Fatalf("Error attaching persistent /app/site volume: %v", err)
 	}
 
 	err = yaml.Unmarshal(getDrupalSettings(), &tokStruct)
@@ -176,19 +138,10 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 	}
 
 	// Set database engine and parameters
-	dbImage := "mysql"
-	dbVersion := "5.7"
-	if conf.GetConfig().Database.Engine == "mariadb" {
-		dbImage = "mariadb"
-		if len(conf.GetConfig().Database.Mariadbconfig.Version) > 1 {
-			dbVersion = conf.GetConfig().Database.Mariadbconfig.Version
-		} else {
-			dbVersion = "10.4"
-		}
-	} else {
-		if len(conf.GetConfig().Database.Mysqlconfig.Version) > 1 {
-			dbVersion = conf.GetConfig().Database.Mysqlconfig.Version
-		}
+	dbImage := "mariadb"
+	dbVersion := "10.8"
+	if len(conf.GetConfig().Database.Mariadbconfig.Version) > 1 {
+		dbVersion = conf.GetConfig().Database.Mariadbconfig.Version
 	}
 	err = yaml.Unmarshal(dockertmpl.SetDatabase(dbImage, dbVersion), &tokStruct)
 	if err != nil {
@@ -267,7 +220,7 @@ func UnmarshalledDefaults() conf.ComposeDotTok {
 
 func getCustomTok() []byte {
 	dc := &conf.ComposeDotTok{
-		Version:  "2",
+		Version:  "3",
 		Services: conf.GetConfig().Services,
 	}
 

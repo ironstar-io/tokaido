@@ -16,7 +16,6 @@ import (
 	"github.com/ironstar-io/tokaido/services/snapshots"
 	"github.com/ironstar-io/tokaido/services/telemetry"
 	"github.com/ironstar-io/tokaido/services/tok/goos"
-	"github.com/ironstar-io/tokaido/services/unison"
 	"github.com/ironstar-io/tokaido/services/xdebug"
 	"github.com/ironstar-io/tokaido/system"
 	"github.com/ironstar-io/tokaido/system/console"
@@ -24,8 +23,6 @@ import (
 	"github.com/ironstar-io/tokaido/system/ssh"
 	"github.com/ironstar-io/tokaido/system/tls"
 	"github.com/ironstar-io/tokaido/system/version"
-	"github.com/ironstar-io/tokaido/system/wsl"
-	"github.com/ironstar-io/tokaido/utils"
 
 	"github.com/logrusorgru/aurora"
 )
@@ -43,7 +40,6 @@ func Init(yes, statuscheck bool) {
 	version.Check()
 	docker.CheckClientVersion()
 	proxy.DecommissionProxy()
-	checkSyncConfig()
 	system.CheckDependencies()
 
 	fmt.Println(aurora.Cyan("\n🚀  Tokaido is starting up!"))
@@ -61,6 +57,7 @@ func Init(yes, statuscheck bool) {
 
 	docker.CreateDatabaseVolume()
 	docker.CreateSiteVolume()
+	docker.CreateLogsVolume()
 	err := snapshots.Init()
 	if err != nil {
 		fmt.Println()
@@ -78,25 +75,8 @@ func Init(yes, statuscheck bool) {
 	docker.CreateComposerCacheVolume()
 
 	c := conf.GetConfig()
-	if c.Global.Syncservice == "unison" {
-		unison.DockerUp()
-		unison.CreateOrUpdatePrf(unison.LocalPort(), c.Tokaido.Project.Name, pr)
-		s := unison.SyncServiceStatus(c.Tokaido.Project.Name)
-		if s == "stopped" {
-			unison.Sync(c.Tokaido.Project.Name)
-		}
-		fmt.Println()
-		console.Println(`🔄  Creating a background process to sync your local repo into the Tokaido environment`, "")
-		unison.CreateSyncService(c.Tokaido.Project.Name, pr)
-	}
-
-	if c.Global.Syncservice == "fusion" {
-		docker.CreateComposerCacheVolume()
-		utils.DebugString("Using Fusion Sync Service")
-		wo := console.SpinStart("Performing an initial sync. This might take a few minutes")
-		siteVolName := "tok_" + conf.GetConfig().Tokaido.Project.Name + "_tokaido_site"
-		utils.StdoutStreamCmdDebug("docker", "run", "--rm", "-e", "AUTO_SYNC=false", "-v", conf.GetProjectPath()+":/tokaido/host-volume", "-v", siteVolName+":/tokaido/site", "tokaido/sync:stable")
-		console.SpinPersist(wo, "🚛", "Initial sync completed")
+	if c.Global.Syncservice == "unison" || c.Global.Syncservice == "fusion" {
+		fmt.Println(aurora.Red("    Sorry, the sync service you selected is not supported."))
 	}
 
 	// Configure TLS
@@ -180,39 +160,4 @@ func surveyMessage() {
 // InitMessage ...
 func InitMessage() {
 	goos.InitMessage()
-}
-
-// checkSyncConfig verifies if the user's syncservice setting is compatible with their system
-func checkSyncConfig() {
-	c := conf.GetConfig()
-
-	switch system.CheckOS() {
-	case "macos":
-		if c.Global.Syncservice == "fusion" {
-			fmt.Println(aurora.Yellow("Warning: The Fusion Sync Service will be removed in Tokaido 1.10. Please migrate to 'docker' or 'unison'"))
-		}
-	case "linux":
-		w := wsl.IsWSL()
-
-		// Can't use docker volumes on Linux, except for in WSL
-		if c.Global.Syncservice != "unison" && !w {
-			fmt.Println(aurora.Sprintf(aurora.Yellow("Warning: The syncservice '%s' is not compatible with Linux. Tokaido will automatically be set to use Unison\n\n"), aurora.Bold(c.Global.Syncservice)))
-			conf.SetGlobalConfigValueByArgs([]string{"global", "syncservice", "unison"})
-		}
-		// Must use docker volumes on WSL
-		if c.Global.Syncservice != "docker" && w {
-			fmt.Println(aurora.Sprintf(aurora.Yellow("Warning: The syncservice '%s' is not compatible with WSL. Tokaido will automatically be set to use Docker Volumes\n\n"), aurora.Bold(c.Global.Syncservice)))
-			conf.SetGlobalConfigValueByArgs([]string{"global", "syncservice", "docker"})
-		}
-	case "windows":
-		// Must use docker volumes on Windows
-		if c.Global.Syncservice != "docker" {
-			conf.SetGlobalConfigValueByArgs([]string{"global", "syncservice", "docker"})
-		}
-	}
-
-	if c.Global.Syncservice == "unison" {
-		unison.SystemCompatibilityChecks()
-	}
-
 }

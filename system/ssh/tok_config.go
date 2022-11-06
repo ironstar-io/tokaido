@@ -4,7 +4,7 @@ import (
 	"github.com/ironstar-io/tokaido/conf"
 	"github.com/ironstar-io/tokaido/services/docker"
 	"github.com/ironstar-io/tokaido/system/fs"
-	"github.com/ironstar-io/tokaido/system/ssh/templates"
+	sshtmpl "github.com/ironstar-io/tokaido/system/ssh/templates"
 
 	"bufio"
 	"bytes"
@@ -43,7 +43,7 @@ func createOrUpdate() {
 
 // generateTokConfig - Generate a `tok_config` file
 func generateTokConfig() []byte {
-	s := tokConf{DrushPort: docker.LocalPort("drush", "22"), ProjectName: conf.GetConfig().Tokaido.Project.Name}
+	s := tokConf{DrushPort: docker.LocalPort("ssh", "22"), ProjectName: conf.GetConfig().Tokaido.Project.Name}
 
 	tmpl := template.New("tok_config")
 	tmpl, err := tmpl.Parse(sshtmpl.TokConfTmplStr)

@@ -1,3 +1,4 @@
+//go:build windows
 // +build windows
 
 package goos
@@ -14,7 +15,6 @@ func InitMessage() {
 	n := conf.GetConfig().Tokaido.Project.Name
 	fmt.Println()
 	fmt.Println(aurora.Green("Your Drupal development environment is now up and running"))
-	fmt.Println(aurora.Green(aurora.Sprintf("You can find it at %s", aurora.Bold("https://"+n+".local.tokaido.io:5154/"))))
 	fmt.Println()
 
 	fmt.Printf("💻  Run '%s' to ssh into the environment\n", aurora.Bold("ssh "+n+".tok"))

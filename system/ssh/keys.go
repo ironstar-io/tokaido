@@ -23,7 +23,7 @@ var sshPub = filepath.Join(fs.HomeDir(), ".ssh", "tok_ssh.pub")
 
 // CheckKey ...
 func CheckKey() (ok bool) {
-	localPort := docker.LocalPort("drush", "22")
+	localPort := docker.LocalPort("ssh", "22")
 	cmdStr := `ssh ` + conf.GetConfig().Tokaido.Project.Name + `.tok -q -p ` + localPort + ` -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -C "echo 1" | echo $?`
 
 	keyResult := utils.BashStringCmd(cmdStr)

@@ -22,9 +22,9 @@ package tls
 
 import (
 	"github.com/ironstar-io/tokaido/system"
+	"github.com/ironstar-io/tokaido/system/console"
 	"github.com/ironstar-io/tokaido/system/fs"
 	"github.com/ironstar-io/tokaido/utils"
-	"github.com/ironstar-io/tokaido/system/console"
 
 	"fmt"
 	"path/filepath"

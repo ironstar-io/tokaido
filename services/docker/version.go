@@ -1,9 +1,9 @@
 package docker
 
 import (
-	"strconv"
 	"fmt"
 	"log"
+	"strconv"
 
 	"github.com/docker/docker/client"
 )

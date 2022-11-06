@@ -13,14 +13,14 @@ import (
 func calcPhpVersionString(version string) string {
 	var v string
 	switch version {
-	case "7.2":
-		v = "72"
-	case "7.3":
-		v = "73"
 	case "7.4":
 		v = "74"
+	case "8.0":
+		v = "80"
+	case "8.1":
+		v = "81"
 	default:
-		log.Fatalf("PHP version %s is not supported. Must use 7.2, 7.3, or 7.4", version)
+		log.Fatalf("PHP version '%s' is not supported. Please use 7.4, 8.0, 8.1", version)
 	}
 
 	return v
@@ -33,12 +33,14 @@ func DrupalSettings(drupalRoot string, projectName string) []byte {
     fpm:
       environment:
         DRUPAL_ROOT: ` + drupalRoot + `
+        PHPRC: "/app/config/php/php.ini"
     nginx:
       environment:
         DRUPAL_ROOT: ` + drupalRoot + `
-    drush:
+    ssh:
       environment:
         DRUPAL_ROOT: ` + drupalRoot + `
+        PHPRC: "/app/config/php/php.ini"
         PROJECT_NAME: ` + projectName + `
     kishu:
       environment:
@@ -49,12 +51,14 @@ func DrupalSettings(drupalRoot string, projectName string) []byte {
     fpm:
       environment:
         DRUPAL_ROOT: ` + drupalRoot + `
+        PHPRC: "/app/config/php/php.ini"
     nginx:
       environment:
         DRUPAL_ROOT: ` + drupalRoot + `
-    drush:
+    ssh:
       environment:
         DRUPAL_ROOT: ` + drupalRoot + `
+        PHPRC: "/app/config/php/php.ini"
         PROJECT_NAME: ` + projectName)
 }
 
@@ -67,29 +71,18 @@ func ImageVersion(phpVersion, stability string) []byte {
 		imageVersion = constants.StableVersion
 	}
 
-	if conf.GetConfig().Global.Syncservice == "fusion" {
-		return []byte(`services:
-  sync:
-    image: tokaido/sync:` + imageVersion + `
-  syslog:
-    image: tokaido/syslog:` + imageVersion + `
-  nginx:
-    image: tokaido/nginx:` + imageVersion + `
-  fpm:
-    image: tokaido/php` + v + `:` + imageVersion + `
-  drush:
-    image: tokaido/admin` + v + `-heavy:` + imageVersion + ``)
+	imageArch := "amd64"
+	if runtime.GOARCH == "arm64" {
+		imageArch = "arm64"
 	}
 
 	return []byte(`services:
-  syslog:
-    image: tokaido/syslog:` + imageVersion + `
   nginx:
-    image: tokaido/nginx:` + imageVersion + `
+    image: tokaido/nginx:` + imageVersion + `-` + imageArch + `
   fpm:
-    image: tokaido/php` + v + `:` + imageVersion + `
-  drush:
-    image: tokaido/admin` + v + `-heavy:` + imageVersion + ``)
+    image: tokaido/php` + v + `:` + imageVersion + `-` + imageArch + `
+  ssh:
+    image: tokaido/ssh` + v + `:` + imageVersion + `-` + imageArch)
 }
 
 // EnableSolr ...
@@ -192,6 +185,21 @@ func MysqlVolumeAttach(name string) []byte {
 `)
 }
 
+// LogsVolumeAttach ...
+func LogsVolumeAttach(name string) []byte {
+	return []byte(`services:
+  ssh:
+    volumes:
+      - ` + name + `:/app/logs
+  fpm:
+    volumes:
+      - ` + name + `:/app/logs
+  nginx:
+    volumes:
+      - ` + name + `:/app/logs
+`)
+}
+
 // SetDatabase sets the database engine and configuration
 func SetDatabase(image, version string) []byte {
 	return []byte(`services:
@@ -206,39 +214,6 @@ func SetDatabasePort(port string) []byte {
   mysql:
     ports:
       - ` + port + `:3306`)
-}
-
-// SetUnisonVersion ...
-func SetUnisonVersion(version string) []byte {
-	return []byte(`services:
-  unison:
-    image: tokaido/unison:` + version)
-}
-
-// TokaidoFusionSiteVolumeAttach ...
-func TokaidoFusionSiteVolumeAttach(path, name string) []byte {
-	return []byte(`services:
-  sync:
-    volumes:
-      - ` + path + `:/app/host-volume
-      - ` + name + `:/app/site
-  drush:
-    volumes:
-      - ` + name + `:/app/site
-      - tok_composer_cache:/home/tok/.composer/cache
-  nginx:
-    volumes:
-      - ` + name + `:/app/site
-  testcafe:
-    volumes:
-      - ` + path + `/.tok/testcafe:/testcafe
-  fpm:
-    volumes:
-      - ` + name + `:/app/site
-  kishu:
-    volumes:
-      - ` + name + `:/app/site
-`)
 }
 
 // TokaidoDockerSiteVolumeAttach ...
@@ -258,22 +233,24 @@ func TokaidoDockerSiteVolumeAttach(path string) []byte {
 	// use the tokaido proxy tls wildcard certificate
 	tlsPath := h + "/.tok/tls/proxy/"
 
+	logsVolName := "tok_" + conf.GetConfig().Tokaido.Project.Name + "_logs"
+
 	vols := `services:
   nginx:
     volumes:
       - ` + path + `:/app/site` + diskMode + `
       - ` + tlsPath + `wildcard.crt:/app/config/nginx/runtime/tls/default.crt
       - ` + tlsPath + `wildcard.key:/app/config/nginx/runtime/tls/default.key
+      - ` + logsVolName + `:/app/logs
   fpm:
     volumes:
       - ` + path + `:/app/site` + diskMode + `
-  testcafe:
-    volumes:
-      - ` + path + `/.tok/testcafe:/testcafe` + diskMode + `
-  drush:
+      - ` + logsVolName + `:/app/logs
+  ssh:
     volumes:
       - ` + path + `:/app/site` + diskMode + `
-      - tok_composer_cache:/home/tok/.composer/cache`
+      - ` + logsVolName + `:/app/logs
+      - tok_composer_cache:/home/app/.composer/cache`
 
 	// We'll mount the .gitconfig and .drush paths if they exist
 	gp := h + "/.gitconfig"
@@ -281,12 +258,12 @@ func TokaidoDockerSiteVolumeAttach(path string) []byte {
 
 	if fs.CheckExists(gp) {
 		vols = vols + `
-      - ` + gp + `:/home/tok/.gitconfig`
+      - ` + gp + `:/home/app/.gitconfig`
 	}
 
 	if fs.CheckExists(dp) {
 		vols = vols + `
-      - ` + dp + `:/home/tok/.drush`
+      - ` + dp + `:/home/app/.drush`
 	}
 
 	return []byte(vols)
@@ -295,9 +272,9 @@ func TokaidoDockerSiteVolumeAttach(path string) []byte {
 // ComposerCacheVolumeAttach ...
 func ComposerCacheVolumeAttach() []byte {
 	return []byte(`services:
-  drush:
+  ssh:
     volumes:
-      - tok_composer_cache:/home/tok/.composer/cache
+      - tok_composer_cache:/home/app/.composer/cache
 `)
 }
 
@@ -308,139 +285,15 @@ var ModWarning = []byte(`
 
 `)
 
-// ComposeTokDefaultsFusionSync - Template byte array for `docker-compose.tok.yml`
-var ComposeTokDefaultsFusionSync = []byte(`
-version: "2"
-services:
-  sync:
-    image: tokaido/sync:stable
-    volumes:
-      - waiting
-    environment:
-      AUTO_SYNC: "true"
-    restart: unless-stopped
-    labels:
-      io.tokaido.managed: local
-      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
-  syslog:
-    image: tokaido/syslog:stable
-    volumes:
-      - /app/logs
-    labels:
-      io.tokaido.managed: local
-      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
-  nginx:
-    user: "1002"
-    image: tokaido/nginx:stable
-    volumes:
-      - waiting
-    volumes_from:
-      - syslog
-    depends_on:
-      - fpm
-    ports:
-      - "8082"
-      - "8443"
-    environment:
-      DRUPAL_ROOT: docroot
-    labels:
-      io.tokaido.managed: local
-      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
-  testcafe:
-    image: testcafe/testcafe
-    working_dir: /testcafe
-    command: tail -f /dev/null
-    entrypoint:
-      - tail
-      - -f
-      - /dev/null
-    volumes:
-      - waiting
-    depends_on:
-      - nginx
-    ports:
-      - "1337"
-  fpm:
-    user: "1001"
-    image: tokaido/php71-fpm:stable
-    working_dir: /app/site/
-    volumes:
-      - waiting
-    volumes_from:
-      - syslog
-    depends_on:
-      - syslog
-    ports:
-      - "9000"
-    environment:
-      PHP_DISPLAY_ERRORS: "yes"
-    labels:
-      io.tokaido.managed: local
-      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
-  mysql:
-    image: mysql:5.7
-    volumes_from:
-      - syslog
-    volumes:
-      - waiting
-    ports:
-      - "3306"
-    command: --max_allowed_packet=1073741824 --ignore-db-dir=lost+found --bind-address=0.0.0.0
-    environment:
-      MYSQL_DATABASE: tokaido
-      MYSQL_USER: tokaido
-      MYSQL_PASSWORD: tokaido
-      MYSQL_ROOT_PASSWORD: tokaido
-      MYSQL_ROOT_HOST: "%"
-    labels:
-      io.tokaido.managed: local
-      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
-  drush:
-    image: tokaido/admin71-heavy:stable
-    hostname: 'tokaido'
-    ports:
-      - "22"
-    working_dir: /app/site
-    volumes:
-      - waiting
-    volumes_from:
-      - syslog
-    environment:
-      SSH_AUTH_SOCK: /ssh/auth/sock
-      APP_ENV: local
-      PROJECT_NAME: tokaido
-    labels:
-      io.tokaido.managed: local
-      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
-  kishu:
-    image: tokaido/kishu:stable
-    volumes:
-      - waiting
-    environment:
-      DRUPAL_ROOT: docroot
-    labels:
-      io.tokaido.managed: local
-      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
-`)
-
 // ComposeTokDefaultsDockerVolume - Template byte array for `docker-compose.tok.yml`
 var ComposeTokDefaultsDockerVolume = []byte(`
-version: "2"
+version: "3"
 services:
-  syslog:
-    image: tokaido/syslog:stable
-    volumes:
-      - /app/logs
-    labels:
-      io.tokaido.managed: local
-      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
   nginx:
     user: "1002"
     image: tokaido/nginx:stable
     volumes:
       - waiting
-    volumes_from:
-      - syslog
     depends_on:
       - fpm
     ports:
@@ -448,44 +301,29 @@ services:
       - "8443"
     environment:
       DRUPAL_ROOT: docroot
+    depends_on:
+      - ssh
     labels:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
-  testcafe:
-    image: testcafe/testcafe
-    working_dir: /testcafe
-    command: tail -f /dev/null
-    entrypoint:
-      - tail
-      - -f
-      - /dev/null
-    volumes:
-      - waiting
-    depends_on:
-      - nginx
-    ports:
-      - "1337"
   fpm:
     user: "1001"
-    image: tokaido/php71-fpm:stable
+    image: tokaido/php81:stable
     working_dir: /app/site/
     volumes:
       - waiting
-    volumes_from:
-      - syslog
-    depends_on:
-      - syslog
     ports:
       - "9000"
     environment:
       PHP_DISPLAY_ERRORS: "yes"
+      PHPRC: "/app/config/php/php.ini"
+    depends_on:
+      - ssh
     labels:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
   mysql:
-    image: mysql:5.7
-    volumes_from:
-      - syslog
+    image: mariadb:10.8
     volumes:
       - waiting
     ports:
@@ -500,125 +338,19 @@ services:
     labels:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
-  drush:
-    image: tokaido/admin71-heavy:stable
+  ssh:
+    image: tokaido/ssh74:stable
     hostname: 'tokaido'
     ports:
       - "22"
     working_dir: /app/site
     volumes:
       - waiting
-    volumes_from:
-      - syslog
     environment:
       SSH_AUTH_SOCK: /ssh/auth/sock
       APP_ENV: local
       PROJECT_NAME: tokaido
-    labels:
-      io.tokaido.managed: local
-      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
-`)
-
-// ComposeTokDefaultsUnison - Template byte array for `docker-compose.tok.yml`
-var ComposeTokDefaultsUnison = []byte(`
-version: "2"
-services:
-  unison:
-    image: tokaido/unison:2.51.2
-    environment:
-      - UNISON_DIR=/app/site
-      - UNISON_UID=1001
-      - UNISON_GID=1001
-    ports:
-      - "5000"
-    volumes:
-      - /app/site
-  syslog:
-    image: tokaido/syslog:stable
-    volumes:
-      - /app/logs
-    labels:
-      io.tokaido.managed: local
-      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
-  nginx:
-    user: "1002"
-    image: tokaido/nginx:stable
-    volumes_from:
-      - syslog
-      - unison
-    depends_on:
-      - fpm
-    ports:
-      - "8082"
-      - "8443"
-    environment:
-      DRUPAL_ROOT: docroot
-    labels:
-      io.tokaido.managed: local
-      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
-  testcafe:
-    image: testcafe/testcafe
-    working_dir: /testcafe
-    command: tail -f /dev/null
-    entrypoint:
-      - tail
-      - -f
-      - /dev/null
-    volumes_from:
-      - unison
-    depends_on:
-      - nginx
-    ports:
-      - "1337"
-  fpm:
-    user: "1001"
-    image: tokaido/php71-fpm:stable
-    working_dir: /app/site/
-    volumes_from:
-      - syslog
-      - unison
-    depends_on:
-      - syslog
-    ports:
-      - "9000"
-    environment:
-      PHP_DISPLAY_ERRORS: "yes"
-    labels:
-      io.tokaido.managed: local
-      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
-  mysql:
-    image: mysql:5.7
-    volumes_from:
-      - syslog
-    volumes:
-      - waiting
-    ports:
-      - "3306"
-    command: --max_allowed_packet=1073741824 --ignore-db-dir=lost+found --bind-address=0.0.0.0
-    environment:
-      MYSQL_DATABASE: tokaido
-      MYSQL_USER: tokaido
-      MYSQL_PASSWORD: tokaido
-      MYSQL_ROOT_PASSWORD: tokaido
-      MYSQL_ROOT_HOST: "%"
-    labels:
-      io.tokaido.managed: local
-      io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `
-  drush:
-    image: tokaido/admin71-heavy:stable
-    hostname: 'tokaido'
-    ports:
-      - "22"
-    working_dir: /app/site
-    volumes:
-      - waiting
-    volumes_from:
-      - syslog
-      - unison
-    environment:
-      SSH_AUTH_SOCK: /ssh/auth/sock
-      APP_ENV: local
-      PROJECT_NAME: tokaido
+      PHPRC: "/app/config/php/php.ini"
     labels:
       io.tokaido.managed: local
       io.tokaido.project: ` + conf.GetConfig().Tokaido.Project.Name + `

@@ -94,6 +94,7 @@ type Config struct {
 // Services ...
 type Services struct {
 	Unison struct {
+		Platform    string            `yaml:"platform,omitempty"`
 		Image       string            `yaml:"image,omitempty"`
 		Hostname    string            `yaml:"hostname,omitempty"`
 		Ports       []string          `yaml:"ports,omitempty"`
@@ -107,12 +108,14 @@ type Services struct {
 		Labels      map[string]string `yaml:"labels,omitempty"`
 	} `yaml:"unison,omitempty"`
 	Chromedriver struct {
+		Platform    string            `yaml:"platform,omitempty"`
 		Enabled     bool              `yaml:"enabled,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`
 		Image       string            `yaml:"image,omitempty"`
 		Ports       []string          `yaml:"ports,omitempty"`
 	} `yaml:"chromedriver,omitempty"`
 	Sync struct {
+		Platform    string            `yaml:"platform,omitempty"`
 		Image       string            `yaml:"image,omitempty"`
 		Hostname    string            `yaml:"hostname,omitempty"`
 		Ports       []string          `yaml:"ports,omitempty"`
@@ -127,6 +130,7 @@ type Services struct {
 		Labels      map[string]string `yaml:"labels,omitempty"`
 	} `yaml:"sync,omitempty"`
 	Syslog struct {
+		Platform    string            `yaml:"platform,omitempty"`
 		Image       string            `yaml:"image,omitempty"`
 		Hostname    string            `yaml:"hostname,omitempty"`
 		Ports       []string          `yaml:"ports,omitempty"`
@@ -140,6 +144,7 @@ type Services struct {
 		Labels      map[string]string `yaml:"labels,omitempty"`
 	} `yaml:"syslog,omitempty"`
 	Nginx struct {
+		Platform    string            `yaml:"platform,omitempty"`
 		Image       string            `yaml:"image,omitempty"`
 		Hostname    string            `yaml:"hostname,omitempty"`
 		Ports       []string          `yaml:"ports,omitempty"`
@@ -158,6 +163,7 @@ type Services struct {
 		} `yaml:"networks,omitempty"`
 	} `yaml:"nginx,omitempty"`
 	Testcafe struct {
+		Platform    string            `yaml:"platform,omitempty"`
 		Image       string            `yaml:"image,omitempty"`
 		Hostname    string            `yaml:"hostname,omitempty"`
 		Ports       []string          `yaml:"ports,omitempty"`
@@ -172,6 +178,7 @@ type Services struct {
 		Labels      map[string]string `yaml:"labels,omitempty"`
 	} `yaml:"testcafe,omitempty"`
 	Fpm struct {
+		Platform    string            `yaml:"platform,omitempty"`
 		Image       string            `yaml:"image,omitempty"`
 		Hostname    string            `yaml:"hostname,omitempty"`
 		Ports       []string          `yaml:"ports,omitempty"`
@@ -186,6 +193,7 @@ type Services struct {
 		Labels      map[string]string `yaml:"labels,omitempty"`
 	} `yaml:"fpm,omitempty"`
 	Memcache struct {
+		Platform    string            `yaml:"platform,omitempty"`
 		Enabled     bool              `yaml:"enabled,omitempty"`
 		Image       string            `yaml:"image,omitempty"`
 		Hostname    string            `yaml:"hostname,omitempty"`
@@ -197,6 +205,7 @@ type Services struct {
 		Labels      map[string]string `yaml:"labels,omitempty"`
 	} `yaml:"memcache,omitempty"`
 	Mysql struct {
+		Platform    string            `yaml:"platform,omitempty"`
 		Image       string            `yaml:"image,omitempty"`
 		Hostname    string            `yaml:"hostname,omitempty"`
 		Ports       []string          `yaml:"ports,omitempty"`
@@ -209,6 +218,7 @@ type Services struct {
 		Labels      map[string]string `yaml:"labels,omitempty"`
 	} `yaml:"mysql,omitempty"`
 	Drush struct {
+		Platform    string            `yaml:"platform,omitempty"`
 		Image       string            `yaml:"image,omitempty"`
 		Hostname    string            `yaml:"hostname,omitempty"`
 		Ports       []string          `yaml:"ports,omitempty"`
@@ -220,8 +230,9 @@ type Services struct {
 		Environment map[string]string `yaml:"environment,omitempty"`
 		Volumes     []string          `yaml:"volumes,omitempty"`
 		Labels      map[string]string `yaml:"labels,omitempty"`
-	} `yaml:"drush,omitempty"`
+	} `yaml:"ssh,omitempty"`
 	Solr struct {
+		Platform    string            `yaml:"platform,omitempty"`
 		Enabled     bool              `yaml:"enabled,omitempty"`
 		Image       string            `yaml:"image,omitempty"`
 		Hostname    string            `yaml:"hostname,omitempty"`
@@ -233,6 +244,7 @@ type Services struct {
 		Labels      map[string]string `yaml:"labels,omitempty"`
 	} `yaml:"solr,omitempty"`
 	Redis struct {
+		Platform    string            `yaml:"platform,omitempty"`
 		Enabled     bool              `yaml:"enabled,omitempty"`
 		Image       string            `yaml:"image,omitempty"`
 		Hostname    string            `yaml:"hostname,omitempty"`
@@ -244,6 +256,7 @@ type Services struct {
 		Labels      map[string]string `yaml:"labels,omitempty"`
 	} `yaml:"redis,omitempty"`
 	Mailhog struct {
+		Platform    string            `yaml:"platform,omitempty"`
 		Enabled     bool              `yaml:"enabled,omitempty"`
 		Image       string            `yaml:"image,omitempty"`
 		Hostname    string            `yaml:"hostname,omitempty"`
@@ -266,6 +279,7 @@ type Services struct {
 		Labels      map[string]string `yaml:"labels,omitempty"`
 	} `yaml:"adminer,omitempty"`
 	Kishu struct {
+		Platform    string            `yaml:"platform,omitempty"`
 		Enabled     bool              `yaml:"enabled,omitempty"`
 		Image       string            `yaml:"image,omitempty"`
 		Environment map[string]string `yaml:"environment,omitempty"`

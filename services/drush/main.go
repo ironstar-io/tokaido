@@ -30,9 +30,9 @@ func GetAdminSignOnPath() string {
 
 // LocalPort - Return the local port for drush
 func LocalPort() string {
-	p := docker.LocalPort("drush", "5000")
+	p := docker.LocalPort("ssh", "5000")
 	if p == "" {
-		log.Fatal("Drush container doesn't appear to be running!")
+		log.Fatal("SSH container doesn't appear to be running!")
 	}
 
 	return p

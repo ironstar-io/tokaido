@@ -59,13 +59,13 @@ func CheckDependencies() {
 // CheckWSLDependencies - Root executable
 func CheckWSLDependencies() {
 	d := map[string]bool{
-		"docker":           false,
-		"docker-compose":   false,
+		"docker":         false,
+		"docker-compose": false,
 	}
 
 	m := map[string]string{
-		"docker":           "😓  docker is missing. You need to install Docker CE or Docker Machine",
-		"docker-compose":   "😓  docker-compose is missing. Please visit https://docs.docker.com/compose/install/ for install instructions",
+		"docker":         "😓  docker is missing. You need to install Docker CE or Docker Machine",
+		"docker-compose": "😓  docker-compose is missing. Please visit https://docs.docker.com/compose/install/ for install instructions",
 	}
 
 	var f bool
